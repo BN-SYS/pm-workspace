@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PM Workspace — 프로젝트 대시보드</title>
+<title>배은아 PM Workspace — 프로젝트 대시보드</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -407,7 +407,7 @@
   <header>
     <div class="header-inner">
       <div class="logo-area">
-        <span class="logo-tag">BN System · PM Workspace</span>
+        <span class="logo-tag">BN System · 배은아 PM Workspace</span>
         <h1>프로젝트 <span>대시보드</span></h1>
       </div>
       <div class="header-meta" id="last-updated">—</div>
@@ -487,8 +487,11 @@ const COLOR_MAP = {
 
 /* ━━━━━━━━━━ 렌더링 ━━━━━━━━━━ */
 function renderCard(p) {
-  const st = STATUS_MAP[p.status] || STATUS_MAP.planning;
-  const color = COLOR_MAP[p.status] || COLOR_MAP.planning;
+  const statuses = Array.isArray(p.status) ? p.status : [p.status];
+  const colors   = statuses.map(s => COLOR_MAP[s] || COLOR_MAP.planning);
+  const color    = colors.length > 1
+    ? `linear-gradient(90deg, ${colors.join(', ')})`
+    : colors[0];
 
   const protoHTML = p.prototypes.length
     ? p.prototypes.map(pt => `
@@ -504,7 +507,7 @@ function renderCard(p) {
     : `<div style="font-size:12px;color:var(--text3);">프로토타입 준비 중</div>`;
 
   return `
-    <div class="card" data-status="${p.status}" data-id="${p.id}"
+    <div class="card" data-status="${statuses.join(',')}" data-id="${p.id}"
          data-search="${p.client} ${p.title}">
       <div class="card-bar" style="background:${color}"></div>
       <div class="card-body">
@@ -514,7 +517,12 @@ function renderCard(p) {
             <div class="card-title">${p.title}</div>
             <span class="type-tag">${p.type}</span>
           </div>
-          <span class="status-badge ${st.cls}">${st.label}</span>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0;">
+            ${statuses.map(s => {
+              const si = STATUS_MAP[s] || STATUS_MAP.planning;
+              return `<span class="status-badge ${si.cls}">${si.label}</span>`;
+            }).join('')}
+          </div>
         </div>
         <div class="card-divider"></div>
         <div class="proto-list">${protoHTML}</div>
@@ -529,7 +537,10 @@ function renderCard(p) {
 function renderStats() {
   const total = PROJECTS.length;
   const counts = Object.fromEntries(Object.keys(STATUS_MAP).map(k => [k, 0]));
-  PROJECTS.forEach(p => { if (counts[p.status] !== undefined) counts[p.status]++; });
+  PROJECTS.forEach(p => {
+    const ss = Array.isArray(p.status) ? p.status : [p.status];
+    ss.forEach(s => { if (counts[s] !== undefined) counts[s]++; });
+  });
 
   const items = [
     { label: '전체 프로젝트', value: total, color: '#8b90a0' },
@@ -565,7 +576,10 @@ let searchQuery  = '';
 
 function applyFilter() {
   let list = [...PROJECTS];
-  if (activeFilter !== 'all') list = list.filter(p => p.status === activeFilter);
+  if (activeFilter !== 'all') list = list.filter(p => {
+    const ss = Array.isArray(p.status) ? p.status : [p.status];
+    return ss.includes(activeFilter);
+  });
   if (searchQuery) {
     const q = searchQuery.toLowerCase();
     list = list.filter(p =>
