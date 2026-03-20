@@ -2,9 +2,11 @@
 .env
 credentials.json
 token.json
+projects/**/.env
 
 # 임시 파일
 .tmp/
+projects/**/.tmp/
 
 # OS
 .DS_Store
