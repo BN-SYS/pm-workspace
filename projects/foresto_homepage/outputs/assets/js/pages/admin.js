@@ -20,7 +20,7 @@ const ADMIN_NAV = [
       { key: 'course-qualify',    href: 'courses.html?type=qualify', label: '자격취득과정 관리' },
       { key: 'course-enhance',    href: 'courses.html?type=enhance', label: '역량강화 관리' },
       { key: 'course-academy',    href: 'courses.html?type=academy', label: '회원아카데미 관리' },
-      { key: 'course-applicants', href: '#',                         label: '신청자 통합 관리' },
+      { key: 'course-applicants', href: 'applicants.html',            label: '신청자 통합 관리' },
     ]
   },
 

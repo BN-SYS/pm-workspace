@@ -9,9 +9,259 @@
   <link rel="stylesheet" href="../assets/css/components.css">
   <link rel="stylesheet" href="../assets/css/responsive.css">
   <link rel="stylesheet" href="../assets/css/pages/admin.css">
+  <style>
+    /* ══════════════════════════════════════
+       상세 카드 레이아웃 (course-edit 기준 동일)
+       ══════════════════════════════════════ */
+    .form-card {
+      background: #fff;
+      border: 1px solid #e3eadd;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .form-card-head {
+      padding: 14px 20px;
+      border-bottom: 1px solid #e3eadd;
+      background: #f8faf6;
+      font-size: 13px;
+      font-weight: 700;
+      color: #2e5c2e;
+      letter-spacing: 0.03em;
+    }
+
+    .form-row {
+      display: flex;
+      align-items: stretch;
+      min-height: 52px;
+      border-bottom: 1px solid #f0f4ee;
+    }
+    .form-row:last-child { border-bottom: none; }
+
+    .form-label {
+      width: 140px;
+      min-width: 140px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #7a8e74;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      background: #f8faf6;
+      border-right: 1px solid #e8efe3;
+      padding: 0 12px;
+      text-align: center;
+    }
+
+    .form-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* 같은 행 2분할 */
+    .form-half {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      gap: 8px;
+    }
+    .form-half + .form-half { border-left: 1px solid #f0f4ee; }
+
+    /* 읽기전용 텍스트 */
+    .detail-val {
+      font-size: 14px;
+      color: #2c3e2c;
+      line-height: 1.6;
+    }
+    .detail-val.mono {
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 13px;
+      color: #3a5a3a;
+    }
+    .detail-val.muted { color: #7a8e74; font-size: 13px; }
+
+    .date-sep { font-size: 13px; color: #aaa; }
+
+    /* 여부 뱃지 */
+    .badge-on {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px; border-radius: 99px; font-size: 12px; font-weight: 600;
+      background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9;
+    }
+    .badge-off {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px; border-radius: 99px; font-size: 12px; font-weight: 600;
+      background: #f5f5f5; color: #9e9e9e; border: 1px solid #e0e0e0;
+    }
+
+    /* ── 신청자 현황 */
+    .applicant-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .applicant-count {
+      font-size: 22px;
+      font-weight: 700;
+      color: #2e5c2e;
+      line-height: 1;
+    }
+
+    .applicant-divider { font-size: 16px; color: #ccc; }
+
+    .capacity-info { font-size: 13px; color: #7a8e74; }
+    .capacity-info strong { color: #2c3e2c; font-weight: 600; }
+
+    .progress-wrap { display: flex; align-items: center; gap: 8px; }
+
+    .progress-bar-bg {
+      width: 120px;
+      height: 8px;
+      background: #e8efe3;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: #4a7c59;
+      border-radius: 99px;
+      transition: width .3s;
+    }
+    .progress-bar-fill.full { background: #e74c3c; }
+
+    .progress-pct { font-size: 12px; color: #7a8e74; min-width: 32px; }
+
+    /* 엑셀 버튼 */
+    .btn-excel {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 34px;
+      padding: 0 14px;
+      border: 1px solid #217346;
+      border-radius: 6px;
+      background: #fff;
+      color: #217346;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: background .15s;
+      white-space: nowrap;
+    }
+    .btn-excel:hover { background: #f0faf4; }
+
+    .btn-excel-icon {
+      width: 16px;
+      height: 16px;
+      background: #217346;
+      border-radius: 2px;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: -0.5px;
+    }
+
+    /* 상세내용 뷰 */
+    .content-view {
+      min-height: 200px;
+      padding: 18px 20px;
+      font-size: 14px;
+      color: #2c3e2c;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* 첨부파일 */
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+      padding: 16px;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 1px solid #e3eadd;
+      border-radius: 8px;
+      background: #fafcf9;
+    }
+
+    .file-item-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .file-item-icon.pdf  { background: #fde8e8; color: #c0392b; }
+    .file-item-icon.hwp  { background: #e8f4fd; color: #2980b9; }
+    .file-item-icon.xlsx { background: #e8fdf0; color: #27ae60; }
+    .file-item-icon.docx { background: #eef0fd; color: #2c3e8c; }
+    .file-item-icon.etc  { background: #f5f5f5; color: #888; }
+
+    .file-item-name {
+      flex: 1;
+      font-size: 13px;
+      color: #2c3e2c;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .file-item-size { font-size: 12px; color: #aaa; white-space: nowrap; }
+
+    .btn-download {
+      height: 30px;
+      padding: 0 12px;
+      border: 1px solid #d0dbc8;
+      border-radius: 6px;
+      background: #fff;
+      color: #4a7c59;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      white-space: nowrap;
+      transition: background .15s;
+    }
+    .btn-download:hover { background: #f0f8f0; border-color: #4a7c59; }
+
+    /* 하단 바 */
+    .detail-bottom-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 0 8px;
+    }
+    .btn-group-right { display: flex; gap: 8px; }
+  </style>
 </head>
 <body class="admin-body">
   <div class="admin-layout">
+    <!-- ── 사이드바 -->
     <aside class="admin-sidebar" id="adminSidebar">
       <div class="admin-sidebar-head">
         <span class="adm-sb-title">MENU</span>
@@ -20,205 +270,293 @@
       <nav class="admin-nav" id="adminNavMount" aria-label="관리자 메뉴"></nav>
     </aside>
 
+    <!-- ── 메인 -->
     <main class="admin-main">
       <div class="admin-topbar">
-        <h1 class="admin-page-title" id="pageTitle">강좌 상세</h1>
+        <h1 class="admin-page-title">강좌 상세</h1>
         <div style="display:flex;gap:8px">
-          <button class="btn btn-gray btn-sm" onclick="history.back()">목록으로</button>
-          <button class="btn btn-gray btn-sm" onclick="CourseDetail.exportExcel()">엑셀 다운로드</button>
-          <button class="btn btn-primary btn-sm" id="editBtn">수정하기</button>
+          <button class="btn btn-gray btn-sm" onclick="CourseDetail.goList()">목록</button>
+          <button class="btn btn-primary btn-sm" onclick="CourseDetail.goEdit()">수정</button>
         </div>
       </div>
 
-      <div id="detailWrap">
-        <div style="text-align:center;padding:60px;color:var(--gray-mid)">강좌 정보를 불러오는 중입니다...</div>
+      <div class="admin-content">
+
+        <!-- ════ 기본정보 ════ -->
+        <div class="form-card">
+          <div class="form-card-head">기본 정보</div>
+
+          <div class="form-row">
+            <div class="form-label">과정명</div>
+            <div class="form-content">
+              <span class="detail-val" id="dCourseName">—</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-label">과정상태</div>
+            <div class="form-content" id="dStatus">—</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-label">교육기간</div>
+            <div class="form-content">
+              <span class="detail-val mono" id="dEduStart">—</span>
+              <span class="date-sep">~</span>
+              <span class="detail-val mono" id="dEduEnd">—</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-label">접수기간</div>
+            <div class="form-content">
+              <span class="detail-val mono" id="dApplyStart">—</span>
+              <span class="date-sep">~</span>
+              <span class="detail-val mono" id="dApplyEnd">—</span>
+            </div>
+          </div>
+
+          <!-- 총 강좌수 / 총 교육시간 2분할 -->
+          <div class="form-row">
+            <div class="form-label">총 강좌수</div>
+            <div class="form-half">
+              <span class="detail-val" id="dLessonCount">—</span>
+            </div>
+            <div class="form-label">총 교육시간</div>
+            <div class="form-half">
+              <span class="detail-val" id="dEduHours">—</span>
+            </div>
+          </div>
+
+          <!-- 신청파일첨부 / 수료증 발급 2분할 -->
+          <div class="form-row">
+            <div class="form-label">신청파일첨부</div>
+            <div class="form-half" id="dFileRequired">—</div>
+            <div class="form-label">수료증 발급</div>
+            <div class="form-half" id="dCertIssue">—</div>
+          </div>
+
+          <!-- 신청자 현황 -->
+          <div class="form-row">
+            <div class="form-label">신청자 현황</div>
+            <div class="form-content">
+              <div class="applicant-wrap">
+                <span class="applicant-count" id="dApplicantCount">0</span>
+                <span class="detail-val muted">명 신청</span>
+                <span class="applicant-divider">/</span>
+                <span class="capacity-info">정원 <strong id="dCapacity">0</strong>명</span>
+                <div class="progress-wrap">
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="dProgressBar" style="width:0%"></div>
+                  </div>
+                  <span class="progress-pct" id="dProgressPct">0%</span>
+                </div>
+                <button class="btn-excel" onclick="CourseDetail.downloadApplicants()">
+                  <span class="btn-excel-icon">XL</span>
+                  신청자 목록 다운로드
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-label">등록일</div>
+            <div class="form-content">
+              <span class="detail-val mono" id="dRegDate">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ 과정 상세내용 ════ -->
+        <div class="form-card">
+          <div class="form-card-head">과정 상세내용</div>
+          <div class="content-view" id="dContent">—</div>
+        </div>
+
+        <!-- ════ 첨부파일 ════ -->
+        <div class="form-card">
+          <div class="form-card-head">첨부파일</div>
+          <div class="file-list" id="dFileList">
+            <span class="detail-val muted">첨부파일 없음</span>
+          </div>
+        </div>
+
+        <!-- ════ 하단 버튼 ════ -->
+        <div class="detail-bottom-bar">
+          <button class="btn btn-danger" onclick="CourseDetail.deleteCourse()">삭제</button>
+          <div class="btn-group-right">
+            <button class="btn btn-gray" onclick="CourseDetail.goList()">목록</button>
+            <button class="btn btn-primary" onclick="CourseDetail.goEdit()">수정</button>
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
 
   <script src="../assets/js/app.js"></script>
-  <script src="../assets/js/components/header.js"></script>
   <script src="../assets/js/pages/admin.js"></script>
-  <script src="../assets/js/pages/education.js"></script>
   <script>
-    AdminSidebar.mount('courses');
-    const STATUS_LABEL = {
-      open:   { label: '접수중',   cls: 'status-open'   },
-      ready:  { label: '접수예정', cls: 'status-ready'  },
-      closed: { label: '접수마감', cls: 'status-closed' },
-      done:   { label: '수강완료', cls: 'status-done'   },
-    };
+  'use strict';
 
-    /* ── 샘플 신청자 데이터 */
-    const NAMES = ['김숲해설','이초록','박자연','최나무','정바람','윤하늘','강숲속','조생태','신나뭇잎','한자연'];
-    const STATUS_LIST = ['approved','approved','pending','approved','rejected','approved','cancel','approved','pending','approved'];
+  const _p    = new URLSearchParams(location.search);
+  const _id   = _p.get('id');
+  const _type = _p.get('type') || 'basic';
+  const _tab  = _p.get('tab');
 
-    function makeApplicants(courseId, count) {
-      return Array.from({ length: count }, (_, i) => ({
-        id:        `${courseId}-${i}`,
-        name:      NAMES[i % NAMES.length],
-        phone:     `010-${String(1000+i).padStart(4,'0')}-${String(2000+i).padStart(4,'0')}`,
-        email:     `applicant${i}@example.com`,
-        region:    ['서울','경기','인천','부산','대구'][i % 5],
-        applyDate: `2026-03-${String(i+1).padStart(2,'0')}`,
-        status:    STATUS_LIST[i % STATUS_LIST.length],
-        complete:  STATUS_LIST[i % STATUS_LIST.length] === 'approved' && i % 3 !== 2,
-      }));
-    }
+  /* 사이드바 활성화 */
+  const _keyMap = {
+    basic: 'course-basic', qualify: 'course-qualify',
+    enhance: 'course-enhance', academy: 'course-academy',
+  };
+  AdminSidebar.mount(_keyMap[_type] || 'course-basic');
 
-    const APPLY_STATUS = {
-      approved: { label:'승인',   cls:'badge-green' },
-      pending:  { label:'검토중', cls:'badge-orange' },
-      rejected: { label:'반려',   cls:'badge-red'   },
-      cancel:   { label:'취소',   cls:'badge-gray'  },
-    };
+  /* 상태 뱃지 */
+  const STATUS_BADGE = {
+    '준비중':   { cls: 'badge-gray',   label: '준비중' },
+    '접수중':   { cls: 'badge-green',  label: '접수중' },
+    '접수마감': { cls: 'badge-orange', label: '접수마감' },
+  };
 
-    const CourseDetail = {
-      _course: null,
-      _applicants: [],
+  /* 파일 아이콘 타입 */
+  function fileIconType(name) {
+    const ext = name.split('.').pop().toLowerCase();
+    if (ext === 'pdf')  return 'pdf';
+    if (ext === 'hwp')  return 'hwp';
+    if (['xlsx','xls'].includes(ext)) return 'xlsx';
+    if (['docx','doc'].includes(ext)) return 'docx';
+    return 'etc';
+  }
 
-      init() {
-        const id = Number(App.getParam('id'));
-        const c  = (typeof ALL_COURSES_RAW !== 'undefined' ? ALL_COURSES_RAW : []).find(x => x.id === id);
+  /* 더미 데이터 (실제 구현 시 API로 대체) */
+  const DUMMY = {
+    id: _id || '1000',
+    name: '제55기 숲해설가 기초과정',
+    status: '접수중',
+    eduStart: '2026-04-01',
+    eduEnd:   '2026-04-30',
+    applyStart: '2026-03-01 09:00',
+    applyEnd:   '2026-03-28 18:00',
+    capacity:   30,
+    applicants: 17,
+    lessonCount: 16,
+    eduHours: 40,
+    fileRequired: true,
+    certIssue: true,
+    regDate: '2026-02-14',
+    content: `본 과정은 숲해설가 자격 취득을 위한 기초 이론 과정입니다.
 
-        if (!c) {
-          document.getElementById('detailWrap').innerHTML =
-            `<div style="text-align:center;padding:60px;color:var(--gray-mid)">강좌를 찾을 수 없습니다.</div>`;
-          return;
-        }
+■ 교육 목표
+- 숲의 생태 기초 이론을 체계적으로 습득합니다.
+- 숲해설 기법과 프로그램 개발 역량을 기릅니다.
+- 현장 실습을 통해 해설 능력을 실전 수준으로 높입니다.
 
-        this._course     = c;
-        this._applicants = makeApplicants(id, c.capacity ? Math.min(c.capacity, 12) : 8);
+■ 주요 커리큘럼
+- 식물 생태학 기초 (4강)
+- 동물·곤충 생태학 기초 (4강)
+- 숲 체험 활동 기법 (4강)
+- 현장 실습 및 발표 (4강)
 
-        document.getElementById('pageTitle').textContent = `강좌 상세 — ${c.title}`;
-        document.getElementById('editBtn').onclick = () => location.href = `course-edit.html?id=${id}`;
+■ 강사진
+- 김○○ 교수 (숲 생태학 전공)
+- 이○○ 박사 (환경교육학 전공)
 
-        const sm       = STATUS_LABEL[c.status] || { label: c.status, cls: '' };
-        const approved = this._applicants.filter(a => a.status === 'approved').length;
-        const pending  = this._applicants.filter(a => a.status === 'pending').length;
-        const capacity = c.capacity || 20;
+■ 유의사항
+- 전 과정 출석률 80% 이상 시 수료증 발급
+- 야외 실습 시 편한 복장 착용 필수`,
+    files: [
+      { name: '기초과정_커리큘럼_2026.pdf', size: '1.2MB' },
+      { name: '강사소개서_제55기.hwp',     size: '340KB' },
+    ],
+  };
 
-        document.getElementById('detailWrap').innerHTML = `
-          <!-- 강좌 기본 정보 -->
-          <div class="card" style="margin-bottom:20px">
-            <div class="card-header">
-              <span class="card-title">강좌 정보</span>
-              <span class="status-badge ${sm.cls}">${sm.label}</span>
-            </div>
-            <div style="padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:16px 32px">
-              <div>
-                <div style="font-size:12px;color:var(--gray-mid);margin-bottom:4px">강좌명</div>
-                <div style="font-weight:700;font-size:16px">${c.title}</div>
-              </div>
-              <div>
-                <div style="font-size:12px;color:var(--gray-mid);margin-bottom:4px">구분</div>
-                <div><span class="badge badge-green">${c.type}</span></div>
-              </div>
-              <div>
-                <div style="font-size:12px;color:var(--gray-mid);margin-bottom:4px">교육 기간</div>
-                <div>${c.from || c.date || '-'} ~ ${c.to || '-'}</div>
-              </div>
-              <div>
-                <div style="font-size:12px;color:var(--gray-mid);margin-bottom:4px">총 교육시간</div>
-                <div>${c.hours || '-'}시간</div>
-              </div>
-              <div>
-                <div style="font-size:12px;color:var(--gray-mid);margin-bottom:4px">접수 기간</div>
-                <div>${c.applyFrom || '-'} ~ ${c.applyTo || '-'}</div>
-              </div>
-              <div>
-                <div style="font-size:12px;color:var(--gray-mid);margin-bottom:4px">정원</div>
-                <div>${capacity}명</div>
-              </div>
-              <div>
-                <div style="font-size:12px;color:var(--gray-mid);margin-bottom:4px">교육 장소</div>
-                <div>${c.location || '미정'}</div>
-              </div>
-              <div>
-                <div style="font-size:12px;color:var(--gray-mid);margin-bottom:4px">수강료</div>
-                <div>${c.fee || '무료'}</div>
-              </div>
-              ${c.guide ? `<div style="grid-column:1/-1">
-                <div style="font-size:12px;color:var(--gray-mid);margin-bottom:4px">강좌 안내</div>
-                <div style="background:var(--gray-light);border-radius:6px;padding:12px;font-size:13px;line-height:1.7">${c.guide}</div>
-              </div>` : ''}
-            </div>
-          </div>
+  document.addEventListener('DOMContentLoaded', () => {
+    const d = DUMMY;
 
-          <!-- 신청자 현황 요약 -->
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
-            ${[
-              { label:'총 신청', val: this._applicants.length, color:'var(--green-dark)' },
-              { label:'승인',    val: approved,                color:'var(--green-main)' },
-              { label:'검토중',  val: pending,                 color:'var(--accent)'     },
-              { label:'정원 잔여', val: capacity - approved,   color:'var(--gray-dark)'  },
-            ].map(s => `
-              <div class="card" style="padding:16px 20px;text-align:center">
-                <div style="font-size:26px;font-weight:800;color:${s.color}">${s.val}</div>
-                <div style="font-size:12px;color:var(--gray-mid);margin-top:4px">${s.label}</div>
-              </div>`).join('')}
-          </div>
+    document.getElementById('dCourseName').textContent = d.name;
 
-          <!-- 신청자 목록 -->
-          <div class="card">
-            <div class="card-header">
-              <span class="card-title">신청자 목록</span>
-              <div style="display:flex;gap:8px">
-                <button class="btn btn-gray btn-sm" onclick="CourseDetail.exportApplicantsExcel()">신청자 엑셀 다운</button>
-                <button class="btn btn-outline btn-sm"
-                  onclick="location.href='courses.html'">
-                  신청자 관리 탭으로 이동
-                </button>
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table class="admin-table">
-                <thead>
-                  <tr>
-                    <th class="center" style="width:44px">NO.</th>
-                    <th style="width:80px">이름</th>
-                    <th>이메일</th>
-                    <th class="center" style="width:120px">연락처</th>
-                    <th class="center" style="width:60px">지역</th>
-                    <th class="center" style="width:100px">신청일</th>
-                    <th class="center" style="width:70px">상태</th>
-                    <th class="center" style="width:80px">수료</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${this._applicants.map((a, i) => {
-                    const as = APPLY_STATUS[a.status] || { label: a.status, cls: 'badge-gray' };
-                    return `<tr>
-                      <td class="center">${i+1}</td>
-                      <td><strong>${a.name}</strong></td>
-                      <td style="font-size:13px;color:var(--gray-mid)">${a.email}</td>
-                      <td class="center" style="font-size:13px">${a.phone}</td>
-                      <td class="center">${a.region}</td>
-                      <td class="center" style="font-size:13px;color:var(--gray-mid)">${a.applyDate}</td>
-                      <td class="center"><span class="badge ${as.cls}">${as.label}</span></td>
-                      <td class="center">
-                        <span class="badge ${a.complete?'badge-green':'badge-gray'}">
-                          ${a.complete?'수료':'미수료'}
-                        </span>
-                      </td>
-                    </tr>`;
-                  }).join('')}
-                </tbody>
-              </table>
-            </div>
+    const st = STATUS_BADGE[d.status] || { cls: 'badge-gray', label: d.status };
+    document.getElementById('dStatus').innerHTML = `<span class="badge ${st.cls}">${st.label}</span>`;
+
+    document.getElementById('dEduStart').textContent    = d.eduStart;
+    document.getElementById('dEduEnd').textContent      = d.eduEnd;
+    document.getElementById('dApplyStart').textContent  = d.applyStart;
+    document.getElementById('dApplyEnd').textContent    = d.applyEnd;
+    document.getElementById('dLessonCount').textContent = `${d.lessonCount}강`;
+    document.getElementById('dEduHours').textContent    = `${d.eduHours}시간`;
+    document.getElementById('dRegDate').textContent     = d.regDate;
+
+    document.getElementById('dFileRequired').innerHTML = d.fileRequired
+      ? '<span class="badge-on">✓ 사용</span>'
+      : '<span class="badge-off">— 미사용</span>';
+
+    document.getElementById('dCertIssue').innerHTML = d.certIssue
+      ? '<span class="badge-on">✓ 발급</span>'
+      : '<span class="badge-off">— 미발급</span>';
+
+    /* 신청자 진행률 */
+    const pct = Math.min(Math.round((d.applicants / d.capacity) * 100), 100);
+    document.getElementById('dApplicantCount').textContent = d.applicants;
+    document.getElementById('dCapacity').textContent       = d.capacity;
+    const bar = document.getElementById('dProgressBar');
+    bar.style.width = `${pct}%`;
+    if (pct >= 100) bar.classList.add('full');
+    document.getElementById('dProgressPct').textContent = `${pct}%`;
+
+    /* 상세내용 */
+    document.getElementById('dContent').textContent = d.content;
+
+    /* 첨부파일 */
+    if (d.files && d.files.length) {
+      document.getElementById('dFileList').innerHTML = d.files.map(f => {
+        const ico = fileIconType(f.name);
+        return `
+          <div class="file-item">
+            <div class="file-item-icon ${ico}">${ico.toUpperCase()}</div>
+            <span class="file-item-name">${f.name}</span>
+            <span class="file-item-size">${f.size}</span>
+            <button class="btn-download" onclick="CourseDetail.downloadFile('${f.name}')">다운로드</button>
           </div>`;
-      },
+      }).join('');
+    }
+  });
 
-      exportExcel() {
-        App.toast('강좌 정보 엑셀 다운로드 (실제 구현 시 API 연동)');
-      },
+  /* ── 액션 */
+  const CourseDetail = {
 
-      exportApplicantsExcel() {
-        App.toast('신청자 명단 엑셀 다운로드 (실제 구현 시 API 연동)');
-      },
-    };
+    _backUrl() {
+      const q = new URLSearchParams();
+      if (_type !== 'basic') q.set('type', _type);
+      if (_tab) q.set('tab', _tab);
+      const qs = q.toString();
+      return `courses.html${qs ? '?' + qs : ''}`;
+    },
 
-    CourseDetail.init();
+    goList() { location.href = this._backUrl(); },
+
+    goEdit() {
+      const q = new URLSearchParams();
+      if (_type !== 'basic') q.set('type', _type);
+      if (_tab) q.set('tab', _tab);
+      if (_id) q.set('id', _id);
+      location.href = `course-edit.html?${q.toString()}`;
+    },
+
+    deleteCourse() {
+      if (!confirm('이 강좌를 삭제하시겠습니까?\n삭제 후에는 복구가 불가합니다.')) return;
+      App.toast('강좌가 삭제되었습니다.', 'success');
+      setTimeout(() => { location.href = this._backUrl(); }, 900);
+    },
+
+    downloadApplicants() {
+      /* 실제 구현 시: 서버 API 호출 → 엑셀 파일 스트림 다운로드 */
+      App.toast('신청자 목록 엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info');
+    },
+
+    downloadFile(name) {
+      App.toast(`${name} 다운로드 — 실제 구현 시 서버 파일 경로와 연동됩니다.`, 'info');
+    },
+  };
   </script>
 </body>
 </html>
