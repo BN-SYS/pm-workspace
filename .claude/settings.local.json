@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"c:/Users/BN659/Desktop/배은아/기획PM/auto_commit.ps1\")"
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"c:/Users/BN659/Desktop/배은아/기획PM/auto_commit.ps1\")",
+      "Bash(powershell.exe -Command \"cd ''c:/Users/BN659/Desktop/배은아/기획PM''; \\(Get-Location\\).Path\")"
     ]
   }
 }

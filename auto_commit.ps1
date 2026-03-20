@@ -1,6 +1,5 @@
 # auto_commit.ps1
-$repoPath = "C:\Users\BN659\Desktop\배은아\기획PM"
-Set-Location $repoPath
+Set-Location "C:\Users\BN659\Desktop\������\��ȹPM"
 
 $status = git status --porcelain
 if ($status) {
