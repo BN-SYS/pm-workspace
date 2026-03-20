@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원아카데미 강좌 | 한국숲해설가협회</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/layout-lnb.css">
+  <link rel="stylesheet" href="../assets/css/pages/education.css">
+  <link rel="stylesheet" href="../assets/css/pages/member.css">
+</head>
+
+<body data-page="academy-course">
+  <div id="hdr"></div>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>회원아카데미</h1>
+      <p>정회원 전용 | 특강·강좌·멘토링 숲학교 교육 프로그램</p>
+    </div>
+  </div>
+
+  <div id="bc"></div>
+  <div class="sub-layout">
+    <div id="lnb"></div>
+    <main class="sub-content">
+      <div class="content-wrap">
+
+        <!-- 안내 배너 -->
+        <div class="member-intro-banner">
+          <div class="member-intro-text">
+            <h3>회원아카데미 강좌</h3>
+            <p>정회원 숲해설가의 전문성 심화를 위한 정기 강좌 프로그램입니다.<br>
+              생태·해설·현장 실무 등 다양한 주제의 강좌를 운영합니다.</p>
+          </div>
+        </div>
+
+        <div class="list-top">
+          <span class="list-count">Total <strong id="totalCount">0</strong>건</span>
+          <div class="list-search">
+            <select class="list-search-type" id="filterStatus" style="min-width:110px">
+              <option value="">접수 상태</option>
+              <option value="open">접수중</option>
+              <option value="ready">준비중</option>
+              <option value="closed">접수마감</option>
+            </select>
+            <button class="list-search-btn" onclick="doSearch()">검색</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="board-table">
+            <thead>
+              <tr>
+                <th style="width:60px">번호</th>
+                <th class="td-title">강좌명</th>
+                <th style="width:180px">교육일자</th>
+                <th style="width:230px">교육기간</th>
+                <th style="width:100px">상태</th>
+              </tr>
+            </thead>
+            <tbody id="academyCourseBody"></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="academyCoursePagination"></div>
+
+      </div>
+    </main>
+  </div>
+
+  <div id="ftr"></div>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/components/header.js"></script>
+  <script src="../assets/js/pages/education.js"></script>
+  <script>
+    document.getElementById('hdr').innerHTML = Header.render('회원활동', '../');
+    document.getElementById('ftr').innerHTML = Footer.render('../');
+    document.getElementById('bc').innerHTML  = LNB.breadcrumb('../', 'member/academy-course.html');
+    document.getElementById('lnb').innerHTML = LNB.render('../', 'member/academy-course.html');
+
+    window._ctrl = new CourseListController('회원강좌', 'academyCourseBody', 'academyCoursePagination', '', 'academy-course-detail.html');
+
+    function doSearch() {
+      const status = document.getElementById('filterStatus').value;
+      window._ctrl.filter(status, '', '');
+    }
+  </script>
+</body>
+
+</html>

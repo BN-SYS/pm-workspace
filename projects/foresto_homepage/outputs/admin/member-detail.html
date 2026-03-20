@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원 상세 | 관리자 | 한국숲해설가협회</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/pages/admin.css">
+  <style>
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 24px;
+    }
+    .detail-grid.col3 { grid-template-columns: 1fr 1fr 1fr; }
+    .detail-grid.col4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .detail-grid .span2 { grid-column: span 2; }
+    .form-group { margin: 0; display: flex; flex-direction: column; gap: 5px; }
+    .form-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-dark);
+    }
+    .form-label .req { color: var(--danger); margin-left: 2px; }
+    .badge-readonly {
+      display: inline-block;
+      font-size: 11px;
+      background: #e8f5e9;
+      color: #2e7d32;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: 500;
+    }
+    .badge-admin-only {
+      display: inline-block;
+      font-size: 11px;
+      background: #fff3e0;
+      color: #e65100;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: 500;
+    }
+    .card { margin-bottom: 16px; }
+    .card-header { display: flex; align-items: center; gap: 8px; padding: 14px 20px; border-bottom: 1px solid var(--gray-light); }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--green-dark); }
+    .card-body { padding: 20px; }
+    .info-tag {
+      font-size: 11px;
+      color: var(--gray-mid);
+      margin-left: auto;
+    }
+    /* 약관 항목 */
+    .terms-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--gray-light);
+      font-size: 13px;
+    }
+    .terms-row:last-child { border-bottom: none; }
+    .terms-row .terms-name { font-weight: 500; }
+    .terms-row .terms-state { display: flex; align-items: center; gap: 10px; }
+    .terms-row .terms-date { font-size: 12px; color: var(--gray-mid); }
+    /* 소속 테이블 */
+    .affil-empty { text-align: center; padding: 20px; font-size: 13px; color: var(--gray-mid); }
+    /* 메모 저장 버튼 */
+    .memo-footer { display: flex; justify-content: flex-end; margin-top: 8px; }
+    /* 하단 위험 영역 */
+    .danger-zone {
+      background: #fff5f5;
+      border: 1px solid #fecaca;
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .danger-zone .danger-info { font-size: 13px; }
+    .danger-zone .danger-info strong { color: var(--danger); }
+    /* 상태 라디오 */
+    .radio-inline { display: flex; gap: 16px; margin-top: 2px; }
+    .radio-inline label {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 13px; cursor: pointer;
+    }
+    .radio-inline input[type="radio"] { accent-color: var(--green-dark); }
+    /* 교육내역 페이지네이션 */
+    .mini-pagination { display: flex; justify-content: center; gap: 4px; padding: 10px 0 0; }
+    .mini-pagination button {
+      width: 28px; height: 28px; border: 1px solid var(--gray-light);
+      background: #fff; border-radius: 4px; font-size: 12px; cursor: pointer;
+    }
+    .mini-pagination button.active { background: var(--green-dark); color: #fff; border-color: var(--green-dark); }
+    .mini-pagination button:hover:not(.active) { background: var(--gray-light); }
+  </style>
+</head>
+<body class="admin-body">
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-head">
+        <span class="adm-sb-title">MENU</span>
+        <button class="sidebar-toggle" onclick="AdminLayout.toggleSidebar()" aria-label="사이드바 토글">☰</button>
+      </div>
+      <nav class="admin-nav" id="adminNavMount" aria-label="관리자 메뉴"></nav>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <h1 class="admin-page-title" id="pageTitle">회원 상세</h1>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-gray btn-sm" onclick="history.back()">목록으로</button>
+          <button class="btn btn-outline btn-sm" id="btnEditPage" onclick="MemberDetail.goEdit()">수정 페이지</button>
+          <button class="btn btn-primary btn-sm" onclick="MemberDetail.save()">저장</button>
+        </div>
+      </div>
+
+      <div id="detailWrap">
+        <div style="text-align:center;padding:60px;color:var(--gray-mid)">회원 정보를 불러오는 중입니다...</div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/components/header.js"></script>
+  <script src="../assets/js/pages/admin.js"></script>
+  <script>
+    AdminSidebar.mount('members');
+    /* ── 샘플 상수 */
+    const JOBS = ['직장인','자영업자','공무원·교원','전문직','학생','주부','은퇴·퇴직','기타'];
+    const ADDRS = [
+      { zip:'03000', addr1:'서울특별시 종로구 세종대로 110' },
+      { zip:'06141', addr1:'서울특별시 강남구 테헤란로 512' },
+      { zip:'14556', addr1:'경기도 부천시 원미구 부흥로 1' },
+      { zip:'48058', addr1:'부산광역시 해운대구 해운대해변로 264' },
+      { zip:'61466', addr1:'광주광역시 동구 금남로 1가' },
+    ];
+    const SAMPLE_COURSES = [
+      { name:'55기 숲해설가 전문가과정', type:'전문과정', startDate:'2026-04-01' },
+      { name:'시민아카데미 봄 숲 이야기', type:'기초과정', startDate:'2026-03-10' },
+      { name:'역량강화 교육 — 심화과정', type:'전문과정', startDate:'2026-02-15' },
+      { name:'54기 숲해설가 전문가과정', type:'전문과정', startDate:'2025-10-01' },
+    ];
+    const COURSE_STATUSES = ['신청','취소','수료','미수료'];
+    const AFFIL_CLUBS   = ['초록숲 동아리','봄내음 동아리','산들바람 동아리','생태탐험대'];
+    const AFFIL_SAGONG  = ['서울 사공단','경기 사공단','부산 사공단'];
+    const GRADES = [
+      { key:'fullMember', label:'정회원'   },
+      { key:'member',     label:'일반회원' },
+      { key:'member',     label:'일반회원' },
+      { key:'fullMember', label:'정회원'   },
+      { key:'member',     label:'일반회원' },
+    ];
+
+    /* ── 회원 샘플 데이터 */
+    const ALL_MEMBERS = Array.from({ length: 50 }, (_, i) => {
+      const g   = GRADES[i % 5];
+      const mm  = String((i % 9) + 1).padStart(2,'0');
+      const dd  = String((i % 20) + 1).padStart(2,'0');
+      const mDay  = String((i % 20) + 1).padStart(2,'0');
+      const mHour = String((i % 12) + 8).padStart(2,'0');
+      const mMin  = String((i * 7) % 60).padStart(2,'0');
+      const hasMarketing = i % 3 === 0;
+      const appCount = i % 4;
+      const apps = Array.from({ length: appCount }, (_, j) => ({
+        course:    SAMPLE_COURSES[(i + j) % SAMPLE_COURSES.length].name,
+        type:      SAMPLE_COURSES[(i + j) % SAMPLE_COURSES.length].type,
+        startDate: SAMPLE_COURSES[(i + j) % SAMPLE_COURSES.length].startDate,
+        applyDate: `2026-${mm}-${String(((i * 3 + j * 7 + 5) % 20) + 1).padStart(2,'0')} ${mHour}:${mMin}`,
+        status:    COURSE_STATUSES[(i + j) % 4],
+      }));
+      const affilCount = i % 3;
+      const affils = Array.from({ length: affilCount }, (_, j) => ({
+        type:     j % 2 === 0 ? '동아리' : '사회공헌사업단',
+        name:     j % 2 === 0
+          ? AFFIL_CLUBS[j % AFFIL_CLUBS.length]
+          : AFFIL_SAGONG[j % AFFIL_SAGONG.length],
+        joinDate: `2025-${String((j % 9) + 1).padStart(2,'0')}-${String((j * 5 + 1) % 28 + 1).padStart(2,'0')}`,
+      }));
+
+      return {
+        id:          50 - i,
+        userId:      `forest${String(50 - i).padStart(3,'0')}`,
+        name:        ['김숲해','이정회','박초록','최나무','정바람','한생태','윤들판','임해설','조산림','강자연'][i % 10],
+        gender:      i % 2 === 0 ? 'm' : 'f',
+        birthY:      String(1970 + (i % 30)),
+        birthM:      String((i % 12) + 1).padStart(2,'0'),
+        birthD:      String((i % 28) + 1).padStart(2,'0'),
+        phone:       `010-${String(1000 + i).padStart(4,'0')}-${String(5000 + i).padStart(4,'0')}`,
+        email:       `user${50 - i}@example.com`,
+        zip:         ADDRS[i % 5].zip,
+        addr1:       ADDRS[i % 5].addr1,
+        addr2:       `${(i + 1) * 100}호`,
+        overseas:    i % 10 === 0,
+        job:         JOBS[i % 8],
+        grade:       g.key,
+        gradeLabel:  g.label,
+        joinDate:    `2026-${mm}-${dd}`,
+        status:      i % 7 === 0 ? 'blocked' : 'active',
+        marketing:   hasMarketing,
+        marketingAt: hasMarketing ? `2026-${mm}-${mDay} ${mHour}:${mMin}` : null,
+        memo:        i % 4 === 0 ? '정회원 전환 요청 확인 완료' : '',
+        apps,
+        affils,
+      };
+    });
+
+    const GRADE_BADGE = { fullMember:'badge-green', member:'badge-blue', admin:'badge-red' };
+
+    const MemberDetail = {
+      _m: null,
+      _appsPage: 1,
+      _appsPageSize: 5,
+
+      init() {
+        const id = Number(App.getParam('id'));
+        const m  = ALL_MEMBERS.find(x => x.id === id);
+        if (!m) {
+          document.getElementById('detailWrap').innerHTML =
+            `<div style="text-align:center;padding:60px;color:var(--gray-mid)">해당 회원을 찾을 수 없습니다.</div>`;
+          return;
+        }
+        this._m = m;
+        document.getElementById('pageTitle').textContent = `회원 상세 — ${m.name}`;
+
+        /* 생년월일 옵션 생성 */
+        const yearOpts  = Array.from({length:86}, (_,k) => 2015 - k)
+          .map(y => `<option value="${y}"${y === Number(m.birthY) ? ' selected':''} >${y}년</option>`).join('');
+        const monthOpts = Array.from({length:12}, (_,k) => k + 1)
+          .map(mo => `<option value="${mo}"${mo === Number(m.birthM) ? ' selected':''} >${mo}월</option>`).join('');
+        const dayOpts   = Array.from({length:31}, (_,k) => k + 1)
+          .map(d => `<option value="${d}"${d === Number(m.birthD) ? ' selected':''} >${d}일</option>`).join('');
+
+        document.getElementById('detailWrap').innerHTML = `
+          <div style="display:flex;flex-direction:column;gap:0">
+
+            <!-- ① 관리 설정 카드 (관리자 전용 — 최상단 배치) -->
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">관리 설정</span>
+                <span class="badge-admin-only">관리자 전용</span>
+                <span class="info-tag">가입일: ${m.joinDate}</span>
+              </div>
+              <div class="card-body">
+                <div class="detail-grid col3">
+                  <div class="form-group">
+                    <label class="form-label">회원 구분</label>
+                    <select class="form-control" id="fGrade" style="height:36px">
+                      <option value="member"     ${m.grade==='member'     ?'selected':''}>일반회원</option>
+                      <option value="fullMember" ${m.grade==='fullMember' ?'selected':''}>정회원</option>
+                      <option value="admin"      ${m.grade==='admin'      ?'selected':''}>관리자</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">회원 상태</label>
+                    <div class="radio-inline" style="margin-top:8px">
+                      <label><input type="radio" name="fStatus" value="active"   ${m.status==='active'  ?'checked':''}> 정상</label>
+                      <label><input type="radio" name="fStatus" value="blocked"  ${m.status==='blocked' ?'checked':''}> 차단</label>
+                    </div>
+                    <div style="font-size:11px;color:var(--danger);margin-top:3px">* 차단 시 로그인 불가</div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">현재 상태</label>
+                    <div style="margin-top:6px">
+                      <span class="badge ${m.status==='active' ? 'badge-green' : 'badge-red'}" style="font-size:12px">
+                        ${m.status==='active' ? '정상' : '차단'}
+                      </span>
+                      <span class="badge ${GRADE_BADGE[m.grade]||'badge-gray'}" style="font-size:12px;margin-left:6px">
+                        ${m.gradeLabel}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ② 본인인증 기반 정보 (관리자는 수정 가능) -->
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">본인인증 기반 정보</span>
+                <span class="badge-readonly">본인인증 확인 항목</span>
+                <span class="info-tag">사용자는 직접 수정 불가 | 관리자 수정 가능</span>
+              </div>
+              <div class="card-body">
+                <div class="detail-grid col4">
+                  <div class="form-group">
+                    <label class="form-label">이름 <span class="req">*</span></label>
+                    <input type="text" class="form-control" id="fName" value="${m.name}" style="height:36px">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">성별</label>
+                    <div class="radio-inline" style="margin-top:8px">
+                      <label><input type="radio" name="fGender" value="m" ${m.gender==='m'?'checked':''}> 남성</label>
+                      <label><input type="radio" name="fGender" value="f" ${m.gender==='f'?'checked':''}> 여성</label>
+                    </div>
+                  </div>
+                  <div class="form-group span2">
+                    <label class="form-label">생년월일</label>
+                    <div style="display:flex;gap:6px;align-items:center">
+                      <select class="form-control" id="fBirthY" style="width:90px;height:36px;font-size:13px">${yearOpts}</select>
+                      <select class="form-control" id="fBirthM" style="width:72px;height:36px;font-size:13px">${monthOpts}</select>
+                      <select class="form-control" id="fBirthD" style="width:72px;height:36px;font-size:13px">${dayOpts}</select>
+                    </div>
+                  </div>
+                  <div class="form-group span2">
+                    <label class="form-label">휴대폰 번호</label>
+                    <input type="tel" class="form-control" id="fPhone" value="${m.phone}" style="height:36px;max-width:220px">
+                    <div style="font-size:11px;color:var(--gray-mid);margin-top:3px">본인인증으로 확인된 번호</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ③ 계정·연락처 정보 -->
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">계정 · 연락처 정보</span>
+              </div>
+              <div class="card-body" style="display:flex;flex-direction:column;gap:18px">
+
+                <!-- 아이디 + 이메일 -->
+                <div class="detail-grid">
+                  <div class="form-group">
+                    <label class="form-label">아이디 <span style="font-size:11px;color:var(--gray-mid);margin-left:4px">(변경 불가)</span></label>
+                    <input type="text" class="form-control" value="${m.userId}" disabled
+                      style="height:36px;background:var(--gray-light);color:var(--gray-mid)">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">이메일</label>
+                    <input type="email" class="form-control" id="fEmail" value="${m.email}" style="height:36px">
+                  </div>
+                </div>
+
+                <!-- 비밀번호 임시 발송 -->
+                <div class="form-group">
+                  <label class="form-label">비밀번호 관리</label>
+                  <div style="display:flex;align-items:center;gap:10px;margin-top:2px">
+                    <input type="text" class="form-control" value="●●●●●●●●" disabled
+                      style="width:160px;height:36px;background:var(--gray-light);letter-spacing:2px">
+                    <button class="btn btn-outline btn-sm" onclick="MemberDetail.sendTempPw()">임시 비밀번호 발송</button>
+                    <span style="font-size:12px;color:var(--gray-mid)">등록된 이메일로 임시 비밀번호가 발송됩니다</span>
+                  </div>
+                </div>
+
+                <!-- 주소 -->
+                <div class="form-group">
+                  <label class="form-label">주소</label>
+                  <div style="display:flex;gap:8px;align-items:center;margin-top:2px">
+                    <input type="text" class="form-control" id="fZip" value="${m.zip}"
+                      placeholder="우편번호" style="width:110px;height:36px;font-size:13px;flex-shrink:0"
+                      ${m.overseas ? 'disabled' : ''}>
+                    <button type="button" class="btn btn-outline btn-sm" id="addrSearchBtn"
+                      onclick="MemberDetail.searchAddr()" ${m.overseas ? 'disabled' : ''}>우편번호 찾기</button>
+                    <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;white-space:nowrap">
+                      <input type="checkbox" id="fOverseas" ${m.overseas ? 'checked' : ''}
+                        onchange="MemberDetail.toggleOverseas(this.checked)"> 해외 거주
+                    </label>
+                  </div>
+                  <input type="text" class="form-control" id="fAddr1" value="${m.addr1}"
+                    placeholder="기본 주소 (우편번호 검색 후 자동 입력)"
+                    style="margin-top:6px;max-width:480px;background:var(--gray-light)" disabled>
+                  <input type="text" class="form-control" id="fAddr2" value="${m.addr2}"
+                    placeholder="상세 주소" style="margin-top:6px;max-width:480px;height:36px"
+                    ${m.overseas ? 'disabled' : ''}>
+                </div>
+
+                <!-- 직업 -->
+                <div class="form-group">
+                  <label class="form-label">직업</label>
+                  <select class="form-control" id="fJob" style="max-width:200px;height:36px;font-size:13px">
+                    ${JOBS.map(j => `<option${j === m.job ? ' selected':''}>${j}</option>`).join('')}
+                  </select>
+                </div>
+
+                <!-- 선택약관동의내역 -->
+                <div class="form-group">
+                  <label class="form-label">선택약관 동의 내역</label>
+                  <div style="border:1px solid var(--gray-light);border-radius:var(--radius);margin-top:4px;max-width:480px">
+                    <div class="terms-row" style="padding:9px 14px">
+                      <span class="terms-name">마케팅 수신 동의</span>
+                      <div class="terms-state">
+                        <span class="badge ${m.marketing ? 'badge-green' : 'badge-gray'}" style="font-size:11px">
+                          ${m.marketing ? '동의' : '미동의'}
+                        </span>
+                        <span class="terms-date">
+                          ${m.marketingAt ? `최종 저장: ${m.marketingAt}` : '동의 이력 없음'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="font-size:11px;color:var(--gray-mid);margin-top:4px">* 약관 항목은 실제 구현 시 약관 관리와 연동됩니다.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ④ 교육 신청 내역 -->
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">교육 신청 내역</span>
+                <span class="info-tag">${m.apps.length}건 (최신순)</span>
+              </div>
+              <div id="appsSection">
+                ${this._renderApps(m.apps)}
+              </div>
+            </div>
+
+            <!-- ⑤ 활동 정보 (소속) -->
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">활동 정보 (소속)</span>
+                <span class="info-tag">${m.affils.length}건</span>
+              </div>
+              <div>
+                ${m.affils.length ? `
+                  <div class="table-wrap" style="margin:0">
+                    <table class="admin-table">
+                      <thead>
+                        <tr>
+                          <th style="width:52px" class="center">번호</th>
+                          <th>소속명</th>
+                          <th style="width:130px" class="center">소속 유형</th>
+                          <th style="width:120px" class="center">가입일</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${m.affils.map((a, idx) => `
+                          <tr>
+                            <td class="center" style="color:var(--gray-mid);font-size:13px">${idx + 1}</td>
+                            <td style="font-weight:500;font-size:13px">${a.name}</td>
+                            <td class="center">
+                              <span class="badge ${a.type === '동아리' ? 'badge-blue' : 'badge-green'}" style="font-size:11px">
+                                ${a.type}
+                              </span>
+                            </td>
+                            <td class="center" style="font-size:12px;color:var(--gray-mid)">${a.joinDate}</td>
+                          </tr>`).join('')}
+                      </tbody>
+                    </table>
+                  </div>` : '<div class="affil-empty">소속 정보가 없습니다.</div>'}
+              </div>
+            </div>
+
+            <!-- ⑥ 관리자 메모 -->
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">관리자 메모</span>
+                <span class="badge-admin-only">회원 미노출</span>
+              </div>
+              <div class="card-body">
+                <textarea class="form-control" id="fMemo" rows="4"
+                  placeholder="내부 메모 (회원에게 노출되지 않습니다)"
+                  style="font-size:13px;resize:vertical">${m.memo}</textarea>
+                <div class="memo-footer">
+                  <button class="btn btn-outline btn-sm" onclick="MemberDetail.saveMemo()">메모 저장</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- ⑦ 위험 영역: 탈퇴 처리 -->
+            <div class="danger-zone">
+              <div class="danger-info">
+                <strong>회원 탈퇴 처리</strong>
+                <div style="margin-top:4px;color:var(--gray-dark);font-size:12px">
+                  탈퇴 처리 시 회원 정보는 탈퇴회원 목록으로 이동되며, 로그인이 불가합니다.<br>
+                  탈퇴 후 복구가 불가하오니 신중하게 처리하세요.
+                </div>
+              </div>
+              <button class="btn btn-danger btn-sm" onclick="MemberDetail.withdraw()">탈퇴 처리</button>
+            </div>
+
+          </div>`;
+
+        /* 해외거주 초기 상태 */
+        if (m.overseas) this.toggleOverseas(true);
+      },
+
+      _renderApps(apps) {
+        const total   = apps.length;
+        const pSize   = this._appsPageSize;
+        const page    = this._appsPage;
+        const totalPg = Math.ceil(total / pSize) || 1;
+        const slice   = apps.slice((page - 1) * pSize, page * pSize);
+
+        const STATUS_BADGE = { '신청':'badge-blue', '수료':'badge-green', '취소':'badge-red', '미수료':'badge-gray' };
+
+        const tableHtml = total ? `
+          <div class="table-wrap" style="margin:0">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th style="width:44px" class="center">NO</th>
+                  <th style="width:150px" class="center">신청일시</th>
+                  <th style="width:90px" class="center">강좌 구분</th>
+                  <th>강좌명</th>
+                  <th style="width:110px" class="center">교육일자(시작)</th>
+                  <th style="width:80px" class="center">상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${slice.map((a, idx) => `
+                  <tr>
+                    <td class="center" style="color:var(--gray-mid);font-size:12px">${(page-1)*pSize + idx + 1}</td>
+                    <td class="center" style="font-size:12px;color:var(--gray-mid)">${a.applyDate}</td>
+                    <td class="center"><span class="badge badge-gray" style="font-size:11px">${a.type}</span></td>
+                    <td style="font-size:13px;font-weight:500">${a.course}</td>
+                    <td class="center" style="font-size:12px;color:var(--gray-mid)">${a.startDate}</td>
+                    <td class="center">
+                      <span class="badge ${STATUS_BADGE[a.status]||'badge-gray'}" style="font-size:11px">${a.status}</span>
+                    </td>
+                  </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>` :
+          `<p style="padding:20px;text-align:center;color:var(--gray-mid);font-size:13px">신청 내역이 없습니다.</p>`;
+
+        const paginHtml = totalPg > 1 ? `
+          <div class="mini-pagination">
+            ${Array.from({length: totalPg}, (_, k) => k + 1).map(p => `
+              <button class="${p === page ? 'active' : ''}"
+                onclick="MemberDetail._appsPage=${p};MemberDetail._reRenderApps()">${p}</button>
+            `).join('')}
+          </div>` : '';
+
+        return tableHtml + paginHtml;
+      },
+
+      _reRenderApps() {
+        const sec = document.getElementById('appsSection');
+        if (sec && this._m) sec.innerHTML = this._renderApps(this._m.apps);
+      },
+
+      save() {
+        const name = document.getElementById('fName')?.value.trim();
+        if (!name) { App.toast('이름을 입력해주세요.', 'warning'); return; }
+        const grade  = document.getElementById('fGrade')?.value;
+        const status = document.querySelector('input[name="fStatus"]:checked')?.value;
+        App.toast(`${name}님의 정보가 저장되었습니다. (등급: ${grade} / 상태: ${status})`, 'success');
+      },
+
+      saveMemo() {
+        const memo = document.getElementById('fMemo')?.value || '';
+        App.toast('메모가 저장되었습니다.', 'success');
+      },
+
+      sendTempPw() {
+        const email = document.getElementById('fEmail')?.value || this._m?.email;
+        if (!email) return;
+        App.toast(`${email}으로 임시 비밀번호를 발송하였습니다. (실제 구현 시 서버 API 연동)`, 'success');
+      },
+
+      searchAddr() {
+        App.toast('우편번호 검색 — 실제 구현 시 Kakao 주소 API 연동 예정', 'info');
+      },
+
+      toggleOverseas(checked) {
+        const ids = ['fZip','fAddr2','addrSearchBtn'];
+        ids.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.disabled = checked;
+        });
+        const addr1 = document.getElementById('fAddr1');
+        if (addr1) addr1.style.opacity = checked ? '0.4' : '1';
+      },
+
+      withdraw() {
+        if (!this._m) return;
+        const name = this._m.name;
+        if (!confirm(`${name}님을 탈퇴 처리하시겠습니까?\n탈퇴 후에는 복구가 불가합니다.`)) return;
+        App.toast(`${name}님이 탈퇴 처리되었습니다. 탈퇴회원 목록에서 확인할 수 있습니다.`, 'success');
+        setTimeout(() => location.href = 'members.html', 1500);
+      },
+
+      goEdit() {
+        const id = App.getParam('id');
+        location.href = `member-edit.html?id=${id}`;
+      },
+    };
+
+    MemberDetail.init();
+  </script>
+</body>
+</html>
