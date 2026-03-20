@@ -284,6 +284,99 @@ body.admin-body .site-header { display: none !important; }
 
 
 /* ══════════════════════════════════════════════
+   4-1. 아코디언 그룹 메뉴
+   ══════════════════════════════════════════════ */
+
+/* 그룹 버튼 — admin-nav-item 기반, button reset */
+.nav-group-header {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+  text-align: left;
+}
+
+/* 화살표 — 기본: 오른쪽, 열리면: 아래쪽 */
+.nav-arrow {
+  margin-left: auto;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  transition: transform 0.2s ease;
+}
+
+.nav-arrow::before {
+  content: '›';
+  font-size: 16px;
+  line-height: 1;
+  display: block;
+  transition: transform 0.2s ease;
+  transform: rotate(0deg);
+}
+
+.nav-group.open > .nav-group-header .nav-arrow::before {
+  transform: rotate(90deg);
+}
+
+/* 서브메뉴 — 접힘/펼침 */
+.nav-submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(0,0,0,0.15);
+}
+
+.nav-group.open > .nav-submenu {
+  max-height: 400px;
+}
+
+/* 서브메뉴 링크 */
+.nav-sub-item {
+  display: flex;
+  align-items: center;
+  padding: 9px 18px 9px 48px;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+  border-left: 2px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.nav-sub-item::before {
+  content: '–';
+  margin-right: 8px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+
+.nav-sub-item:hover {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.85);
+}
+
+.nav-sub-item.active {
+  color: #a8d878;
+  font-weight: 600;
+  border-left-color: #508829;
+  background: rgba(80,136,41,0.12);
+}
+
+/* 사이드바 접힘 시: 서브메뉴 + 화살표 숨김 */
+.admin-layout.sidebar-collapsed .nav-submenu { display: none; }
+.admin-layout.sidebar-collapsed .nav-arrow   { display: none; }
+
+
+/* ══════════════════════════════════════════════
    5. 메인 영역
    ══════════════════════════════════════════════ */
 .admin-main {

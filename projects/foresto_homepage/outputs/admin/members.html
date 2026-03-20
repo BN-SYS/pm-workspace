@@ -12,58 +12,73 @@
   <link rel="stylesheet" href="../assets/css/pages/admin.css">
   <style>
     /* ════════════════════════════════════════
-       필터 카드 — 세련된 수평 2행 레이아웃
+       필터 카드 — flex 기반 라벨+콘텐츠 구조
        ════════════════════════════════════════ */
     .filter-card {
       background: #fff;
       border: 1px solid #e3eadd;
       border-radius: 10px;
-      padding: 0;
       margin-bottom: 16px;
       overflow: hidden;
     }
 
-    /* 필터 본문 영역 */
     .filter-body {
-      padding: 20px 24px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
     }
 
     /* 각 행 */
     .filter-row {
       display: flex;
       align-items: center;
-      gap: 0;
-      flex-wrap: wrap;
+      min-height: 46px;
+      border-bottom: 1px solid #f0f4ee;
     }
 
-    /* 개별 그룹 */
-    .fg {
+    .filter-row:last-child {
+      border-bottom: none;
+    }
+
+    /* 라벨 셀 */
+    .filter-label {
+      width: 84px;
+      min-width: 84px;
+      flex-shrink: 0;
+      align-self: stretch;
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 0 24px 0 0;
-      margin-right: 24px;
-      border-right: 1px solid #e8efe3;
-      min-width: 0;
-    }
-
-    .fg:last-child {
-      border-right: none;
-      padding-right: 0;
-      margin-right: 0;
-    }
-
-    .fg-label {
+      justify-content: center;
       font-size: 12px;
       font-weight: 700;
       color: #7a8e74;
-      white-space: nowrap;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
-      min-width: fit-content;
+      white-space: nowrap;
+      background: #f8faf6;
+      border-right: 1px solid #e8efe3;
+    }
+
+    /* 콘텐츠 셀 */
+    .filter-content {
+      flex: 1;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      min-width: 0;
+    }
+
+    /* 등급+상태 행 — 정확히 50/50 */
+    .filter-half {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .filter-half + .filter-half {
+      border-left: 1px solid #e8efe3;
     }
 
     /* 날짜 인풋 그룹 */
@@ -74,7 +89,7 @@
     }
 
     .date-pair input[type="date"] {
-      width: 148px;
+      width: 140px;
       height: 34px;
       padding: 0 10px;
       border: 1px solid #d5e0ce;
@@ -95,8 +110,9 @@
 
     .date-sep {
       color: #aabba4;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
+      padding: 0 2px;
     }
 
     /* 칩 스타일 라디오 그룹 */
@@ -106,18 +122,14 @@
       flex-wrap: wrap;
     }
 
-    .chip {
-      cursor: pointer;
-    }
+    .chip { cursor: pointer; }
 
-    .chip input[type="radio"] {
-      display: none;
-    }
+    .chip input[type="radio"] { display: none; }
 
     .chip span {
       display: inline-flex;
       align-items: center;
-      padding: 5px 13px;
+      padding: 5px 14px;
       border-radius: 99px;
       font-size: 13px;
       font-weight: 500;
@@ -130,31 +142,27 @@
       cursor: pointer;
     }
 
-    .chip input[type="radio"]:checked+span {
+    .chip input[type="radio"]:checked + span {
       background: #1a2718;
       color: #fff;
       border-color: #1a2718;
       font-weight: 600;
     }
 
-    .chip:hover span {
-      border-color: #508829;
-      color: #508829;
-    }
+    .chip:hover span { border-color: #508829; color: #508829; }
+    .chip input[type="radio"]:checked + span:hover { color: #fff; }
 
-    .chip input[type="radio"]:checked+span:hover {
-      color: #fff;
-    }
-
-    /* 키워드 검색 */
+    /* 검색어 행 — select + input 가로 꽉 채움 */
     .kw-wrap {
       display: flex;
       align-items: center;
       gap: 6px;
+      width: 100%;
     }
 
     .kw-wrap select {
-      width: 110px;
+      flex-shrink: 0;
+      width: 116px;
       height: 34px;
       padding: 0 8px;
       border: 1px solid #d5e0ce;
@@ -174,12 +182,13 @@
 
     .kw-input-wrap {
       position: relative;
+      flex: 1;
     }
 
     .kw-input-wrap input {
-      width: 260px;
+      width: 100%;
       height: 34px;
-      padding: 0 36px 0 12px;
+      padding: 0 38px 0 12px;
       border: 1px solid #d5e0ce;
       border-radius: 6px;
       font-size: 13px;
@@ -196,9 +205,7 @@
       box-shadow: 0 0 0 3px rgba(80, 136, 41, 0.08);
     }
 
-    .kw-input-wrap input::placeholder {
-      color: #aabba4;
-    }
+    .kw-input-wrap input::placeholder { color: #aabba4; }
 
     .kw-search-ico {
       position: absolute;
@@ -216,7 +223,7 @@
       align-items: center;
       justify-content: flex-end;
       gap: 8px;
-      padding: 14px 24px;
+      padding: 12px 18px;
       background: #f8faf6;
       border-top: 1px solid #e8efe3;
     }
@@ -273,6 +280,7 @@
 
     .admin-table tbody td {
       padding: 13px 14px;
+      text-align: center;
     }
 
     .admin-table td.col-no {
@@ -334,39 +342,47 @@
       <div class="filter-card">
         <div class="filter-body">
 
-          <!-- 행 1: 가입기간 · 등급 · 상태 -->
+          <!-- 행 1: 가입기간 -->
           <div class="filter-row">
-            <div class="fg">
-              <span class="fg-label">가입기간</span>
+            <span class="filter-label">가입기간</span>
+            <div class="filter-content">
               <div class="date-pair">
                 <input type="date" id="filterDateFrom">
                 <span class="date-sep">—</span>
                 <input type="date" id="filterDateTo">
               </div>
             </div>
-            <div class="fg">
-              <span class="fg-label">등급</span>
-              <div class="chip-group">
-                <label class="chip"><input type="radio" name="filterGrade" value=""><span>전체</span></label>
-                <label class="chip"><input type="radio" name="filterGrade" value="member"><span>일반회원</span></label>
-                <label class="chip"><input type="radio" name="filterGrade" value="fullMember"><span>정회원</span></label>
-                <label class="chip"><input type="radio" name="filterGrade" value="admin"><span>관리자</span></label>
+          </div>
+
+          <!-- 행 2: 등급 + 상태 (정확히 50/50) -->
+          <div class="filter-row">
+            <div class="filter-half">
+              <span class="filter-label">등급</span>
+              <div class="filter-content">
+                <div class="chip-group">
+                  <label class="chip"><input type="radio" name="filterGrade" value=""><span>전체</span></label>
+                  <label class="chip"><input type="radio" name="filterGrade" value="member"><span>일반회원</span></label>
+                  <label class="chip"><input type="radio" name="filterGrade" value="fullMember"><span>정회원</span></label>
+                  <label class="chip"><input type="radio" name="filterGrade" value="admin"><span>관리자</span></label>
+                </div>
               </div>
             </div>
-            <div class="fg">
-              <span class="fg-label">상태</span>
-              <div class="chip-group">
-                <label class="chip"><input type="radio" name="filterStatus" value=""><span>전체</span></label>
-                <label class="chip"><input type="radio" name="filterStatus" value="active"><span>정상</span></label>
-                <label class="chip"><input type="radio" name="filterStatus" value="blocked"><span>차단</span></label>
+            <div class="filter-half">
+              <span class="filter-label">상태</span>
+              <div class="filter-content">
+                <div class="chip-group">
+                  <label class="chip"><input type="radio" name="filterStatus" value=""><span>전체</span></label>
+                  <label class="chip"><input type="radio" name="filterStatus" value="active"><span>정상</span></label>
+                  <label class="chip"><input type="radio" name="filterStatus" value="blocked"><span>차단</span></label>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- 행 2: 키워드 검색 -->
+          <!-- 행 4: 검색어 (입력창 우측 끝까지 채움) -->
           <div class="filter-row">
-            <div class="fg">
-              <span class="fg-label">검색어</span>
+            <span class="filter-label">검색어</span>
+            <div class="filter-content">
               <div class="kw-wrap">
                 <select id="filterKeywordType">
                   <option value="">전체 필드</option>
@@ -378,7 +394,6 @@
                 <div class="kw-input-wrap">
                   <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요"
                     onkeydown="if(event.key==='Enter') MemberAdmin.search()">
-                  <span class="kw-search-ico">🔍</span>
                 </div>
               </div>
             </div>

@@ -3,38 +3,144 @@
    ============================================= */
 'use strict';
 
-/* ── 관리자 사이드바 네비게이션 데이터 */
+/* ── 관리자 사이드바 네비게이션 데이터 (2단 계층) */
 const ADMIN_NAV = [
-  { key: 'dashboard',    href: 'index.html',              ico: '📊', label: '대시보드' },
-  { key: 'members',      href: 'members.html',            ico: '👥', label: '회원관리' },
-  { key: 'withdrawn',    href: 'members-withdrawn.html',  ico: '🚪', label: '탈퇴회원' },
-  { key: 'courses',      href: 'courses.html',            ico: '📚', label: '강좌관리' },
-  { key: 'calendar',     href: 'calendar.html',           ico: '📅', label: '일정관리' },
-  { key: 'history',      href: 'history.html',            ico: '🕐', label: '연혁관리' },
-  { key: 'organization', href: 'organization.html',       ico: '🏛', label: '조직도/임원진' },
-  { key: 'content',      href: 'content.html',            ico: '📝', label: '콘텐츠관리' },
+  {
+    key: 'member-group', ico: '👥', label: '회원관리',
+    children: [
+      { key: 'members',   href: 'members.html',          label: '회원관리' },
+      { key: 'withdrawn', href: 'members-withdrawn.html', label: '탈퇴회원' },
+    ]
+  },
+
+  {
+    key: 'course-group', ico: '📚', label: '강좌관리',
+    children: [
+      { key: 'course-basic',      href: 'courses.html', label: '기초과정 관리' },
+      { key: 'course-qualify',    href: '#',            label: '자격취득과정 관리' },
+      { key: 'course-enhance',    href: '#',            label: '역량강화 관리' },
+      { key: 'course-academy',    href: '#',            label: '회원아카데미 관리' },
+      { key: 'course-applicants', href: '#',            label: '신청자 통합 관리' },
+    ]
+  },
+
+  { key: 'calendar', href: 'calendar.html', ico: '📅', label: '일정관리' },
+
+  {
+    key: 'board-group', ico: '📋', label: '게시판관리',
+    children: [
+      { key: 'board-notice', href: '#', label: '공지사항 관리' },
+      { key: 'board-region', href: '#', label: '전국지역협회 관리' },
+      { key: 'board-intro',  href: '#', label: '사공단소개 관리' },
+      { key: 'board-club',   href: '#', label: '동아리소개 관리' },
+    ]
+  },
+
+  {
+    key: 'site-group', ico: '⚙️', label: '사이트관리',
+    children: [
+      { key: 'site-banner', href: '#', label: '배너 관리' },
+      { key: 'site-popup',  href: '#', label: '팝업 관리' },
+    ]
+  },
+
+  {
+    key: 'content-group', ico: '📝', label: '콘텐츠관리',
+    children: [
+      { key: 'history',      href: 'history.html',      label: '연혁 관리' },
+      { key: 'organization', href: 'organization.html', label: '조직도·임원진 관리' },
+    ]
+  },
+
+  {
+    key: 'apply-group', ico: '📩', label: '기타신청관리',
+    children: [
+      { key: 'apply-regular',    href: '#', label: '정회원신청 관리' },
+      { key: 'apply-instructor', href: '#', label: '강사신청 관리' },
+      { key: 'apply-forest',     href: '#', label: '숲해설신청 관리' },
+      { key: 'apply-sponsor',    href: '#', label: '후원신청 관리' },
+    ]
+  },
 ];
 
-/* ── AdminSidebar: 마운트 포인트(#adminNavMount)에 nav 항목을 주입 */
+
+/* ── AdminSidebar: 2단 아코디언 사이드바 */
 const AdminSidebar = {
 
   /**
-   * @param {string} activeKey - ADMIN_NAV의 key 값
+   * @param {string} activeKey - ADMIN_NAV leaf key (예: 'members', 'course-basic')
    */
   mount(activeKey) {
     const mountEl = document.getElementById('adminNavMount');
     if (!mountEl) return;
 
-    mountEl.innerHTML = ADMIN_NAV.map(item => `
-      <a href="${item.href}"
-         class="admin-nav-item ${item.key === activeKey ? 'active' : ''}"
-         aria-current="${item.key === activeKey ? 'page' : 'false'}">
+    /* 현재 페이지가 속한 그룹 키 찾기 */
+    const activeGroupKey = (() => {
+      for (const item of ADMIN_NAV) {
+        if (item.children && item.children.some(c => c.key === activeKey)) {
+          return item.key;
+        }
+      }
+      return null;
+    })();
 
-        <span class="nav-ico" aria-hidden="true">${item.ico}</span>
-        <span class="nav-txt">${item.label}</span>
+    mountEl.innerHTML = ADMIN_NAV.map(item => {
 
-      </a>
-    `).join('');
+      /* 단독 메뉴 (하위 없음) */
+      if (!item.children) {
+        return `
+          <a href="${item.href}"
+             class="admin-nav-item ${item.key === activeKey ? 'active' : ''}"
+             aria-current="${item.key === activeKey ? 'page' : 'false'}">
+            <span class="nav-ico" aria-hidden="true">${item.ico}</span>
+            <span class="nav-txt">${item.label}</span>
+          </a>`;
+      }
+
+      /* 그룹 메뉴 (아코디언) */
+      const isOpen    = item.key === activeGroupKey;
+      const firstHref = item.children[0].href;
+
+      return `
+        <div class="nav-group ${isOpen ? 'open' : ''}">
+          <button class="admin-nav-item nav-group-header"
+                  onclick="AdminSidebar.toggleGroup(this, '${firstHref}')">
+            <span class="nav-ico" aria-hidden="true">${item.ico}</span>
+            <span class="nav-txt">${item.label}</span>
+            <span class="nav-arrow" aria-hidden="true"></span>
+          </button>
+          <div class="nav-submenu">
+            ${item.children.map(child => `
+              <a href="${child.href}"
+                 class="nav-sub-item ${child.key === activeKey ? 'active' : ''}">
+                ${child.label}
+              </a>`).join('')}
+          </div>
+        </div>`;
+
+    }).join('');
+  },
+
+
+  /**
+   * 그룹 헤더 클릭 시 — 열기/닫기 + 첫 번째 하위 메뉴 이동
+   * @param {HTMLElement} btn
+   * @param {string}      firstHref
+   */
+  toggleGroup(btn, firstHref) {
+    const group  = btn.closest('.nav-group');
+    const isOpen = group.classList.contains('open');
+
+    /* 다른 그룹 모두 닫기 */
+    document.querySelectorAll('.nav-group.open').forEach(g => g.classList.remove('open'));
+
+    if (!isOpen) {
+      group.classList.add('open');
+      /* 첫 번째 하위 페이지로 이동 */
+      if (firstHref && firstHref !== '#') {
+        location.href = firstHref;
+      }
+    }
   },
 };
 
