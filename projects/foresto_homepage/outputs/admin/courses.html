@@ -1,309 +1,607 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>강좌관리 | 관리자 | 한국숲해설가협회</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/common.css">
-    <link rel="stylesheet" href="../assets/css/components.css">
-    <link rel="stylesheet" href="../assets/css/responsive.css">
-    <link rel="stylesheet" href="../assets/css/pages/admin.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>강좌관리 | 관리자 | 한국숲해설가협회</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/pages/admin.css">
+  <style>
+    /* ════════════════════════════════════════
+       회원아카데미 탭
+       ════════════════════════════════════════ */
+    .academy-tab-bar {
+      display: flex;
+      gap: 0;
+      margin-bottom: 16px;
+      border-bottom: 2px solid #e3eadd;
+    }
+
+    .academy-tab {
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #7a8e74;
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: color .15s, border-color .15s;
+      font-family: 'Noto Sans KR', sans-serif;
+      white-space: nowrap;
+    }
+
+    .academy-tab:hover { color: #4a7c59; }
+
+    .academy-tab.active {
+      color: #2e5c2e;
+      font-weight: 700;
+      border-bottom-color: #2e5c2e;
+    }
+
+    /* ════════════════════════════════════════
+       필터 카드 — members.html 기준 표준
+       ════════════════════════════════════════ */
+    .filter-card {
+      background: #fff;
+      border: 1px solid #e3eadd;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .filter-body { display: flex; flex-direction: column; }
+
+    .filter-row {
+      display: flex;
+      align-items: center;
+      min-height: 46px;
+      border-bottom: 1px solid #f0f4ee;
+    }
+
+    .filter-row:last-child { border-bottom: none; }
+
+    .filter-label {
+      width: 84px;
+      min-width: 84px;
+      flex-shrink: 0;
+      align-self: stretch;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #7a8e74;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      background: #f8faf6;
+      border-right: 1px solid #e8efe3;
+    }
+
+    .filter-content {
+      flex: 1;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      min-width: 0;
+    }
+
+    /* 날짜 */
+    .date-pair { display: flex; align-items: center; gap: 6px; }
+
+    .date-pair input[type="date"] {
+      width: 140px;
+      height: 34px;
+      padding: 0 10px;
+      border: 1px solid #d5e0ce;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #2a3a26;
+      background: #fafcf9;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .date-pair input[type="date"]:focus {
+      border-color: #508829;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(80,136,41,0.08);
+    }
+
+    .date-sep { color: #aabba4; font-size: 13px; padding: 0 2px; }
+    .date-hint { font-size: 11px; color: #aabba4; margin-left: 10px; }
+
+    /* 칩 */
+    .chip-group { display: flex; gap: 5px; flex-wrap: wrap; }
+    .chip { cursor: pointer; }
+    .chip input[type="radio"] { display: none; }
+    .chip span {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 14px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: 'Noto Sans KR', sans-serif;
+      border: 1px solid #d5e0ce;
+      background: #fafcf9;
+      color: #6a7e64;
+      transition: all 0.15s;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .chip input[type="radio"]:checked + span {
+      background: #1a2718; color: #fff; border-color: #1a2718; font-weight: 600;
+    }
+    .chip:hover span { border-color: #508829; color: #508829; }
+    .chip input[type="radio"]:checked + span:hover { color: #fff; }
+
+    /* 검색어 */
+    .kw-wrap { display: flex; align-items: center; gap: 6px; width: 100%; }
+
+    .kw-input-wrap { position: relative; flex: 1; }
+
+    .kw-input-wrap input {
+      width: 100%;
+      height: 34px;
+      padding: 0 12px;
+      border: 1px solid #d5e0ce;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #2a3a26;
+      background: #fafcf9;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .kw-input-wrap input:focus {
+      border-color: #508829;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(80,136,41,0.08);
+    }
+
+    .kw-input-wrap input::placeholder { color: #aabba4; }
+
+    /* 필터 푸터 */
+    .filter-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 12px 18px;
+      background: #f8faf6;
+      border-top: 1px solid #e8efe3;
+    }
+
+    /* ════════════════════════════════════════
+       테이블
+       ════════════════════════════════════════ */
+    .admin-table {
+      table-layout: fixed;
+      width: 100%;
+      font-size: 15px;
+    }
+
+    .admin-table thead th {
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .admin-table tbody td {
+      padding: 13px 14px;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .admin-table tbody td.td-left { text-align: left; }
+    .admin-table .td-muted { color: #6a7e64; }
+
+    .admin-table .cell-datetime {
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 12px;
+      color: #586853;
+    }
+
+    /* 접수기간 — 두 줄 표시 */
+    .period-cell {
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 12px;
+      color: #586853;
+      line-height: 1.5;
+      white-space: normal;
+      word-break: break-all;
+    }
+
+    /* 하단 바 */
+    .table-bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+    }
+  </style>
 </head>
-
 <body class="admin-body">
-    <div class="admin-layout">
-        <aside class="admin-sidebar" id="adminSidebar">
-            <div class="admin-sidebar-head">
-                <span class="adm-sb-title">MENU</span>
-                <button class="sidebar-toggle" onclick="AdminLayout.toggleSidebar()" aria-label="사이드바 토글">☰</button>
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-head">
+        <span class="adm-sb-title">MENU</span>
+        <button class="sidebar-toggle" onclick="AdminLayout.toggleSidebar()" aria-label="사이드바 토글">☰</button>
+      </div>
+      <nav class="admin-nav" id="adminNavMount" aria-label="관리자 메뉴"></nav>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <h1 class="admin-page-title" id="pageTitle">강좌관리</h1>
+      </div>
+
+      <!-- ① 회원아카데미 탭 (type=academy일 때만 표시) -->
+      <div id="academyTabBar" style="display:none">
+        <div class="academy-tab-bar" id="academyTabs"></div>
+      </div>
+
+      <!-- ② 검색 필터 -->
+      <div class="filter-card">
+        <div class="filter-body">
+
+          <!-- 행 1: 교육시작일 -->
+          <div class="filter-row">
+            <span class="filter-label">교육시작일</span>
+            <div class="filter-content">
+              <div class="date-pair">
+                <input type="date" id="filterDateFrom">
+                <span class="date-sep">—</span>
+                <input type="date" id="filterDateTo">
+              </div>
+              <span class="date-hint">교육 시작일 기준</span>
             </div>
-            <nav class="admin-nav" id="adminNavMount" aria-label="관리자 메뉴"></nav>
-        </aside>
+          </div>
 
-        <main class="admin-main">
-            <div class="admin-topbar">
-                <h1 class="admin-page-title">강좌관리</h1>
-                <button class="btn btn-primary btn-sm" onclick="location.href='course-edit.html'">+ 강좌 개설</button>
+          <!-- 행 2: 상태 -->
+          <div class="filter-row">
+            <span class="filter-label">상태</span>
+            <div class="filter-content">
+              <div class="chip-group" id="statusChips">
+                <label class="chip"><input type="radio" name="filterStatus" value=""><span>전체</span></label>
+                <label class="chip"><input type="radio" name="filterStatus" value="준비중"><span>준비중</span></label>
+                <label class="chip"><input type="radio" name="filterStatus" value="접수중"><span>접수중</span></label>
+                <label class="chip"><input type="radio" name="filterStatus" value="접수마감"><span>접수마감</span></label>
+              </div>
             </div>
+          </div>
 
-            <!-- 탭 -->
-            <div class="tabs" style="margin-bottom:20px">
-                <button class="tab-btn active" onclick="CourseAdmin.switchTab('list',this)">강좌 목록</button>
-                <button class="tab-btn" onclick="CourseAdmin.switchTab('apply',this)">신청자 관리</button>
-                <button class="tab-btn" onclick="CourseAdmin.switchTab('complete',this)">수료 처리</button>
+          <!-- 행 3: 과정명 검색 -->
+          <div class="filter-row">
+            <span class="filter-label">과정명</span>
+            <div class="filter-content">
+              <div class="kw-wrap">
+                <div class="kw-input-wrap">
+                  <input type="text" id="filterKeyword" placeholder="과정명을 입력하세요"
+                    onkeydown="if(event.key==='Enter') CourseAdmin.search()">
+                </div>
+              </div>
             </div>
+          </div>
 
-            <!-- 강좌 목록 탭 -->
-            <div id="tab-list">
-                <div class="admin-filter-bar">
-                    <div class="search-field">
-                        <label>구분</label>
-                        <select class="form-control" id="filterType">
-                            <option value="">전체</option>
-                            <option value="전문과정">전문과정</option>
-                            <option value="시민아카데미">시민아카데미</option>
-                            <option value="직무교육">직무교육</option>
-                        </select>
-                    </div>
-                    <div class="search-field">
-                        <label>상태</label>
-                        <select class="form-control" id="filterStatus">
-                            <option value="">전체</option>
-                            <option value="open">접수중</option>
-                            <option value="ready">접수예정</option>
-                            <option value="closed">접수마감</option>
-                            <option value="done">수강완료</option>
-                        </select>
-                    </div>
-                    <div class="search-field">
-                        <label>강좌명</label>
-                        <input type="text" class="form-control" id="filterKeyword" placeholder="강좌명 검색">
-                    </div>
-                    <button class="btn btn-primary search-btn" onclick="CourseAdmin.search()">검색</button>
-                    <button class="btn btn-gray search-btn" onclick="CourseAdmin.resetFilter()">초기화</button>
-                </div>
-
-                <div class="list-top">
-                    <div class="list-count">총 <strong id="courseCount">0</strong>건</div>
-                    <div style="display:flex;gap:8px;align-items:center">
-                        <select class="form-control" style="height:34px;width:auto;font-size:13px"
-                            onchange="CourseAdmin.changePageSize(+this.value)">
-                            <option value="10">10개씩</option>
-                            <option value="20">20개씩</option>
-                            <option value="50">50개씩</option>
-                        </select>
-                        <button class="btn btn-gray btn-sm" onclick="CourseAdmin.exportExcel()">엑셀 다운</button>
-                    </div>
-                </div>
-
-                <div class="table-wrap">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th style="width:60px" class="center">번호</th>
-                                <th style="width:90px" class="center">구분</th>
-                                <th>강좌명</th>
-                                <th style="width:110px" class="center">교육일자</th>
-                                <th style="width:80px" class="center">신청인원</th>
-                                <th style="width:80px" class="center">정원</th>
-                                <th style="width:90px" class="center">상태</th>
-                                <th style="width:120px" class="center">관리</th>
-                            </tr>
-                        </thead>
-                        <tbody id="courseTableBody"></tbody>
-                    </table>
-                </div>
-                <div class="pagination" id="coursePagination"></div>
-            </div>
-
-            <!-- 신청자 관리 탭 -->
-            <div id="tab-apply" style="display:none">
-                <div class="admin-filter-bar">
-                    <div class="search-field">
-                        <label>강좌 선택</label>
-                        <select class="form-control" id="applyCourseFilter" style="min-width:200px">
-                            <option value="">전체 강좌</option>
-                        </select>
-                    </div>
-                    <div class="search-field">
-                        <label>상태</label>
-                        <select class="form-control" id="applyStatusFilter">
-                            <option value="">전체</option>
-                            <option value="pending">검토중</option>
-                            <option value="approved">승인</option>
-                            <option value="rejected">반려</option>
-                            <option value="cancel">취소</option>
-                        </select>
-                    </div>
-                    <div class="search-field">
-                        <label>신청자</label>
-                        <input type="text" class="form-control" id="applyKeyword" placeholder="이름/이메일 검색">
-                    </div>
-                    <button class="btn btn-primary search-btn" onclick="CourseAdmin.searchApply()">검색</button>
-                </div>
-
-                <div class="list-top">
-                    <div class="list-count">총 <strong id="applyCount">0</strong>건</div>
-                    <div style="display:flex;gap:8px">
-                        <button class="btn btn-gray btn-sm" onclick="CourseAdmin.bulkApprove()">선택 승인</button>
-                        <button class="btn btn-danger btn-sm" onclick="CourseAdmin.bulkReject()">선택 반려</button>
-                        <button class="btn btn-gray btn-sm" onclick="CourseAdmin.exportApplyExcel()">엑셀 다운</button>
-                    </div>
-                </div>
-
-                <div class="table-wrap">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th style="width:40px" class="center"><input type="checkbox" id="checkAll"
-                                        onclick="CourseAdmin.toggleAllCheck(this)"></th>
-                                <th style="width:50px" class="center">번호</th>
-                                <th>강좌명</th>
-                                <th style="width:80px" class="center">신청자</th>
-                                <th style="width:120px" class="center">연락처</th>
-                                <th style="width:160px" class="center">이메일</th>
-                                <th style="width:100px" class="center">신청일</th>
-                                <th style="width:90px" class="center">상태</th>
-                                <th style="width:120px" class="center">관리</th>
-                            </tr>
-                        </thead>
-                        <tbody id="applyTableBody"></tbody>
-                    </table>
-                </div>
-                <div class="pagination" id="applyPagination"></div>
-            </div>
-
-            <!-- 수료 처리 탭 -->
-            <div id="tab-complete" style="display:none">
-                <div class="alert alert-info">수료 처리 후 해당 회원의 마이페이지에서 수료증 발급이 가능합니다.</div>
-                <div class="admin-filter-bar">
-                    <div class="search-field">
-                        <label>강좌 선택</label>
-                        <select class="form-control" id="completeCourseFilter" style="min-width:200px">
-                            <option value="">강좌 선택</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-primary search-btn" onclick="CourseAdmin.loadCompleteList()">조회</button>
-                </div>
-                <div class="table-wrap">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th style="width:40px" class="center"><input type="checkbox" id="completeCheckAll"
-                                        onclick="CourseAdmin.toggleCompleteCheck(this)"></th>
-                                <th style="width:50px" class="center">번호</th>
-                                <th style="width:100px" class="center">신청자</th>
-                                <th style="width:130px" class="center">연락처</th>
-                                <th style="width:90px" class="center">출석률</th>
-                                <th style="width:90px" class="center">수료여부</th>
-                                <th style="width:120px" class="center">관리</th>
-                            </tr>
-                        </thead>
-                        <tbody id="completeTableBody">
-                            <tr>
-                                <td colspan="7" style="text-align:center;padding:32px;color:var(--gray-mid)">강좌를 선택하여
-                                    조회하세요.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
-                    <button class="btn btn-primary" onclick="CourseAdmin.bulkComplete()">선택 수료 처리</button>
-                    <button class="btn btn-gray" onclick="CourseAdmin.exportCompleteExcel()">수료자 명단 다운</button>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- 강좌 개설/수정 모달 -->
-    <div class="modal-overlay" id="courseModal">
-        <div class="modal" style="max-width:680px">
-            <div class="modal-header">
-                <h3 id="courseModalTitle">강좌 개설</h3>
-                <button class="modal-close" onclick="App.closeModal('courseModal')">×</button>
-            </div>
-            <div class="modal-body">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-                    <div class="form-group">
-                        <label class="form-label">구분 <span class="req">*</span></label>
-                        <select class="form-control" id="modalCourseType">
-                            <option value="">선택</option>
-                            <option value="전문과정">전문과정</option>
-                            <option value="시민아카데미">시민아카데미</option>
-                            <option value="직무교육">직무교육</option>
-                            <option value="역량강화">역량강화</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">상태 <span class="req">*</span></label>
-                        <select class="form-control" id="modalCourseStatus">
-                            <option value="ready">접수예정</option>
-                            <option value="open">접수중</option>
-                            <option value="closed">접수마감</option>
-                            <option value="done">수강완료</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">강좌명 <span class="req">*</span></label>
-                    <input type="text" class="form-control" id="modalCourseTitle" placeholder="강좌명을 입력하세요">
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
-                    <div class="form-group">
-                        <label class="form-label">교육 시작일 <span class="req">*</span></label>
-                        <input type="date" class="form-control" id="modalCourseFrom">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">교육 종료일 <span class="req">*</span></label>
-                        <input type="date" class="form-control" id="modalCourseTo">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">총 교육시간 <span class="req">*</span></label>
-                        <input type="number" class="form-control" id="modalCourseHours" placeholder="시간" min="1">
-                    </div>
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-                    <div class="form-group">
-                        <label class="form-label">접수 시작일</label>
-                        <input type="date" class="form-control" id="modalApplyFrom">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">접수 마감일</label>
-                        <input type="date" class="form-control" id="modalApplyTo">
-                    </div>
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-                    <div class="form-group">
-                        <label class="form-label">정원</label>
-                        <input type="number" class="form-control" id="modalCourseCapacity" placeholder="명" min="1">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">수강료</label>
-                        <input type="text" class="form-control" id="modalCourseFee" placeholder="무료 or 금액">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">교육 장소</label>
-                    <input type="text" class="form-control" id="modalCourseLocation" placeholder="교육 장소를 입력하세요">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">강좌 안내 (신청 시 표시)</label>
-                    <textarea class="form-control" id="modalCourseGuide" rows="4"
-                        placeholder="수강생에게 표시될 안내 내용을 입력하세요."></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-gray" onclick="App.closeModal('courseModal')">취소</button>
-                <button class="btn btn-primary" onclick="CourseAdmin.saveCourse()">저장</button>
-            </div>
         </div>
-    </div>
-
-    <!-- 신청자 상세 모달 -->
-    <div class="modal-overlay" id="applyDetailModal">
-        <div class="modal" style="max-width:480px">
-            <div class="modal-header">
-                <h3>신청자 상세</h3>
-                <button class="modal-close" onclick="App.closeModal('applyDetailModal')">×</button>
-            </div>
-            <div class="modal-body" id="applyDetailBody"></div>
-            <div class="modal-footer">
-                <button class="btn btn-danger btn-sm" onclick="CourseAdmin.rejectApply()">반려</button>
-                <button class="btn btn-primary" onclick="CourseAdmin.approveApply()">승인</button>
-            </div>
+        <div class="filter-footer">
+          <button class="btn btn-outline btn-sm" onclick="CourseAdmin.exportExcel()">엑셀 다운로드</button>
+          <button class="btn btn-gray btn-sm" onclick="CourseAdmin.resetFilter()">초기화</button>
+          <button class="btn btn-primary btn-sm" onclick="CourseAdmin.search()">검색</button>
         </div>
-    </div>
+      </div>
 
-    <script src="../assets/js/app.js"></script>
-    <script src="../assets/js/components/header.js"></script>
-    <script src="../assets/js/pages/admin.js"></script>
-    <script src="../assets/js/pages/admin-courses.js"></script>
-    <script>
-        AdminSidebar.mount('course-basic');
-        CourseAdmin.init();
-    </script>
+      <!-- ② 목록 상단 -->
+      <div class="list-top">
+        <div class="list-count">총 <strong id="courseCount">0</strong>건</div>
+        <select class="form-control" id="pageSizeSelect"
+          onchange="CourseAdmin.changePageSize(+this.value)"
+          style="width:130px;height:36px;font-size:13px">
+          <option value="10">10개씩 보기</option>
+          <option value="30">30개씩 보기</option>
+          <option value="50">50개씩 보기</option>
+        </select>
+      </div>
+
+      <!-- ③ 테이블 -->
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width:3%" class="col-chk">
+                <input type="checkbox" id="chkAll" onchange="CourseAdmin.toggleAll(this.checked)">
+              </th>
+              <th style="width:4%">No</th>
+              <th>과정명</th>
+              <th style="width:9%">시작일</th>
+              <th style="width:20%">접수기간</th>
+              <th style="width:8%">상태</th>
+              <th style="width:9%">등록일</th>
+            </tr>
+          </thead>
+          <tbody id="courseTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- ④ 페이지네이션 -->
+      <div class="pagination" id="coursePagination"></div>
+
+      <!-- ⑤ 하단 버튼 -->
+      <div class="table-bottom-bar">
+        <button class="btn btn-danger btn-sm" id="btnDeleteSelected"
+          onclick="CourseAdmin.deleteSelected()" disabled>선택 삭제</button>
+        <button class="btn btn-primary btn-sm"
+          onclick="CourseAdmin.goCreate()">+ 강좌 등록</button>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/components/header.js"></script>
+  <script src="../assets/js/pages/admin.js"></script>
+  <script>
+    /* ── 타입별 설정 */
+    const COURSE_CONFIG = {
+      basic:   { key: 'course-basic',   label: '기초과정 관리',    subs: ['시민아카데미', '학교숲해설', '기관방문'] },
+      qualify: { key: 'course-qualify', label: '자격취득과정 관리', subs: ['전문가과정', '준전문가과정'] },
+      enhance: { key: 'course-enhance', label: '역량강화 관리',    subs: ['심화과정', '직무교육'] },
+      academy: { key: 'course-academy', label: '회원아카데미 관리', subs: [] },
+    };
+
+    /* ── 회원아카데미 탭 설정 */
+    const ACADEMY_TABS = [
+      { key: 'lecture', label: '특강' },
+      { key: 'course',  label: '강좌' },
+      { key: 'mentor',  label: '멘토링숲학교' },
+    ];
+
+    const params = new URLSearchParams(location.search);
+    const type   = params.get('type') || 'basic';
+    const config = COURSE_CONFIG[type] || COURSE_CONFIG.basic;
+
+    /* 현재 아카데미 탭 (type=academy일 때만 사용) */
+    const activeTab = (type === 'academy') ? (params.get('tab') || 'lecture') : null;
+
+    /* 페이지 타이틀·사이드바 활성화 */
+    document.title = config.label + ' | 관리자 | 한국숲해설가협회';
+    document.getElementById('pageTitle').textContent = config.label;
+    AdminSidebar.mount(config.key);
+
+    /* 라디오 초기값 */
+    document.querySelector('input[name="filterStatus"][value=""]').checked = true;
+
+    /* ── 회원아카데미 탭 렌더링 */
+    if (type === 'academy') {
+      document.getElementById('academyTabBar').style.display = '';
+      document.getElementById('academyTabs').innerHTML = ACADEMY_TABS.map(t => `
+        <button class="academy-tab ${t.key === activeTab ? 'active' : ''}"
+                onclick="location.href='courses.html?type=academy&tab=${t.key}'">
+          ${t.label}
+        </button>`).join('');
+    }
+
+    /* ── 상태 뱃지 */
+    const STATUS_BADGE = {
+      '준비중':  { cls: 'badge-gray',   label: '준비중' },
+      '접수중':  { cls: 'badge-green',  label: '접수중' },
+      '접수마감': { cls: 'badge-orange', label: '접수마감' },
+    };
+
+    /* ── 샘플 데이터 */
+    const COURSE_NAMES = {
+      basic: [
+        '봄 숲 이야기 — 시민아카데미',
+        '학교 숲 생태교육 기초과정',
+        '기관 방문 숲 해설 체험',
+        '여름 숲 탐험 시민아카데미',
+        '가을 단풍 숲 해설 기초',
+        '겨울 숲 생태 관찰 입문',
+        '도심 속 숲 치유 프로그램',
+        '생태 감수성 키우기 입문',
+      ],
+      qualify: [
+        '제55기 숲해설가 전문가과정',
+        '제54기 숲해설가 전문가과정',
+        '제10기 준전문가 양성과정',
+        '제11기 준전문가 양성과정',
+        '제56기 숲해설가 전문가과정',
+      ],
+      enhance: [
+        '숲해설 심화 — 생태 스토리텔링',
+        '숲 치유 프로그램 개발 직무교육',
+        '탄소중립 숲 교육 심화과정',
+        '국가숲길 해설 전문 심화',
+        '숲 교육 콘텐츠 제작 직무',
+      ],
+      /* 탭별 더미 데이터 */
+      'academy-lecture': [
+        '식물 생태 특강 — 봄 야생화',
+        '조류 탐조 특강 — 겨울 철새',
+        '버섯 생태 특강',
+        '기후위기와 숲 생태 특강',
+        '한국 자생식물 특강',
+      ],
+      'academy-course': [
+        '숲 생태 강좌 — 수목 감별',
+        '곤충 생태 강좌',
+        '야생화 이야기 강좌',
+        '숲 치유 이론 강좌',
+        '생태 스토리텔링 강좌',
+      ],
+      'academy-mentor': [
+        '멘토링숲학교 — 봄학기',
+        '멘토링숲학교 — 여름학기',
+        '멘토링숲학교 — 가을학기',
+        '멘토링숲학교 — 특별과정',
+      ],
+    };
+
+    const STATUSES = ['준비중', '접수중', '접수중', '접수마감'];
+
+    /* type=academy면 탭별 데이터 키 사용 */
+    const dataKey = (type === 'academy') ? `academy-${activeTab}` : type;
+
+    const ALL_COURSES = Array.from({ length: 28 }, (_, i) => {
+      const names = COURSE_NAMES[dataKey] || COURSE_NAMES.basic;
+      const mm    = String((i % 9) + 1).padStart(2, '0');
+      const dd    = String((i % 20) + 1).padStart(2, '0');
+      const recMm = String(((i + 1) % 9) + 1).padStart(2, '0');
+      const recDd = String((i % 20) + 1).padStart(2, '0');
+      const startDate  = `2026-${mm}-${dd}`;
+      const recStartMm = String(((i + 2) % 9) + 1).padStart(2, '0');
+      const recStartDd = String(((i * 2 + 1) % 20) + 1).padStart(2, '0');
+      const recEndDd   = String(((i * 3 + 5) % 20) + 1).padStart(2, '0');
+
+      return {
+        id:      1000 + i,
+        name:    names[i % names.length],
+        startDate,
+        recFrom: `2026-${recStartMm}-${recStartDd} 09:00`,
+        recTo:   `2026-${mm}-${recEndDd} 18:00`,
+        status:  STATUSES[i % 4],
+        regDate: `2026-${recMm}-${recDd}`,
+      };
+    });
+
+    const CourseAdmin = {
+      filtered:    [...ALL_COURSES],
+      currentPage: 1,
+      pageSize:    10,
+
+      _dateInRange(dateStr, from, to) {
+        if (!from && !to) return true;
+        const d = new Date(dateStr);
+        if (from && !to) return d >= new Date(from);
+        if (!from && to) return d <= new Date(to);
+        return d >= new Date(from) && d <= new Date(to);
+      },
+
+      search() {
+        const from   = document.getElementById('filterDateFrom').value;
+        const to     = document.getElementById('filterDateTo').value;
+        const status = document.querySelector('input[name="filterStatus"]:checked')?.value || '';
+        const kw     = document.getElementById('filterKeyword').value.trim().toLowerCase();
+
+        this.filtered = ALL_COURSES.filter(c => {
+          if (!this._dateInRange(c.startDate, from, to)) return false;
+          if (status && c.status !== status) return false;
+          if (kw && !c.name.toLowerCase().includes(kw)) return false;
+          return true;
+        });
+        this.currentPage = 1;
+        this.render();
+      },
+
+      resetFilter() {
+        document.getElementById('filterDateFrom').value = '';
+        document.getElementById('filterDateTo').value   = '';
+        document.querySelector('input[name="filterStatus"][value=""]').checked = true;
+        document.getElementById('filterKeyword').value  = '';
+        this.filtered    = [...ALL_COURSES];
+        this.currentPage = 1;
+        this.render();
+      },
+
+      changePageSize(size) { this.pageSize = size; this.currentPage = 1; this.render(); },
+
+      toggleAll(checked) {
+        document.querySelectorAll('.row-chk').forEach(cb => cb.checked = checked);
+        this._syncDeleteBtn();
+      },
+
+      _syncDeleteBtn() {
+        const any = document.querySelectorAll('.row-chk:checked').length > 0;
+        document.getElementById('btnDeleteSelected').disabled = !any;
+        document.getElementById('chkAll').indeterminate = false;
+      },
+
+      deleteSelected() {
+        const ids = [...document.querySelectorAll('.row-chk:checked')].map(cb => Number(cb.dataset.id));
+        if (!ids.length) return;
+        if (!confirm(`선택한 ${ids.length}건을 삭제하시겠습니까?`)) return;
+        ids.forEach(id => {
+          const idx = ALL_COURSES.findIndex(c => c.id === id);
+          if (idx > -1) ALL_COURSES.splice(idx, 1);
+        });
+        this.filtered = this.filtered.filter(c => !ids.includes(c.id));
+        this.render();
+        App.toast(`${ids.length}건이 삭제되었습니다.`, 'success');
+      },
+
+      goCreate() {
+        const p = new URLSearchParams(location.search);
+        const t = p.get('type') || 'basic';
+        const tab = p.get('tab');
+        const q = new URLSearchParams();
+        if (t !== 'basic') q.set('type', t);
+        if (tab) q.set('tab', tab);
+        const qs = q.toString();
+        location.href = `course-edit.html${qs ? '?' + qs : ''}`;
+      },
+
+      goEdit(id) {
+        const p = new URLSearchParams(location.search);
+        const t = p.get('type') || 'basic';
+        const tab = p.get('tab');
+        const q = new URLSearchParams();
+        if (t !== 'basic') q.set('type', t);
+        if (tab) q.set('tab', tab);
+        q.set('id', id);
+        location.href = `course-edit.html?${q.toString()}`;
+      },
+
+      exportExcel() {
+        App.toast('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info');
+      },
+
+      render() {
+        const total = this.filtered.length;
+        const start = (this.currentPage - 1) * this.pageSize;
+        const slice = this.filtered.slice(start, start + this.pageSize);
+
+        document.getElementById('courseCount').textContent = total.toLocaleString();
+        document.getElementById('chkAll').checked = false;
+        document.getElementById('btnDeleteSelected').disabled = true;
+
+        document.getElementById('courseTableBody').innerHTML = slice.length
+          ? slice.map((c, i) => {
+              const st = STATUS_BADGE[c.status] || { cls: 'badge-gray', label: c.status };
+              return `
+              <tr onclick="location.href='course-detail.html?id=${c.id}&type=${type}'" style="cursor:pointer">
+                <td class="col-chk" onclick="event.stopPropagation()">
+                  <input type="checkbox" class="row-chk" data-id="${c.id}"
+                    onchange="CourseAdmin._syncDeleteBtn()">
+                </td>
+                <td class="td-muted">${start + i + 1}</td>
+                <td class="td-left" style="font-weight:500">${c.name}</td>
+                <td class="cell-datetime">${c.startDate}</td>
+                <td class="period-cell">${c.recFrom}<br>~ ${c.recTo}</td>
+                <td><span class="badge ${st.cls}">${st.label}</span></td>
+                <td class="td-muted cell-datetime">${c.regDate}</td>
+              </tr>`;
+            }).join('')
+          : `<tr><td colspan="7" style="padding:40px;text-align:center;color:#aabba4">검색 결과가 없습니다.</td></tr>`;
+
+        App.renderPagination('coursePagination', this.currentPage,
+          Math.ceil(total / this.pageSize) || 1,
+          p => { this.currentPage = p; this.render(); });
+      },
+    };
+
+    CourseAdmin.render();
+  </script>
 </body>
-
 </html>
