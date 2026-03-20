@@ -1,0 +1,435 @@
+/* ========================================
+   admin.css (NEW)
+   - common.css 변수(:root) 재사용
+   - 관리자 전용 레이아웃/컴포넌트
+======================================== */
+
+:root {
+  --admin-bg: #0b1220;
+  --admin-surface: #0f1b33;
+  --admin-surface-2: #111f3d;
+  --admin-card: #0f1b33;
+  --admin-text: #e8eefc;
+  --admin-muted: rgba(232, 238, 252, 0.72);
+  --admin-border: rgba(232, 238, 252, 0.14);
+  --admin-accent: var(--primary-color);
+  --admin-danger: #ff5a7a;
+  --admin-warning: #ffcc66;
+  --admin-success: #44d19d;
+  --admin-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+/* admin pages reset/override */
+body.admin {
+  padding-top: 0; /* common.css의 padding-top(72px) 무력화 */
+  background: radial-gradient(1200px 600px at 20% 0%, rgba(102,126,234,0.25), transparent 55%),
+              radial-gradient(1000px 700px at 90% 10%, rgba(118,75,162,0.18), transparent 60%),
+              var(--admin-bg);
+  color: var(--admin-text);
+}
+
+.admin a { color: inherit; }
+
+.admin-shell {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+}
+
+.admin-topbar-placeholder {
+  grid-column: 1 / -1;
+}
+
+/* sidebar (loaded from includes/admin-sidebar.html) */
+#adminSidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  border-right: 1px solid var(--admin-border);
+  background: linear-gradient(180deg, rgba(15,27,51,0.95), rgba(15,27,51,0.70));
+  backdrop-filter: blur(10px);
+  padding: 18px 14px;
+}
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--admin-border);
+  color: var(--admin-muted);
+  font-size: 12px;
+}
+
+.admin-nav {
+  margin-top: 10px;
+}
+
+.nav-item {
+  margin: 6px 0;
+}
+
+.nav-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  color: var(--admin-muted);
+  transition: 0.2s ease;
+}
+
+.nav-link:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: var(--admin-border);
+  color: var(--admin-text);
+}
+
+.nav-item.active > .nav-link {
+  background: rgba(102,126,234,0.16);
+  border-color: rgba(102,126,234,0.25);
+  color: var(--admin-text);
+}
+
+.submenu {
+  display: none;
+  margin: 8px 0 12px 10px;
+  padding-left: 10px;
+  border-left: 1px dashed var(--admin-border);
+}
+
+.nav-item.active .submenu { display: block; }
+
+.submenu a {
+  display: block;
+  padding: 10px 10px;
+  border-radius: 10px;
+  color: var(--admin-muted);
+}
+
+.submenu a:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--admin-text);
+}
+
+/* header (loaded from includes/admin-header.html) */
+.admin-header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--admin-border);
+  background: rgba(15,27,51,0.55);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.admin-header__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-header__title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+}
+
+.admin-header__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid var(--admin-border);
+  background: rgba(255,255,255,0.06);
+  color: var(--admin-text);
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-weight: 700;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--admin-shadow);
+}
+
+.btn.primary {
+  border-color: rgba(102,126,234,0.4);
+  background: linear-gradient(135deg, rgba(102,126,234,0.95), rgba(118,75,162,0.85));
+}
+
+.btn.danger {
+  border-color: rgba(255,90,122,0.45);
+  background: rgba(255,90,122,0.12);
+}
+
+.btn.ghost {
+  background: transparent;
+}
+
+.admin-main {
+  padding: 18px 18px 60px;
+}
+
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 14px 0 16px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.4px;
+}
+
+.page-desc {
+  color: var(--admin-muted);
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 14px;
+}
+
+.card {
+  grid-column: span 4;
+  border: 1px solid var(--admin-border);
+  background: linear-gradient(180deg, rgba(17,31,61,0.9), rgba(15,27,51,0.75));
+  border-radius: 16px;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.25);
+  padding: 14px;
+}
+
+.card h3 {
+  font-size: 14px;
+  color: var(--admin-muted);
+  margin-bottom: 6px;
+}
+
+.kpi {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+.kpi-sub {
+  margin-top: 6px;
+  color: var(--admin-muted);
+  font-size: 12px;
+}
+
+.panel {
+  border: 1px solid var(--admin-border);
+  background: rgba(15,27,51,0.55);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.panel-title {
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.field {
+  grid-column: span 3;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 12px;
+  color: var(--admin-muted);
+}
+
+.input, .select, .textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--admin-border);
+  background: rgba(0,0,0,0.15);
+  color: var(--admin-text);
+  outline: none;
+}
+
+.textarea { min-height: 90px; resize: vertical; }
+
+.table-wrap {
+  overflow: auto;
+  border-radius: 14px;
+  border: 1px solid var(--admin-border);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 980px;
+}
+
+.table th, .table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--admin-border);
+  font-size: 13px;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  background: rgba(17,31,61,0.95);
+  text-align: left;
+  color: var(--admin-muted);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--admin-border);
+  font-size: 12px;
+  color: var(--admin-muted);
+}
+
+.pill.success { border-color: rgba(68,209,157,0.35); color: rgba(68,209,157,0.95); background: rgba(68,209,157,0.10); }
+.pill.warn { border-color: rgba(255,204,102,0.35); color: rgba(255,204,102,0.95); background: rgba(255,204,102,0.10); }
+.pill.danger { border-color: rgba(255,90,122,0.35); color: rgba(255,90,122,0.95); background: rgba(255,90,122,0.10); }
+
+.thumb {
+  width: 44px;
+  height: 32px;
+  border-radius: 10px;
+  border: 1px solid var(--admin-border);
+  object-fit: cover;
+  background: rgba(255,255,255,0.06);
+}
+
+.row-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 120;
+}
+
+.modal-backdrop.show { display: flex; }
+
+.modal {
+  width: min(920px, 92vw);
+  max-height: 88vh;
+  overflow: auto;
+  border-radius: 18px;
+  border: 1px solid var(--admin-border);
+  background: linear-gradient(180deg, rgba(17,31,61,0.98), rgba(15,27,51,0.92));
+  box-shadow: var(--admin-shadow);
+  padding: 14px;
+}
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.modal-title { font-weight: 1000; }
+
+.toast {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  background: rgba(17,31,61,0.95);
+  border: 1px solid var(--admin-border);
+  color: var(--admin-text);
+  padding: 12px 12px;
+  border-radius: 14px;
+  box-shadow: var(--admin-shadow);
+  display: none;
+  z-index: 160;
+  width: min(420px, 92vw);
+}
+
+.toast.show { display: block; }
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -520px;
+  width: min(520px, 92vw);
+  height: 100vh;
+  border-left: 1px solid var(--admin-border);
+  background: linear-gradient(180deg, rgba(17,31,61,0.98), rgba(15,27,51,0.92));
+  box-shadow: var(--admin-shadow);
+  z-index: 140;
+  transition: right 0.25s ease;
+  padding: 14px;
+  overflow: auto;
+}
+
+.drawer.show { right: 0; }
+
+/* 접힌 상태의 select는 흰 글씨(다크 UI용) */
+.select {
+  color: #fff !important;
+  background: rgba(255,255,255,0.06); /* 기존 다크 톤 유지 시 */
+  border: 1px solid rgba(255,255,255,0.18);
+}
+
+/* 펼쳐진 option은 무조건 검정 글씨 */
+.select option {
+  color: #111 !important;
+  background: #fff !important;
+}
+
+@media (max-width: 1100px) {
+  .admin-shell { grid-template-columns: 1fr; }
+  #adminSidebar { position: relative; height: auto; }
+  .card { grid-column: span 12; }
+  .field { grid-column: span 6; }
+}
+@media (max-width: 720px) {
+  .field { grid-column: span 12; }
+}

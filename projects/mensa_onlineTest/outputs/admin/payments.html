@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>결제 내역 - 온라인테스트 관리</title>
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+
+<body class="admin">
+  <div id="headerPlaceholder"></div>
+
+  <div class="admin-shell">
+    <div id="sidebarPlaceholder"></div>
+
+    <main class="admin-main">
+      <div class="page-head">
+        <div>
+          <div class="page-title">결제 내역</div>
+          <div class="page-desc">기본/상세/차액 결제 기록을 조회합니다. (데모 데이터)</div>
+        </div>
+      </div>
+
+      <section class="card-grid" id="payKpis"></section>
+
+      <section class="panel" style="margin-top:14px;">
+        <div class="filters">
+          <div class="field">
+            <label>유형</label>
+            <select class="select" id="typeSel">
+              <option value="all">전체</option>
+              <option value="basic">기본</option>
+              <option value="detail">상세</option>
+              <option value="upgrade">차액</option>
+            </select>
+          </div>
+          <div class="field" style="grid-column: span 6;">
+            <label>검색(이름/이메일/PG TID)</label>
+            <input class="input" id="search" placeholder="예: PG_..." />
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button class="btn primary" id="btnApply">검색</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>결제ID</th>
+                <th>일시</th>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>유형</th>
+                <th>금액</th>
+                <th>PG 거래번호</th>
+              </tr>
+            </thead>
+            <tbody id="payTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div id="toast" class="toast"></div>
+    </main>
+  </div>
+
+  <script src="../js/include.js"></script>
+  <script type="module" src="../js/admin/payments.js"></script>
+</body>
+</html>
