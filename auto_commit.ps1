@@ -1,5 +1,5 @@
 # auto_commit.ps1
-Set-Location "C:\Users\BN659\Desktop\������\��ȹPM"
+Set-Location $PSScriptRoot
 
 $status = git status --porcelain
 if ($status) {
