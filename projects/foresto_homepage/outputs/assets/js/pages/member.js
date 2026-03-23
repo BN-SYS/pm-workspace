@@ -4,6 +4,14 @@
    ============================================= */
 'use strict';
 
+/* ── 강좌 접수상태 동적 계산 (오늘 날짜 기준) */
+function _calcCourseStatus(c) {
+  const today = new Date().toISOString().slice(0, 10);
+  if (today < c.from) return 'ready';
+  if (today > c.to)   return 'closed';
+  return 'open';
+}
+
 /* ══════════════════════════════════════════════
    0. 공통 유틸: 게시판 팩토리
    - data, tableBodyId, paginationId, countId,
@@ -438,7 +446,8 @@ const CompetencyCtrl = {
       closed: { label: '접수마감', cls: 'closed' },
       applied:{ label: '신청완료', cls: 'applied'},
     };
-    const sm = SM[item.status] || { label: item.status, cls: 'closed' };
+    const calcStatus = _calcCourseStatus(item); /* 오늘 날짜 기준 동적 계산 */
+    const sm = SM[calcStatus] || { label: calcStatus, cls: 'closed' };
 
     /* 첨부파일 */
     const atts = item.attachments || [];
@@ -457,19 +466,16 @@ const CompetencyCtrl = {
          </div>`
       : '';
 
-    /* 접수하기 / 취소하기 버튼
-     * 취소하기는 이미 접수했고(isApplied) 신청기간 내(status==='open')인 경우에만 노출
-     * 프로토타입: URL 파라미터 applied=1 로 접수완료 상태 시뮬레이션
-     */
+    /* 접수하기 / 취소하기 버튼 */
     const isApplied     = App.getParam('applied') === '1';
-    const inApplyPeriod = item.status === 'open';
+    const inApplyPeriod = calcStatus === 'open';
 
     let applyBtn;
     if (isApplied && inApplyPeriod) {
       applyBtn = `<button class="btn btn-gray btn-sm cd-btn-apply" disabled>접수완료</button>
                   <button class="btn btn-danger btn-sm cd-btn-cancel"
                           onclick="App.toast('신청이 취소되었습니다. (프로토타입)', 'info')">취소하기</button>`;
-    } else if (item.status === 'open') {
+    } else if (calcStatus === 'open') {
       applyBtn = `<button class="btn btn-dark btn-sm cd-btn-apply"
                           onclick="window._ctrl && window._ctrl.openApply(${item.id})">접수하기</button>`;
     } else {
@@ -548,7 +554,8 @@ function renderCourseDetail(containerId, types, detailPage, listPage) {
     closed: { label: '접수마감', cls: 'closed' },
     applied:{ label: '신청완료', cls: 'applied'},
   };
-  const sm = SM[item.status] || { label: item.status, cls: 'closed' };
+  const calcStatus = _calcCourseStatus(item); /* 오늘 날짜 기준 동적 계산 */
+  const sm = SM[calcStatus] || { label: calcStatus, cls: 'closed' };
 
   const atts = item.attachments || [];
   const attHtml = atts.length
@@ -566,11 +573,11 @@ function renderCourseDetail(containerId, types, detailPage, listPage) {
 
   const isApplied = App.getParam('applied') === '1';
   let applyBtn;
-  if (isApplied && item.status === 'open') {
+  if (isApplied && calcStatus === 'open') {
     applyBtn = `<button class="btn btn-gray btn-sm cd-btn-apply" disabled>접수완료</button>
                 <button class="btn btn-danger btn-sm cd-btn-cancel"
                         onclick="App.toast('신청이 취소되었습니다. (프로토타입)', 'info')">취소하기</button>`;
-  } else if (item.status === 'open') {
+  } else if (calcStatus === 'open') {
     applyBtn = `<button class="btn btn-dark btn-sm cd-btn-apply"
                         onclick="window._ctrl && window._ctrl.openApply(${item.id})">접수하기</button>`;
   } else {

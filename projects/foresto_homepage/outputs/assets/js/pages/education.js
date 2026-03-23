@@ -7,10 +7,10 @@
 const ALL_COURSES_RAW = [
   ...Array.from({ length: 12 }, (_, i) => ({
     id: 1000 + i, type: '전문과정',
-    title: `[전문과정] ${55 - i}기 숲해설가 전문가과정`,
-    date:  `2026-0${(i % 9) + 1}-${String((i % 20) + 1).padStart(2, '0')} 10:00:00`,
-    from:  `2026-0${(i % 9) + 1}-${String((i % 20) + 1).padStart(2, '0')}`,
-    to:    `2026-0${(i % 9) + 1}-${String((i % 20) + 5).padStart(2, '0')}`,
+    title: `[전문과정] ${44 + i}기 숲해설가 전문가과정`,
+    date:  `2026-${String(i + 1).padStart(2, '0')}-10 10:00:00`,
+    from:  `2026-${String(i + 1).padStart(2, '0')}-01`,
+    to:    `2026-${String(i + 1).padStart(2, '0')}-20`,
     status: ['open','open','ready','closed','closed'][i % 5],
     attachments: i % 3 === 0 ? [
       { name: '신청서_01.hwp', size: '34.5K' },
@@ -76,6 +76,22 @@ const ALL_COURSES_RAW = [
   })),
 ];
 
+/* ── 이달 접수 중인 더미 데이터: to를 월말로 연장 (프로토타입 시연용) */
+(function() {
+  const today     = new Date().toISOString().slice(0, 10);  // 'YYYY-MM-DD'
+  const thisMonth = today.slice(0, 7);                       // 'YYYY-MM'
+  const lastDay   = new Date(new Date(today).getFullYear(), new Date(today).getMonth() + 1, 0)
+                      .toISOString().slice(0, 10);            // 'YYYY-MM-DD' (월말)
+  ALL_COURSES_RAW.forEach(c => {
+    if (c.from.startsWith(thisMonth) && c.to < today) {
+      c.to = lastDay;
+    }
+  });
+})();
+
+/* member.js 에서 window.ALL_COURSES_RAW 로 접근 가능하도록 노출 */
+window.ALL_COURSES_RAW = ALL_COURSES_RAW;
+
 /* ── 접수 상태 4단계
  *  ready   : 준비중 (접수기간 이전)
  *  open    : 접수중 (접수기간 이내 + 정원 남음)
@@ -85,7 +101,7 @@ const ALL_COURSES_RAW = [
 const STATUS_META = {
   ready:   { label: '준비중',   cls: 'status-ready',   canApply: false },
   open:    { label: '접수중',   cls: 'status-open',    canApply: true  },
-  closed:  { label: '접수마감', cls: 'status-closed',  canApply: false },
+  closed:  { label: '마감', cls: 'status-closed',  canApply: false },
   applied: { label: '신청완료', cls: 'status-applied', canApply: false },
 };
 
@@ -97,20 +113,29 @@ class CourseListController {
     this.paginationId  = paginationId;
     this.detailBase    = detailBasePath || '';   // '' = 같은 폴더
     this.detailPage    = detailPage    || 'course-detail.html';  // 상세 페이지 파일명 (기본: course-detail.html)
-    this.courses       = ALL_COURSES_RAW.filter(c => c.type === pageType);
+    this.courses       = ALL_COURSES_RAW.filter(c => c.type === pageType).sort((a, b) => b.date.localeCompare(a.date));
     this.filtered      = [...this.courses];
     this.currentPage   = 1;
     this.pageSize      = 10;
     this._injectModal();
   }
 
+  /* 오늘 날짜 기준 접수 상태 계산 */
+  _calcStatus(c) {
+    const today = new Date().toISOString().slice(0, 10);
+    if (today < c.from) return 'ready';
+    if (today > c.to)   return 'closed';
+    return 'open';
+  }
+
   filter(status, from, to) {
     this.filtered = this.courses.filter(c => {
-      if (status && c.status !== status) return false;
-      if (from   && c.date < from)       return false;
-      if (to     && c.date > to)         return false;
+      const cs = this._calcStatus(c);
+      if (status && cs !== status) return false;
+      if (from   && c.date < from) return false;
+      if (to     && c.date > to)   return false;
       return true;
-    });
+    }).sort((a, b) => b.date.localeCompare(a.date));
     this.currentPage = 1;
     this.render();
   }
@@ -129,20 +154,22 @@ class CourseListController {
 
     const tbody = document.getElementById(this.containerId);
     if (!tbody) return;
-    tbody.innerHTML = slice.map(c => {
-      const sm    = STATUS_META[c.status];
+    const startIdx = (this.currentPage - 1) * this.pageSize;
+    tbody.innerHTML = slice.map((c, i) => {
+      const sm    = STATUS_META[this._calcStatus(c)];
+      const rowNo = total - startIdx - i;
       /* 목록에서 타이틀 및 상태 배지 모두 상세 페이지로 이동 */
       const badge = sm.canApply
         ? `<a href="${this.detailBase}${this.detailPage}?id=${c.id}" class="status-badge ${sm.cls}">${sm.label}</a>`
         : `<span class="status-badge ${sm.cls}">${sm.label}</span>`;
       return `<tr>
-        <td class="col-num center">${c.id}</td>
+        <td class="col-num center">${rowNo}</td>
         <td class="td-title">
           <a href="${this.detailBase}${this.detailPage}?id=${c.id}">${c.title}</a>
         </td>
         <td class="col-date center">${String(c.date).slice(0, 10)}</td>
-        <td class="col-period center" style="font-size:13px;color:var(--gray-mid)">${c.from} ~ ${c.to}</td>
-        <td class="col-status center">${badge}</td>
+        <td class="col-period center">${c.from} ~ ${c.to}</td>
+        <td class="col-status">${badge}</td>
       </tr>`;
     }).join('');
 
@@ -214,7 +241,7 @@ class CourseListController {
      * URL에서 applied 파라미터 제거해 목록 상태로 재렌더링
      */
     const course = this.courses.find(c => c.id === id);
-    const reverted = course?.status || 'closed';
+    const reverted = course ? this._calcStatus(course) : 'closed';
     const msg = reverted === 'open'
         ? '신청이 취소되었습니다. 접수기간 내이므로 재신청이 가능합니다.'
         : '신청이 취소되었습니다. 접수마감 상태로 변경됩니다.';
@@ -361,10 +388,10 @@ class CourseDetailController extends CourseListController {
 
         /* ── 접수 상태 4단계 판별
          * 프로토타입: URL ?applied=1 → 신청완료 시뮬레이션
-         * 신청 취소 후: 강좌 status 에 따라 접수중/접수마감 자동 복귀
+         * 신청 취소 후: 오늘 날짜 기준으로 재계산
          */
         const isApplied = App.getParam('applied') === '1';
-        const baseStatus = course.status; /* ready | open | closed */
+        const baseStatus = this._calcStatus(course); /* 오늘 날짜 기준 동적 계산 */
 
         /* 표시할 배지 상태 결정 */
         const displayStatus = isApplied ? 'applied' : baseStatus;
@@ -372,10 +399,11 @@ class CourseDetailController extends CourseListController {
 
         /* 목록으로 돌아갈 경로 */
         const backMap = {
-            '전문과정':   'course-list.html',
-            '시민아카데미': 'academy.html',
-            '직무교육':   'job-training.html',
-            '역량강화':   'job-training.html',
+            '전문과정':    'course-list.html',
+            '시민아카데미': 'academy-apply.html',
+            '직무교육':    'job-training-apply.html',
+            '역량강화':    'job-training-apply.html',
+            '멘토링':      'mentoring.html',
         };
         const backHref = backMap[course.type] || 'course-list.html';
 
