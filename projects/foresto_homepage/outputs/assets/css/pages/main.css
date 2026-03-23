@@ -666,9 +666,9 @@
   .hero-slide-title { font-size: 28px; }
   .hero-slide-tag { font-size: 13px; }
   .hero-slide-desc { display: none; }
-  .hero-slide-inner { gap: 16px; padding: 0 16px; }
+  .hero-slide-inner { gap: 16px; padding: 0 60px; }
   .hero-slide-btn { height: 38px; font-size: 14px; width: 110px; }
-  .hero-dots { bottom: 16px; }
+  .hero-dots { width: 170px; bottom: 16px; padding: 0 40px; }
   .hero-arrow { width: 34px; height: 34px; font-size: 15px; }
   .hero-prev { left: 8px; }
   .hero-next { right: 8px; }
@@ -694,7 +694,6 @@
   .hero-slider { height: 220px; }
   .hero-slide-title { font-size: 22px; line-height: 1.3; }
   .hero-slide-tag { font-size: 12px; }
-  .hero-slide-inner { gap: 12px; }
   .hero-slide-btn { height: 32px; font-size: 13px; width: 96px; }
 
   /* 협회 소개 */
