@@ -48,6 +48,8 @@ html[data-font="lg"] { font-size: 18px; }
 
   /* 레이아웃 */
   --container-max: 1800px;
+  --container-md: 1400px;
+  --container-sm: 760px;
   --radius: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;

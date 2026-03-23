@@ -301,8 +301,8 @@ select.form-control {
 /* ── 강좌 상태 배지 */
 .status-badge {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 80px; padding: 5px 0; border-radius: 4px;
-  font-size: var(--text-md);
+  width: 80px; padding: 5px 0; border-radius: 10px;
+  font-size: var(--text-sm);
   font-weight: 700; white-space: nowrap;
 }
 .status-open   { background: var(--green-dark); color: var(--white); }
@@ -437,7 +437,7 @@ select.form-control {
 .cd-status-badge {
   display: inline-block;
   padding: 2px 10px;
-  border-radius: 3px;
+  border-radius: 6px;
   font-size: var(--text-xs);
   font-weight: 700;
   white-space: nowrap;

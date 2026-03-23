@@ -57,15 +57,15 @@ const NAV_DATA = [
       {
         label: '기초 과정', href: 'education/academy.html',
         children: [
-          { label: '기초 과정 개요', href: 'education/academy.html' },
-          { label: '교육 신청', href: 'education/academy.html' },
+          { label: '과정 개요', href: 'education/academy.html' },
+          { label: '과정 신청', href: 'education/academy-apply.html' },
         ],
       },
       {
         label: '자격취득 과정', href: 'education/course-intro.html',
         children: [
-          { label: '교육 개요', href: 'education/course-intro.html' },
-          { label: '교육 신청', href: 'education/course-list.html' },
+          { label: '과정 개요', href: 'education/course-intro.html' },
+          { label: '과정 신청', href: 'education/course-list.html' },
           { label: '수료생 후기', href: 'education/reviews.html' },
         ],
       },
@@ -73,7 +73,7 @@ const NAV_DATA = [
         label: '역량강화 과정', href: 'education/job-training.html',
         children: [
           { label: '과정 개요', href: 'education/job-training.html' },
-          { label: '교육 신청', href: 'education/job-training.html' },
+          { label: '과정 신청', href: 'education/job-training-apply.html' },
         ],
       },
     ],
@@ -406,7 +406,7 @@ const LNB = {
       if (items.length) break;
     }
 
-    if (!items.length) return '';
+    if (items.length <= 1) return '';
 
     const itemsHtml = items.map(n3 =>
       `<a href="${root}${n3.href}"
@@ -414,11 +414,24 @@ const LNB = {
         >${n3.label}</a>`
     ).join('');
 
+    /* 렌더 후 탭 너비 균등화 */
+    setTimeout(() => LNB.equalizeTabWidths(), 0);
+
     return `
       <nav class="sub-lnb" aria-label="서브 메뉴">
         <span class="lnb-group-title">${groupLabel}</span>
         <div class="lnb-items">${itemsHtml}</div>
       </nav>`;
+  },
+
+  /* 탭 너비를 가장 넓은 아이템 기준으로 통일 */
+  equalizeTabWidths() {
+    const items = document.querySelectorAll('.lnb-item');
+    if (items.length < 2) return;
+    /* 너비 초기화 후 자연 너비 측정 */
+    items.forEach(el => { el.style.width = ''; });
+    const maxW = Math.max(...Array.from(items).map(el => el.offsetWidth));
+    items.forEach(el => { el.style.width = maxW + 'px'; });
   },
 
   /**

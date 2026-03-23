@@ -43,8 +43,21 @@
   <script>
     document.getElementById('hdr').innerHTML = Header.render('교육과정', '../');
     document.getElementById('ftr').innerHTML = Footer.render('../');
-    document.getElementById('bc').innerHTML  = LNB.breadcrumb('../', 'education/course-list.html');
-    document.getElementById('lnb').innerHTML = LNB.render('../', 'education/course-list.html');
+
+    /* 강좌 타입에 따라 LNB 활성 경로 결정 */
+    const _courseId = Number(new URLSearchParams(location.search).get('id'));
+    const _course   = (typeof ALL_COURSES_RAW !== 'undefined')
+      ? ALL_COURSES_RAW.find(c => c.id === _courseId) : null;
+    const _lnbPathMap = {
+      '전문과정':    'education/course-list.html',
+      '시민아카데미': 'education/academy-apply.html',
+      '직무교육':    'education/job-training-apply.html',
+      '역량강화':    'education/job-training-apply.html',
+    };
+    const _lnbPath = (_course && _lnbPathMap[_course.type]) || 'education/course-list.html';
+
+    document.getElementById('bc').innerHTML  = LNB.breadcrumb('../', _lnbPath);
+    document.getElementById('lnb').innerHTML = LNB.render('../', _lnbPath);
 
     window._ctrl = new CourseDetailController();
     window._ctrl.init();
