@@ -26,8 +26,8 @@
       --border: rgba(255, 255, 255, 0.07);
       --border2: rgba(255, 255, 255, 0.13);
       --text: #e8eaf0;
-      --text2: #8b90a0;
-      --text3: #555a6a;
+      --text2: #d6d8e0;
+      --text3: #a1afe4;
       --accent: #4f7fff;
       --accent2: #7c5cff;
       --green: #2ecc8a;
@@ -432,6 +432,42 @@
       flex-shrink: 0;
     }
 
+    /* 기획문서 목록 */
+    .doc-section-label {
+      font-size: 10px;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-family: 'DM Mono', monospace;
+      margin-top: 10px;
+      margin-bottom: 6px;
+    }
+
+    .doc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--text2);
+      text-decoration: none;
+      padding: 4px 10px;
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      transition: all 0.15s;
+      white-space: nowrap;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .doc-link:hover {
+      background: var(--bg3);
+      border-color: var(--text3);
+      color: var(--text1);
+    }
+
+    .doc-link svg {
+      flex-shrink: 0;
+    }
+
     /* 카드 하단 */
     .card-footer {
       display: flex;
@@ -603,6 +639,7 @@
        status: 'planning' | 'design' | 'dev' | 'complete' | 'hold' (여러 상태인 경우 배열로 ['planning', 'design'] 처럼 입력)
        type:   '리뉴얼' | '신규개발' | '고도화'
        prototypes: [{ name: '화면명', path: 'projects/폴더/outputs/파일명.html' }]
+       docs:      [{ name: '기능정의서', url: 'https://notion.so/...' }]  ← 기획문서 외부링크 (없으면 생략)
        devUrl:  'https://...'  ← 개발서버 URL (없으면 생략)
        liveUrl: 'https://...'  ← 운영서버 URL (없으면 생략)
        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -620,6 +657,7 @@
           { name: '기본결과', path: 'projects/mensa_onlineTest/outputs/result-basic.html' },
           { name: '상세리포트', path: 'projects/mensa_onlineTest/outputs/result-detail.html' },
         ],
+        docs:      [{ name: '리드미', url: 'https://bn-sys.github.io/pm-workspace/projects/mensa_onlineTest/' }], 
         liveUrl: 'https://test.mensakorea.kr/test/consent.php'
       },
       {
@@ -634,6 +672,7 @@
           { name: '관리자', path: 'projects/foresto_homepage/outputs/admin/index.html' },
           { name: '마이페이지', path: 'projects/foresto_homepage/outputs/mypage/index.html' },
         ],
+        docs:      [{ name: '리드미', url: 'https://bn-sys.github.io/pm-workspace/projects/foresto_homepage/' },{ name: '요구사항정의서', url: 'https://docs.google.com/spreadsheets/d/1TtrJEkFUd8MVGFUA1uwmA1KNdW63U_AjcZ5pKrLc0_s/edit?gid=1770386605#gid=1770386605' }], 
       },
       {
         id: 'daejintex_renewal',
@@ -642,7 +681,11 @@
         type: '리뉴얼',
         status: ['planning'],
         updated: '2026-03-23',
-        prototypes: [],
+        prototypes: [
+          { name: '사용자', path: 'projects/daejintex_renewal/outputs/index.html' },
+          { name: '관리자', path: 'projects/daejintex_renewal/outputs/admin/index.html' },
+        ],
+        docs:      [{ name: '리드미', url: 'https://bn-sys.github.io/pm-workspace/projects/daejintex_renewal/' }], 
       },
     ];
 
@@ -672,7 +715,8 @@
         ? `linear-gradient(90deg, ${colors.join(', ')})`
         : colors[0];
 
-      const protoHTML = p.prototypes.length
+      const protoHTML = `<div class="doc-section-label">프로토타입</div>` +
+        (p.prototypes.length
         ? p.prototypes.map(pt => `
         <div class="proto-item">
           <span class="proto-name">${pt.name}</span>
@@ -683,7 +727,22 @@
             열기
           </a>
         </div>`).join('')
-        : `<div style="font-size:12px;color:var(--text3);">프로토타입 준비 중</div>`;
+        : `<div style="font-size:12px;color:var(--text3);padding-bottom:4px;">준비 중</div>`);
+
+      const docsHTML = (p.docs && p.docs.length)
+        ? `<div class="doc-section-label">기획문서</div>` +
+          p.docs.map(d => `
+        <div class="proto-item">
+          <span class="proto-name">${d.name}</span>
+          <a class="doc-link" href="${d.url}" target="_blank">
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+              <path d="M3 1.5h4.5L9.5 4V10.5H3V1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+              <path d="M7 1.5V4h2.5" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+            </svg>
+            열기
+          </a>
+        </div>`).join('')
+        : '';
 
       return `
     <div class="card" data-status="${statuses.join(',')}" data-id="${p.id}"
@@ -704,7 +763,7 @@
           </div>
         </div>
         <div class="card-divider"></div>
-        <div class="proto-list">${protoHTML}</div>
+        <div class="proto-list">${docsHTML}${protoHTML}</div>
         ${(p.devUrl || p.liveUrl) ? `
         <div class="url-btn-group">
           ${p.devUrl ? `
