@@ -1,7 +1,7 @@
 # 한국숲해설가협회 홈페이지 구축 기획문서
 
 ## [요구사항정의서](https://docs.google.com/spreadsheets/d/1TtrJEkFUd8MVGFUA1uwmA1KNdW63U_AjcZ5pKrLc0_s/edit?usp=sharing)
-## [전체 프로토타입 보기](https://bn-sys.github.io/pm-workspace/projects/index.html)
+## [전체 프로토타입 보기](https://bn-sys.github.io/pm-workspace/projects/foresto_homepage/outputs/index.html)
 
 > **프로젝트명** 한국숲해설가협회 홈페이지 구축_재견적  
 > **문서버전** V0.1  
