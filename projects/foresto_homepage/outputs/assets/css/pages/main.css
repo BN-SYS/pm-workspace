@@ -207,7 +207,7 @@
 /* ── ③ 메인 콘텐츠 3열 레이아웃 */
 .content-main-grid {
   display: flex;
-  gap: 8px;
+  gap: 30px;
   height: 560px;
   padding: 20px 0 64px;
   box-sizing: content-box;
