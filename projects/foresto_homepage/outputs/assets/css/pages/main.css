@@ -64,21 +64,21 @@
 }
 
 .hero-slide-tag {
-  font-size: 18px;
+  font-size: var(--text-base);
   font-weight: 500;
   color: #fff;
 }
 
 .hero-slide-title {
   font-family: 'Nanum Pen Script', cursive;
-  font-size: 64px;
+  font-size: var(--text-hero);
   font-weight: 400;
   color: #fff;
   line-height: 1.2;
 }
 
 .hero-slide-desc {
-  font-size: 18px;
+  font-size: var(--text-base);
   font-weight: 500;
   color: #fff;
 }
@@ -98,7 +98,7 @@
   border: none;
   border-radius: 8px;
   color: #fff;
-  font-size: 18px;
+  font-size: var(--text-base);
   font-weight: 600;
   text-decoration: none;
   transition: background 0.2s;
@@ -110,7 +110,7 @@
 }
 
 .hero-slide-btn .btn-arrow {
-  font-size: 20px;
+  font-size: var(--text-lg);
   line-height: 1;
   opacity: 0.85;
 }
@@ -158,7 +158,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  font-size: 20px;
+  font-size: var(--text-lg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -192,7 +192,7 @@
 }
 
 .assoc-intro p {
-  font-size: 18px;
+  font-size: var(--text-base);
   font-weight: 600;
   color: #111;
   line-height: 1.4;
@@ -267,7 +267,7 @@
 }
 
 .course-card-title {
-  font-size: 24px;
+  font-size: var(--text-24);
   font-weight: 600;
   color: #fff;
   white-space: nowrap;
@@ -276,7 +276,7 @@
 }
 
 .course-card-arrow {
-  font-size: 20px;
+  font-size: var(--text-lg);
   color: rgba(255, 255, 255, 0.85);
   font-weight: 400;
   flex-shrink: 0;
@@ -302,7 +302,7 @@
 }
 
 .home-panel-title {
-  font-size: 24px;
+  font-size: var(--text-24);
   font-weight: 700;
   color: #20281a;
 }
@@ -313,7 +313,7 @@
   justify-content: center;
   width: 24px;
   height: 24px;
-  font-size: 18px;
+  font-size: var(--text-2xl);
   color: #555;
   text-decoration: none;
   transition: color 0.2s;
@@ -349,7 +349,7 @@
 .board-title {
   flex: 1;
   min-width: 0;
-  font-size: 18px;
+  font-size: var(--text-base);
   font-weight: 500;
   color: #111;
   cursor: pointer;
@@ -363,7 +363,7 @@
 .board-title:hover { color: #508829; }
 
 .board-date {
-  font-size: 13px;
+  font-size: var(--text-xs);
   color: #999;
   flex-shrink: 0;
   white-space: nowrap;
@@ -391,14 +391,14 @@
   justify-content: space-between;
   align-items: center;
   font-weight: 700;
-  font-size: 16px;
+  font-size: var(--text-md);
 }
 
 .cal-nav button {
   background: none;
   border: none;
   color: #fff;
-  font-size: 18px;
+  font-size: var(--text-base);
   cursor: pointer;
   width: 24px;
   height: 24px;
@@ -421,7 +421,7 @@
 
 .cal-dh {
   text-align: center;
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 500;
   padding: 6px 2px;
   background: #e1e3e0;
@@ -437,7 +437,7 @@
   position: relative;
   text-align: center;
   padding: 8px 2px;
-  font-size: 14px;
+  font-size: var(--text-sm);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -461,21 +461,33 @@
 .cal-cell.today.sun,
 .cal-cell.today.sat { color: #f6f8f5; }
 
-/* 이벤트 dot */
-.cal-cell.has-event::after {
+/* 선택된 날짜 (today 제외) */
+.cal-cell.selected:not(.today) {
+  background: #d8eddf;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* 이벤트 dot — 모든 셀에 공간 예약, 이벤트 없으면 투명 */
+.cal-cell::after {
   content: '';
   display: block;
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #508829;
+  background: transparent;
   margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.cal-cell.has-event::after {
+  background: #508829;
 }
 
 /* 달력 하단 일정 목록 */
 .cal-schedule-box {
   flex: 1;
-  min-height: 0;
+  min-height: 120px;
   background: #f1f5ee;
   border-radius: 12px;
   padding: 20px 24px;
@@ -486,7 +498,7 @@
 }
 
 .cal-schedule-item {
-  font-size: 18px;
+  font-size: var(--text-base);
   font-weight: 500;
   color: #111;
   white-space: nowrap;
@@ -498,6 +510,13 @@
 }
 
 .cal-schedule-item:hover { color: #508829; }
+
+.cal-schedule-empty {
+  font-size: var(--text-base);
+  line-height: 1.4;
+  cursor: default;
+  pointer-events: none;
+}
 
 
 /* ── 팝업 */
@@ -521,7 +540,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 700;
 }
 
@@ -529,14 +548,14 @@
   background: none;
   border: none;
   color: #fff;
-  font-size: 18px;
+  font-size: var(--text-base);
   cursor: pointer;
   line-height: 1;
 }
 
 .popup-body {
   padding: 14px 16px;
-  font-size: 14px;
+  font-size: var(--text-sm);
   line-height: 1.7;
   color: #333;
 }
@@ -550,7 +569,7 @@
 }
 
 .popup-nosh-label {
-  font-size: 13px;
+  font-size: var(--text-xs);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -587,7 +606,7 @@
 /* ── 태블릿 세로 (≤ 900px): 패널 단열 + 높이 축소 */
 @media (max-width: 900px) {
   .hero-slider { height: 380px; }
-  .hero-slide-title { font-size: 42px; }
+  .hero-slide-title { font-size: var(--text-42); }
   .hero-slide-inner { padding: 0 24px; }
 
   .course-cards-col {
@@ -595,7 +614,7 @@
     gap: 6px;
   }
   .course-card { flex: 1; }
-  .course-card-title { font-size: 16px; }
+  .course-card-title { font-size: var(--text-md); }
   .course-card-body { padding: 12px; }
 
   .content-main-grid {
@@ -639,23 +658,23 @@
     padding: 16px 20px;
   }
   .assoc-intro p {
-    font-size: 16px;
+    font-size: var(--text-md);
   }
 
   /* 공통 패널 */
-  .home-panel-title { font-size: 18px;  }
-  .panel-more { font-size: 16px; }
+  .home-panel-title { font-size: var(--text-base); }
+  .panel-more { font-size: var(--text-md); }
 
   /* 공지사항 */
   .notice-box { padding: 16px 18px; }
-  .board-title { font-size: 15px; }
-  .board-date { font-size: 12px; }
+  .board-title { font-size: var(--text-15); }
+  .board-date { font-size: var(--text-12); }
 
   /* 협회일정 */
   .cal-schedule-box { padding: 14px 18px; }
-  .cal-schedule-item { font-size: 15px; }
-  .cal-nav { font-size: 15px; padding: 8px 14px; }
-  .cal-dh, .cal-cell { font-size: 13px; }
+  .cal-schedule-item { font-size: var(--text-15); }
+  .cal-nav { font-size: var(--text-15); padding: 8px 14px; }
+  .cal-dh, .cal-cell { font-size: var(--text-xs); }
 }
 
 
@@ -663,19 +682,19 @@
 @media (max-width: 600px) {
   /* 히어로 */
   .hero-slider { height: 260px; }
-  .hero-slide-title { font-size: 28px; }
-  .hero-slide-tag { font-size: 13px; }
+  .hero-slide-title { font-size: var(--text-2xl); }
+  .hero-slide-tag { font-size: var(--text-xs); }
   .hero-slide-desc { display: none; }
   .hero-slide-inner { gap: 16px; padding: 0 60px; }
-  .hero-slide-btn { height: 38px; font-size: 14px; width: 110px; }
+  .hero-slide-btn { height: 38px; font-size: var(--text-sm); width: 110px; }
   .hero-dots { width: 170px; bottom: 16px; padding: 0 40px; }
-  .hero-arrow { width: 34px; height: 34px; font-size: 15px; }
+  .hero-arrow { width: 34px; height: 34px; font-size: var(--text-15); }
   .hero-prev { left: 8px; }
   .hero-next { right: 8px; }
 
   /* 강좌카드 */
   .course-card { flex: 1; border-radius: 10px; }
-  .course-card-title { font-size: 14px; }
+  .course-card-title { font-size: var(--text-sm); }
   .course-card-body { padding: 10px 12px; }
 
   /* 팝업: 상단 고정 (헤더 아래) */
@@ -692,29 +711,30 @@
 /* ── 소형 모바일 (≤ 480px) */
 @media (max-width: 480px) {
   .hero-slider { height: 220px; }
-  .hero-slide-title { font-size: 22px; line-height: 1.3; }
-  .hero-slide-tag { font-size: 12px; }
-  .hero-slide-btn { height: 32px; font-size: 13px; width: 96px; }
+  .hero-slide-title { font-size: var(--text-xl); line-height: 1.3; }
+  .hero-slide-tag { font-size: var(--text-12); }
+  .hero-slide-inner { gap: 12px; padding: 0 48px; }
+  .hero-slide-btn { height: 32px; font-size: var(--text-xs); width: 96px; }
 
   /* 협회 소개 */
   .assoc-intro { padding: 12px 0 0; }
   .assoc-intro-box { padding: 14px 16px; border-radius: 8px; }
-  .assoc-intro p { font-size: 14px; }
+  .assoc-intro p { font-size: var(--text-sm); }
 
   /* 메인 그리드 여백 */
   .content-main-grid { padding: 12px 0 32px; gap: 12px; }
 
   /* 강좌카드 */
   .course-card { flex: 1; border-radius: 8px; }
-  .course-card-title { font-size: 14px; }
+  .course-card-title { font-size: var(--text-sm); }
   .course-card-body { padding: 8px 10px; }
-  .course-card-arrow { font-size: 16px; }
+  .course-card-arrow { font-size: var(--text-md); }
 
   /* 패널 */
-  .home-panel-title { font-size: 16px; }
-  .board-title { font-size: 14px; }
+  .home-panel-title { font-size: var(--text-md); }
+  .board-title { font-size: var(--text-sm); }
   .notice-box { padding: 14px 14px; border-radius: 10px; }
   .cal-schedule-box { padding: 12px 14px; border-radius: 10px; }
-  .cal-schedule-item { font-size: 14px; }
-  .cal-dh, .cal-cell { font-size: 12px; padding: 6px 1px; }
+  .cal-schedule-item { font-size: var(--text-sm); }
+  .cal-dh, .cal-cell { font-size: var(--text-12); padding: 6px 1px; }
 }

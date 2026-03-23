@@ -160,17 +160,13 @@
           </div>
           <div class="mini-cal-wrap">
             <div class="cal-nav">
-              <button onclick="App.toast('이전 달')">‹</button>
+              <button onclick="moveCalMonth(-1)" aria-label="이전 달">‹</button>
               <span id="miniCalTitle"></span>
-              <button onclick="App.toast('다음 달')">›</button>
+              <button onclick="moveCalMonth(1)" aria-label="다음 달">›</button>
             </div>
             <div class="cal-grid" id="miniCal"></div>
           </div>
-          <div class="cal-schedule-box">
-            <div class="cal-schedule-item" onclick="App.toast('전문가과정 접수 마감')">03.15 전문가과정 접수 마감</div>
-            <div class="cal-schedule-item" onclick="App.toast('동아리 정기모임')">03.20 동아리 정기모임</div>
-            <div class="cal-schedule-item" onclick="App.toast('사공단 봉사활동')">03.28 사공단 봉사활동</div>
-          </div>
+          <div class="cal-schedule-box" id="calScheduleBox"></div>
         </div>
 
       </div><!-- /content-main-grid -->
@@ -215,18 +211,70 @@
       box.innerHTML = html;
     })();
 
-    /* ── 미니캘린더 (동적 날짜 기반) */
-    (function () {
-      const now = new Date();
-      const yr   = now.getFullYear();
-      const mo   = now.getMonth();
-      const today = now.getDate();
-      const eventDays = [15, 20, 25, 28];
+    /* ── 협회 일정 데이터 (YYYY-MM-DD) */
+    const SCHEDULES = [
+      { date: '2026-03-15', title: '전문가과정 접수 마감' },
+      { date: '2026-03-20', title: '동아리 정기모임' },
+      { date: '2026-03-25', title: '역량강화 특강' },
+      { date: '2026-03-28', title: '사공단 봉사활동' },
+      { date: '2026-04-01', title: '전문가과정 개강' },
+      { date: '2026-04-05', title: '4월 이사회' },
+    ];
 
-      const titleEl = document.getElementById('miniCalTitle');
-      if (titleEl) titleEl.textContent = `${yr}.${String(mo + 1).padStart(2, '0')}`;
+    /* 선택 날짜 이후(당일 포함) 일정 최대 3건 렌더 — 항상 3슬롯 고정 */
+    function renderCalSchedule(fromDate) {
+      const box = document.getElementById('calScheduleBox');
+      if (!box) return;
+      const list = SCHEDULES.filter(s => s.date >= fromDate).slice(0, 3);
 
-      const first  = new Date(yr, mo, 1).getDay();
+      if (!list.length) {
+        /* 일정 없음: 메시지 1줄 + 빈 슬롯 2개로 높이 유지 */
+        box.innerHTML =
+          `<div class="cal-schedule-item" style="color:var(--gray-mid);cursor:default;">예정된 일정이 없습니다.</div>` +
+          `<div class="cal-schedule-empty">&nbsp;</div>` +
+          `<div class="cal-schedule-empty">&nbsp;</div>`;
+        return;
+      }
+
+      box.innerHTML = Array.from({ length: 3 }, (_, i) => {
+        const s = list[i];
+        if (s) {
+          const label = s.date.slice(5).replace('-', '.');
+          return `<div class="cal-schedule-item" onclick="App.toast('${s.title}')">${label} ${s.title}</div>`;
+        }
+        return `<div class="cal-schedule-empty">&nbsp;</div>`;
+      }).join('');
+    }
+
+    /* 날짜 셀 클릭: 선택 표시 + 일정 갱신 */
+    function selectCalDate(dateStr, el) {
+      document.querySelectorAll('#miniCal .cal-cell.selected')
+        .forEach(c => c.classList.remove('selected'));
+      if (el) el.classList.add('selected');
+      renderCalSchedule(dateStr);
+    }
+
+    /* ── 미니캘린더 상태 */
+    const _calNow = new Date();
+    let _calYr = _calNow.getFullYear();
+    let _calMo = _calNow.getMonth(); /* 0-based */
+
+    function renderMiniCal() {
+      const yr    = _calYr;
+      const mo    = _calMo;
+      const todayD = (_calNow.getFullYear() === yr && _calNow.getMonth() === mo)
+                     ? _calNow.getDate() : -1;
+      const yrStr = String(yr);
+      const moStr = String(mo + 1).padStart(2, '0');
+
+      /* 이번 달 이벤트 날짜 추출 */
+      const eventDays = SCHEDULES
+        .filter(s => s.date.startsWith(`${yrStr}-${moStr}`))
+        .map(s => Number(s.date.slice(8, 10)));
+
+      document.getElementById('miniCalTitle').textContent = `${yr}.${moStr}`;
+
+      const first   = new Date(yr, mo, 1).getDay();
       const lastDay = new Date(yr, mo + 1, 0).getDate();
 
       const days = ['일', '월', '화', '수', '목', '금', '토'];
@@ -235,20 +283,47 @@
       for (let i = 0; i < first; i++) html += `<div class="cal-cell"></div>`;
 
       for (let d = 1; d <= lastDay; d++) {
-        const dow = (first + d - 1) % 7;
-        const dateStr = `${yr}.${String(mo + 1).padStart(2, '0')}.${String(d).padStart(2, '0')}`;
+        const dow     = (first + d - 1) % 7;
+        const dStr    = String(d).padStart(2, '0');
+        const dateStr = `${yrStr}-${moStr}-${dStr}`;
         const cls = [
           'cal-cell',
-          d === today ? 'today' : '',
+          d === todayD ? 'today' : '',
           eventDays.includes(d) ? 'has-event' : '',
           dow === 0 ? 'sun' : '',
           dow === 6 ? 'sat' : ''
         ].filter(Boolean).join(' ');
-        html += `<div class="${cls}" onclick="App.toast('${dateStr} 일정')">${d}</div>`;
+        html += `<div class="${cls}" onclick="selectCalDate('${dateStr}', this)">${d}</div>`;
       }
 
+      /* 항상 6행(42칸) 고정 — 남은 칸 빈 셀로 패딩 */
+      const padCount = 42 - first - lastDay;
+      for (let i = 0; i < padCount; i++) html += `<div class="cal-cell"></div>`;
+
       document.getElementById('miniCal').innerHTML = html;
-    })();
+
+      /* 현재 달이면 오늘, 다른 달이면 1일 기본 선택 */
+      const defaultDate = todayD > 0
+        ? `${yrStr}-${moStr}-${String(todayD).padStart(2, '0')}`
+        : `${yrStr}-${moStr}-01`;
+      renderCalSchedule(defaultDate);
+
+      /* 오늘이 아닌 경우만 selected 표시 (오늘은 .today 스타일 유지) */
+      if (todayD <= 0) {
+        const defaultCell = document.querySelector(`#miniCal .cal-cell[onclick*="${defaultDate}"]`);
+        if (defaultCell) defaultCell.classList.add('selected');
+      }
+    }
+
+    function moveCalMonth(dir) {
+      _calMo += dir;
+      if (_calMo > 11) { _calMo = 0;  _calYr++; }
+      if (_calMo < 0)  { _calMo = 11; _calYr--; }
+      renderMiniCal();
+    }
+
+    /* 초기 렌더 */
+    renderMiniCal();
 
     /* ── 팝업 오늘 하루 닫기 */
     document.getElementById('popupNoShow').addEventListener('change', function () {
