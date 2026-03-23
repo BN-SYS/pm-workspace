@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verihum — 사람 작성 인증 서비스</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,800;1,300;1,600&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── 컬러 시스템 ── */
+    :root {
+      --color-bg:       #0d0f14;
+      --color-surface:  #161921;
+      --color-surface2: #1e2230;
+      --color-text:     #c8cdd8;
+      --color-heading:  #eef0f5;
+      --color-accent:   #00e5a0;
+      --color-accent2:  #00b87a;
+      --color-muted:    #5a6070;
+      --color-border:   #252a38;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(15px, 1.8vw, 17px);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── 배경 패턴 ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── 공통 ── */
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 clamp(20px, 5vw, 60px);
+    }
+
+    section { position: relative; z-index: 1; }
+
+    .label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      border: 1px solid rgba(0,229,160,0.3);
+      border-radius: 2px;
+      padding: 4px 12px;
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 800;
+      color: var(--color-heading);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    p { color: var(--color-text); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(80px, 12vw, 140px) 0 clamp(60px, 8vw, 100px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* glow orb */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -100px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(0,229,160,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.1s;
+    }
+
+    .hero h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(40px, 7vw, 88px);
+      font-weight: 800;
+      color: var(--color-heading);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      max-width: 780px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.25s;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--color-accent);
+    }
+
+    .hero-sub {
+      margin-top: 32px;
+      font-size: clamp(15px, 2vw, 18px);
+      color: var(--color-muted);
+      max-width: 520px;
+      line-height: 1.75;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.4s;
+    }
+
+    .hero-actions {
+      margin-top: 48px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.55s;
+    }
+
+    .btn-primary {
+      background: var(--color-accent);
+      color: #0d0f14;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 16px 36px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-primary:hover {
+      background: var(--color-accent2);
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-muted);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 2px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-ghost:hover { color: var(--color-heading); border-color: var(--color-muted); }
+
+    /* 타이핑 모션 UI */
+    .hero-visual {
+      margin-top: 72px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.7s;
+    }
+
+    .typing-demo {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      max-width: 620px;
+      overflow: hidden;
+    }
+
+    .typing-demo-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .typing-demo-bar span {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+
+    .typing-demo-bar .dot-r { background: #ff5f56; }
+    .typing-demo-bar .dot-y { background: #ffbd2e; }
+    .typing-demo-bar .dot-g { background: #27c93f; }
+
+    .typing-demo-label {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--color-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .typing-demo-body {
+      padding: 20px 24px;
+      font-family: 'Space Grotesk', monospace;
+      font-size: 14px;
+      min-height: 100px;
+      position: relative;
+    }
+
+    .typing-text { color: var(--color-heading); }
+    .typing-ai   { color: rgba(0,229,160,0.5); text-decoration: line-through; }
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: var(--color-accent);
+      vertical-align: middle;
+      margin-left: 2px;
+      animation: blink 1s step-end infinite;
+    }
+
+    .typing-meta {
+      display: flex;
+      gap: 20px;
+      padding: 12px 24px;
+      border-top: 1px solid var(--color-border);
+      background: rgba(0,229,160,0.03);
+    }
+
+    .typing-meta-item { font-size: 12px; color: var(--color-muted); }
+    .typing-meta-item strong { color: var(--color-accent); font-weight: 600; }
+
+    /* ── PROBLEM ── */
+    .section-problem {
+      padding: clamp(80px, 10vw, 120px) 0;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 48px;
+      border: 1px solid var(--color-border);
+      overflow: hidden;
+    }
+
+    .problem-card {
+      background: var(--color-surface);
+      padding: clamp(28px, 4vw, 48px);
+      position: relative;
+      transition: background 0.3s ease;
+    }
+
+    .problem-card:hover { background: var(--color-surface2); }
+    .problem-card + .problem-card { border-left: 2px solid var(--color-border); }
+
+    .problem-card-num {
+      font-family: 'Fraunces', serif;
+      font-size: 56px;
+      font-weight: 800;
+      color: var(--color-border);
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+
+    .problem-card h3 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(18px, 2.5vw, 24px);
+      font-weight: 600;
+      color: var(--color-heading);
+      margin-bottom: 14px;
+      line-height: 1.3;
+    }
+
+    .problem-card p { font-size: 14px; color: var(--color-muted); line-height: 1.75; }
+
+    /* ── SOLUTION ── */
+    .section-solution {
+      padding: clamp(80px, 10vw, 120px) 0;
+    }
+
+    .solution-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 6vw, 80px);
+      align-items: start;
+      margin-top: 56px;
+    }
+
+    .solution-text h2 { margin-bottom: 24px; }
+
+    .solution-text p {
+      font-size: 15px;
+      color: var(--color-muted);
+      margin-bottom: 16px;
+      line-height: 1.8;
+    }
+
+    .solution-features {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 24px 28px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .feature-item:hover {
+      border-color: rgba(0,229,160,0.3);
+      background: var(--color-surface2);
+    }
+
+    .feature-icon {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,229,160,0.1);
+      border: 1px solid rgba(0,229,160,0.2);
+    }
+
+    .feature-icon svg { width: 18px; height: 18px; fill: var(--color-accent); }
+
+    .feature-content h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-heading);
+      margin-bottom: 6px;
+      letter-spacing: 0.01em;
+    }
+
+    .feature-content p { font-size: 13px; color: var(--color-muted); line-height: 1.65; }
+
+    /* ── HOW IT WORKS ── */
+    .section-how {
+      padding: clamp(80px, 10vw, 120px) 0;
+      border-top: 1px solid var(--color-border);
+      position: relative;
+    }
+
+    .section-how::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, var(--color-border) 20%, var(--color-border) 80%, transparent);
+      pointer-events: none;
+    }
+
+    .how-header { text-align: center; margin-bottom: 72px; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .step-card {
+      padding: clamp(24px, 3vw, 40px);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      position: relative;
+    }
+
+    .step-num {
+      font-family: 'Fraunces', serif;
+      font-size: 13px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--color-accent);
+      margin-bottom: 20px;
+    }
+
+    .step-card h3 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(17px, 2vw, 22px);
+      font-weight: 600;
+      color: var(--color-heading);
+      line-height: 1.3;
+      margin-bottom: 14px;
+    }
+
+    .step-card p { font-size: 13.5px; color: var(--color-muted); line-height: 1.75; }
+
+    .step-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 20px;
+      font-size: 11px;
+      color: var(--color-accent);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .step-tag::before {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 1px;
+      background: var(--color-accent);
+    }
+
+    /* ── MARKET ── */
+    .section-market {
+      padding: clamp(80px, 10vw, 120px) 0;
+    }
+
+    .market-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: clamp(40px, 6vw, 80px);
+      align-items: center;
+      margin-top: 56px;
+    }
+
+    .market-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .stat-box {
+      padding: 32px 28px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      transition: border-color 0.3s ease;
+    }
+
+    .stat-box:hover { border-color: rgba(0,229,160,0.25); }
+
+    .stat-num {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 800;
+      color: var(--color-accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label { font-size: 13px; color: var(--color-muted); line-height: 1.5; }
+
+    .market-text h2 { margin-bottom: 24px; }
+
+    .market-targets {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .target-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .target-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      flex-shrink: 0;
+    }
+
+    .target-row p { font-size: 14px; color: var(--color-text); }
+    .target-row span { font-size: 12px; color: var(--color-muted); margin-left: auto; white-space: nowrap; }
+
+    /* ── MODEL ── */
+    .section-model {
+      padding: clamp(60px, 8vw, 100px) 0;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .model-header { text-align: center; margin-bottom: 56px; }
+
+    .model-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .model-card {
+      padding: clamp(24px, 3vw, 40px);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .model-card.featured {
+      background: var(--color-surface2);
+      border-color: rgba(0,229,160,0.4);
+    }
+
+    .model-card:hover { transform: translateY(-4px); }
+
+    .model-card-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: 12px;
+    }
+
+    .model-card h3 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(18px, 2.2vw, 24px);
+      font-weight: 600;
+      color: var(--color-heading);
+      margin-bottom: 12px;
+    }
+
+    .model-card p { font-size: 13.5px; color: var(--color-muted); line-height: 1.7; }
+
+    /* ── CTA ── */
+    .section-cta {
+      padding: clamp(80px, 10vw, 120px) 0;
+      text-align: center;
+      position: relative;
+    }
+
+    .section-cta::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 300px;
+      background: radial-gradient(ellipse, rgba(0,229,160,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-inner { position: relative; z-index: 1; }
+
+    .cta-inner h2 {
+      font-size: clamp(32px, 5vw, 60px);
+      margin-bottom: 20px;
+    }
+
+    .cta-inner p {
+      font-size: 16px;
+      color: var(--color-muted);
+      margin-bottom: 40px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--color-border);
+      padding: 32px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--color-heading);
+      letter-spacing: -0.02em;
+    }
+
+    .footer-logo span { color: var(--color-accent); }
+
+    .footer-copy { font-size: 12px; color: var(--color-muted); }
+
+    /* ── 애니메이션 ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* scroll 진입 효과 */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── 반응형 ── */
+    @media (max-width: 768px) {
+      .problem-grid,
+      .solution-layout,
+      .steps,
+      .market-layout,
+      .model-cards { grid-template-columns: 1fr; }
+
+      .problem-card + .problem-card { border-left: none; border-top: 2px solid var(--color-border); }
+
+      .section-how::before { display: none; }
+
+      .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
+
+      .market-stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="container">
+      <p class="hero-eyebrow">Verihum · AI 시대의 인증 인프라</p>
+      <h1>결과가 아닌<br><em>과정</em>을 증명한다</h1>
+      <p class="hero-sub">
+        글을 쓴 것이 AI인지, 사람인지 판별하는 시대가 왔다.<br>
+        Verihum은 작성 과정 데이터를 분석해 사람의 손이 만든 결과물을 인증한다.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">도입 문의하기</a>
+        <a href="#how" class="btn-ghost">작동 방식 보기 →</a>
+      </div>
+
+      <!-- 타이핑 데모 UI -->
+      <div class="hero-visual">
+        <div class="typing-demo">
+          <div class="typing-demo-bar">
+            <span class="dot-r"></span>
+            <span class="dot-y"></span>
+            <span class="dot-g"></span>
+            <span class="typing-demo-label">Process Log · Live</span>
+          </div>
+          <div class="typing-demo-body">
+            <span class="typing-ai" id="ai-text"></span>
+            <span class="typing-text" id="human-text"></span>
+            <span class="cursor"></span>
+          </div>
+          <div class="typing-meta">
+            <div class="typing-meta-item">직접 입력 <strong id="human-pct">0%</strong></div>
+            <div class="typing-meta-item">붙여넣기 <strong id="paste-pct">0%</strong></div>
+            <div class="typing-meta-item">수정 횟수 <strong id="edit-count">0회</strong></div>
+            <div class="typing-meta-item">작성 시간 <strong>04:27</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROBLEM ── -->
+  <section class="section-problem">
+    <div class="container">
+      <span class="label reveal">Problem</span>
+      <h2 class="reveal">AI 글쓰기의 확산이<br>만든 두 가지 문제</h2>
+      <div class="problem-grid reveal">
+        <div class="problem-card">
+          <div class="problem-card-num">01</div>
+          <h3>결과물만으로는<br>AI 작성 여부를 알 수 없다</h3>
+          <p>기존 AI 탐지 기술은 최종 결과물 텍스트를 분석한다. 하지만 수정과 가공을 거친 결과물은 판별 정확도가 현저히 낮아지며, 오탐 논란도 지속되고 있다.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-card-num">02</div>
+          <h3>교사·평가자의<br>업무 과부하가 심각하다</h3>
+          <p>수행평가, 논술형 과제, 온라인 시험 등에서 AI 활용 여부를 일일이 확인하는 것은 현실적으로 불가능하다. 평가 공정성이 무너지고 있다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SOLUTION ── -->
+  <section class="section-solution">
+    <div class="container">
+      <div class="solution-layout">
+        <div class="solution-text reveal">
+          <span class="label">Solution</span>
+          <h2>작성 과정 데이터로<br>사람임을 증명한다</h2>
+          <p>Verihum은 글을 쓰는 <em style="color:var(--color-accent);font-style:normal;font-weight:600;">과정</em>을 기록한다. 타이핑 흐름, 수정 패턴, 붙여넣기 이력 등 행동 데이터를 수집하고 AI로 분석해 사람 작성 여부를 인증한다.</p>
+          <p>결과물이 아닌 과정 기반 접근으로, 기존 AI 탐지 방식의 한계를 근본적으로 해결한다.</p>
+        </div>
+        <div class="solution-features reveal">
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 3H5C3.9 3 3 3.9 3 5v4c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 6H5V5h4v4zm10-6h-4c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 6h-4V5h4v4zM9 13H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zm0 6H5v-4h4v4zm6-1h2v-2h-2v2zm0-8h2V8h-2v2zm0 4h2v-2h-2v2z"/></svg>
+            </div>
+            <div class="feature-content">
+              <h4>행동 로그 수집</h4>
+              <p>키보드 입력, 마우스 동작, 붙여넣기, 수정 흐름을 실시간으로 기록한다.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+            </div>
+            <div class="feature-content">
+              <h4>과정 재현 기능</h4>
+              <p>저장된 로그로 작성 과정을 타임라인 형태로 재현해 평가자가 직접 확인할 수 있다.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            </div>
+            <div class="feature-content">
+              <h4>AI 기반 과정 평가</h4>
+              <p>수집된 로그를 AI가 분석해 작성 주체 판별 결과와 과정 점수를 자동 산출한다.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            </div>
+            <div class="feature-content">
+              <h4>인증서 발급</h4>
+              <p>분석 완료 후 사람 작성 비율과 과정 평가 결과를 담은 인증 리포트를 제공한다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="section-how" id="how">
+    <div class="container">
+      <div class="how-header">
+        <span class="label reveal">How It Works</span>
+        <h2 class="reveal">3단계로 완성되는<br>과정 기반 인증</h2>
+      </div>
+      <div class="steps">
+        <div class="step-card reveal">
+          <div class="step-num">Step 01</div>
+          <h3>과제 등록 &<br>환경 설정</h3>
+          <p>교사 또는 관리자가 Verihum 웹 플랫폼에 과제를 등록한다. 평가 기준, 제출 기간, 모니터링 범위를 설정할 수 있다.</p>
+          <div class="step-tag">Administrator</div>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-num">Step 02</div>
+          <h3>작성 과정<br>자동 기록</h3>
+          <p>학생이 과제를 작성하는 동안 플랫폼 내 에디터가 타이핑 패턴, 수정 흐름, 외부 붙여넣기 등 행동 데이터를 실시간으로 수집한다.</p>
+          <div class="step-tag">Learner</div>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-num">Step 03</div>
+          <h3>AI 분석 &<br>결과 리포트</h3>
+          <p>수집된 로그를 AI가 분석해 사람 작성 비율, 과정 점수, 상세 행동 타임라인을 포함한 리포트를 자동 생성한다.</p>
+          <div class="step-tag">AI Evaluation</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MARKET ── -->
+  <section class="section-market">
+    <div class="container">
+      <div class="market-layout">
+        <div class="market-stats reveal">
+          <div class="stat-box">
+            <div class="stat-num">580만+</div>
+            <div class="stat-label">국내 초·중·고 재학생 수<br>(수행평가 대상)</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">92%</div>
+            <div class="stat-label">교사 중 AI 과제 제출<br>경험 비율 (2024 조사)</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">B2B</div>
+            <div class="stat-label">교육기관·시험기관·기업<br>대상 구독형 수익모델</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">API</div>
+            <div class="stat-label">기존 LMS·시험 플랫폼<br>연동 확장 가능</div>
+          </div>
+        </div>
+        <div class="market-text reveal">
+          <span class="label">Target Market</span>
+          <h2>교육에서 시작해<br>전 산업으로 확장</h2>
+          <div class="market-targets">
+            <div class="target-row">
+              <div class="target-dot"></div>
+              <p>초·중·고 교육기관 — 수행평가·생기부</p>
+              <span>1차 시장</span>
+            </div>
+            <div class="target-row">
+              <div class="target-dot"></div>
+              <p>대학·온라인 교육 플랫폼</p>
+              <span>2차 시장</span>
+            </div>
+            <div class="target-row">
+              <div class="target-dot"></div>
+              <p>자격시험·공인 시험기관</p>
+              <span>2차 시장</span>
+            </div>
+            <div class="target-row">
+              <div class="target-dot"></div>
+              <p>기업 채용 과제·공공기관</p>
+              <span>3차 시장</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── REVENUE MODEL ── -->
+  <section class="section-model">
+    <div class="container">
+      <div class="model-header">
+        <span class="label reveal">Revenue Model</span>
+        <h2 class="reveal">유연한 과금 구조</h2>
+      </div>
+      <div class="model-cards">
+        <div class="model-card reveal">
+          <div class="model-card-label">SaaS</div>
+          <h3>구독형</h3>
+          <p>교육기관 단위 월정액 구독. 학교·학원·플랫폼이 단일 계약으로 전체 구성원에게 서비스를 제공한다.</p>
+        </div>
+        <div class="model-card featured reveal">
+          <div class="model-card-label">Usage Based</div>
+          <h3>사용량 기반 과금</h3>
+          <p>분석 건수 단위로 과금. 소규모 기관부터 대형 시험 기관까지 규모에 맞는 유연한 운영이 가능하다.</p>
+        </div>
+        <div class="model-card reveal">
+          <div class="model-card-label">API</div>
+          <h3>API 연동</h3>
+          <p>기존 LMS, 시험 플랫폼에 Verihum 분석 기능을 API로 연동. B2B/B2G 인증 서비스로 확장한다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="section-cta" id="contact">
+    <div class="container">
+      <div class="cta-inner reveal">
+        <span class="label">Contact</span>
+        <h2>과정을 함께<br>증명하시겠습니까?</h2>
+        <p>도입 문의, 파일럿 프로그램 신청, API 연동 협의를 환영합니다.</p>
+        <a href="mailto:contact@yourcompany.com" class="btn-primary">도입 문의하기</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">Veri<span>hum</span></div>
+        <div class="footer-copy">AI 시대에 필요한 사람 작성 인증 서비스. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── 타이핑 데모 애니메이션 ──
+    const aiRaw   = 'AI가 생성한 텍스트를 그대로 복사해 붙여넣었습니다. ';
+    const humanRaw = '직접 작성: 서울에서 부산까지의 최단 거리는 약 325km이며, 교통수단에 따라 소요 시간이 다릅니다.';
+
+    const aiEl     = document.getElementById('ai-text');
+    const humanEl  = document.getElementById('human-text');
+    const hPct     = document.getElementById('human-pct');
+    const pPct     = document.getElementById('paste-pct');
+    const eCnt     = document.getElementById('edit-count');
+
+    let phase = 0; // 0: show AI text, 1: strikethrough delay, 2: type human text, 3: pause, 4: reset
+
+    function runDemo() {
+      phase = 0;
+      aiEl.textContent = '';
+      humanEl.textContent = '';
+      hPct.textContent = '0%';
+      pPct.textContent = '0%';
+      eCnt.textContent = '0회';
+
+      // Phase 0: 붙여넣기 — AI text 순간 표시
+      setTimeout(() => {
+        aiEl.textContent = aiRaw;
+        pPct.textContent = '100%';
+        eCnt.textContent = '1회';
+
+        // Phase 1: delay → strikethrough 유지, human typing 시작
+        setTimeout(() => {
+          let i = 0;
+          pPct.textContent = '62%';
+          const interval = setInterval(() => {
+            humanEl.textContent = humanRaw.slice(0, i + 1);
+            i++;
+            const ratio = Math.round((i / humanRaw.length) * 100);
+            hPct.textContent = ratio + '%';
+            pPct.textContent = Math.max(0, 62 - Math.round(ratio * 0.6)) + '%';
+            if (i >= humanRaw.length) {
+              clearInterval(interval);
+              eCnt.textContent = '7회';
+              // Phase 3: 잠시 후 리셋
+              setTimeout(runDemo, 3200);
+            }
+          }, 48);
+        }, 900);
+      }, 600);
+    }
+
+    runDemo();
+
+    // ── Scroll Reveal ──
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
