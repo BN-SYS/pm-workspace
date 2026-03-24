@@ -170,10 +170,10 @@ const BoardDetail = {
           <span>작성자 <strong>${item.author}</strong></span>
         </div>
         <hr class="cd-divider">
+        ${attachHtml}
         <div class="cd-body">
           <div class="cd-content">${item.content || '<p>내용이 없습니다.</p>'}</div>
         </div>
-        ${attachHtml}
         ${navHtml}
         <div class="cd-actions">
           <button class="btn btn-primary btn-sm cd-btn-list"
@@ -250,7 +250,26 @@ const RECRUIT_DATA = Array.from({ length: 15 }, (_, i) => ({
               <p>활동 내용, 일정, 대상 기관 등 세부 안내는 첨부 파일을 참조하세요.</p>`,
 }));
 
-/* ── 1-3. 사공단 소식 데이터 (20건) */
+/* ── 1-3. 사공단 소개 텍스트 (관리자 등록) */
+const SAGONGDAN_INTRO_TEXT = `한국숲해설가협회 사회공헌사업단은 숲해설가의 전문성을 활용하여 장애인, 어르신, 취약계층 아동 등 사회적 배려 대상자를 위한 자연 체험 봉사 활동을 펼치고 있습니다.<br>각 공헌단은 담당 지역과 기관을 중심으로 정기 활동을 운영하며, 자연과 사람을 이어주는 가교 역할을 합니다.`;
+
+/* ── 1-3. 사공단 마스터 데이터 (관리자 등록 기준) */
+const SAGONGDAN_DATA = [
+  { id: 1, name: '1공헌단', imgUrl: null,
+    desc: '안양·수리 지역 장애인 복지관을 중심으로 숲 생태 교육 봉사 활동을 진행합니다.' },
+  { id: 3, name: '3공헌단', imgUrl: null,
+    desc: '용인수지 지역 장애인 복지관을 대상으로 산림치유 및 자연 체험 프로그램을 운영합니다.' },
+  { id: 4, name: '4공헌단', imgUrl: null,
+    desc: '서울시립발달장애인센터와 협력하여 정기 숲 체험 봉사 활동을 진행합니다.' },
+  { id: 7, name: '7공헌단', imgUrl: null,
+    desc: '부천 지역 장애인 복지관과 여의도공원 일대에서 숲해설 봉사 활동을 운영합니다.' },
+  { id: 8, name: '8공헌단', imgUrl: null,
+    desc: '월드컵공원 및 마포 지역에서 생태 교육과 봉사 활동을 정기적으로 진행합니다.' },
+  { id: 13, name: '13공헌단', imgUrl: null,
+    desc: '서울시립발달장애인복지관을 중심으로 월 정기 봉사 및 계절 특별 프로그램을 운영합니다.' },
+];
+
+/* ── 1-4. 사공단 소식 데이터 (20건) */
 const NEWS_SUBTITLES = [
   '도봉구 초등 숲 체험 후기', '노인복지관 자연치유 활동',
   '다문화가족 숲 힐링', '장애인 시설 나들이',
@@ -259,10 +278,12 @@ const NEWS_SUBTITLES = [
   '사공단 정기회의 결과', '2월 활동 정리',
 ];
 
+const SAGONGDAN_TEAM_NAMES = SAGONGDAN_DATA.map(t => t.name);
+
 const SAGONGDAN_NEWS_DATA = Array.from({ length: 20 }, (_, i) => ({
   id:      20 - i,
-  isPin:   i < 1,   /* 최신 1건 고정 */
-  title:   `[사공단] ${NEWS_SUBTITLES[i % NEWS_SUBTITLES.length]} ${Math.floor(i / NEWS_SUBTITLES.length) + 1}호`,
+  team:    SAGONGDAN_TEAM_NAMES[i % 3],
+  title:   `${NEWS_SUBTITLES[i % NEWS_SUBTITLES.length]} ${Math.floor(i / NEWS_SUBTITLES.length) + 1}호`,
   author:  pickAuthor('staff', i),
   date:    makeDate(i),
   content: `<p>사공단 소식 ${20 - i}번 게시물입니다.</p>
@@ -272,25 +293,43 @@ const SAGONGDAN_NEWS_DATA = Array.from({ length: 20 }, (_, i) => ({
 
 /* ── 1-4. 사공단 일지 데이터 (15건) */
 const LOG_SUBTITLES = [
-  '3월 봉사활동 일지', '노원구 활동 보고서', '도봉구 현장 기록',
-  '2월 월간 활동 보고', '강북구 현장 일지', '봄철 활동 정리',
-  '1월 활동 보고서', '겨울 특별활동 기록', '12월 활동 일지',
-  '신규봉사자 오리엔테이션',
+  '안양수리장애인복지관 활동일지',
+  '용인수지복지관 활동일지',
+  '서울시립발달장애인센터 활동일지',
+  '서울시립발달장애인복지관 활동일지',
+  '월드컵공원 활동일지',
+  '부천장애인복지관 활동일지',
+  '창경궁 활동일지',
+  '서울숲 활동일지',
+  '하남장애인 주간보호시설 활동일지',
+  '용인수지장애인복지관 활동일지',
 ];
 
 const SAGONGDAN_LOG_DATA = Array.from({ length: 15 }, (_, i) => ({
   id:      15 - i,
-  title:   `[일지] ${LOG_SUBTITLES[i % LOG_SUBTITLES.length]}`,
+  team:    SAGONGDAN_TEAM_NAMES[i % SAGONGDAN_TEAM_NAMES.length],
+  title:   `[활동일지] ${LOG_SUBTITLES[i % LOG_SUBTITLES.length]}`,
   author:  pickAuthor('staff', i),
-  actDate: makeDate(i),
-  date:    makeDate(i, 1),
-  hasFile: true,
+  date:    makeDate(i),
   content: `<p>사공단 일지 ${15 - i}번 게시물입니다.</p>
             <p>현장 활동 기록을 정리하여 공유드립니다.</p>`,
 }));
 
-/* ── 1-5. 동아리 소식 데이터 (24건) */
-const CLUB_NAMES   = ['숲사랑단', '초록나무', '산들바람'];
+/* ── 1-5. 동아리 소개 텍스트 (관리자 등록) */
+const CLUB_INTRO_TEXT = `한국숲해설가협회 숲동아리단은 회원들이 자발적으로 구성한 소모임으로, 숲에 대한 관심과 열정을 함께 나눕니다.<br>각 동아리는 고유한 주제와 활동 방식으로 운영되며, 회원이라면 누구나 가입 신청이 가능합니다.`;
+
+/* ── 1-5. 동아리 마스터 데이터 (관리자 등록 기준) */
+const CLUB_DATA = [
+  { id: 1, name: '숲사랑단', imgUrl: null,
+    desc: '도심 속 숲을 찾아 자연의 소중함을 나누는 동아리입니다. 매월 정기 탐방과 해설 활동을 진행합니다.' },
+  { id: 2, name: '초록나무', imgUrl: null,
+    desc: '식물 생태 탐구와 해설에 특화된 동아리로, 계절별 식물 관찰 활동을 진행합니다.' },
+  { id: 3, name: '산들바람', imgUrl: null,
+    desc: '산림치유와 숲 힐링 프로그램 개발에 집중하는 동아리입니다.' },
+];
+const CLUB_NAMES = CLUB_DATA.map(c => c.name);   /* 소식·자료방 데이터에서 참조 */
+
+/* ── 1-6. 동아리 소식 데이터 (24건, 공지기능 미사용) */
 const CLUB_NEWS_SUBTITLES = [
   '3월 정기모임 후기', '봄 탐방 활동 결과', '신입 회원 환영',
   '동아리 사진 공유', '활동 일정 안내', '월간 소식',
@@ -298,7 +337,6 @@ const CLUB_NEWS_SUBTITLES = [
 
 const CLUB_NEWS_DATA = Array.from({ length: 24 }, (_, i) => ({
   id:      24 - i,
-  isPin:   i < 1,   /* 최신 1건 고정 */
   title:   `[${CLUB_NAMES[i % 3]}] ${CLUB_NEWS_SUBTITLES[i % CLUB_NEWS_SUBTITLES.length]}`,
   club:    CLUB_NAMES[i % 3],
   author:  pickAuthor('member', i),
@@ -307,7 +345,7 @@ const CLUB_NEWS_DATA = Array.from({ length: 24 }, (_, i) => ({
             <p>동아리 활동 내용을 공유드립니다.</p>`,
 }));
 
-/* ── 1-6. 동아리 자료방 데이터 (12건) */
+/* ── 1-7. 동아리 자료방 데이터 (12건) */
 const ARCHIVE_TITLES = [
   '동아리 규정집', '활동 매뉴얼', '해설 자료 모음',
   '식물 도감 자료', '사진 모음집', '활동 보고 양식',
@@ -319,11 +357,12 @@ const ARCHIVE_FILES = [
 
 const CLUB_ARCHIVE_DATA = Array.from({ length: 12 }, (_, i) => ({
   id:      12 - i,
+  club:    CLUB_NAMES[i % 3],
   title:   `${ARCHIVE_TITLES[i % ARCHIVE_TITLES.length]} v${i + 1}`,
-  author:  '사무국',
+  author:  pickAuthor('member', i),
   date:    makeDate(i),
   file:    ARCHIVE_FILES[i % ARCHIVE_FILES.length],
-  content: `<p>자료 ${12 - i}번 파일입니다.</p>`,
+  content: `<p>동아리 자료방 ${12 - i}번 파일입니다.</p>`,
 }));
 
 /* ── 1-7. QnA 데이터 */
@@ -812,137 +851,57 @@ const InstructorCtrl = {
 
 /* ══════════════════════════════════════════════
    6. 사회공헌사업단 컨트롤러
+   - SAGONGDAN_DATA: 팀 마스터 (소개 탭 갤러리 소스)
+   - tabs: intro / news / log (숲동아리단과 동일 구조)
 ══════════════════════════════════════════════ */
 const SagongdanCtrl = {
   _newsBoard: null,
   _logBoard:  null,
 
+  /* ── SAGONGDAN_DATA 기반 드롭다운 일괄 갱신 */
+  _syncTeamSelects() {
+    ['sagongdanNewsTeamFilter', 'sagongdanLogTeamFilter'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const cur = el.value;
+      el.innerHTML = `<option value="">전체 팀</option>` +
+        SAGONGDAN_DATA.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+      if (SAGONGDAN_DATA.some(t => t.name === cur)) el.value = cur;
+    });
+  },
+
   init() {
-    /* 상세 보기 분기: URL에 id 파라미터가 있으면 상세로 전환 */
-    const id   = App.getParam('id');
-    const type = App.getParam('type') || 'news';
+    const id  = App.getParam('id');
+    const tab = App.getParam('tab') || 'intro';
+
+    /* 상세 분기 */
     if (id) {
-      const listWrap   = document.getElementById('sagongdanListWrap');
       const detailWrap = document.getElementById('sagongdanDetailWrap');
-      if (listWrap)   listWrap.style.display   = 'none';
+      document.querySelectorAll('[id^="tab-"]').forEach(el => el.style.display = 'none');
       if (detailWrap) detailWrap.style.display = 'block';
-      SagongdanCtrl.renderDetail(type, id);
+      if (tab === 'intro') {
+        this.renderTeamDetail(id);
+      } else {
+        this.renderDetail(tab, id);
+      }
       return;
     }
 
-    /* 소식 게시판 */
+    this._initBoards();
+    this._switchTab(tab);
+  },
+
+  _initBoards() {
     this._newsBoard = createBoard({
       data:         SAGONGDAN_NEWS_DATA,
-      tableBodyId:  'newsTableBody',
-      paginationId: 'newsPagination',
-      countId:      'newsCount',
-      rowRenderer:  (row, seq) => `
-        <tr class="${row.isPin ? 'pinned' : ''}">
-          <td class="col-num center">${row.isPin ? '<span class="badge-notice">공지</span>' : seq}</td>
-          <td class="td-title">
-            <a href="?type=news&id=${row.id}">${row.title}</a>
-          </td>
-          <td class="col-author center">${row.author}</td>
-          <td class="col-date center">${row.date}</td>
-        </tr>`,
-    });
-
-    /* 일지 게시판 */
-    this._logBoard = createBoard({
-      data:         SAGONGDAN_LOG_DATA,
-      tableBodyId:  'logTableBody',
-      paginationId: 'logPagination',
-      countId:      'logCount',
+      tableBodyId:  'sagongdanNewsTableBody',
+      paginationId: 'sagongdanNewsPagination',
+      countId:      'sagongdanNewsCount',
       rowRenderer:  (row, seq) => `
         <tr>
           <td class="col-num center">${seq}</td>
-          <td class="td-title">
-            <a href="?type=log&id=${row.id}">${row.title}</a>
-          </td>
-          <td class="col-author center">${row.author}</td>
-          <td class="col-date center">${row.actDate}</td>
-          <td class="col-extra center">${row.hasFile ? '📎' : '-'}</td>
-          <td class="col-extra center">${row.date}</td>
-        </tr>`,
-    });
-
-    this._newsBoard.render();
-    this._logBoard.render();
-  },
-
-  /* 탭 전환 */
-  switchTab(tab, btn) {
-    ['news', 'log'].forEach(t => {
-      const el = document.getElementById(`tab-${t}`);
-      if (el) el.style.display = t === tab ? 'block' : 'none';
-    });
-    document.querySelectorAll('.tab-btn')
-      .forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-  },
-
-  /* 소식 검색 */
-  searchNews() {
-    const kw = document.getElementById('newsKeyword')?.value || '';
-    this._newsBoard?.search(kw);
-  },
-  resetNews() {
-    const el = document.getElementById('newsKeyword');
-    if (el) el.value = '';
-    this._newsBoard?.search('');
-  },
-
-  /* 일지 검색 */
-  searchLog() {
-    const kw = document.getElementById('logKeyword')?.value || '';
-    this._logBoard?.search(kw);
-  },
-  resetLog() {
-    const el = document.getElementById('logKeyword');
-    if (el) el.value = '';
-    this._logBoard?.search('');
-  },
-
-  /* 상세 렌더 */
-  renderDetail(type, id) {
-    const data = type === 'log' ? SAGONGDAN_LOG_DATA : SAGONGDAN_NEWS_DATA;
-    BoardDetail.render('sagongdanDetail', data, id);
-  },
-};
-
-
-/* ══════════════════════════════════════════════
-   7. 숲동아리단 컨트롤러
-══════════════════════════════════════════════ */
-const ClubCtrl = {
-  _newsBoard:    null,
-  _archiveBoard: null,
-
-  init() {
-    /* 상세 보기 분기: URL에 id 파라미터가 있으면 상세로 전환 */
-    const id  = App.getParam('id');
-    const tab = App.getParam('tab') || 'news';
-    if (id) {
-      const listWrap   = document.getElementById('clubListWrap');
-      const detailWrap = document.getElementById('clubDetailWrap');
-      if (listWrap)   listWrap.style.display   = 'none';
-      if (detailWrap) detailWrap.style.display = 'block';
-      ClubCtrl.renderDetail(tab, id);
-      return;
-    }
-
-    /* 소식 게시판 */
-    this._newsBoard = createBoard({
-      data:         CLUB_NEWS_DATA,
-      tableBodyId:  'clubNewsTableBody',
-      paginationId: 'clubNewsPagination',
-      countId:      'clubNewsCount',
-      rowRenderer:  (row, seq) => `
-        <tr class="${row.isPin ? 'pinned' : ''}">
-          <td class="col-num center">${row.isPin ? '<span class="badge-notice">공지</span>' : seq}</td>
           <td class="col-extra center">
-            <span class="badge badge-green"
-                  style="font-size:11px">${row.club}</span>
+            <span class="badge badge-green" style="font-size:11px">${row.team}</span>
           </td>
           <td class="td-title">
             <a href="?tab=news&id=${row.id}">${row.title}</a>
@@ -952,7 +911,238 @@ const ClubCtrl = {
         </tr>`,
     });
 
-    /* 자료방 게시판 */
+    this._logBoard = createBoard({
+      data:         SAGONGDAN_LOG_DATA,
+      tableBodyId:  'sagongdanLogTableBody',
+      paginationId: 'sagongdanLogPagination',
+      countId:      'sagongdanLogCount',
+      rowRenderer:  (row, seq) => `
+        <tr>
+          <td class="col-num center">${seq}</td>
+          <td class="col-extra center">
+            <span class="badge badge-green" style="font-size:11px">${row.team}</span>
+          </td>
+          <td class="td-title">
+            <a href="?tab=log&id=${row.id}">${row.title}</a>
+          </td>
+          <td class="col-author center">${row.author}</td>
+          <td class="col-date center">${row.date}</td>
+        </tr>`,
+    });
+
+    this._syncTeamSelects();
+
+    /* ── 등록 버튼 (정회원·관리자) */
+    if (App.user.isLoggedIn) {
+      const btnHtml = (href, label) =>
+        `<a href="${href}" class="btn btn-primary btn-sm">${label}</a>`;
+      const nb = document.getElementById('sagongdanNewsWriteBtn');
+      const lb = document.getElementById('sagongdanLogWriteBtn');
+      if (nb) nb.innerHTML = btnHtml('sagongdan-news-write.html', '소식 등록');
+      if (lb) lb.innerHTML = btnHtml('sagongdan-log-write.html',  '일지 등록');
+    }
+  },
+
+  _switchTab(tab) {
+    ['intro', 'news', 'log'].forEach(t => {
+      const el = document.getElementById(`tab-${t}`);
+      if (el) el.style.display = t === tab ? 'block' : 'none';
+    });
+    if (tab === 'intro') this._renderIntro();
+    if (tab === 'news')  this._newsBoard?.render();
+    if (tab === 'log')   this._logBoard?.render();
+  },
+
+  /* ── 소개 갤러리 렌더 */
+  _renderIntro() {
+    const desc = document.getElementById('sagongdanIntroDesc');
+    if (desc && SAGONGDAN_INTRO_TEXT) {
+      desc.innerHTML = `
+        <div class="intro-notice">
+          <div class="intro-notice-title">사회공헌사업단이란?</div>
+          <div class="intro-notice-body">${SAGONGDAN_INTRO_TEXT}</div>
+        </div>`;
+    }
+    const grid = document.getElementById('sagongdanIntroGrid');
+    if (!grid) return;
+    if (!SAGONGDAN_DATA.length) {
+      grid.innerHTML = '<p style="padding:40px;text-align:center;color:var(--gray-mid)">등록된 팀이 없습니다.</p>';
+      return;
+    }
+    grid.innerHTML = SAGONGDAN_DATA.map(t => {
+      const thumb = t.imgUrl
+        ? `<div class="gallery-thumb" style="background-image:url('${t.imgUrl}')"></div>`
+        : `<div class="gallery-thumb-placeholder"></div>`;
+      return `
+        <div class="gallery-card" onclick="location.href='?tab=intro&id=${t.id}'"
+             style="cursor:pointer">
+          ${thumb}
+          <div class="gallery-info">
+            <div class="gallery-title">${t.name}</div>
+          </div>
+        </div>`;
+    }).join('');
+  },
+
+  /* ── 소개 상세 */
+  renderTeamDetail(id) {
+    const item = SAGONGDAN_DATA.find(t => String(t.id) === String(id));
+    const el   = document.getElementById('sagongdanDetail');
+    if (!el) return;
+    if (!item) {
+      el.innerHTML = '<div style="text-align:center;padding:48px;color:var(--gray-mid)">해당 팀을 찾을 수 없습니다.</div>';
+      return;
+    }
+    const idx  = SAGONGDAN_DATA.findIndex(t => t.id === item.id);
+    const prev = SAGONGDAN_DATA[idx - 1];
+    const next = SAGONGDAN_DATA[idx + 1];
+    const thumb = item.imgUrl
+      ? `<div class="gallery-thumb" style="background-image:url('${item.imgUrl}');height:200px;border-radius:var(--radius);margin-bottom:20px"></div>`
+      : '';
+    const navHtml = (next || prev) ? `
+      <div class="cd-nav">
+        ${next ? `<div class="cd-nav-item" onclick="location.href='?tab=intro&id=${next.id}'">
+          <span class="cd-nav-label">다음</span>
+          <span class="cd-nav-title">${next.name}</span>
+        </div>` : ''}
+        ${prev ? `<div class="cd-nav-item" onclick="location.href='?tab=intro&id=${prev.id}'">
+          <span class="cd-nav-label">이전</span>
+          <span class="cd-nav-title">${prev.name}</span>
+        </div>` : ''}
+      </div>` : '';
+    el.innerHTML = `
+      <div class="cd-wrap">
+        <div class="cd-head">
+          <div class="cd-head-left">
+            <h2 class="cd-title">${item.name}</h2>
+          </div>
+        </div>
+        <hr class="cd-divider">
+        ${thumb}
+        <div class="cd-body">
+          <div class="cd-content"><p>${item.desc || ''}</p></div>
+        </div>
+        ${navHtml}
+        <div class="cd-actions">
+          <button class="btn btn-primary btn-sm cd-btn-list"
+                  onclick="location.href='?tab=intro'">목록</button>
+        </div>
+      </div>`;
+  },
+
+  /* ── 소식 검색 */
+  searchNews() {
+    const keyword = document.getElementById('sagongdanNewsKeyword')?.value    || '';
+    const team    = document.getElementById('sagongdanNewsTeamFilter')?.value || '';
+    this._newsBoard?.filterFn(r => {
+      if (team    && r.team !== team)                                          return false;
+      if (keyword && !r.title.toLowerCase().includes(keyword.toLowerCase()))  return false;
+      return true;
+    });
+  },
+  resetNews() {
+    ['sagongdanNewsKeyword', 'sagongdanNewsTeamFilter'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    this._newsBoard?.filterFn(null);
+  },
+
+  /* ── 일지 검색 */
+  searchLog() {
+    const keyword = document.getElementById('sagongdanLogKeyword')?.value    || '';
+    const team    = document.getElementById('sagongdanLogTeamFilter')?.value || '';
+    this._logBoard?.filterFn(r => {
+      if (team    && r.team !== team)                                          return false;
+      if (keyword && !r.title.toLowerCase().includes(keyword.toLowerCase()))  return false;
+      return true;
+    });
+  },
+  resetLog() {
+    ['sagongdanLogKeyword', 'sagongdanLogTeamFilter'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    this._logBoard?.filterFn(null);
+  },
+
+  /* ── 소식·일지 상세 렌더 */
+  renderDetail(tab, id) {
+    const data = tab === 'log' ? SAGONGDAN_LOG_DATA : SAGONGDAN_NEWS_DATA;
+    BoardDetail.render('sagongdanDetail', data, id);
+  },
+};
+
+
+/* ══════════════════════════════════════════════
+   7. 숲동아리단 컨트롤러
+   - CLUB_DATA: 동아리 마스터 (소개 탭, 드롭다운 공통 소스)
+   - intro 탭: 갤러리형 카드 → 동아리 상세
+   - news/archive: 필터(동아리 선택 + 키워드), 공지 미사용
+══════════════════════════════════════════════ */
+const ClubCtrl = {
+  _newsBoard:    null,
+  _archiveBoard: null,
+
+  /* ── CLUB_DATA 기반 드롭다운 옵션 HTML */
+  _clubOptions(allLabel = '전체 동아리') {
+    return `<option value="">${allLabel}</option>` +
+      CLUB_DATA.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+  },
+
+  /* ── 동아리 선택 드롭다운 일괄 갱신 (CLUB_DATA 변경 시 반영) */
+  _syncClubSelects() {
+    ['clubNewsClubFilter', 'clubArchiveClubFilter'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const cur = el.value;
+      el.innerHTML = this._clubOptions();
+      if (CLUB_DATA.some(c => c.name === cur)) el.value = cur;
+    });
+  },
+
+  init() {
+    const id  = App.getParam('id');
+    const tab = App.getParam('tab') || 'intro';
+
+    /* 상세 분기 */
+    if (id) {
+      const detailWrap = document.getElementById('clubDetailWrap');
+      document.querySelectorAll('[id^="tab-"]').forEach(el => el.style.display = 'none');
+      if (detailWrap) detailWrap.style.display = 'block';
+      if (tab === 'intro') {
+        this.renderClubDetail(id);
+      } else {
+        this.renderDetail(tab, id);
+      }
+      return;
+    }
+
+    /* 게시판 초기화 */
+    this._initBoards();
+    this._switchTab(tab);
+  },
+
+  _initBoards() {
+    this._newsBoard = createBoard({
+      data:         CLUB_NEWS_DATA,
+      tableBodyId:  'clubNewsTableBody',
+      paginationId: 'clubNewsPagination',
+      countId:      'clubNewsCount',
+      rowRenderer:  (row, seq) => `
+        <tr>
+          <td class="col-num center">${seq}</td>
+          <td class="col-extra center">
+            <span class="badge badge-green" style="font-size:11px">${row.club}</span>
+          </td>
+          <td class="td-title">
+            <a href="?tab=news&id=${row.id}">${row.title}</a>
+          </td>
+          <td class="col-author center">${row.author}</td>
+          <td class="col-date center">${row.date}</td>
+        </tr>`,
+    });
+
     this._archiveBoard = createBoard({
       data:         CLUB_ARCHIVE_DATA,
       tableBodyId:  'clubArchiveTableBody',
@@ -961,81 +1151,155 @@ const ClubCtrl = {
       rowRenderer:  (row, seq) => `
         <tr>
           <td class="col-num center">${seq}</td>
+          <td class="col-extra center">
+            <span class="badge badge-green" style="font-size:11px">${row.club}</span>
+          </td>
           <td class="td-title">
             <a href="?tab=archive&id=${row.id}">${row.title}</a>
           </td>
           <td class="col-author center">${row.author}</td>
           <td class="col-date center">${row.date}</td>
-          <td class="col-extra center">
-            ${row.file
-              ? `<a href="#"
-                    class="attach-file"
-                    onclick="App.toast('${row.file} 다운로드를 시작합니다.')">
-                    📎 ${row.file}
-                 </a>`
-              : '-'}
-          </td>
         </tr>`,
     });
 
-    /* 탭 파라미터 복원 */
-    this.switchTab(App.getParam('tab') || 'news');
+    /* 동아리 드롭다운 CLUB_DATA 기반으로 초기 세팅 */
+    this._syncClubSelects();
+
+    /* ── 등록 버튼 (정회원·관리자) */
+    if (App.user.isLoggedIn) {
+      const btnHtml = (href, label) =>
+        `<a href="${href}" class="btn btn-primary btn-sm">${label}</a>`;
+      const nb = document.getElementById('clubNewsWriteBtn');
+      const ab = document.getElementById('clubArchiveWriteBtn');
+      if (nb) nb.innerHTML = btnHtml('club-news-write.html',    '소식 등록');
+      if (ab) ab.innerHTML = btnHtml('club-archive-write.html', '자료 등록');
+    }
   },
 
-  /* 탭 전환 */
-  switchTab(tab, btn) {
-    ['news', 'archive'].forEach(t => {
+  _switchTab(tab) {
+    ['intro', 'news', 'archive'].forEach(t => {
       const el = document.getElementById(`tab-${t}`);
       if (el) el.style.display = t === tab ? 'block' : 'none';
     });
-    document.querySelectorAll('.tab-btn')
-      .forEach(b => b.classList.remove('active'));
-
-    /* 버튼이 넘어온 경우 활성화 / URL 없이 클릭된 경우 */
-    if (btn) {
-      btn.classList.add('active');
-    } else {
-      /* 탭 파라미터로 버튼 활성화 */
-      document.querySelectorAll(`.tab-btn[data-tab="${tab}"]`)
-        .forEach(b => b.classList.add('active'));
-    }
-
-    /* 해당 탭 처음 열릴 때 렌더 */
+    if (tab === 'intro')   this._renderIntro();
     if (tab === 'news')    this._newsBoard?.render();
     if (tab === 'archive') this._archiveBoard?.render();
   },
 
-  /* 소식 검색 */
-  searchNews() {
-    const keyword = document.getElementById('clubNewsKeyword')?.value || '';
-    const club    = document.getElementById('clubNameFilter')?.value  || '';
+  /* ── 동아리 소개 갤러리 렌더 */
+  _renderIntro() {
+    const desc = document.getElementById('clubIntroDesc');
+    if (desc && CLUB_INTRO_TEXT) {
+      desc.innerHTML = `
+        <div class="intro-notice">
+          <div class="intro-notice-title">숲동아리단이란?</div>
+          <div class="intro-notice-body">${CLUB_INTRO_TEXT}</div>
+        </div>`;
+    }
+    const grid = document.getElementById('clubIntroGrid');
+    if (!grid) return;
+    if (!CLUB_DATA.length) {
+      grid.innerHTML = '<p style="padding:40px;text-align:center;color:var(--gray-mid)">등록된 동아리가 없습니다.</p>';
+      return;
+    }
+    grid.innerHTML = CLUB_DATA.map(c => {
+      const thumb = c.imgUrl
+        ? `<div class="gallery-thumb" style="background-image:url('${c.imgUrl}')"></div>`
+        : `<div class="gallery-thumb-placeholder"></div>`;
+      return `
+        <div class="gallery-card" onclick="location.href='?tab=intro&id=${c.id}'"
+             style="cursor:pointer">
+          ${thumb}
+          <div class="gallery-info">
+            <div class="gallery-title">${c.name}</div>
+          </div>
+        </div>`;
+    }).join('');
+  },
 
+  /* ── 동아리 소개 상세 */
+  renderClubDetail(id) {
+    const item = CLUB_DATA.find(c => String(c.id) === String(id));
+    const el   = document.getElementById('clubDetail');
+    if (!el) return;
+    if (!item) {
+      el.innerHTML = '<div style="text-align:center;padding:48px;color:var(--gray-mid)">해당 동아리를 찾을 수 없습니다.</div>';
+      return;
+    }
+    const idx  = CLUB_DATA.findIndex(c => c.id === item.id);
+    const prev = CLUB_DATA[idx - 1];
+    const next = CLUB_DATA[idx + 1];
+    const thumb = item.imgUrl
+      ? `<div class="gallery-thumb" style="background-image:url('${item.imgUrl}');height:200px;border-radius:var(--radius);margin-bottom:20px"></div>`
+      : '';
+    const navHtml = (next || prev) ? `
+      <div class="cd-nav">
+        ${next ? `<div class="cd-nav-item" onclick="location.href='?tab=intro&id=${next.id}'">
+          <span class="cd-nav-label">다음</span>
+          <span class="cd-nav-title">${next.name}</span>
+        </div>` : ''}
+        ${prev ? `<div class="cd-nav-item" onclick="location.href='?tab=intro&id=${prev.id}'">
+          <span class="cd-nav-label">이전</span>
+          <span class="cd-nav-title">${prev.name}</span>
+        </div>` : ''}
+      </div>` : '';
+    el.innerHTML = `
+      <div class="cd-wrap">
+        <div class="cd-head">
+          <div class="cd-head-left">
+            <h2 class="cd-title">${item.name}</h2>
+          </div>
+        </div>
+        <hr class="cd-divider">
+        ${thumb}
+        <div class="cd-body">
+          <div class="cd-content"><p>${item.desc || ''}</p></div>
+        </div>
+        ${navHtml}
+        <div class="cd-actions">
+          <button class="btn btn-primary btn-sm cd-btn-list"
+                  onclick="location.href='?tab=intro'">목록</button>
+        </div>
+      </div>`;
+  },
+
+  /* ── 소식 검색 */
+  searchNews() {
+    const keyword = document.getElementById('clubNewsKeyword')?.value    || '';
+    const club    = document.getElementById('clubNewsClubFilter')?.value || '';
     this._newsBoard?.filterFn(r => {
-      if (club    && r.club !== club)                                          return false;
-      if (keyword && !r.title.toLowerCase().includes(keyword.toLowerCase()))  return false;
+      if (club    && r.club !== club)                                         return false;
+      if (keyword && !r.title.toLowerCase().includes(keyword.toLowerCase())) return false;
       return true;
     });
   },
   resetNews() {
-    ['clubNewsKeyword', 'clubNameFilter'].forEach(id => {
+    ['clubNewsKeyword', 'clubNewsClubFilter'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = '';
     });
     this._newsBoard?.filterFn(null);
   },
 
-  /* 자료 검색 */
+  /* ── 자료방 검색 */
   searchArchive() {
-    const kw = document.getElementById('clubArchiveKeyword')?.value || '';
-    this._archiveBoard?.search(kw);
+    const keyword = document.getElementById('clubArchiveKeyword')?.value    || '';
+    const club    = document.getElementById('clubArchiveClubFilter')?.value || '';
+    this._archiveBoard?.filterFn(r => {
+      if (club    && r.club !== club)                                         return false;
+      if (keyword && !r.title.toLowerCase().includes(keyword.toLowerCase())) return false;
+      return true;
+    });
   },
   resetArchive() {
-    const el = document.getElementById('clubArchiveKeyword');
-    if (el) el.value = '';
-    this._archiveBoard?.search('');
+    ['clubArchiveKeyword', 'clubArchiveClubFilter'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    this._archiveBoard?.filterFn(null);
   },
 
-  /* 상세 렌더 */
+  /* ── 소식·자료방 상세 렌더 */
   renderDetail(tab, id) {
     const data = tab === 'archive' ? CLUB_ARCHIVE_DATA : CLUB_NEWS_DATA;
     BoardDetail.render('clubDetail', data, id);

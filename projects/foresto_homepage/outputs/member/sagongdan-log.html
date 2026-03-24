@@ -22,7 +22,7 @@
   <div class="page-header">
     <div class="container">
       <h1>사공단 일지</h1>
-      <p>정회원 전용 | 봉사활동 일지 및 활동보고서</p>
+      <p>봉사활동 일지 및 활동보고서</p>
     </div>
   </div>
 
@@ -34,9 +34,7 @@
     <div class="content-wrap">
     <div id="logListWrap">
 
-      <div class="alert alert-info" style="margin-bottom:16px">
-        사공단 일지는 <strong>정회원 전용</strong> 게시판입니다.
-      </div>
+
       <div class="alert alert-warning" style="margin-bottom:24px">
         파일 업로드 용량: 파일당 최대 <strong>10MB</strong> &nbsp;|&nbsp; 허용 형식: JPG, PNG, PDF, HWP, DOCX
       </div>
@@ -149,13 +147,17 @@
               <span style="margin-left:16px;color:var(--gray-mid)">활동일 ${item.actDate}</span>
             </div>
             <hr class="cd-divider">
+            ${item.file ? `<div class="cd-attach">
+              <a href="#" class="cd-attach-item"
+                 onclick="App.toast('첨부파일 다운로드 — 실제 구현 시 서버 연동 예정','info');return false;">
+                <svg class="cd-attach-icon" viewBox="0 0 24 24" fill="none" width="15" height="15">
+                  <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.41 17.41a2 2 0 0 1-2.83-2.83l8.49-8.48"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>활동일지_${item.actDate}.pdf</span>
+              </a>
+            </div>` : ''}
             <div class="cd-body"><div class="cd-content">${item.content}</div></div>
-            ${item.file ? `<hr class="cd-divider">
-              <div class="cd-attach">
-                <a href="#" class="cd-attach-item" onclick="App.toast('첨부파일 다운로드 (실제 구현 시 서버 연동)','info');return false;">
-                  <span>📎 활동일지_${item.actDate}.pdf</span>
-                </a>
-              </div>` : ''}
             ${navHtml}
             <div class="cd-actions">
               <button class="btn btn-primary btn-sm cd-btn-list"

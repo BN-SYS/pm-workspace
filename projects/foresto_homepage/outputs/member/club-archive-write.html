@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>사공단 일지 등록 | 한국숲해설가협회</title>
+  <title>동아리 자료 등록 | 한국숲해설가협회</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/reset.css">
   <link rel="stylesheet" href="../assets/css/common.css">
@@ -13,12 +13,12 @@
   <link rel="stylesheet" href="../assets/css/pages/community.css">
   <link rel="stylesheet" href="../assets/css/pages/write.css">
 </head>
-<body data-page="sagongdan-log-write">
+<body data-page="club-archive-write">
   <div id="hdr"></div>
   <div class="page-header">
     <div class="container">
-      <h1>사공단 일지 등록</h1>
-      <p>봉사활동 일지를 등록해 주세요.</p>
+      <h1>동아리 자료 등록</h1>
+      <p>동아리 활동 자료를 등록해 주세요.</p>
     </div>
   </div>
   <div id="bc"></div>
@@ -29,10 +29,10 @@
         <div class="write-wrap">
 
           <div class="write-row">
-            <label class="write-label">팀 <span class="write-req">*</span></label>
+            <label class="write-label">동아리 <span class="write-req">*</span></label>
             <div class="write-input-cell">
-              <select class="write-select" id="writeTeam">
-                <option value="">팀을 선택하세요</option>
+              <select class="write-select" id="writeClub">
+                <option value="">동아리를 선택하세요</option>
               </select>
             </div>
           </div>
@@ -65,7 +65,7 @@
                   <button type="button" class="se2-btn" title="링크 삽입">🔗</button>
                 </div>
                 <textarea class="se2-body" id="writeContent"
-                          placeholder="봉사활동 내용, 장소, 참여 인원 등을 자유롭게 기록해 주세요."></textarea>
+                          placeholder="자료에 대한 설명을 입력하세요."></textarea>
                 <div class="se2-footer">SmartEditor2 — 실제 구현 시 서버 연동 적용 예정</div>
               </div>
             </div>
@@ -93,9 +93,8 @@
           </div>
 
         </div>
-
         <div class="write-actions">
-          <a href="sagongdan.html?tab=log" class="btn btn-gray">취소</a>
+          <a href="club.html?tab=archive" class="btn btn-gray">취소</a>
           <button type="button" class="btn btn-primary" onclick="WriteCtrl.submit()">등록하기</button>
         </div>
       </div>
@@ -110,13 +109,13 @@
     if (!App.user.isLoggedIn) location.href = '../auth/login.html';
     document.getElementById('hdr').innerHTML = Header.render('회원활동', '../');
     document.getElementById('ftr').innerHTML = Footer.render('../');
-    document.getElementById('bc').innerHTML  = LNB.breadcrumb('../', 'member/sagongdan.html?tab=log');
-    document.getElementById('lnb').innerHTML = LNB.render('../', 'member/sagongdan.html?tab=log');
+    document.getElementById('bc').innerHTML  = LNB.breadcrumb('../', 'member/club.html?tab=archive');
+    document.getElementById('lnb').innerHTML = LNB.render('../', 'member/club.html?tab=archive');
 
-    SAGONGDAN_DATA.forEach(t => {
+    CLUB_DATA.forEach(c => {
       const o = document.createElement('option');
-      o.value = t.name; o.textContent = t.name;
-      document.getElementById('writeTeam').appendChild(o);
+      o.value = c.name; o.textContent = c.name;
+      document.getElementById('writeClub').appendChild(o);
     });
 
     const WriteCtrl = {
@@ -165,14 +164,14 @@
         document.getElementById('fileAddBtn').style.display = '';
       },
       submit() {
-        const team    = document.getElementById('writeTeam').value;
+        const club    = document.getElementById('writeClub').value;
         const title   = document.getElementById('writeTitle').value.trim();
         const content = document.getElementById('writeContent').value.trim();
-        if (!team)    { App.toast('팀을 선택해 주세요.', 'warning');   return; }
-        if (!title)   { App.toast('제목을 입력해 주세요.', 'warning'); return; }
-        if (!content) { App.toast('내용을 입력해 주세요.', 'warning'); return; }
-        App.toast('일지가 등록되었습니다.');
-        setTimeout(() => location.href = 'sagongdan.html?tab=log', 1200);
+        if (!club)    { App.toast('동아리를 선택해 주세요.', 'warning'); return; }
+        if (!title)   { App.toast('제목을 입력해 주세요.', 'warning');   return; }
+        if (!content) { App.toast('내용을 입력해 주세요.', 'warning');   return; }
+        App.toast('자료가 등록되었습니다.');
+        setTimeout(() => location.href = 'club.html?tab=archive', 1200);
       },
     };
   </script>

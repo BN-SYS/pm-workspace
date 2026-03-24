@@ -36,6 +36,24 @@
 }
 .card-title { font-size: var(--text-base); font-weight: 700; color: var(--green-dark); }
 
+/* ── 소개 안내 박스 */
+.intro-notice {
+  padding: 20px 24px;
+  background: var(--green-pale);
+  border-left: 4px solid var(--green-main);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin-bottom: 28px;
+  color: var(--gray-dark);
+  line-height: 1.8;
+}
+.intro-notice-title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--green-dark);
+  margin-bottom: 10px;
+}
+.intro-notice-body { font-size: var(--text-sm); }
+
 /* ── 배지 */
 .badge {
   display: inline-block; padding: 3px 10px;
@@ -241,6 +259,7 @@ select.form-control {
 }
 .list-count strong { color: var(--gray-dark); font-weight: 700; }
 .list-top-right { display: flex; align-items: center; gap: 8px; }
+.list-write-area { display: flex; justify-content: flex-end; margin-top: 12px; }
 
 /* ── 목록 인라인 검색 바 (리뉴얼 — 2026.03) */
 .list-search {
