@@ -23,7 +23,7 @@
   <div id="hdr"></div>
 
   <!-- 팝업 공지 -->
-  <div class="popup-wrap" id="popup">
+  <!-- <div class="popup-wrap" id="popup">
     <div class="popup-head">
       공지사항
       <button onclick="document.getElementById('popup').style.display='none'" aria-label="닫기">×</button>
@@ -40,7 +40,7 @@
       </label>
       <button class="btn btn-primary btn-xs" onclick="document.getElementById('popup').style.display='none'">닫기</button>
     </div>
-  </div>
+  </div> -->
 
   <!-- ① 히어로 슬라이더 -->
   <div class="hero-slider" id="heroSlider">
@@ -221,6 +221,20 @@
 
   <script src="assets/js/app.js"></script>
   <script src="assets/js/components/header.js"></script>
+
+  <!-- ★ [PREVIEW MODE] 고객사 시연용 링크 차단 — 정식 오픈 시 이 블록 삭제 ★ -->
+  <script>
+    document.addEventListener('click', function (e) {
+      const a = e.target.closest('a');
+      if (!a) return;
+      const href = a.getAttribute('href');
+      if (!href || href === '#' || href.startsWith('javascript') || href.startsWith('mailto')) return;
+      if (href.startsWith('http') || href.startsWith('//')) return;
+      e.preventDefault();
+      App.toast('해당 페이지는 현재 준비 중입니다.');
+    }, true);
+  </script>
+  <!-- ★ [PREVIEW MODE] END ★ -->
   <script>
 
     /* ── 헤더 / 푸터 렌더 */
