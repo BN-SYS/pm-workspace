@@ -98,8 +98,8 @@ const NAV_DATA = [
         label: '사회공헌사업단', href: 'member/sagongdan.html',
         children: [
           { label: '사공단 소개', href: 'member/sagongdan.html' },
-          { label: '사공단 소식', href: 'member/sagongdan-news.html' },
-          { label: '사공단 일지', href: 'member/sagongdan-log.html' },
+          { label: '사공단 소식', href: 'member/sagongdan.html?tab=news' },
+          { label: '사공단 일지', href: 'member/sagongdan.html?tab=log' },
         ],
       },
       {

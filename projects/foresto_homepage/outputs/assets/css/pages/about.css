@@ -597,7 +597,7 @@
   transform: rotate(180deg);
   border-top-color: var(--green-dark);
 }
-.download-bar {
+.doc-info-bar {
   background: var(--green-pale);
   border-radius: var(--radius);
   padding: 18px 24px;
@@ -605,12 +605,12 @@
   margin-bottom: 24px;
   flex-wrap: wrap; gap: 12px;
 }
-.download-bar-title {
+.doc-info-bar-title {
   font-size: var(--text-base);
   font-weight: 700;
   color: var(--green-dark);
 }
-.download-bar-date {
+.doc-info-bar-date {
   font-size: var(--text-md);
   color: var(--gray-mid);
   margin-top: 2px;

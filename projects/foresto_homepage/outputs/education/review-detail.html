@@ -135,15 +135,15 @@
 
       el.innerHTML = `
         <div class="cd-wrap">
-          <div class="cd-head">
-            <div class="cd-head-left">
-              <h2 class="cd-title">${review.title}</h2>
+          <div class="cd-head" style="flex-direction:column;align-items:stretch;gap:6px;padding-bottom:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="review-badge">${review.courseTitle}</span>
+              <span style="font-size:var(--text-sm);color:var(--gray-mid);">작성자 <strong style="color:var(--gray-dark);font-weight:600;">${review.author}</strong></span>
             </div>
-            <span class="cd-date">${review.date.replace(/-/g, '.')}</span>
-          </div>
-          <div class="cd-meta">
-            <span class="review-badge">${review.courseTitle}</span>
-            <span style="margin-left:auto;">작성자 <strong>${review.author}</strong></span>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;">
+              <h2 class="cd-title">${review.title}</h2>
+              <span class="cd-date">${review.date.replace(/-/g, '.')}</span>
+            </div>
           </div>
           <hr class="cd-divider">
           <div class="cd-body">

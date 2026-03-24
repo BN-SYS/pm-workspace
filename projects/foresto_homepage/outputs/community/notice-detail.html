@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="../assets/css/common.css">
   <link rel="stylesheet" href="../assets/css/components.css">
   <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/layout-lnb.css">
   <link rel="stylesheet" href="../assets/css/pages/community.css">
 </head>
 
@@ -24,19 +25,16 @@
     </div>
   </div>
 
-  
-<div class="page-tabs">
-  <span class="page-tab-group">소식</span>
-  <a href="notice-list.html" class="page-tab active">공지사항</a>
-  <a href="calendar.html" class="page-tab">협회 캘린더</a>
-  <a href="newsletter.html" class="page-tab">협회지</a>
-  <a href="press.html" class="page-tab">언론 보도</a>
-</div>
-
-  <div class="content-wrap">
-    <div id="noticeDetail">
-      <div style="text-align:center;padding:48px;color:var(--gray-mid)">불러오는 중...</div>
-    </div>
+  <div id="bc"></div>
+  <div class="sub-layout">
+    <div id="lnb"></div>
+    <main class="sub-content">
+      <div class="content-wrap">
+        <div id="noticeDetail">
+          <div style="text-align:center;padding:48px;color:var(--gray-mid)">불러오는 중...</div>
+        </div>
+      </div>
+    </main>
   </div>
 
   <div id="ftr"></div>
@@ -47,6 +45,9 @@
   <script>
     document.getElementById('hdr').innerHTML = Header.render('커뮤니티', '../');
     document.getElementById('ftr').innerHTML = Footer.render('../');
+    document.getElementById('bc').innerHTML = LNB.breadcrumb('../', 'community/notice-list.html');
+    document.getElementById('lnb').innerHTML = LNB.render('../', 'community/notice-list.html');
+    Footer.initFamilyOutsideClick();
   </script>
 </body>
 

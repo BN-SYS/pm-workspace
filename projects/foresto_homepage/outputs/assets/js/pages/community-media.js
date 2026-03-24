@@ -167,7 +167,7 @@ const NewsletterCtrl = {
 
         grid.innerHTML = slice.map(item => {
             const pinBadge = item.isPin
-                ? `<span class="nl-cover-badge">최신</span>`
+                ? `<span class="nl-cover-badge">공지</span>`
                 : '';
             return `
             <div class="nl-card"
@@ -212,25 +212,17 @@ const NewsletterCtrl = {
         const next = this.DATA[idx - 1];
 
         const attachHtml = (item.attachments || []).length
-            ? `<div class="attach-section">
-                 <h4 class="attach-title">첨부파일 (${item.attachments.length}개)</h4>
-                 <ul class="attach-list">
-                   ${item.attachments.map(a => {
-                       const extCls = a.ext === 'pdf' ? 'file-type-pdf'
-                                    : a.ext === 'hwp' ? 'file-type-hwp'
-                                    : 'file-type-etc';
-                       return `
-                   <li class="attach-item">
-                     <span class="file-type-badge ${extCls}" style="font-size:10px;padding:2px 7px">${a.ext.toUpperCase()}</span>
-                     <span class="attach-name">${a.name}</span>
-                     <span class="attach-size">${a.size}</span>
-                     <button class="btn btn-outline btn-xs"
-                             onclick="NewsletterCtrl.download('${a.name}', '${a.name}')">
-                       다운로드
-                     </button>
-                   </li>`;
-                   }).join('')}
-                 </ul>
+            ? `<div class="cd-attach">
+                 ${item.attachments.map(a => `
+                   <a href="#" class="cd-attach-item"
+                      onclick="App.toast('첨부파일 다운로드 — 실제 구현 시 서버 연동 예정', 'info');return false;">
+                     <svg class="cd-attach-icon" viewBox="0 0 24 24" fill="none" width="15" height="15">
+                       <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.41 17.41a2 2 0 0 1-2.83-2.83l8.49-8.48"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                     </svg>
+                     <span>${a.name}</span>
+                     <span class="cd-attach-size">(${a.size})</span>
+                   </a>`).join('')}
                </div>`
             : '';
 
@@ -257,10 +249,10 @@ const NewsletterCtrl = {
               <span>작성자 <strong>${item.author}</strong></span>
             </div>
             <hr class="cd-divider">
+            ${attachHtml}
             <div class="cd-body">
               <div class="cd-content">${item.content || ''}</div>
             </div>
-            ${attachHtml ? `<hr class="cd-divider">${attachHtml}` : ''}
             ${navHtml}
             <div class="cd-actions">
               <button class="btn btn-primary btn-sm cd-btn-list"
@@ -632,32 +624,24 @@ const ArchiveCtrl = {
         const next = this.DATA[idx - 1];
 
         const attachHtml = (item.attachments || []).length
-            ? `<div class="attach-section">
-                 <h4 class="attach-title">첨부파일 (${item.attachments.length}개)</h4>
-                 <ul class="attach-list">
-                   ${item.attachments.map(a => {
-                       const cls   = this._extClass(a.ext);
-                       const dlBtn = isFullMember
-                           ? `<button class="btn btn-outline btn-xs"
-                                      onclick="ArchiveCtrl.download('${a.name}', '${a.name}')">
-                                다운로드
-                              </button>`
-                           : `<button class="btn btn-gray btn-xs" disabled
-                                      title="정회원만 다운로드 가능합니다.">
-                                다운로드
-                              </button>`;
-                       return `
-                   <li class="attach-item">
-                     <span class="file-type-badge ${cls}" style="font-size:10px;padding:2px 7px">${a.ext.toUpperCase()}</span>
-                     <span class="attach-name">${a.name}</span>
-                     <span class="attach-size">${a.size}</span>
-                     ${dlBtn}
-                   </li>`;
-                   }).join('')}
-                 </ul>
+            ? `<div class="cd-attach">
+                 ${item.attachments.map(a => {
+                     const onclick = isFullMember
+                         ? `App.toast('첨부파일 다운로드 — 실제 구현 시 서버 연동 예정', 'info');return false;`
+                         : `App.toast('정회원만 다운로드할 수 있습니다.', 'warning');return false;`;
+                     return `
+                   <a href="#" class="cd-attach-item"${!isFullMember ? ' style="opacity:0.5"' : ''}
+                      onclick="${onclick}">
+                     <svg class="cd-attach-icon" viewBox="0 0 24 24" fill="none" width="15" height="15">
+                       <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.41 17.41a2 2 0 0 1-2.83-2.83l8.49-8.48"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                     </svg>
+                     <span>${a.name}</span>
+                     <span class="cd-attach-size">(${a.size})</span>
+                   </a>`;
+                 }).join('')}
                  ${!isFullMember
-                     ? `<p class="attach-notice">정회원만 파일을 다운로드할 수 있습니다.
-                          <a href="../about/members.html">정회원 안내 →</a></p>`
+                     ? `<p style="font-size:12px;color:var(--gray-mid);margin-top:6px">정회원만 파일을 다운로드할 수 있습니다. <a href="../about/members.html">정회원 안내 →</a></p>`
                      : ''}
                </div>`
             : '';
@@ -685,10 +669,10 @@ const ArchiveCtrl = {
               <span>작성자 <strong>${item.author}</strong></span>
             </div>
             <hr class="cd-divider">
+            ${attachHtml}
             <div class="cd-body">
               <div class="cd-content">${item.content || ''}</div>
             </div>
-            ${attachHtml ? `<hr class="cd-divider">${attachHtml}` : ''}
             ${navHtml}
             <div class="cd-actions">
               <button class="btn btn-primary btn-sm cd-btn-list"

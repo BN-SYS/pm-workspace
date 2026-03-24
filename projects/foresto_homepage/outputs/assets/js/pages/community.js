@@ -109,6 +109,7 @@ const NOTICE_DATA = {
             author: '관리자', date: '2026-01-02',
             content: `<p>2026년 협회 운영 방침에 대해 안내드립니다.</p>
                 <p>주요 변경 사항은 다음과 같습니다.</p>`,
+            attachments: [{ name: '2026_운영방침_안내문.pdf', size: '128K' }],
         },
         {
             id: 9998,
@@ -326,7 +327,6 @@ const CalendarCtrl = {
 
     init() {
         this._renderFilterPanel();
-        this._injectEventModal();
         this.render();
     },
 
@@ -376,28 +376,6 @@ const CalendarCtrl = {
         return CALENDAR_EVENTS.filter(e => e.date === ds && this._filter[e.cat]);
     },
 
-    openEventModal(evt) {
-        const meta = this.CAT_META[evt.cat] || { label: evt.cat };
-        const titleEl = document.getElementById('calModalEvtTitle');
-        const bodyEl = document.getElementById('calModalEvtBody');
-        const linkBtn = document.getElementById('calModalEvtLink');
-        if (titleEl) titleEl.textContent = evt.title;
-        if (bodyEl) {
-            bodyEl.innerHTML = `
-        <div style="margin-bottom:12px">
-          <span class="badge badge-green">${meta.label}</span>
-          <span style="font-size:13px;color:var(--gray-mid);margin-left:8px">
-            📅 ${evt.date}
-          </span>
-        </div>
-        <div style="font-size:14px;line-height:1.8;
-                    white-space:pre-line;color:var(--gray-dark)">
-          ${evt.desc}
-        </div>`;
-        }
-        if (linkBtn) linkBtn.style.display = evt.link ? 'inline-flex' : 'none';
-        App.openModal('calEventModal');
-    },
 
     render() {
         const titleEl = document.getElementById('calMonthTitle');
@@ -441,15 +419,10 @@ const CalendarCtrl = {
 
             const evtTags = [
                 ...evts.slice(0, 2).map(e => {
-                    const encoded = encodeURIComponent(JSON.stringify(e));
-                    /* 링크 있음: 밑줄 + 포인터 / 없음: 클릭 없음 */
-                    const linkStyle = e.link
-                        ? 'cursor:pointer;text-decoration:underline;'
-                        : 'cursor:default;';
+                    const linkStyle = e.link ? 'cursor:pointer;text-decoration:underline;' : 'cursor:default;';
+                    const clickAttr = e.link ? `onclick="event.stopPropagation();location.href='${e.link}'"` : '';
                     return `<span class="event-tag ${this.CAT_META[e.cat]?.cls || ''}"
-                        style="${linkStyle}"
-                        data-evt="${encoded}"
-                        data-link="${e.link || ''}">${e.title}</span>`;
+                        style="${linkStyle}" ${clickAttr}>${e.title}</span>`;
                 }),
                 evts.length > 2
                     ? `<span style="font-size:10px;color:var(--gray-mid)">
@@ -459,7 +432,8 @@ const CalendarCtrl = {
             ].join('');
 
             html += `
-        <div class="full-cell${isToday ? ' today' : ''}">
+        <div class="full-cell${isToday ? ' today' : ''}" style="cursor:pointer"
+             onclick="CalendarCtrl.selectDay(${y}, ${m}, ${d})">
           <div class="${dateNumCls}">${d}</div>
           <div class="evt-container">${evtTags}</div>
         </div>`;
@@ -468,13 +442,13 @@ const CalendarCtrl = {
         const grid = document.getElementById('fullCalGrid');
         if (!grid) return;
         grid.innerHTML = html;
-        grid.querySelectorAll('.event-tag[data-evt]').forEach(el => {
-            const link = el.dataset.link;
-            if (link) {
-                el.addEventListener('click', () => { location.href = link; });
-            }
-            /* 링크 없는 경우 클릭 이벤트 없음 */
-        });
+    },
+
+    selectDay(y, m, d) {
+        const pad = n => String(n).padStart(2, '0');
+        const dateStr = `${y}-${pad(m + 1)}-${pad(d)}`;
+        const label = `${m + 1}월 ${d}일 일정`;
+        if (typeof renderDaySchedule === 'function') renderDaySchedule(dateStr, label);
     },
 
     _renderList() {
@@ -506,10 +480,11 @@ const CalendarCtrl = {
         listEl.innerHTML = monthEvts.map(e => {
             const d = new Date(e.date);
             const meta = this.CAT_META[e.cat] || { label: e.cat };
+            const cursor = e.link ? 'cursor:pointer' : '';
+            const clickAttr = e.link ? `onclick="location.href='${e.link}'"` : '';
             return `
         <div style="display:flex;gap:16px;align-items:flex-start;
-                    padding:14px 0;border-bottom:1px solid var(--gray-light);cursor:pointer"
-             onclick="CalendarCtrl.openEventModal(${JSON.stringify(e).replace(/"/g, '&quot;')})">
+                    padding:14px 0;border-bottom:1px solid var(--gray-light);${cursor}" ${clickAttr}>
           <div style="background:var(--green-dark);color:#fff;border-radius:8px;
                       padding:8px 12px;text-align:center;min-width:52px;flex-shrink:0">
             <div style="font-size:11px;opacity:.8">${d.getMonth() + 1}월</div>
@@ -521,12 +496,6 @@ const CalendarCtrl = {
               <span class="badge badge-green" style="font-size:11px">${meta.label}</span>
             </h4>
             <p style="font-size:13px;color:var(--gray-mid)">${e.desc.split('\n')[0]}</p>
-            ${e.link
-                    ? `<button class="btn btn-outline btn-sm" style="margin-top:6px"
-                         onclick="event.stopPropagation();App.toast('관련 페이지로 이동합니다.')">
-                   관련 페이지 →
-                 </button>`
-                    : ''}
           </div>
         </div>`;
         }).join('');
@@ -553,10 +522,10 @@ const CalendarCtrl = {
 
         upEl.innerHTML = upcoming.map(e => {
             const meta = this.CAT_META[e.cat] || { label: e.cat };
-            const encoded = JSON.stringify(e).replace(/"/g, '&quot;');
+            const cursor = e.link ? 'cursor:pointer' : '';
+            const clickAttr = e.link ? `onclick="location.href='${e.link}'"` : '';
             return `
-        <div style="padding:8px 0;border-bottom:1px solid var(--gray-light);cursor:pointer"
-             onclick="CalendarCtrl.openEventModal(${encoded})">
+        <div style="padding:8px 0;border-bottom:1px solid var(--gray-light);${cursor}" ${clickAttr}>
           <div style="font-size:12px;color:var(--gray-mid)">
             ${e.date} · ${meta.label}
           </div>
@@ -567,30 +536,6 @@ const CalendarCtrl = {
         }).join('');
     },
 
-    _injectEventModal() {
-        if (document.getElementById('calEventModal')) return;
-        document.body.insertAdjacentHTML('beforeend', `
-      <div class="modal-overlay" id="calEventModal">
-        <div class="modal" style="max-width:480px">
-          <div class="modal-header">
-            <h3 id="calModalEvtTitle"></h3>
-            <button class="modal-close"
-                    onclick="App.closeModal('calEventModal')">×</button>
-          </div>
-          <div class="modal-body" id="calModalEvtBody"></div>
-          <div class="modal-footer">
-            <button class="btn btn-outline btn-sm"
-                    id="calModalEvtLink"
-                    style="display:none"
-                    onclick="App.toast('관련 페이지로 이동합니다.')">
-              관련 페이지 →
-            </button>
-            <button class="btn btn-gray"
-                    onclick="App.closeModal('calEventModal')">닫기</button>
-          </div>
-        </div>
-      </div>`);
-    },
 };
 
 
@@ -659,6 +604,20 @@ const NoticeCtrl = {
         const badge = isPinned
             ? `<span class="cd-status-badge" style="background:var(--accent);border-color:var(--accent);color:#fff">공지</span>`
             : '';
+        const attachHtml = (item.attachments || []).length
+            ? `<div class="cd-attach">
+                 ${item.attachments.map(a => `
+                   <a href="#" class="cd-attach-item"
+                      onclick="App.toast('첨부파일 다운로드 — 실제 구현 시 서버 연동 예정', 'info');return false;">
+                     <svg class="cd-attach-icon" viewBox="0 0 24 24" fill="none" width="15" height="15">
+                       <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.41 17.41a2 2 0 0 1-2.83-2.83l8.49-8.48"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                     </svg>
+                     <span>${a.name}</span>
+                     <span class="cd-attach-size">(${a.size})</span>
+                   </a>`).join('')}
+               </div>`
+            : '';
         const navHtml = (next || prev) ? `
           <div class="cd-nav">
             ${next ? `<div class="cd-nav-item" onclick="location.href='notice-detail.html?id=${next.id}'">
@@ -683,6 +642,7 @@ const NoticeCtrl = {
               <span>작성자 <strong>${item.author}</strong></span>
             </div>
             <hr class="cd-divider">
+            ${attachHtml}
             <div class="cd-body">
               <div class="cd-content">${item.content || '<p>내용이 없습니다.</p>'}</div>
             </div>

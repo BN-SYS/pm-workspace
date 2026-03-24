@@ -33,16 +33,6 @@
       자주 묻는 질문
     </h2>
 
-    <!-- 카테고리 탭 -->
-    <div class="faq-tabs" id="faqTabs">
-      <button class="faq-tab active" onclick="FilterFaq('all',   this)">전체</button>
-      <button class="faq-tab" onclick="FilterFaq('edu',   this)">교육·과정</button>
-      <button class="faq-tab" onclick="FilterFaq('qual',  this)">자격·시험</button>
-      <button class="faq-tab" onclick="FilterFaq('fee',   this)">비용·환불</button>
-      <button class="faq-tab" onclick="FilterFaq('act',   this)">활동·취업</button>
-      <button class="faq-tab" onclick="FilterFaq('member',this)">회원가입</button>
-    </div>
-
     <div class="accordion-list" id="faqList"></div>
 
     <!-- 문의 안내 -->
@@ -148,21 +138,8 @@
       },
     ];
 
-    let currentCat = 'all';
-
-    function FilterFaq(cat, btn) {
-      currentCat = cat;
-      document.querySelectorAll('.faq-tab').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderFaq();
-    }
-
     function renderFaq() {
-      const list = currentCat === 'all'
-        ? FAQ_DATA
-        : FAQ_DATA.filter(f => f.cat === currentCat);
-
-      document.getElementById('faqList').innerHTML = list.map((f, i) => `
+      document.getElementById('faqList').innerHTML = FAQ_DATA.map((f, i) => `
         <div class="accordion-item" id="faq-${i}">
           <div class="accordion-head" onclick="toggleFaq('faq-${i}')">
             <div class="acc-q-mark">Q</div>
