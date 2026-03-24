@@ -47,24 +47,42 @@ const MyPage = {
     if (name === 'cert') this.renderEdu();
   },
 
+  openPwModal() {
+    ['pwCurrent', 'pwNew', 'pwConfirm'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    const msg = document.getElementById('pwMsg');
+    if (msg) msg.textContent = '';
+    App.openModal('pwModal');
+  },
+
+  closePwModal() {
+    App.closeModal('pwModal');
+  },
+
   changePw() {
     const cur = document.getElementById('pwCurrent')?.value.trim();
     const nw  = document.getElementById('pwNew')?.value.trim();
     const cf  = document.getElementById('pwConfirm')?.value.trim();
     const msg = document.getElementById('pwMsg');
-    if (!cur || !nw || !cf) { if (msg) { msg.style.color = 'var(--danger)'; msg.textContent = '모든 비밀번호 항목을 입력해주세요.'; } return; }
+    if (!cur || !nw || !cf) { if (msg) { msg.style.color = 'var(--danger)'; msg.textContent = '모든 항목을 입력해주세요.'; } return; }
     if (nw !== cf)           { if (msg) { msg.style.color = 'var(--danger)'; msg.textContent = '새 비밀번호가 일치하지 않습니다.'; }   return; }
     if (nw.length < 8)       { if (msg) { msg.style.color = 'var(--danger)'; msg.textContent = '비밀번호는 8자 이상이어야 합니다.'; }  return; }
-    if (msg) { msg.style.color = 'var(--green-dark)'; msg.textContent = '비밀번호가 변경되었습니다.'; }
-    ['pwCurrent', 'pwNew', 'pwConfirm'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    App.closeModal('pwModal');
+    App.toast('비밀번호가 변경되었습니다.');
   },
 
-  openWithdraw() { this.showPanel('withdraw'); },
+  openWithdrawModal() {
+    const ta = document.getElementById('withdrawReason');
+    const cb = document.getElementById('withdrawAgree');
+    if (ta) ta.value = '';
+    if (cb) cb.checked = false;
+    App.openModal('withdrawModal');
+  },
 
   doWithdraw() {
     if (!document.getElementById('withdrawAgree')?.checked) {
       App.toast('탈퇴 동의 체크박스를 선택해주세요.', 'warning'); return;
     }
+    App.closeModal('withdrawModal');
     App.toast('탈퇴 처리가 완료되었습니다.');
     setTimeout(() => { location.href = '../index.html'; }, 1500);
   },

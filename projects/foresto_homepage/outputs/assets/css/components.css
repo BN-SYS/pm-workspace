@@ -27,6 +27,8 @@
 .btn-xs  { padding: 4px 10px;  font-size: var(--text-xs); }
 .btn-lg  { padding: 13px 28px; font-size: var(--text-base); font-weight: 700; }
 .btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn-link-danger { background: transparent; color: var(--danger); border-color: transparent; padding-left: 0; padding-right: 0; font-weight: 400; font-size: var(--text-sm); }
+.btn-link-danger:hover { text-decoration: underline; }
 
 /* ── 카드 */
 .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; }
