@@ -382,15 +382,18 @@
     /* 초기 렌더 */
     renderMiniCal();
 
-    /* ── 팝업 오늘 하루 닫기 */
-    document.getElementById('popupNoShow').addEventListener('change', function () {
-      if (this.checked) {
-        localStorage.setItem('popup_hide_until', new Date().toDateString());
+    /* ── 팝업 오늘 하루 닫기 (팝업 주석 해제 시 함께 활성화) */
+    const _popupNoShow = document.getElementById('popupNoShow');
+    if (_popupNoShow) {
+      _popupNoShow.addEventListener('change', function () {
+        if (this.checked) {
+          localStorage.setItem('popup_hide_until', new Date().toDateString());
+          document.getElementById('popup').style.display = 'none';
+        }
+      });
+      if (localStorage.getItem('popup_hide_until') === new Date().toDateString()) {
         document.getElementById('popup').style.display = 'none';
       }
-    });
-    if (localStorage.getItem('popup_hide_until') === new Date().toDateString()) {
-      document.getElementById('popup').style.display = 'none';
     }
 
     /* ── 히어로 슬라이더 */

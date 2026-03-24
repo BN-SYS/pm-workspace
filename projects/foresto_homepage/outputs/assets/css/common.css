@@ -428,7 +428,7 @@ body {
   cursor: pointer;
   transition: var(--trans);
   white-space: nowrap;
-  min-width: 168px;
+  min-width: 10.5rem;
   justify-content: space-between;
 }
 .footer-family-btn:hover {
@@ -447,7 +447,7 @@ body {
   position: absolute;
   right: 0;
   bottom: calc(100% + 4px);
-  min-width: 168px;
+  min-width: 10.5rem;
   background: var(--white);
   border: 1px solid var(--gray-light);
   border-radius: var(--radius);

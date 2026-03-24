@@ -492,18 +492,18 @@
   border-radius: 12px;
   padding: 20px 24px;
   overflow: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 }
 
 .cal-schedule-item {
-  font-size: var(--text-base);
+  font-size: min(var(--text-base), 20px); /* 크게(3번)에서 보통(2번=20px) 수준으로 캡 */
   font-weight: 500;
   color: #111;
-  white-space: nowrap;
+  word-break: keep-all;
   overflow: hidden;
-  text-overflow: ellipsis;
   cursor: pointer;
   transition: color 0.2s;
   line-height: 1.4;
