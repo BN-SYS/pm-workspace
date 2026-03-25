@@ -234,6 +234,9 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <h1 class="admin-page-title">신청자 통합 관리</h1>
+        <div class="admin-topbar-actions">
+          <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../../../../common_assets/icons/refresh.png" alt="새로고침"></button>
+        </div>
       </div>
 
       <!-- ① 필터 -->
@@ -248,6 +251,13 @@
                 <input type="date" id="filterDateFrom">
                 <span class="date-sep">—</span>
                 <input type="date" id="filterDateTo">
+              </div>
+              <div class="date-preset-group">
+                <button class="date-preset-btn" onclick="ApplicantAdmin.setDatePreset('today')">오늘</button>
+                <button class="date-preset-btn" onclick="ApplicantAdmin.setDatePreset(7)">7일</button>
+                <button class="date-preset-btn" onclick="ApplicantAdmin.setDatePreset(30)">30일</button>
+                <button class="date-preset-btn" onclick="ApplicantAdmin.setDatePreset(90)">3개월</button>
+                <button class="date-preset-btn" onclick="ApplicantAdmin.setDatePreset(180)">6개월</button>
               </div>
             </div>
           </div>
@@ -347,14 +357,15 @@
           <colgroup>
             <col style="width:34px">    <!-- checkbox -->
             <col style="width:38px">    <!-- No -->
+            <col style="width:9%">      <!-- 접수번호 -->
             <col style="width:7%">      <!-- 과정유형 -->
             <col>                       <!-- 과정명 (auto) -->
             <col style="width:10%">     <!-- 신청자(ID) -->
             <col style="width:3%">      <!-- 성별 -->
             <col style="width:7%">      <!-- 생년월일 -->
             <col style="width:10%">     <!-- 핸드폰 -->
-            <col style="width:12%">     <!-- 신청일시 -->
-            <col style="width:12%">     <!-- 취소일시 -->
+            <col style="width:11%">     <!-- 신청일시 -->
+            <col style="width:11%">     <!-- 취소일시 -->
             <col style="width:6%">      <!-- 신청상태 -->
             <col style="width:6%">      <!-- 수료상태 -->
           </colgroup>
@@ -364,6 +375,7 @@
                 <input type="checkbox" id="chkAll" onchange="ApplicantAdmin.toggleAll(this.checked)">
               </th>
               <th>No</th>
+              <th>접수번호</th>
               <th>과정유형</th>
               <th style="text-align:center">과정명</th>
               <th>신청자</th>
@@ -511,6 +523,7 @@
     const dd       = String((i % 28) + 1).padStart(2, '0');
     const hh       = String((i % 10) + 9).padStart(2, '0');
     const min      = String((i * 7) % 60).padStart(2, '0');
+    const ss       = String((i * 13) % 60).padStart(2, '0');
     const applyStatus = APPLY_POOL[i % APPLY_POOL.length];
     const completionStatus = COMPLETION_POOL[i % COMPLETION_POOL.length];
 
@@ -520,6 +533,7 @@
 
     return {
       id:               2000 + i,
+      applyNo:          `APP-2026-${String(2000 + i).padStart(5, '0')}`,
       memberId:         `M${String(2000 + i).padStart(5, '0')}`,
       courseType:       course.type,
       academyTab:       course.academyTab,
@@ -528,10 +542,10 @@
       gender:           GENDERS[i % GENDERS.length],
       phone:            PHONES[i % PHONES.length],
       birthdate:        BIRTHDATES[i % BIRTHDATES.length],
-      applyDate:        `2026-${mm}-${dd} ${hh}:${min}`,
+      applyDate:        `2026-${mm}-${dd} ${hh}:${min}:${ss}`,
       applyStatus,
       completionStatus,
-      cancelDate:       applyStatus === '취소' ? `2026-${mm}-${cancelDd} ${cancelHh}:${min}` : null,
+      cancelDate:       applyStatus === '취소' ? `2026-${mm}-${cancelDd} ${cancelHh}:${min}:${ss}` : null,
       fileRequired:     setting.fileRequired,
       certIssue:        setting.certIssue,
       /* 파일첨부 있는 경우 더미 파일 */
@@ -583,6 +597,15 @@
       });
       this.currentPage = 1;
       this.render();
+    },
+
+    setDatePreset(range) {
+      const to = new Date(), from = new Date();
+      if (range !== 'today') from.setDate(from.getDate() - range);
+      const fmt = d => d.toISOString().split('T')[0];
+      document.getElementById('filterDateFrom').value = fmt(from);
+      document.getElementById('filterDateTo').value = fmt(to);
+      this.search();
     },
 
     resetFilter() {
@@ -698,7 +721,8 @@
                 <input type="checkbox" class="row-chk" data-id="${a.id}"
                   onchange="ApplicantAdmin._syncBulkBtns()">
               </td>
-              <td>${start + i + 1}</td>
+              <td>${total - start - i}</td>
+              <td class="cell-mono">${a.applyNo}</td>
               <td><span class="badge-type ${typeMeta.cls}">${typeMeta.label}${tabSuffix}</span></td>
               <td style="font-weight:500;text-align:center">${a.courseName}</td>
               <td><span style="font-weight:600">${a.name}</span> <span style="font-weight:400;color:#888;font-size:12px">(${a.memberId})</span></td>
@@ -714,7 +738,7 @@
               }</td>
             </tr>`;
           }).join('')
-        : `<tr><td colspan="13" style="padding:40px;text-align:center;color:#5a6e54">검색 결과가 없습니다.</td></tr>`;
+        : `<tr><td colspan="14" style="padding:40px;text-align:center;color:#5a6e54">검색 결과가 없습니다.</td></tr>`;
 
       App.renderPagination('applicantPagination', this.currentPage,
         Math.ceil(total / this.pageSize) || 1,

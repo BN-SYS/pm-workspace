@@ -826,3 +826,72 @@ select.form-control {
   .admin-grid-2 { grid-template-columns: 1fr; }
   .stat-grid    { grid-template-columns: 1fr 1fr; }
 }
+
+
+/* ══════════════════════════════════════════════
+   15. 새로고침 버튼
+   ══════════════════════════════════════════════ */
+.btn-refresh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #d5e0ce;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.btn-refresh img {
+  width: 16px;
+  height: 16px;
+  opacity: 0.55;
+  transition: opacity 0.15s, transform 0.3s;
+}
+
+.btn-refresh:hover {
+  border-color: #508829;
+  background: #f0f7e8;
+}
+
+.btn-refresh:hover img {
+  opacity: 1;
+  transform: rotate(180deg);
+}
+
+/* topbar 우측 액션 래퍼 */
+.admin-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+/* ══════════════════════════════════════════════
+   16. 날짜 프리셋 버튼 그룹
+   ══════════════════════════════════════════════ */
+.date-preset-group {
+  display: flex;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.date-preset-btn {
+  height: 34px;
+  padding: 0 11px;
+  border: none;
+  border-radius: 5px;
+  background: #508829;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  transition: background 0.12s;
+  white-space: nowrap;
+}
+
+.date-preset-btn:hover { background: #3d6a1e; }

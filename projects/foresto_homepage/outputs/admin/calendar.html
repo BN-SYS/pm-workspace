@@ -196,7 +196,10 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <h1 class="admin-page-title">일정관리</h1>
-        <button class="btn btn-primary btn-sm" onclick="CalAdmin.openModal()">+ 일정 등록</button>
+        <div class="admin-topbar-actions">
+          <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../../../../common_assets/icons/refresh.png" alt="새로고침"></button>
+          <button class="btn btn-primary btn-sm" onclick="CalAdmin.openModal()">+ 일정 등록</button>
+        </div>
       </div>
 
       <!-- ① 검색 필터 -->
@@ -212,7 +215,13 @@
                 <span class="date-sep">—</span>
                 <input type="date" id="filterDateTo">
               </div>
-              <span class="date-hint">일정 날짜 기준 · 미선택 시 전체</span>
+              <div class="date-preset-group">
+                <button class="date-preset-btn" onclick="CalAdmin.setDatePreset('today')">오늘</button>
+                <button class="date-preset-btn" onclick="CalAdmin.setDatePreset(7)">7일</button>
+                <button class="date-preset-btn" onclick="CalAdmin.setDatePreset(30)">30일</button>
+                <button class="date-preset-btn" onclick="CalAdmin.setDatePreset(90)">3개월</button>
+                <button class="date-preset-btn" onclick="CalAdmin.setDatePreset(180)">6개월</button>
+              </div>
             </div>
           </div>
 
@@ -412,6 +421,7 @@
     const rDay  = String((i % 20) + 1).padStart(2, '0');
     const rHH   = String((i % 10) + 9).padStart(2, '0');
     const rMM   = String((i * 7) % 60).padStart(2, '0');
+    const rSS   = String((i * 13) % 60).padStart(2, '0');
     return {
       id:       nextId++,
       cat:      CAT_KEYS[i % CAT_KEYS.length],
@@ -419,7 +429,7 @@
       date:     `${year}-${month}-${day}`,
       link:     LINKS[i % LINKS.length],
       author:   AUTHORS[i % AUTHORS.length],
-      regDate:  `${year}-${rMonth}-${rDay} ${rHH}:${rMM}`,
+      regDate:  `${year}-${rMonth}-${rDay} ${rHH}:${rMM}:${rSS}`,
     };
   }).sort((a, b) => b.date.localeCompare(a.date)); /* 날짜 최신순 */
 
@@ -463,6 +473,15 @@
       });
       this.currentPage = 1;
       this.render();
+    },
+
+    setDatePreset(range) {
+      const to = new Date(), from = new Date();
+      if (range !== 'today') from.setDate(from.getDate() - range);
+      const fmt = d => d.toISOString().split('T')[0];
+      document.getElementById('filterDateFrom').value = fmt(from);
+      document.getElementById('filterDateTo').value = fmt(to);
+      this.search();
     },
 
     resetFilter() {
@@ -544,7 +563,7 @@
           id:      nextId++,
           cat, title, date, link,
           author:  '관리자A',
-          regDate: `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`,
+          regDate: `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`,
         });
         App.toast('일정이 등록되었습니다.', 'success');
       }
@@ -572,7 +591,7 @@
                 <input type="checkbox" class="row-chk" data-id="${e.id}"
                   onchange="CalAdmin._syncBtns()">
               </td>
-              <td>${start + i + 1}</td>
+              <td>${total - start - i}</td>
               <td><span class="cat-badge ${cm.cls}">${cm.label}</span></td>
               <td style="text-align:center;font-weight:500;cursor:pointer"
                 onclick="CalAdmin.openModal(${e.id})">${e.title}</td>

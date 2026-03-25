@@ -272,7 +272,10 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <h1 class="admin-page-title">회원관리</h1>
-        <button class="btn btn-primary btn-sm" onclick="location.href='member-edit.html'">+ 회원 등록</button>
+        <div class="admin-topbar-actions">
+          <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../../../../common_assets/icons/refresh.png" alt="새로고침"></button>
+          <button class="btn btn-primary btn-sm" onclick="location.href='member-edit.html'">+ 회원 등록</button>
+        </div>
       </div>
 
       <!-- ① 검색 필터 -->
@@ -287,6 +290,13 @@
                 <input type="date" id="filterDateFrom">
                 <span class="date-sep">—</span>
                 <input type="date" id="filterDateTo">
+              </div>
+              <div class="date-preset-group">
+                <button class="date-preset-btn" onclick="Members.setDatePreset('today')">오늘</button>
+                <button class="date-preset-btn" onclick="Members.setDatePreset(7)">7일</button>
+                <button class="date-preset-btn" onclick="Members.setDatePreset(30)">30일</button>
+                <button class="date-preset-btn" onclick="Members.setDatePreset(90)">3개월</button>
+                <button class="date-preset-btn" onclick="Members.setDatePreset(180)">6개월</button>
               </div>
             </div>
           </div>
@@ -481,6 +491,20 @@
         this.render();
       },
 
+      setDatePreset(range) {
+        const to = new Date();
+        const from = new Date();
+        if (range === 'today') {
+          /* 오늘만 */
+        } else {
+          from.setDate(from.getDate() - range);
+        }
+        const fmt = d => d.toISOString().split('T')[0];
+        document.getElementById('filterDateFrom').value = fmt(from);
+        document.getElementById('filterDateTo').value = fmt(to);
+        this.search();
+      },
+
       resetFilter() {
         document.getElementById('filterDateFrom').value = '';
         document.getElementById('filterDateTo').value = '';
@@ -539,7 +563,7 @@
               <input type="checkbox" class="row-chk" data-id="${m.id}"
                 onchange="MemberAdmin._syncDeleteBtn()">
             </td>
-            <td class="col-no">${start + i + 1}</td>
+            <td class="col-no">${total - start - i}</td>
             <td class="center">
               <span class="badge ${GRADE_BADGE[m.grade] || 'badge-gray'}">
                 ${GRADE_LABEL[m.grade] || m.grade}

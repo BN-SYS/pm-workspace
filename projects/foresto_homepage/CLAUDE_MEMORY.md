@@ -6,6 +6,11 @@
 ## 핵심 규칙
 
 - **outputs/ 외부 파일 수정 금지.** 클라이언트 전달 파일은 `outputs/` 안에만 있다.
+- **관리자 목록 No 역순:** 전 목록 `total - start - i` 패턴 사용. `start + i + 1` (오름차순) 절대 금지.
+- **게시판 고정글:** 별도 영역 없음. 단일 tbody에 pinnedPosts 상단 고정(비페이지네이션) + byDate 전체 목록(페이지네이션). `_rowHtml(p, noCell, pinStyle=true)` 헬퍼, 번호 목록은 `pinStyle=false`.
+- **배너 관리:** `banner.html`(목록), `banner-edit.html`(등록/수정). 최대 3개. 더보기 버튼명 "더보기" 통일 (linkLabel 필드 없음). 필수: 이미지+메인텍스트. 선택: 상단텍스트/하단텍스트/링크URL.
+- **팝업 관리:** `popup.html`(목록), `popup-edit.html`(등록/수정). 필드: 팝업제목(관리자용,미노출)/노출기간/크기W×H/PC위치L·T/이미지(선택)/내용SE2/링크URL(선택). 사용자 팝업 하단: 오늘하루닫기+닫기. 모바일 위치 고정(center).
+- **신청자 접수번호:** `APP-2026-XXXXX` 형식. 데이터 필드 `applyNo`. No 다음 컬럼.
 - **preview mode 유지.** `index.html`에 서브페이지 링크 차단 스크립트가 있다. 삭제하지 마.
 - **팝업 HTML 주석 처리 상태.** 관련 JS는 null-check 처리되어 있다. 팝업 HTML 복구 시 JS 확인 필요.
 - **글자 크기 조절 버튼은 달력 영역에 영향 안 줘야 한다.** 달력 관련 CSS는 px 고정값 사용.
@@ -93,3 +98,8 @@ git push 전 반드시 확인:
 | 2026-03-25 | 드롭다운 chevron-down.png 교체 (list-filter-select, list-pagesize-select, kw-select, select.form-control) | list-common.css, admin.css, applicants.html |
 | 2026-03-25 | 신청자 통합 관리 전면 개편 (컬럼 추가, 13컬럼 노스크롤, 수료상태 변경, 상세페이지 신규) | applicants.html, applicant-detail.html |
 | 2026-03-25 | 관리자 전역 테이블/폰트 기준 admin.css 통합, 각 페이지 중복 스타일 제거 | admin.css, members.html, courses.html, members-withdrawn.html, history.html |
+| 2026-03-25 | 전 목록 No 역순(total-start-i) 통일, 접수번호 컬럼 추가, board.html 상단고정글 영역 신규 | members.html, members-withdrawn.html, courses.html, applicants.html, calendar.html, board.html |
+| 2026-03-25 | 배너관리 목록/등록수정 신규, 더보기 버튼명 통일, 날짜 초(ss) 전체 적용, 사이드 chevron 아이콘 | banner.html, banner-edit.html, admin.js, board.html, applicants.html, applicant-detail.html, members-withdrawn.html, courses.html, calendar.html, member-detail.html |
+| 2026-03-25 | 팝업관리 목록/등록수정 신규, admin.js popup href 연결 | popup.html, popup-edit.html, admin.js |
+| 2026-03-25 | 관리자 새로고침 버튼(btn-refresh) + 날짜 프리셋(오늘/7일/30일/3개월/6개월) 전 목록 페이지 적용 | admin.css, members.html, members-withdrawn.html, courses.html, applicants.html, board.html, calendar.html, history.html, popup.html, banner.html |
+| 2026-03-25 | 회원아카데미 탭 메뉴 admin-topbar 인라인 배치 (has-tabs 클래스), 탭 min-width 통일(96px) | courses.html |

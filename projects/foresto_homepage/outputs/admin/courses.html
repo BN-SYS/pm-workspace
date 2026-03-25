@@ -14,15 +14,48 @@
     /* ════════════════════════════════════════
        회원아카데미 탭
        ════════════════════════════════════════ */
+    /* topbar 내 탭 레이아웃 */
+    .admin-topbar-left {
+      display: flex;
+      align-items: stretch;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topbar-tab-divider {
+      width: 1px;
+      background: #e3eadd;
+      margin: 10px 16px;
+      flex-shrink: 0;
+    }
+
+    .admin-topbar.has-tabs {
+      border-bottom: 2px solid #e3eadd;
+      margin-bottom: 16px;
+      align-items: stretch;
+      padding-bottom: 0;
+    }
+
+    .admin-topbar.has-tabs .admin-topbar-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .admin-topbar.has-tabs .admin-page-title {
+      display: flex;
+      align-items: center;
+      padding-bottom: 2px;
+    }
+
     .academy-tab-bar {
       display: flex;
       gap: 0;
-      margin-bottom: 16px;
-      border-bottom: 2px solid #e3eadd;
+      align-items: stretch;
     }
 
     .academy-tab {
-      padding: 10px 24px;
+      min-width: 96px;
+      padding: 0 8px;
       font-size: 14px;
       font-weight: 500;
       color: #7a8e74;
@@ -34,6 +67,9 @@
       transition: color .15s, border-color .15s;
       font-family: 'Noto Sans KR', sans-serif;
       white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .academy-tab:hover { color: #4a7c59; }
@@ -216,14 +252,18 @@
     </aside>
 
     <main class="admin-main">
-      <div class="admin-topbar">
-        <h1 class="admin-page-title" id="pageTitle">강좌관리</h1>
-        <button class="btn btn-primary btn-sm" onclick="CourseAdmin.goCreate()">+ 강좌 등록</button>
-      </div>
-
-      <!-- ① 회원아카데미 탭 (type=academy일 때만 표시) -->
-      <div id="academyTabBar" style="display:none">
-        <div class="academy-tab-bar" id="academyTabs"></div>
+      <div class="admin-topbar" id="adminTopbarCourses">
+        <div class="admin-topbar-left">
+          <h1 class="admin-page-title" id="pageTitle">강좌관리</h1>
+          <div id="academyTabBar" style="display:none;align-items:stretch">
+            <div class="topbar-tab-divider"></div>
+            <div class="academy-tab-bar" id="academyTabs"></div>
+          </div>
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../../../../common_assets/icons/refresh.png" alt="새로고침"></button>
+          <button class="btn btn-primary btn-sm" onclick="CourseAdmin.goCreate()">+ 강좌 등록</button>
+        </div>
       </div>
 
       <!-- ② 검색 필터 -->
@@ -239,7 +279,13 @@
                 <span class="date-sep">—</span>
                 <input type="date" id="filterDateTo">
               </div>
-              <span class="date-hint">교육 시작일 기준</span>
+              <div class="date-preset-group">
+                <button class="date-preset-btn" onclick="CourseAdmin.setDatePreset('today')">오늘</button>
+                <button class="date-preset-btn" onclick="CourseAdmin.setDatePreset(7)">7일</button>
+                <button class="date-preset-btn" onclick="CourseAdmin.setDatePreset(30)">30일</button>
+                <button class="date-preset-btn" onclick="CourseAdmin.setDatePreset(90)">3개월</button>
+                <button class="date-preset-btn" onclick="CourseAdmin.setDatePreset(180)">6개월</button>
+              </div>
             </div>
           </div>
 
@@ -357,7 +403,9 @@
 
     /* ── 회원아카데미 탭 렌더링 */
     if (type === 'academy') {
-      document.getElementById('academyTabBar').style.display = '';
+      const tabBar = document.getElementById('academyTabBar');
+      tabBar.style.display = 'flex';
+      document.getElementById('adminTopbarCourses').classList.add('has-tabs');
       document.getElementById('academyTabs').innerHTML = ACADEMY_TABS.map(t => `
         <button class="academy-tab ${t.key === activeTab ? 'active' : ''}"
                 onclick="location.href='courses.html?type=academy&tab=${t.key}'">
@@ -432,6 +480,9 @@
       const dd    = String((i % 20) + 1).padStart(2, '0');
       const recMm = String(((i + 1) % 9) + 1).padStart(2, '0');
       const recDd = String((i % 20) + 1).padStart(2, '0');
+      const rHH   = String((i % 10) + 9).padStart(2, '0');
+      const rMM   = String((i * 7) % 60).padStart(2, '0');
+      const rSS   = String((i * 13) % 60).padStart(2, '0');
       const startDate  = `2026-${mm}-${dd}`;
       const recStartMm = String(((i + 2) % 9) + 1).padStart(2, '0');
       const recStartDd = String(((i * 2 + 1) % 20) + 1).padStart(2, '0');
@@ -444,7 +495,7 @@
         recFrom: `2026-${recStartMm}-${recStartDd} 09:00`,
         recTo:   `2026-${mm}-${recEndDd} 18:00`,
         status:  STATUSES[i % 4],
-        regDate: `2026-${recMm}-${recDd}`,
+        regDate: `2026-${recMm}-${recDd} ${rHH}:${rMM}:${rSS}`,
       };
     });
 
@@ -475,6 +526,15 @@
         });
         this.currentPage = 1;
         this.render();
+      },
+
+      setDatePreset(range) {
+        const to = new Date(), from = new Date();
+        if (range !== 'today') from.setDate(from.getDate() - range);
+        const fmt = d => d.toISOString().split('T')[0];
+        document.getElementById('filterDateFrom').value = fmt(from);
+        document.getElementById('filterDateTo').value = fmt(to);
+        this.search();
       },
 
       resetFilter() {
@@ -557,7 +617,7 @@
                   <input type="checkbox" class="row-chk" data-id="${c.id}"
                     onchange="CourseAdmin._syncDeleteBtn()">
                 </td>
-                <td class="td-muted">${start + i + 1}</td>
+                <td class="td-muted">${total - start - i}</td>
                 <td style="font-weight:500;text-align:center">${c.name}</td>
                 <td class="cell-datetime">${c.startDate}</td>
                 <td class="period-cell">${c.recFrom} ~ ${c.recTo}</td>

@@ -268,6 +268,9 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <h1 class="admin-page-title">탈퇴회원</h1>
+        <div class="admin-topbar-actions">
+          <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../../../../common_assets/icons/refresh.png" alt="새로고침"></button>
+        </div>
       </div>
 
       <!-- 안내 배너 -->
@@ -287,6 +290,13 @@
                 <input type="date" id="filterDateFrom">
                 <span class="date-sep">—</span>
                 <input type="date" id="filterDateTo">
+              </div>
+              <div class="date-preset-group">
+                <button class="date-preset-btn" onclick="WithdrawnAdmin.setDatePreset('today')">오늘</button>
+                <button class="date-preset-btn" onclick="WithdrawnAdmin.setDatePreset(7)">7일</button>
+                <button class="date-preset-btn" onclick="WithdrawnAdmin.setDatePreset(30)">30일</button>
+                <button class="date-preset-btn" onclick="WithdrawnAdmin.setDatePreset(90)">3개월</button>
+                <button class="date-preset-btn" onclick="WithdrawnAdmin.setDatePreset(180)">6개월</button>
               </div>
             </div>
           </div>
@@ -393,6 +403,9 @@
       const dd  = String((i % 20) + 1).padStart(2,'0');
       const wMm = String(((i + 2) % 9) + 1).padStart(2,'0');
       const wDd = String(((i * 3 + 7) % 20) + 1).padStart(2,'0');
+      const wHH = String((i % 10) + 9).padStart(2,'0');
+      const wMI = String((i * 7) % 60).padStart(2,'0');
+      const wSS = String((i * 13) % 60).padStart(2,'0');
       return {
         id:             100 + i,
         userId:         `olduser${String(i + 1).padStart(3,'0')}`,
@@ -401,7 +414,7 @@
         gradeLabel:     g.label,
         email:          `withdrawn${i + 1}@example.com`,
         phone:          `010-${String(2000 + i).padStart(4,'0')}-${String(6000 + i).padStart(4,'0')}`,
-        deletedAt:      `2026-${wMm}-${wDd}`,
+        deletedAt:      `2026-${wMm}-${wDd} ${wHH}:${wMI}:${wSS}`,
         processor:      PROCESSORS[i % 4],
         withdrawReason: WITHDRAW_REASONS[i % WITHDRAW_REASONS.length],
       };
@@ -445,6 +458,15 @@
         this.render();
       },
 
+      setDatePreset(range) {
+        const to = new Date(), from = new Date();
+        if (range !== 'today') from.setDate(from.getDate() - range);
+        const fmt = d => d.toISOString().split('T')[0];
+        document.getElementById('filterDateFrom').value = fmt(from);
+        document.getElementById('filterDateTo').value = fmt(to);
+        this.search();
+      },
+
       resetFilter() {
         document.getElementById('filterDateFrom').value    = '';
         document.getElementById('filterDateTo').value      = '';
@@ -470,7 +492,7 @@
 
         document.getElementById('memberTableBody').innerHTML = slice.map((m, i) => `
           <tr>
-            <td class="center td-muted">${start + i + 1}</td>
+            <td class="center td-muted">${total - start - i}</td>
             <td class="center cell-date">${m.deletedAt}</td>
             <td class="td-muted">${m.userId}</td>
             <td><strong>${m.name}</strong></td>
