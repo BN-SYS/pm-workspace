@@ -267,6 +267,16 @@
   ];
   const DUMMY_FILE_NAMES = ['개인정보_동의서_서명본.pdf','신청서_제출용.hwp','재직증명서.pdf','경력기술서.docx','학력증명서.pdf'];
 
+  const PERIODS    = [
+    '2026년 3월 1일 ~ 2026년 6월 30일',
+    '2026년 1월 6일 ~ 2026년 2월 28일',
+    '2025년 9월 1일 ~ 2025년 11월 30일',
+    '2025년 4월 1일 ~ 2025년 6월 30일',
+    '2026년 3월 15일 ~ 2026년 5월 31일',
+  ];
+  const HOURS_POOL = [40, 60, 80, 100, 120];
+  const CERT_DATES = ['2026-06-30', '2026-02-28', '2025-11-30', '2025-06-30', '2026-05-31'];
+
   const ALL_APPLICANTS = Array.from({ length: 52 }, (_, i) => {
     const course   = COURSE_NAMES_POOL[i % COURSE_NAMES_POOL.length];
     const setting  = COURSE_SETTINGS[i % COURSE_SETTINGS.length];
@@ -296,6 +306,10 @@
       fileRequired:     setting.fileRequired,
       certIssue:        setting.certIssue,
       submittedFile:    setting.fileRequired ? { name: DUMMY_FILE_NAMES[i % DUMMY_FILE_NAMES.length], size: `${(i % 5 + 1) * 120}KB` } : null,
+      certNo:           `2026-${String(i + 1).padStart(3, '0')}`,
+      period:           PERIODS[i % PERIODS.length],
+      hours:            HOURS_POOL[i % HOURS_POOL.length],
+      certDate:         CERT_DATES[i % CERT_DATES.length],
     };
   });
 
@@ -446,11 +460,11 @@
     let certCard = '';
     if (a.certIssue) {
       const certContent = a.completionStatus === '수료'
-        ? `<button class="btn-cert-download" onclick="downloadCert('${a.name}', '${a.courseName}')">
+        ? `<button class="btn-cert-download" onclick="openCert(${a.id})">
              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                <path d="M8 1v9M4.5 6.5L8 10l3.5-3.5M2 12h12" stroke="#2e7d32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
              </svg>
-             수료증 다운로드
+             수료증 확인 / 다운로드
            </button>
            <span class="detail-val muted" style="font-size:12px;margin-left:8px">${a.name}님 · ${a.courseName}</span>`
         : `<p class="cert-unavail">수료 처리 후 수료증을 발급·다운로드할 수 있습니다. (현재 상태: <strong>${a.completionStatus}</strong>)</p>`;
@@ -481,8 +495,19 @@
   function downloadFile(name) {
     App.toast(`${name} 다운로드 — 실제 구현 시 서버 파일 경로와 연동됩니다.`, 'info');
   }
-  function downloadCert(name, courseName) {
-    App.toast(`${name}님 수료증 다운로드 — 실제 구현 시 PDF 생성 API와 연동됩니다.`, 'info');
+
+  function openCert(id) {
+    const a = ALL_APPLICANTS.find(x => x.id === id);
+    if (!a) return;
+    const params = new URLSearchParams({
+      certNo: a.certNo,
+      name:   a.name,
+      course: a.courseName,
+      period: a.period,
+      hours:  String(a.hours),
+      date:   a.certDate,
+    });
+    window.open(`../mypage/certificate-preview.html?${params.toString()}`, '_blank');
   }
 
   /* ══════════════════════════════════════
