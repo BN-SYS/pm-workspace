@@ -89,3 +89,7 @@ git push 전 반드시 확인:
 | 2026-03-25 | footer-family-btn min-width rem 전환 (10.5rem) | common.css |
 | 2026-03-24 | preview mode 추가, 팝업 JS null-safety 처리, 슬라이더 복구 | index.html |
 | 2026-03-24 | 마이페이지 비밀번호 변경 / 탈퇴하기 → 모달로 이동, 사이드메뉴 정리 | mypage/index.html |
+| 2026-03-25 | 관리자 사이드바 PNG 아이콘 교체, nav-arrow img rotate, collapsed 아이콘 가운데 정렬 (gap:0) | admin.css, admin.js |
+| 2026-03-25 | 드롭다운 chevron-down.png 교체 (list-filter-select, list-pagesize-select, kw-select, select.form-control) | list-common.css, admin.css, applicants.html |
+| 2026-03-25 | 신청자 통합 관리 전면 개편 (컬럼 추가, 13컬럼 노스크롤, 수료상태 변경, 상세페이지 신규) | applicants.html, applicant-detail.html |
+| 2026-03-25 | 관리자 전역 테이블/폰트 기준 admin.css 통합, 각 페이지 중복 스타일 제거 | admin.css, members.html, courses.html, members-withdrawn.html, history.html |

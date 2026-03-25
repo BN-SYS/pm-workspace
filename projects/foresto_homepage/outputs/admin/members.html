@@ -240,87 +240,21 @@
     }
 
     /* ════════════════════════════════════════
-       테이블 — 1920px 기준 전체 너비 최적화
+       테이블 — admin.css 전역 기준 적용
        ════════════════════════════════════════ */
-
-    /* col-chk: % 기반으로 통일 (40px → 3%) */
-    .admin-table {
-      table-layout: fixed;
-      width: 100%;
-      font-size: 15px;
-    }
-
     .admin-table th.col-chk,
     .admin-table td.col-chk {
       width: 3%;
-      text-align: center;
-    }
-
-    /* 모든 th 중앙정렬 + 클리핑 — col-chk 제외 */
-    .admin-table thead th:not(.col-chk) {
-      text-align: center;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    /* td 클리핑 — col-chk 제외 */
-    .admin-table tbody td:not(.col-chk) {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    /* col-chk: 클리핑 없이 그냥 가운데 */
-    .admin-table th.col-chk,
-    .admin-table td.col-chk {
       overflow: visible;
       text-overflow: clip;
       white-space: normal;
     }
 
-    .admin-table tbody td {
-      padding: 13px 14px;
-      text-align: center;
-    }
-
-    .admin-table td.col-no {
-      text-align: center;
-      color: var(--gray-mid);
-    }
-
-    .admin-table td.center {
-      text-align: center;
-    }
-
-    .admin-table .td-muted {
-      color: #6a7e64;
-    }
-
-    .admin-table tbody tr:hover {
-      background: #f6faf3;
-      cursor: pointer;
-    }
-
-    .badge-blocked {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-
-    /* 가입일시 컬럼 — 모노스페이스로 가독성 향상 */
     .admin-table .cell-datetime {
       font-family: 'SF Mono', 'Consolas', monospace;
-      font-size: 14px;
-      color: #586853;
-      letter-spacing: -0.01em;
     }
 
-    .admin-table tbody td:nth-child(4),
-    .admin-table tbody td:nth-child(5),
-    .admin-table thead th:nth-child(4),
-    .admin-table thead th:nth-child(5) {
-      text-align: center;
-    }
+    .badge-blocked { background: #fee2e2; color: #b91c1c; }
   </style>
 </head>
 

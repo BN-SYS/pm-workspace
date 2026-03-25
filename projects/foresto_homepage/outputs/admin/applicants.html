@@ -158,13 +158,19 @@
     .kw-input-wrap input::placeholder { color: #aabba4; }
     .kw-select {
       height: 34px;
-      padding: 0 8px;
+      padding: 0 28px 0 8px;
       border: 1px solid #d5e0ce;
       border-radius: 6px;
       font-size: 13px;
       font-family: 'Noto Sans KR', sans-serif;
       color: #2a3a26;
       background: #fafcf9;
+      background-image: url('../../../../common_assets/icons/chevron-down.png');
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 11px 11px;
+      appearance: none;
+      -webkit-appearance: none;
       outline: none;
       cursor: pointer;
     }
@@ -181,48 +187,25 @@
     }
 
     /* ════════════════════════════════════════
-       테이블
+       테이블 — admin.css 전역 기준 적용
        ════════════════════════════════════════ */
-    .admin-table {
-      table-layout: fixed;
-      width: 100%;
-      font-size: 14px;
-    }
-    .admin-table thead th {
-      text-align: center;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .admin-table tbody td {
-      padding: 12px 14px;
-      text-align: center;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .admin-table tbody td.td-left { text-align: left; }
-    .admin-table .td-muted { color: #6a7e64; font-size: 13px; }
-    .admin-table .cell-mono {
-      font-family: 'SF Mono', 'Consolas', monospace;
-      font-size: 12px;
-      color: #586853;
-    }
 
     /* 과정유형 뱃지 */
     .badge-type {
       display: inline-block;
-      padding: 3px 9px;
+      padding: 3px 8px;
       border-radius: 4px;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 0.02em;
       white-space: nowrap;
     }
     .badge-type.basic   { background: #e8f5e9; color: #2e7d32; }
     .badge-type.qualify { background: #e3f2fd; color: #1565c0; }
     .badge-type.enhance { background: #fff3e0; color: #e65100; }
     .badge-type.academy { background: #f3e5f5; color: #6a1b9a; }
+
+    /* 행 hover */
+    .applicant-row:hover td { background: #f2f7f0; cursor: pointer; }
 
     /* ════════════════════════════════════════
        상태 변경 드롭다운 (2단계 확인)
@@ -242,10 +225,14 @@
       font-family: 'Noto Sans KR', sans-serif;
     }
     .status-btn::after {
-      content: '▾';
-      font-size: 10px;
-      color: #aaa;
-      margin-left: 1px;
+      content: '';
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-left: 3px;
+      flex-shrink: 0;
+      background: url('../../../../common_assets/icons/chevron-down.png') center/contain no-repeat;
+      opacity: 0.45;
     }
     .status-btn:hover .badge { opacity: .8; }
 
@@ -424,7 +411,6 @@
                 <div class="chip-group">
                   <label class="chip"><input type="radio" name="filterApply" value=""><span>전체</span></label>
                   <label class="chip"><input type="radio" name="filterApply" value="신청완료"><span>신청완료</span></label>
-                  <label class="chip"><input type="radio" name="filterApply" value="대기"><span>대기</span></label>
                   <label class="chip"><input type="radio" name="filterApply" value="취소"><span>취소</span></label>
                 </div>
               </div>
@@ -434,7 +420,7 @@
               <div class="filter-content">
                 <div class="chip-group">
                   <label class="chip"><input type="radio" name="filterCompletion" value=""><span>전체</span></label>
-                  <label class="chip"><input type="radio" name="filterCompletion" value="진행중"><span>진행중</span></label>
+                  <label class="chip"><input type="radio" name="filterCompletion" value="미정"><span>미정</span></label>
                   <label class="chip"><input type="radio" name="filterCompletion" value="수료"><span>수료</span></label>
                   <label class="chip"><input type="radio" name="filterCompletion" value="미수료"><span>미수료</span></label>
                 </div>
@@ -482,19 +468,39 @@
 
       <!-- ③ 테이블 -->
       <div class="table-wrap">
-        <table class="admin-table">
+        <table class="admin-table" style="table-layout:fixed;width:100%;">
+          <colgroup>
+            <col style="width:34px">    <!-- checkbox -->
+            <col style="width:38px">    <!-- No -->
+            <col style="width:7%">      <!-- 과정유형 -->
+            <col>                       <!-- 과정명 (auto) -->
+            <col style="width:5%">      <!-- 신청자 -->
+            <col style="width:6%">      <!-- 회원ID -->
+            <col style="width:3%">      <!-- 성별 -->
+            <col style="width:7%">      <!-- 생년월일 -->
+            <col style="width:10%">     <!-- 핸드폰 -->
+            <col style="width:12%">     <!-- 신청일시 -->
+            <col style="width:12%">     <!-- 취소일시 -->
+            <col style="width:6%">      <!-- 신청상태 -->
+            <col style="width:6%">      <!-- 수료상태 -->
+          </colgroup>
           <thead>
             <tr>
-              <th style="width:3%" class="col-chk">
+              <th class="col-chk">
                 <input type="checkbox" id="chkAll" onchange="ApplicantAdmin.toggleAll(this.checked)">
               </th>
-              <th style="width:4%">No</th>
-              <th style="width:9%">과정유형</th>
+              <th>No</th>
+              <th>과정유형</th>
               <th>과정명</th>
-              <th style="width:8%">신청자</th>
-              <th style="width:10%">신청일</th>
-              <th style="width:9%">신청상태</th>
-              <th style="width:9%">수료상태</th>
+              <th>신청자</th>
+              <th>회원ID</th>
+              <th>성별</th>
+              <th>생년월일</th>
+              <th>핸드폰</th>
+              <th>신청일시</th>
+              <th>취소일시</th>
+              <th>신청상태</th>
+              <th>수료상태</th>
             </tr>
           </thead>
           <tbody id="applicantTableBody"></tbody>
@@ -555,15 +561,13 @@
   /* ── 상태 정의 */
   const APPLY_STATUS = {
     '신청완료': { cls: 'badge-green',  label: '신청완료' },
-    '대기':     { cls: 'badge-gray',   label: '대기' },
     '취소':     { cls: 'badge-orange', label: '취소' },
   };
 
   const COMPLETION_STATUS = {
-    '진행중': { cls: 'badge-blue',   label: '진행중' },
+    '미정':   { cls: 'badge-gray',   label: '미정' },
     '수료':   { cls: 'badge-green',  label: '수료' },
     '미수료': { cls: 'badge-orange', label: '미수료' },
-    '—':      { cls: 'badge-gray',   label: '—' },
   };
 
   const COURSE_TYPE_META = {
@@ -605,22 +609,61 @@
     '유채원', '구민서', '안재원', '남지현', '조은결',
   ];
 
-  const APPLY_POOL      = ['신청완료', '신청완료', '신청완료', '대기', '취소'];
-  const COMPLETION_POOL = ['진행중', '진행중', '수료', '미수료', '—'];
+  const GENDERS   = ['남', '여'];
+  const PHONES    = ['010-1234-5678', '010-2345-6789', '010-3456-7890', '010-4567-8901', '010-5678-9012', '010-6789-0123', '010-7890-1234'];
+  const BIRTHDATES= ['1985-03-15', '1990-07-22', '1978-11-08', '1995-04-30', '1982-09-17', '1988-12-03', '1972-06-25'];
+
+  const APPLY_POOL      = ['신청완료', '신청완료', '신청완료', '신청완료', '취소'];
+  const COMPLETION_POOL = ['미정', '미정', '수료', '미수료', '미정'];
+
+  /* 과정 설정: fileRequired / certIssue 는 과정마다 다름 (인덱스 기준 순환) */
+  const COURSE_SETTINGS = [
+    { fileRequired: true,  certIssue: true  },
+    { fileRequired: false, certIssue: true  },
+    { fileRequired: true,  certIssue: false },
+    { fileRequired: false, certIssue: false },
+    { fileRequired: true,  certIssue: true  },
+  ];
+  const DUMMY_FILE_NAMES = [
+    '개인정보_동의서_서명본.pdf',
+    '신청서_제출용.hwp',
+    '재직증명서.pdf',
+    '경력기술서.docx',
+    '학력증명서.pdf',
+  ];
 
   const ALL_APPLICANTS = Array.from({ length: 52 }, (_, i) => {
-    const course = COURSE_NAMES_POOL[i % COURSE_NAMES_POOL.length];
-    const mm = String((i % 11) + 1).padStart(2, '0');
-    const dd = String((i % 28) + 1).padStart(2, '0');
+    const course   = COURSE_NAMES_POOL[i % COURSE_NAMES_POOL.length];
+    const setting  = COURSE_SETTINGS[i % COURSE_SETTINGS.length];
+    const mm       = String((i % 11) + 1).padStart(2, '0');
+    const dd       = String((i % 28) + 1).padStart(2, '0');
+    const hh       = String((i % 10) + 9).padStart(2, '0');
+    const min      = String((i * 7) % 60).padStart(2, '0');
+    const applyStatus = APPLY_POOL[i % APPLY_POOL.length];
+    const completionStatus = COMPLETION_POOL[i % COMPLETION_POOL.length];
+
+    /* 취소일시: 신청일 + 며칠 뒤 */
+    const cancelDd  = String(Math.min(parseInt(dd) + 3, 28)).padStart(2, '0');
+    const cancelHh  = String((i % 8) + 10).padStart(2, '0');
+
     return {
       id:               2000 + i,
+      memberId:         `M${String(2000 + i).padStart(5, '0')}`,
       courseType:       course.type,
       academyTab:       course.academyTab,
       courseName:       course.name,
       name:             NAMES[i % NAMES.length],
-      applyDate:        `2026-${mm}-${dd}`,
-      applyStatus:      APPLY_POOL[i % APPLY_POOL.length],
-      completionStatus: COMPLETION_POOL[i % COMPLETION_POOL.length],
+      gender:           GENDERS[i % GENDERS.length],
+      phone:            PHONES[i % PHONES.length],
+      birthdate:        BIRTHDATES[i % BIRTHDATES.length],
+      applyDate:        `2026-${mm}-${dd} ${hh}:${min}`,
+      applyStatus,
+      completionStatus,
+      cancelDate:       applyStatus === '취소' ? `2026-${mm}-${cancelDd} ${cancelHh}:${min}` : null,
+      fileRequired:     setting.fileRequired,
+      certIssue:        setting.certIssue,
+      /* 파일첨부 있는 경우 더미 파일 */
+      submittedFile:    setting.fileRequired ? { name: DUMMY_FILE_NAMES[i % DUMMY_FILE_NAMES.length], size: `${(i % 5 + 1) * 120}KB` } : null,
     };
   });
 
@@ -729,6 +772,11 @@
       App.toast(`${ids.length}명이 [${status}] 처리되었습니다.`, 'success');
     },
 
+    goDetail(e, id) {
+      /* 상태 버튼 클릭은 이미 stopPropagation 처리됨 */
+      location.href = `applicant-detail.html?id=${id}`;
+    },
+
     exportExcel() {
       App.toast('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info');
     },
@@ -752,33 +800,45 @@
             const cs = COMPLETION_STATUS[a.completionStatus] || { cls: 'badge-gray', label: a.completionStatus };
             /* 회원아카데미는 과정유형 뱃지 아래 탭 이름 표시 */
             const tabLabel = (a.courseType === 'academy' && a.academyTab)
-              ? `<br><span style="font-size:10px;color:#9c67b0">${ACADEMY_TAB_LABEL[a.academyTab] || ''}</span>`
+              ? `<br><span style="font-size:12px;color:#9c67b0">${ACADEMY_TAB_LABEL[a.academyTab] || ''}</span>`
               : '';
 
+            /* 날짜시간 단일 라인 — "2026-01-15 09:07" */
+            const fmtDt = dtStr => {
+              if (!dtStr) return '—';
+              const parts = dtStr.split(' ');
+              return parts[0] + (parts[1] ? ' ' + parts[1].slice(0, 5) : '');
+            };
+
             return `
-            <tr>
-              <td class="col-chk">
+            <tr class="applicant-row" onclick="ApplicantAdmin.goDetail(event,${a.id})">
+              <td class="col-chk" onclick="event.stopPropagation()">
                 <input type="checkbox" class="row-chk" data-id="${a.id}"
                   onchange="ApplicantAdmin._syncBulkBtns()">
               </td>
-              <td class="td-muted">${start + i + 1}</td>
+              <td>${start + i + 1}</td>
               <td><span class="badge-type ${typeMeta.cls}">${typeMeta.label}</span>${tabLabel}</td>
               <td class="td-left" style="font-weight:500">${a.courseName}</td>
-              <td>${a.name}</td>
-              <td class="cell-mono">${a.applyDate}</td>
-              <td class="status-cell">
+              <td style="font-weight:500">${a.name}</td>
+              <td class="cell-mono">${a.memberId}</td>
+              <td>${a.gender}</td>
+              <td class="cell-mono">${a.birthdate}</td>
+              <td class="cell-mono">${a.phone}</td>
+              <td class="cell-mono">${fmtDt(a.applyDate)}</td>
+              <td class="cell-mono">${fmtDt(a.cancelDate)}</td>
+              <td class="status-cell" onclick="event.stopPropagation()">
                 <button class="status-btn" onclick="StatusDropdown.open(event,'apply',${a.id})">
                   <span class="badge ${as.cls}">${as.label}</span>
                 </button>
               </td>
-              <td class="status-cell">
+              <td class="status-cell" onclick="event.stopPropagation()">
                 <button class="status-btn" onclick="StatusDropdown.open(event,'completion',${a.id})">
                   <span class="badge ${cs.cls}">${cs.label}</span>
                 </button>
               </td>
             </tr>`;
           }).join('')
-        : `<tr><td colspan="8" style="padding:40px;text-align:center;color:#aabba4">검색 결과가 없습니다.</td></tr>`;
+        : `<tr><td colspan="13" style="padding:40px;text-align:center;color:#5a6e54">검색 결과가 없습니다.</td></tr>`;
 
       App.renderPagination('applicantPagination', this.currentPage,
         Math.ceil(total / this.pageSize) || 1,
@@ -823,7 +883,7 @@
       const isApply = this._field === 'apply';
       const options = isApply
         ? Object.keys(APPLY_STATUS)
-        : Object.keys(COMPLETION_STATUS).filter(k => k !== '—');
+        : Object.keys(COMPLETION_STATUS);
       const current = isApply ? a?.applyStatus : a?.completionStatus;
       const title   = isApply ? '신청상태 변경' : '수료상태 변경';
 
