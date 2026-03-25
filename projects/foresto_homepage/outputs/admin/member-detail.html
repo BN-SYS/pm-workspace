@@ -112,6 +112,16 @@
       font-size: 13px; cursor: pointer;
     }
     .radio-inline input[type="radio"] { accent-color: var(--green-dark); }
+    /* 읽기 전용 값 표시 */
+    .detail-value {
+      display: flex;
+      align-items: center;
+      min-height: 36px;
+      font-size: 13px;
+      color: var(--gray-dark);
+      padding: 0 2px;
+      line-height: 1.5;
+    }
     /* 교육내역 페이지네이션 */
     .mini-pagination { display: flex; justify-content: center; gap: 4px; padding: 10px 0 0; }
     .mini-pagination button {
@@ -135,10 +145,10 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <h1 class="admin-page-title" id="pageTitle">회원 상세</h1>
-        <div style="display:flex;gap:8px">
+        <div class="admin-topbar-actions">
+          <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../../../../common_assets/icons/refresh.png" alt="새로고침"></button>
           <button class="btn btn-gray btn-sm" onclick="history.back()">목록으로</button>
-          <button class="btn btn-outline btn-sm" id="btnEditPage" onclick="MemberDetail.goEdit()">수정 페이지</button>
-          <button class="btn btn-primary btn-sm" onclick="MemberDetail.save()">저장</button>
+          <button class="btn btn-primary btn-sm" id="btnEditPage" onclick="MemberDetail.goEdit()">수정</button>
         </div>
       </div>
 
@@ -251,14 +261,6 @@
         this._m = m;
         document.getElementById('pageTitle').textContent = `회원 상세 — ${m.name}`;
 
-        /* 생년월일 옵션 생성 */
-        const yearOpts  = Array.from({length:86}, (_,k) => 2015 - k)
-          .map(y => `<option value="${y}"${y === Number(m.birthY) ? ' selected':''} >${y}년</option>`).join('');
-        const monthOpts = Array.from({length:12}, (_,k) => k + 1)
-          .map(mo => `<option value="${mo}"${mo === Number(m.birthM) ? ' selected':''} >${mo}월</option>`).join('');
-        const dayOpts   = Array.from({length:31}, (_,k) => k + 1)
-          .map(d => `<option value="${d}"${d === Number(m.birthD) ? ' selected':''} >${d}일</option>`).join('');
-
         document.getElementById('detailWrap').innerHTML = `
           <div style="display:flex;flex-direction:column;gap:0">
 
@@ -273,19 +275,18 @@
                 <div class="detail-grid col3">
                   <div class="form-group">
                     <label class="form-label">회원 구분</label>
-                    <select class="form-control" id="fGrade" style="height:36px">
-                      <option value="member"     ${m.grade==='member'     ?'selected':''}>일반회원</option>
-                      <option value="fullMember" ${m.grade==='fullMember' ?'selected':''}>정회원</option>
-                      <option value="admin"      ${m.grade==='admin'      ?'selected':''}>관리자</option>
-                    </select>
+                    <div class="detail-value">
+                      <span class="badge ${GRADE_BADGE[m.grade]||'badge-gray'}" style="font-size:12px">${m.gradeLabel}</span>
+                    </div>
                   </div>
                   <div class="form-group">
                     <label class="form-label">회원 상태</label>
-                    <div class="radio-inline" style="margin-top:8px">
-                      <label><input type="radio" name="fStatus" value="active"   ${m.status==='active'  ?'checked':''}> 정상</label>
-                      <label><input type="radio" name="fStatus" value="blocked"  ${m.status==='blocked' ?'checked':''}> 차단</label>
+                    <div class="detail-value">
+                      <span class="badge ${m.status==='active' ? 'badge-green' : 'badge-red'}" style="font-size:12px">
+                        ${m.status==='active' ? '정상' : '차단'}
+                      </span>
+                      ${m.status==='blocked' ? '<span style="font-size:11px;color:var(--danger);margin-left:8px">로그인 불가</span>' : ''}
                     </div>
-                    <div style="font-size:11px;color:var(--danger);margin-top:3px">* 차단 시 로그인 불가</div>
                   </div>
                   <div class="form-group">
                     <label class="form-label">현재 상태</label>
@@ -302,7 +303,7 @@
               </div>
             </div>
 
-            <!-- ② 본인인증 기반 정보 (관리자는 수정 가능) -->
+            <!-- ② 본인인증 기반 정보 -->
             <div class="card">
               <div class="card-header">
                 <span class="card-title">본인인증 기반 정보</span>
@@ -312,27 +313,20 @@
               <div class="card-body">
                 <div class="detail-grid col4">
                   <div class="form-group">
-                    <label class="form-label">이름 <span class="req">*</span></label>
-                    <input type="text" class="form-control" id="fName" value="${m.name}" style="height:36px">
+                    <label class="form-label">이름</label>
+                    <div class="detail-value">${m.name}</div>
                   </div>
                   <div class="form-group">
                     <label class="form-label">성별</label>
-                    <div class="radio-inline" style="margin-top:8px">
-                      <label><input type="radio" name="fGender" value="m" ${m.gender==='m'?'checked':''}> 남성</label>
-                      <label><input type="radio" name="fGender" value="f" ${m.gender==='f'?'checked':''}> 여성</label>
-                    </div>
+                    <div class="detail-value">${m.gender === 'm' ? '남성' : '여성'}</div>
                   </div>
                   <div class="form-group span2">
                     <label class="form-label">생년월일</label>
-                    <div style="display:flex;gap:6px;align-items:center">
-                      <select class="form-control" id="fBirthY" style="width:90px;height:36px;font-size:13px">${yearOpts}</select>
-                      <select class="form-control" id="fBirthM" style="width:72px;height:36px;font-size:13px">${monthOpts}</select>
-                      <select class="form-control" id="fBirthD" style="width:72px;height:36px;font-size:13px">${dayOpts}</select>
-                    </div>
+                    <div class="detail-value">${m.birthY}년 ${Number(m.birthM)}월 ${Number(m.birthD)}일</div>
                   </div>
                   <div class="form-group span2">
                     <label class="form-label">휴대폰 번호</label>
-                    <input type="tel" class="form-control" id="fPhone" value="${m.phone}" style="height:36px;max-width:220px">
+                    <div class="detail-value">${m.phone}</div>
                     <div style="font-size:11px;color:var(--gray-mid);margin-top:3px">본인인증으로 확인된 번호</div>
                   </div>
                 </div>
@@ -350,12 +344,11 @@
                 <div class="detail-grid">
                   <div class="form-group">
                     <label class="form-label">아이디 <span style="font-size:11px;color:var(--gray-mid);margin-left:4px">(변경 불가)</span></label>
-                    <input type="text" class="form-control" value="${m.userId}" disabled
-                      style="height:36px;background:var(--gray-light);color:var(--gray-mid)">
+                    <div class="detail-value" style="color:var(--gray-mid)">${m.userId}</div>
                   </div>
                   <div class="form-group">
                     <label class="form-label">이메일</label>
-                    <input type="email" class="form-control" id="fEmail" value="${m.email}" style="height:36px">
+                    <div class="detail-value">${m.email}</div>
                   </div>
                 </div>
 
@@ -363,8 +356,7 @@
                 <div class="form-group">
                   <label class="form-label">비밀번호 관리</label>
                   <div style="display:flex;align-items:center;gap:10px;margin-top:2px">
-                    <input type="text" class="form-control" value="●●●●●●●●" disabled
-                      style="width:160px;height:36px;background:var(--gray-light);letter-spacing:2px">
+                    <div class="detail-value" style="letter-spacing:2px;color:var(--gray-mid)">●●●●●●●●</div>
                     <button class="btn btn-outline btn-sm" onclick="MemberDetail.sendTempPw()">임시 비밀번호 발송</button>
                     <span style="font-size:12px;color:var(--gray-mid)">등록된 이메일로 임시 비밀번호가 발송됩니다</span>
                   </div>
@@ -373,31 +365,18 @@
                 <!-- 주소 -->
                 <div class="form-group">
                   <label class="form-label">주소</label>
-                  <div style="display:flex;gap:8px;align-items:center;margin-top:2px">
-                    <input type="text" class="form-control" id="fZip" value="${m.zip}"
-                      placeholder="우편번호" style="width:110px;height:36px;font-size:13px;flex-shrink:0"
-                      ${m.overseas ? 'disabled' : ''}>
-                    <button type="button" class="btn btn-outline btn-sm" id="addrSearchBtn"
-                      onclick="MemberDetail.searchAddr()" ${m.overseas ? 'disabled' : ''}>우편번호 찾기</button>
-                    <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;white-space:nowrap">
-                      <input type="checkbox" id="fOverseas" ${m.overseas ? 'checked' : ''}
-                        onchange="MemberDetail.toggleOverseas(this.checked)"> 해외 거주
-                    </label>
+                  <div class="detail-value" style="color:var(--gray-mid);font-size:13px;margin-top:2px">
+                    ${m.overseas ? '[해외 거주]' : '[' + m.zip + ']'}
                   </div>
-                  <input type="text" class="form-control" id="fAddr1" value="${m.addr1}"
-                    placeholder="기본 주소 (우편번호 검색 후 자동 입력)"
-                    style="margin-top:6px;max-width:480px;background:var(--gray-light)" disabled>
-                  <input type="text" class="form-control" id="fAddr2" value="${m.addr2}"
-                    placeholder="상세 주소" style="margin-top:6px;max-width:480px;height:36px"
-                    ${m.overseas ? 'disabled' : ''}>
+                  <div class="detail-value" style="font-size:13px">${m.addr1}</div>
+                  ${m.addr2 ? `<div class="detail-value" style="font-size:13px">${m.addr2}</div>` : ''}
+                  ${m.overseas ? '<div style="font-size:11px;color:var(--gray-mid);margin-top:3px">해외 거주 회원</div>' : ''}
                 </div>
 
                 <!-- 직업 -->
                 <div class="form-group">
                   <label class="form-label">직업</label>
-                  <select class="form-control" id="fJob" style="max-width:200px;height:36px;font-size:13px">
-                    ${JOBS.map(j => `<option${j === m.job ? ' selected':''}>${j}</option>`).join('')}
-                  </select>
+                  <div class="detail-value">${m.job}</div>
                 </div>
 
                 <!-- 선택약관동의내역 -->
@@ -506,8 +485,6 @@
 
           </div>`;
 
-        /* 해외거주 초기 상태 */
-        if (m.overseas) this.toggleOverseas(true);
       },
 
       _renderApps(apps) {
@@ -565,37 +542,15 @@
         if (sec && this._m) sec.innerHTML = this._renderApps(this._m.apps);
       },
 
-      save() {
-        const name = document.getElementById('fName')?.value.trim();
-        if (!name) { App.toast('이름을 입력해주세요.', 'warning'); return; }
-        const grade  = document.getElementById('fGrade')?.value;
-        const status = document.querySelector('input[name="fStatus"]:checked')?.value;
-        App.toast(`${name}님의 정보가 저장되었습니다. (등급: ${grade} / 상태: ${status})`, 'success');
-      },
-
       saveMemo() {
         const memo = document.getElementById('fMemo')?.value || '';
         App.toast('메모가 저장되었습니다.', 'success');
       },
 
       sendTempPw() {
-        const email = document.getElementById('fEmail')?.value || this._m?.email;
+        const email = this._m?.email;
         if (!email) return;
         App.toast(`${email}으로 임시 비밀번호를 발송하였습니다. (실제 구현 시 서버 API 연동)`, 'success');
-      },
-
-      searchAddr() {
-        App.toast('우편번호 검색 — 실제 구현 시 Kakao 주소 API 연동 예정', 'info');
-      },
-
-      toggleOverseas(checked) {
-        const ids = ['fZip','fAddr2','addrSearchBtn'];
-        ids.forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.disabled = checked;
-        });
-        const addr1 = document.getElementById('fAddr1');
-        if (addr1) addr1.style.opacity = checked ? '0.4' : '1';
       },
 
       withdraw() {

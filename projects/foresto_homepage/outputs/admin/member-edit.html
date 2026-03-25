@@ -57,6 +57,16 @@
     .userid-wrap { display: flex; gap: 8px; align-items: center; }
     .check-ok  { color: #16a34a; font-size: 12px; font-weight: 600; }
     .check-ng  { color: var(--danger); font-size: 12px; font-weight: 600; }
+    /* 비밀번호 보기 토글 */
+    .pw-wrap { position: relative; }
+    .pw-toggle {
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; padding: 0;
+      display: flex; align-items: center;
+    }
+    .pw-toggle img { width: 16px; opacity: .5; }
+    .pw-toggle:hover img { opacity: .9; }
+    .pw-wrap input { padding-right: 34px; }
     /* 하단 버튼 */
     .form-footer {
       display: flex; justify-content: flex-end; gap: 10px;
@@ -65,6 +75,9 @@
     }
     /* 메모 */
     .memo-note { font-size: 11px; color: var(--gray-mid); margin-top: 4px; }
+    /* select 내 한글 텍스트 잘림 방지 — height 고정 시 padding을 줄여 여유 확보 */
+    select.form-control { padding-top: 7px; padding-bottom: 7px; }
+    .affil-table select.form-control { padding-top: 5px; padding-bottom: 5px; }
   </style>
 </head>
 <body class="admin-body">
@@ -80,7 +93,6 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <h1 class="admin-page-title" id="pageTitle">회원 등록</h1>
-        <button class="btn btn-gray btn-sm" onclick="history.back()">취소</button>
       </div>
 
       <!-- ① 관리 설정 -->
@@ -90,7 +102,7 @@
           <span class="badge-admin-only">관리자 전용</span>
         </div>
         <div class="card-body">
-          <div class="edit-grid col3">
+          <div class="edit-grid col2">
             <div class="form-group">
               <label class="form-label">회원 구분 <span class="req">*</span></label>
               <select class="form-control" id="fGrade" style="height:36px">
@@ -112,25 +124,53 @@
         </div>
       </div>
 
-      <!-- ② 아이디 (등록 전용) -->
+      <!-- ② 아이디 / 비밀번호 (등록 전용) -->
       <div class="card" id="cardUserId">
         <div class="card-header">
-          <span class="card-title">아이디 설정</span>
+          <span class="card-title">아이디 / 비밀번호 설정</span>
           <span class="badge-new-only">등록 시에만 설정</span>
         </div>
         <div class="card-body">
-          <div class="form-group" style="max-width:400px">
-            <label class="form-label">아이디 <span class="req">*</span></label>
-            <div class="userid-wrap">
-              <input type="text" class="form-control" id="fUserId"
-                placeholder="영문 소문자, 숫자 4~20자" style="height:36px;flex:1"
-                oninput="MemberEdit.resetIdCheck()">
-              <button class="btn btn-outline btn-sm" onclick="MemberEdit.checkUserId()">중복 확인</button>
+          <div class="edit-grid col2">
+
+            <!-- 아이디 -->
+            <div class="form-group">
+              <label class="form-label">아이디 <span class="req">*</span></label>
+              <div class="userid-wrap">
+                <input type="text" class="form-control" id="fUserId"
+                  placeholder="영문 소문자, 숫자 4~20자" style="height:36px;flex:1"
+                  oninput="MemberEdit.resetIdCheck()">
+                <button class="btn btn-outline btn-sm" onclick="MemberEdit.checkUserId()">중복 확인</button>
+              </div>
+              <div id="userIdMsg" style="margin-top:4px;font-size:12px"></div>
+              <div style="font-size:11px;color:var(--gray-mid);margin-top:3px">
+                아이디는 등록 후 변경 불가합니다. 신중하게 입력하세요.
+              </div>
             </div>
-            <div id="userIdMsg" style="margin-top:4px;font-size:12px"></div>
-            <div style="font-size:11px;color:var(--gray-mid);margin-top:3px">
-              아이디는 등록 후 변경 불가합니다. 신중하게 입력하세요.
+
+            <!-- 비밀번호 -->
+            <div class="form-group">
+              <label class="form-label">비밀번호 <span class="req">*</span></label>
+              <div class="pw-wrap">
+                <input type="password" class="form-control" id="fPw"
+                  placeholder="영문 + 숫자 + 특수문자 8자 이상" style="height:36px"
+                  oninput="MemberEdit.checkPwMatch()">
+                <button type="button" class="pw-toggle" onclick="MemberEdit.togglePw('fPw',this)" title="비밀번호 보기">
+                  <img id="fPwEyeIco" src="../../../../common_assets/icons/eye.png" alt="보기">
+                </button>
+              </div>
+              <label class="form-label" style="margin-top:10px">비밀번호 확인 <span class="req">*</span></label>
+              <div class="pw-wrap">
+                <input type="password" class="form-control" id="fPwConfirm"
+                  placeholder="비밀번호 재입력" style="height:36px"
+                  oninput="MemberEdit.checkPwMatch()">
+                <button type="button" class="pw-toggle" onclick="MemberEdit.togglePw('fPwConfirm',this)" title="비밀번호 보기">
+                  <img id="fPwConfirmEyeIco" src="../../../../common_assets/icons/eye.png" alt="보기">
+                </button>
+              </div>
+              <div id="pwMsg" style="margin-top:5px;font-size:12px"></div>
             </div>
+
           </div>
         </div>
       </div>
@@ -159,18 +199,9 @@
             <div class="form-group span2">
               <label class="form-label">생년월일</label>
               <div style="display:flex;gap:6px;align-items:center">
-                <select class="form-control" id="fBirthY" style="width:90px;height:36px;font-size:13px">
-                  ${Array.from({length:86}, (_,k) => 2015-k).map(y =>
-                    `<option value="${y}">${y}년</option>`).join('')}
-                </select>
-                <select class="form-control" id="fBirthM" style="width:72px;height:36px;font-size:13px">
-                  ${Array.from({length:12}, (_,k) => k+1).map(mo =>
-                    `<option value="${mo}">${mo}월</option>`).join('')}
-                </select>
-                <select class="form-control" id="fBirthD" style="width:72px;height:36px;font-size:13px">
-                  ${Array.from({length:31}, (_,k) => k+1).map(d =>
-                    `<option value="${d}">${d}일</option>`).join('')}
-                </select>
+                <select class="form-control" id="fBirthY" style="width:90px;height:36px;font-size:13px"></select>
+                <select class="form-control" id="fBirthM" style="width:72px;height:36px;font-size:13px"></select>
+                <select class="form-control" id="fBirthD" style="width:72px;height:36px;font-size:13px"></select>
               </div>
             </div>
             <div class="form-group span2">
@@ -392,6 +423,32 @@
         this._renderAffilRows();
       },
 
+      /* ── 비밀번호 보기 토글 */
+      togglePw(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const ico   = btn.querySelector('img');
+        if (!input) return;
+        const isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        if (ico) ico.style.opacity = isHidden ? '1' : '.5';
+      },
+
+      /* ── 비밀번호 일치 확인 */
+      checkPwMatch() {
+        const pw  = document.getElementById('fPw')?.value       || '';
+        const pw2 = document.getElementById('fPwConfirm')?.value || '';
+        const msg = document.getElementById('pwMsg');
+        if (!msg) return;
+        if (!pw2) { msg.textContent = ''; return; }
+        if (pw === pw2) {
+          msg.textContent = '비밀번호가 일치합니다.';
+          msg.style.color = '#16a34a';
+        } else {
+          msg.textContent = '비밀번호가 일치하지 않습니다.';
+          msg.style.color = 'var(--danger)';
+        }
+      },
+
       /* ── 아이디 중복 확인 */
       resetIdCheck() {
         this._idChecked = false;
@@ -427,10 +484,10 @@
           <table class="affil-table">
             <thead>
               <tr>
-                <th style="width:130px">소속 유형</th>
+                <th style="width:160px">소속 유형</th>
                 <th>소속명</th>
                 <th style="width:150px">가입일</th>
-                <th style="width:48px"></th>
+                <th style="width:48px">관리</th>
               </tr>
             </thead>
             <tbody>
@@ -439,12 +496,12 @@
                   <td>
                     <select class="form-control" id="affilType-${row.id}"
                       onchange="MemberEdit.onAffilTypeChange(${row.id})"
-                      style="height:32px;font-size:12px">
+                      style="width:100%;height:32px;font-size:12px">
                       ${AFFIL_TYPES.map(t => `<option${t===row.type?' selected':''}>${t}</option>`).join('')}
                     </select>
                   </td>
                   <td>
-                    <select class="form-control" id="affilName-${row.id}" style="height:32px;font-size:12px">
+                    <select class="form-control" id="affilName-${row.id}" style="width:100%;height:32px;font-size:12px">
                       ${(AFFIL_DATA[row.type] || []).map(n =>
                         `<option${n===row.name?' selected':''}>${n}</option>`).join('')}
                     </select>
@@ -521,6 +578,11 @@
           const userId = document.getElementById('fUserId')?.value.trim();
           if (!userId) { App.toast('아이디를 입력해주세요.', 'warning'); return; }
           if (!this._idChecked) { App.toast('아이디 중복 확인을 해주세요.', 'warning'); return; }
+          const pw  = document.getElementById('fPw')?.value || '';
+          const pw2 = document.getElementById('fPwConfirm')?.value || '';
+          if (!pw)  { App.toast('비밀번호를 입력해주세요.', 'warning'); return; }
+          if (pw.length < 8) { App.toast('비밀번호는 8자 이상 입력해주세요.', 'warning'); return; }
+          if (pw !== pw2) { App.toast('비밀번호가 일치하지 않습니다.', 'warning'); return; }
         }
 
         const affils = this._collectAffils();
@@ -537,14 +599,32 @@
       },
     };
 
-    /* 생년월일 초기값 1990-01-01 */
-    (function setDefaultBirth() {
-      const y = document.getElementById('fBirthY');
-      const m = document.getElementById('fBirthM');
-      const d = document.getElementById('fBirthD');
-      if (y) { for(let o of y.options) if(o.value==='1990'){o.selected=true;break;} }
-      if (m) m.value = '1';
-      if (d) d.value = '1';
+    /* 생년월일 옵션 동적 생성 + 초기값 설정 */
+    (function initBirth() {
+      const yEl = document.getElementById('fBirthY');
+      const mEl = document.getElementById('fBirthM');
+      const dEl = document.getElementById('fBirthD');
+      if (yEl) {
+        yEl.innerHTML = '<option value="">년</option>';
+        for (let y = 2015; y >= 1930; y--) {
+          yEl.innerHTML += `<option value="${y}">${y}년</option>`;
+        }
+        yEl.value = '1990';
+      }
+      if (mEl) {
+        mEl.innerHTML = '<option value="">월</option>';
+        for (let mo = 1; mo <= 12; mo++) {
+          mEl.innerHTML += `<option value="${mo}">${mo}월</option>`;
+        }
+        mEl.value = '1';
+      }
+      if (dEl) {
+        dEl.innerHTML = '<option value="">일</option>';
+        for (let d = 1; d <= 31; d++) {
+          dEl.innerHTML += `<option value="${d}">${d}일</option>`;
+        }
+        dEl.value = '1';
+      }
     })();
 
     MemberEdit.init();
