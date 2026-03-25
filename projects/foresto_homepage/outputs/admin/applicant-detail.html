@@ -75,13 +75,12 @@
 
     .detail-val {
       font-size: 14px;
-      color: #2c3e2c;
+      color: #111111;
       line-height: 1.6;
     }
     .detail-val.mono {
-      font-family: 'SF Mono', 'Consolas', monospace;
-      font-size: 13px;
-      color: #3a5a3a;
+      font-variant-numeric: tabular-nums;
+      color: #111111;
     }
     .detail-val.muted { color: #7a8e74; font-size: 13px; }
 
@@ -135,7 +134,7 @@
     .file-item-icon.etc  { background: #f5f5f5; color: #888; }
     .file-item-name {
       flex: 1;
-      font-size: 13px; color: #2c3e2c;
+      font-size: 13px; color: #111111;
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .file-item-size { font-size: 12px; color: #aaa; white-space: nowrap; }
@@ -257,7 +256,7 @@
   const ACADEMY_TAB_LABEL = { lecture: '특강', course: '강좌', mentor: '멘토링숲학교' };
 
   const APPLY_POOL      = ['신청완료','신청완료','신청완료','신청완료','취소'];
-  const COMPLETION_POOL = ['미정', '수료', '미수료'];
+  const COMPLETION_POOL = ['미수료', '수료', '미수료'];
   const COURSE_SETTINGS = [
     { fileRequired: true,  certIssue: true  },
     { fileRequired: false, certIssue: true  },
@@ -333,7 +332,6 @@
     '취소':     { cls: 'badge-orange', label: '취소' },
   };
   const COMPLETION_STATUS_MAP = {
-    '미정':   { cls: 'badge-gray',   label: '미정' },
     '수료':   { cls: 'badge-green',  label: '수료' },
     '미수료': { cls: 'badge-orange', label: '미수료' },
   };
@@ -424,12 +422,13 @@
             <span class="badge ${as.cls}">${as.label}</span>
           </div>
         </div>
+        ${a.applyStatus !== '취소' ? `
         <div class="form-row">
           <div class="form-label">수료상태</div>
           <div class="form-content">
             <span class="badge ${cs.cls}">${cs.label}</span>
           </div>
-        </div>
+        </div>` : ''}
         ${cancelRow}
       </div>`;
 

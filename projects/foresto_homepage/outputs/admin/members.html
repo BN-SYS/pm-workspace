@@ -251,7 +251,8 @@
     }
 
     .admin-table .cell-datetime {
-      font-family: 'SF Mono', 'Consolas', monospace;
+      font-variant-numeric: tabular-nums;
+      color: #111111;
     }
 
     .badge-blocked { background: #fee2e2; color: #b91c1c; }
@@ -271,6 +272,7 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <h1 class="admin-page-title">회원관리</h1>
+        <button class="btn btn-primary btn-sm" onclick="location.href='member-edit.html'">+ 회원 등록</button>
       </div>
 
       <!-- ① 검색 필터 -->
@@ -387,11 +389,8 @@
 
       <!-- ⑤ 하단 버튼 -->
       <div class="table-bottom-bar">
-        <button class="btn btn-danger btn-sm" onclick="MemberAdmin.deleteSelected()" id="btnDeleteSelected" disabled>
+        <button class="btn btn-danger btn-danger-filled btn-sm" onclick="MemberAdmin.deleteSelected()" id="btnDeleteSelected" disabled>
           선택 삭제
-        </button>
-        <button class="btn btn-primary btn-sm" onclick="location.href='member-edit.html'">
-          + 회원 등록
         </button>
       </div>
 

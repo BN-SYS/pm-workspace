@@ -458,7 +458,7 @@ body.admin-body .site-header { display: none !important; }
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
-  color: #2c3e2c;
+  color: #111111;
 }
 
 /* 헤더 */
@@ -497,12 +497,15 @@ body.admin-body .site-header { display: none !important; }
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #2c3e2c;
+  color: #111111;
 }
 
 .admin-table tbody td.td-left  { text-align: left; padding-left: 12px; }
 .admin-table tbody td.center   { text-align: center; }
-.admin-table .cell-mono        { font-family: 'SF Mono', 'Consolas', monospace; }
+.admin-table .cell-mono,
+.admin-table .cell-datetime,
+.admin-table .cell-date,
+.admin-table .period-cell      { font-variant-numeric: tabular-nums; color: #111111; white-space: nowrap; }
 
 
 /* ══════════════════════════════════════════════
@@ -625,11 +628,13 @@ select.form-control {
 .btn-gray:hover { background: #e3eadd; }
 
 .btn-danger {
-  background: #dc2626;
-  color: #fff;
+  background: #fff;
+  color: #dc2626;
   border-color: #dc2626;
 }
-.btn-danger:hover { background: #b91c1c; border-color: #b91c1c; }
+.btn-danger:hover { background: #fef2f2; border-color: #b91c1c; color: #b91c1c; }
+.btn-danger-filled { background: #dc2626; color: #fff; }
+.btn-danger-filled:hover { background: #b91c1c; color: #fff; }
 
 .btn:disabled {
   opacity: 0.45;
@@ -773,26 +778,51 @@ select.form-control {
 
 
 /* ══════════════════════════════════════════════
-   16. 반응형 (PC 적응형 — 1200px 이하 보정)
+   16. 반응형 (PC 적응형)
    ══════════════════════════════════════════════ */
+
+/* ── 1400px: 대시보드 통계 2열 */
 @media (max-width: 1400px) {
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* ── 1280px: 여백·폰트 1단계 축소 */
+@media (max-width: 1280px) {
+  .admin-main { padding: 22px 24px; }
+
+  .admin-table thead th { font-size: 12px; padding: 9px 6px; }
+  .admin-table tbody td { font-size: 13px; padding: 11px 6px; }
+
+  .badge, .badge-type { font-size: 11px; padding: 2px 7px; }
+
+  .admin-filter-bar { padding: 12px 16px; gap: 8px; }
+  .btn { font-size: 14px; padding: 7px 14px; }
+  .btn-sm { font-size: 13px; padding: 6px 11px; }
+}
+
+/* ── 1100px: 여백·폰트 2단계 축소 + 사이드바 자동 축소 */
 @media (max-width: 1100px) {
-  .admin-main { padding: 20px 22px; }
+  .admin-sidebar { width: 60px; }
+  .admin-layout .nav-txt    { opacity: 0; width: 0; overflow: hidden; pointer-events: none; }
+  .admin-layout .admin-nav-item { justify-content: center; padding: 13px 0; gap: 0; }
+  .admin-layout .adm-sb-title   { display: none; }
+  .admin-layout .nav-submenu    { display: none; }
+  .admin-layout .nav-arrow      { display: none; }
+
+  .admin-main { padding: 18px 18px; }
+
+  .admin-table thead th { font-size: 11px; padding: 8px 5px; }
+  .admin-table tbody td { font-size: 13px; padding: 10px 5px; }
+
+  .admin-page-title { font-size: 20px; }
+
+  .adm-brand-text { display: none; }
+  .adm-brand-badge { display: none; }
+  .adm-user-name  { display: none; }
 }
 
 @media (max-width: 900px) {
-  .admin-sidebar {
-    position: fixed;
-    left: -220px;
-    top: 60px;  /* 어드민 topbar 높이 */
-    height: calc(100vh - 60px);
-    z-index: 150;
-    transition: left 0.25s cubic-bezier(0.4,0,0.2,1);
-  }
-  .admin-sidebar.mobile-open { left: 0; }
+  /* 사이드바는 항상 표시 — 1100px 이하에서 이미 아이콘 모드(60px)로 전환되므로 숨기지 않음 */
   .admin-grid-2 { grid-template-columns: 1fr; }
   .stat-grid    { grid-template-columns: 1fr 1fr; }
 }

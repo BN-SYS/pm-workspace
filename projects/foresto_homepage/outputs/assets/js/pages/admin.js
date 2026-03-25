@@ -4,9 +4,12 @@
 'use strict';
 
 /* ── 관리자 사이드바 네비게이션 데이터 (2단 계층) */
+/* 아이콘 경로: common_assets/icons/ (admin 페이지 기준 상대경로) */
+const _ICO = name => `../../../../common_assets/icons/${name}.png`;
+
 const ADMIN_NAV = [
   {
-    key: 'member-group', ico: 'users.png', label: '회원관리',
+    key: 'member-group', ico: _ICO('users'), label: '회원관리',
     children: [
       { key: 'members',   href: 'members.html',          label: '회원관리' },
       { key: 'withdrawn', href: 'members-withdrawn.html', label: '탈퇴회원' },
@@ -14,30 +17,30 @@ const ADMIN_NAV = [
   },
 
   {
-    key: 'course-group', ico: 'academic-cap.png', label: '강좌관리',
+    key: 'course-group', ico: _ICO('academic-cap'), label: '강좌관리',
     children: [
       { key: 'course-basic',      href: 'courses.html',              label: '기초과정 관리' },
       { key: 'course-qualify',    href: 'courses.html?type=qualify', label: '자격취득과정 관리' },
       { key: 'course-enhance',    href: 'courses.html?type=enhance', label: '역량강화 관리' },
       { key: 'course-academy',    href: 'courses.html?type=academy', label: '회원아카데미 관리' },
-      { key: 'course-applicants', href: 'applicants.html',           label: '신청자 통합 관리' },
+      { key: 'course-applicants', href: 'applicants.html',            label: '신청자 통합 관리' },
     ]
   },
 
-  { key: 'calendar', href: 'calendar.html', ico: 'calendar.png', label: '일정관리' },
+  { key: 'calendar', href: 'calendar.html', ico: _ICO('calendar'), label: '일정관리' },
 
   {
-    key: 'board-group', ico: 'clipboard-list.png', label: '게시판관리',
+    key: 'board-group', ico: _ICO('collection'), label: '게시판관리',
     children: [
-      { key: 'board-notice', href: '#', label: '공지사항 관리' },
-      { key: 'board-region', href: '#', label: '전국지역협회 관리' },
-      { key: 'board-intro',  href: '#', label: '사공단소개 관리' },
-      { key: 'board-club',   href: '#', label: '동아리소개 관리' },
+      { key: 'board-notice', href: 'board.html?type=notice', label: '공지사항 관리' },
+      { key: 'board-region', href: 'board.html?type=region', label: '전국지역협회 관리' },
+      { key: 'board-intro',  href: 'board.html?type=intro',  label: '사공단소개 관리' },
+      { key: 'board-club',   href: 'board.html?type=club',   label: '동아리소개 관리' },
     ]
   },
 
   {
-    key: 'site-group', ico: 'cog.png', label: '사이트관리',
+    key: 'site-group', ico: _ICO('cog'), label: '사이트관리',
     children: [
       { key: 'site-banner', href: '#', label: '배너 관리' },
       { key: 'site-popup',  href: '#', label: '팝업 관리' },
@@ -45,7 +48,7 @@ const ADMIN_NAV = [
   },
 
   {
-    key: 'content-group', ico: 'document-text.png', label: '콘텐츠관리',
+    key: 'content-group', ico: _ICO('pencil-alt'), label: '콘텐츠관리',
     children: [
       { key: 'history',      href: 'history.html',      label: '연혁 관리' },
       { key: 'organization', href: 'organization.html', label: '조직도·임원진 관리' },
@@ -53,7 +56,7 @@ const ADMIN_NAV = [
   },
 
   {
-    key: 'apply-group', ico: 'inbox-in.png', label: '기타신청관리',
+    key: 'apply-group', ico: _ICO('inbox'), label: '기타신청관리',
     children: [
       { key: 'apply-regular',    href: '#', label: '정회원신청 관리' },
       { key: 'apply-instructor', href: '#', label: '강사신청 관리' },
@@ -62,9 +65,6 @@ const ADMIN_NAV = [
     ]
   },
 ];
-
-/* 아이콘 기본 경로 — admin HTML 기준 */
-const ICO_BASE = '../../../../common_assets/icons/';
 
 
 /* ── AdminSidebar: 2단 아코디언 사이드바 */
@@ -95,7 +95,7 @@ const AdminSidebar = {
           <a href="${item.href}"
              class="admin-nav-item ${item.key === activeKey ? 'active' : ''}"
              aria-current="${item.key === activeKey ? 'page' : 'false'}">
-            <img class="nav-ico" src="${ICO_BASE}${item.ico}" alt="" aria-hidden="true">
+            <img class="nav-ico" src="${item.ico}" alt="" aria-hidden="true">
             <span class="nav-txt">${item.label}</span>
           </a>`;
       }
@@ -108,9 +108,9 @@ const AdminSidebar = {
         <div class="nav-group ${isOpen ? 'open' : ''}">
           <button class="admin-nav-item nav-group-header"
                   onclick="AdminSidebar.toggleGroup(this, '${firstHref}')">
-            <img class="nav-ico" src="${ICO_BASE}${item.ico}" alt="" aria-hidden="true">
+            <img class="nav-ico" src="${item.ico}" alt="" aria-hidden="true">
             <span class="nav-txt">${item.label}</span>
-            <img class="nav-arrow" src="${ICO_BASE}chevron-right.png" alt="" aria-hidden="true">
+            <span class="nav-arrow" aria-hidden="true"></span>
           </button>
           <div class="nav-submenu">
             ${item.children.map(child => `
@@ -155,18 +155,16 @@ const AdminTopbar = {
   render() {
     return `
       <div class="adm-brand" style="display:flex;align-items:center;gap:10px;text-decoration:none;cursor:default">
-        <div class="adm-brand-icon">🌲</div>
         <span class="adm-brand-text">한국숲해설가협회</span>
         <span class="adm-brand-badge">Admin</span>
       </div>
       <div class="adm-topbar-right">
-        <a href="../index.html" class="adm-home-btn" target="_blank">홈페이지</a>
-        <div class="adm-divider"></div>
         <div class="adm-user">
           <div class="adm-user-avatar">A</div>
           <span class="adm-user-name">관리자</span>
         </div>
         <div class="adm-divider"></div>
+        <a href="../index.html" class="adm-home-btn" target="_blank">HOMEPAGE</a>
         <button class="adm-logout-btn" onclick="AdminTopbar.logout()">로그아웃</button>
       </div>`;
   },

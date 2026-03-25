@@ -207,131 +207,7 @@
     /* 행 hover */
     .applicant-row:hover td { background: #f2f7f0; cursor: pointer; }
 
-    /* ════════════════════════════════════════
-       상태 변경 드롭다운 (2단계 확인)
-       ════════════════════════════════════════ */
-    .status-cell {
-      position: relative;
-      overflow: visible !important;
-    }
-    .status-btn {
-      background: none;
-      border: none;
-      padding: 0;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-family: 'Noto Sans KR', sans-serif;
-    }
-    .status-btn::after {
-      content: '';
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      margin-left: 3px;
-      flex-shrink: 0;
-      background: url('../../../../common_assets/icons/chevron-down.png') center/contain no-repeat;
-      opacity: 0.45;
-    }
-    .status-btn:hover .badge { opacity: .8; }
 
-    .status-dropdown {
-      display: none;
-      position: fixed;
-      background: #fff;
-      border: 1px solid #d0dbc8;
-      border-radius: 10px;
-      box-shadow: 0 6px 24px rgba(0,0,0,.14);
-      z-index: 9999;
-      min-width: 180px;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-    .status-dropdown.open { display: block; }
-
-    /* 1단계: 선택 목록 */
-    .sd-header {
-      padding: 10px 16px 6px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #aabba4;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-    .sd-sep { height: 1px; background: #f0f4ee; margin: 2px 0; }
-    .sd-item {
-      padding: 9px 16px;
-      font-size: 13px;
-      color: #2c3e2c;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: background .1s;
-    }
-    .sd-item:hover { background: #f4f9f4; }
-    .sd-item.current { font-weight: 700; }
-    .sd-item.current::before { content: '✓'; color: #4a7c59; font-size: 12px; }
-    .sd-item:not(.current)::before { content: ''; width: 12px; display: inline-block; }
-
-    /* 2단계: 확인 패널 */
-    .sd-confirm {
-      padding: 14px 16px 12px;
-    }
-    .sd-confirm-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: #aabba4;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-    .sd-confirm-msg {
-      font-size: 13px;
-      color: #2c3e2c;
-      line-height: 1.6;
-      margin-bottom: 14px;
-    }
-    .sd-confirm-arrow {
-      display: inline-block;
-      margin: 0 6px;
-      color: #aaa;
-      font-size: 12px;
-    }
-    .sd-confirm-btns {
-      display: flex;
-      gap: 6px;
-      justify-content: flex-end;
-    }
-    .sd-btn-cancel {
-      height: 30px;
-      padding: 0 14px;
-      border: 1px solid #d0dbc8;
-      border-radius: 6px;
-      background: #fff;
-      color: #7a8e74;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'Noto Sans KR', sans-serif;
-      transition: background .1s;
-    }
-    .sd-btn-cancel:hover { background: #f4f9f4; }
-    .sd-btn-confirm {
-      height: 30px;
-      padding: 0 16px;
-      border: none;
-      border-radius: 6px;
-      background: #2e5c2e;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: 'Noto Sans KR', sans-serif;
-      transition: background .1s;
-    }
-    .sd-btn-confirm:hover { background: #1a3d1a; }
 
     /* 일괄처리 바 */
     .table-bottom-bar {
@@ -420,7 +296,6 @@
               <div class="filter-content">
                 <div class="chip-group">
                   <label class="chip"><input type="radio" name="filterCompletion" value=""><span>전체</span></label>
-                  <label class="chip"><input type="radio" name="filterCompletion" value="미정"><span>미정</span></label>
                   <label class="chip"><input type="radio" name="filterCompletion" value="수료"><span>수료</span></label>
                   <label class="chip"><input type="radio" name="filterCompletion" value="미수료"><span>미수료</span></label>
                 </div>
@@ -474,8 +349,7 @@
             <col style="width:38px">    <!-- No -->
             <col style="width:7%">      <!-- 과정유형 -->
             <col>                       <!-- 과정명 (auto) -->
-            <col style="width:5%">      <!-- 신청자 -->
-            <col style="width:6%">      <!-- 회원ID -->
+            <col style="width:10%">     <!-- 신청자(ID) -->
             <col style="width:3%">      <!-- 성별 -->
             <col style="width:7%">      <!-- 생년월일 -->
             <col style="width:10%">     <!-- 핸드폰 -->
@@ -491,9 +365,8 @@
               </th>
               <th>No</th>
               <th>과정유형</th>
-              <th>과정명</th>
+              <th style="text-align:center">과정명</th>
               <th>신청자</th>
-              <th>회원ID</th>
               <th>성별</th>
               <th>생년월일</th>
               <th>핸드폰</th>
@@ -513,6 +386,10 @@
       <!-- ⑤ 하단 버튼 -->
       <div class="table-bottom-bar">
         <div class="bulk-btn-group">
+          <button class="btn btn-danger btn-danger-filled btn-sm" id="btnBulkDelete"
+            onclick="ApplicantAdmin.bulkDelete()" disabled>선택 삭제</button>
+        </div>
+        <div class="bulk-btn-group">
           <button class="btn btn-danger btn-sm" id="btnBulkCancel"
             onclick="ApplicantAdmin.bulkChangeApply('취소')" disabled>선택 취소처리</button>
           <button class="btn btn-outline btn-sm" id="btnBulkComplete"
@@ -520,16 +397,12 @@
           <button class="btn btn-gray btn-sm" id="btnBulkIncomplete"
             onclick="ApplicantAdmin.bulkChangeCompletion('미수료')" disabled>선택 미수료처리</button>
         </div>
-        <span id="bulkSelectedInfo" style="font-size:12px;color:#aaa"></span>
       </div>
 
     </main>
   </div>
 
-  <!-- 상태 변경 드롭다운 (2단계) -->
-  <div id="statusDropdown" class="status-dropdown">
-    <div id="statusDropdownInner"></div>
-  </div>
+
 
   <script src="../assets/js/app.js"></script>
   <script src="../assets/js/components/header.js"></script>
@@ -565,7 +438,6 @@
   };
 
   const COMPLETION_STATUS = {
-    '미정':   { cls: 'badge-gray',   label: '미정' },
     '수료':   { cls: 'badge-green',  label: '수료' },
     '미수료': { cls: 'badge-orange', label: '미수료' },
   };
@@ -574,13 +446,13 @@
     basic:   { label: '기초과정',     cls: 'basic' },
     qualify: { label: '자격취득과정', cls: 'qualify' },
     enhance: { label: '역량강화',     cls: 'enhance' },
-    academy: { label: '회원아카데미', cls: 'academy' },
+    academy: { label: '아카데미', cls: 'academy' },
   };
 
   const ACADEMY_TAB_LABEL = {
     lecture: '특강',
     course:  '강좌',
-    mentor:  '멘토링숲학교',
+    mentor:  '멘토링',
   };
 
   /* ── 더미 데이터 */
@@ -614,7 +486,7 @@
   const BIRTHDATES= ['1985-03-15', '1990-07-22', '1978-11-08', '1995-04-30', '1982-09-17', '1988-12-03', '1972-06-25'];
 
   const APPLY_POOL      = ['신청완료', '신청완료', '신청완료', '신청완료', '취소'];
-  const COMPLETION_POOL = ['미정', '수료', '미수료'];
+  const COMPLETION_POOL = ['미수료', '수료', '미수료'];
 
   /* 과정 설정: fileRequired / certIssue 는 과정마다 다름 (인덱스 기준 순환) */
   const COURSE_SETTINGS = [
@@ -738,14 +610,26 @@
     _syncBulkBtns() {
       const count = document.querySelectorAll('.row-chk:checked').length;
       const any   = count > 0;
+      document.getElementById('btnBulkDelete').disabled     = !any;
       document.getElementById('btnBulkCancel').disabled     = !any;
       document.getElementById('btnBulkComplete').disabled   = !any;
       document.getElementById('btnBulkIncomplete').disabled = !any;
-      document.getElementById('bulkSelectedInfo').textContent = any ? `${count}명 선택됨` : '';
     },
 
     _selectedIds() {
       return [...document.querySelectorAll('.row-chk:checked')].map(cb => Number(cb.dataset.id));
+    },
+
+    bulkDelete() {
+      const ids = this._selectedIds();
+      if (!ids.length) return;
+      if (!confirm(`선택한 ${ids.length}명의 신청 데이터를 삭제하시겠습니까?\n삭제 후 복구가 불가능합니다.`)) return;
+      ids.forEach(id => {
+        const idx = ALL_APPLICANTS.findIndex(a => a.id === id);
+        if (idx > -1) ALL_APPLICANTS.splice(idx, 1);
+      });
+      this.search();
+      App.toast(`${ids.length}명의 신청 데이터가 삭제되었습니다.`, 'error');
     },
 
     bulkChangeApply(status) {
@@ -788,19 +672,17 @@
 
       document.getElementById('applicantCount').textContent = total.toLocaleString();
       document.getElementById('chkAll').checked = false;
-      ['btnBulkCancel','btnBulkComplete','btnBulkIncomplete'].forEach(id => {
+      ['btnBulkDelete','btnBulkCancel','btnBulkComplete','btnBulkIncomplete'].forEach(id => {
         document.getElementById(id).disabled = true;
       });
-      document.getElementById('bulkSelectedInfo').textContent = '';
 
       document.getElementById('applicantTableBody').innerHTML = slice.length
         ? slice.map((a, i) => {
             const typeMeta = COURSE_TYPE_META[a.courseType] || { label: a.courseType, cls: 'basic' };
             const as = APPLY_STATUS[a.applyStatus]           || { cls: 'badge-gray', label: a.applyStatus };
             const cs = COMPLETION_STATUS[a.completionStatus] || { cls: 'badge-gray', label: a.completionStatus };
-            /* 회원아카데미는 과정유형 뱃지 아래 탭 이름 표시 */
-            const tabLabel = (a.courseType === 'academy' && a.academyTab)
-              ? `<br><span style="font-size:12px;color:#9c67b0">${ACADEMY_TAB_LABEL[a.academyTab] || ''}</span>`
+            const tabSuffix = (a.courseType === 'academy' && a.academyTab)
+              ? ` · ${ACADEMY_TAB_LABEL[a.academyTab] || ''}`
               : '';
 
             /* 날짜시간 단일 라인 — "2026-01-15 09:07" */
@@ -817,25 +699,19 @@
                   onchange="ApplicantAdmin._syncBulkBtns()">
               </td>
               <td>${start + i + 1}</td>
-              <td><span class="badge-type ${typeMeta.cls}">${typeMeta.label}</span>${tabLabel}</td>
-              <td class="td-left" style="font-weight:500">${a.courseName}</td>
-              <td style="font-weight:500">${a.name}</td>
-              <td class="cell-mono">${a.memberId}</td>
+              <td><span class="badge-type ${typeMeta.cls}">${typeMeta.label}${tabSuffix}</span></td>
+              <td style="font-weight:500;text-align:center">${a.courseName}</td>
+              <td><span style="font-weight:600">${a.name}</span> <span style="font-weight:400;color:#888;font-size:12px">(${a.memberId})</span></td>
               <td>${a.gender}</td>
               <td class="cell-mono">${a.birthdate}</td>
               <td class="cell-mono">${a.phone}</td>
               <td class="cell-mono">${fmtDt(a.applyDate)}</td>
               <td class="cell-mono">${fmtDt(a.cancelDate)}</td>
-              <td class="status-cell" onclick="event.stopPropagation()">
-                <button class="status-btn" onclick="StatusDropdown.open(event,'apply',${a.id})">
-                  <span class="badge ${as.cls}">${as.label}</span>
-                </button>
-              </td>
-              <td class="status-cell" onclick="event.stopPropagation()">
-                <button class="status-btn" onclick="StatusDropdown.open(event,'completion',${a.id})">
-                  <span class="badge ${cs.cls}">${cs.label}</span>
-                </button>
-              </td>
+              <td><span class="badge ${as.cls}">${as.label}</span></td>
+              <td>${a.applyStatus === '취소'
+                ? `<span style="color:#bbb;font-size:13px">—</span>`
+                : `<span class="badge ${cs.cls}">${cs.label}</span>`
+              }</td>
             </tr>`;
           }).join('')
         : `<tr><td colspan="13" style="padding:40px;text-align:center;color:#5a6e54">검색 결과가 없습니다.</td></tr>`;
@@ -845,129 +721,6 @@
         p => { this.currentPage = p; this.render(); });
     },
   };
-
-  /* ══════════════════════════════════════
-     StatusDropdown — 2단계 확인 방식
-     1단계: 변경할 상태 선택
-     2단계: "현재 → 새 상태" 확인 패널
-     ══════════════════════════════════════ */
-  const StatusDropdown = {
-    _field:   null,
-    _id:      null,
-    _pending: null,   /* 선택했지만 아직 확인 안 된 값 */
-
-    open(e, field, id) {
-      e.stopPropagation();
-      const el = document.getElementById('statusDropdown');
-      const isSame = el.classList.contains('open')
-                     && this._field === field && this._id === id;
-      this.close();
-      if (isSame) return;   /* 같은 버튼 재클릭 → 닫기만 */
-
-      this._field = field;
-      this._id    = id;
-
-      this._renderStep1();
-
-      /* 버튼 바로 아래에 위치 */
-      const rect = e.currentTarget.getBoundingClientRect();
-      el.style.top  = `${rect.bottom + 6}px`;
-      el.style.left = `${rect.left + rect.width / 2}px`;
-      el.style.transform = 'translateX(-50%)';
-      el.classList.add('open');
-    },
-
-    /* 1단계: 선택 목록 */
-    _renderStep1() {
-      const a       = ALL_APPLICANTS.find(a => a.id === this._id);
-      const isApply = this._field === 'apply';
-      const options = isApply
-        ? Object.keys(APPLY_STATUS)
-        : Object.keys(COMPLETION_STATUS);
-      const current = isApply ? a?.applyStatus : a?.completionStatus;
-      const title   = isApply ? '신청상태 변경' : '수료상태 변경';
-
-      document.getElementById('statusDropdownInner').innerHTML =
-        `<div class="sd-header">${title}</div>
-         <div class="sd-sep"></div>` +
-        options.map(opt => `
-          <div class="sd-item ${opt === current ? 'current' : ''}"
-               onclick="StatusDropdown._selectPending('${opt}')">
-            ${opt}
-          </div>`).join('');
-    },
-
-    /* 1단계 선택 → 2단계 확인 패널 */
-    _selectPending(value) {
-      const a       = ALL_APPLICANTS.find(a => a.id === this._id);
-      const isApply = this._field === 'apply';
-      const current = isApply ? a?.applyStatus : a?.completionStatus;
-
-      /* 이미 같은 상태면 무시 */
-      if (value === current) { this.close(); return; }
-
-      this._pending = value;
-
-      const statusMap = isApply ? APPLY_STATUS : COMPLETION_STATUS;
-      const fromBadge = statusMap[current]?.cls || 'badge-gray';
-      const toBadge   = statusMap[value]?.cls   || 'badge-gray';
-      const title     = isApply ? '신청상태 변경' : '수료상태 변경';
-
-      document.getElementById('statusDropdownInner').innerHTML = `
-        <div class="sd-confirm">
-          <div class="sd-confirm-title">${title} 확인</div>
-          <div class="sd-confirm-msg">
-            <span class="badge ${fromBadge}">${current}</span>
-            <span class="sd-confirm-arrow">→</span>
-            <span class="badge ${toBadge}">${value}</span>
-            <br><span style="font-size:12px;color:#888;margin-top:6px;display:inline-block">
-              ${a?.name}님의 상태를 변경합니다.
-            </span>
-          </div>
-          <div class="sd-confirm-btns">
-            <button class="sd-btn-cancel" onclick="StatusDropdown._backToStep1()">취소</button>
-            <button class="sd-btn-confirm" onclick="StatusDropdown.confirm()">변경</button>
-          </div>
-        </div>`;
-    },
-
-    /* 2단계에서 [취소] → 1단계로 돌아가기 */
-    _backToStep1() {
-      this._pending = null;
-      this._renderStep1();
-    },
-
-    /* 2단계에서 [변경] → 실제 적용 */
-    confirm() {
-      const a = ALL_APPLICANTS.find(a => a.id === this._id);
-      if (!a || !this._pending) { this.close(); return; }
-
-      if (this._field === 'apply') {
-        a.applyStatus = this._pending;
-      } else {
-        a.completionStatus = this._pending;
-      }
-
-      const changed = this._pending;
-      this.close();
-      ApplicantAdmin.search();
-      App.toast(`상태가 [${changed}](으)로 변경되었습니다.`, 'success');
-    },
-
-    close() {
-      document.getElementById('statusDropdown').classList.remove('open');
-      this._field   = null;
-      this._id      = null;
-      this._pending = null;
-    },
-  };
-
-  /* 바깥 클릭 시 닫기 */
-  document.addEventListener('click', e => {
-    if (!document.getElementById('statusDropdown').contains(e.target)) {
-      StatusDropdown.close();
-    }
-  });
 
   /* 초기 렌더 */
   ApplicantAdmin.render();
