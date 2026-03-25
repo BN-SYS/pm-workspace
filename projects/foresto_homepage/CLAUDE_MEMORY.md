@@ -54,30 +54,16 @@
 
 ## 반복 실수 목록
 
-### 1. overflow:hidden 제거 → 박스 늘어남
-- **실수:** `cal-schedule-box`의 `overflow: hidden` 제거만 함
-- **결과:** 박스가 옆 패널보다 커짐
-- **정답:** `overflow-y: auto`로 교체 또는 `min-height` 조정으로 해결
-
-### 2. height 고정값 → 폰트 커지면 내용 잘림
-- **실수:** `home-panel { height: 560px }` 고정
-- **결과:** 글자 크기 3단계 + 6줄 달 → 일정 박스 짤림
-- **정답:** `min-height: 560px`으로 변경, 컨테이너도 동일하게
-
-### 3. JS DOM null 참조 → 이후 스크립트 전체 멈춤
-- **실수:** 팝업 HTML 주석 처리 후 JS는 그대로 둠
-- **결과:** `getElementById('popupNoShow')` → null → TypeError → 슬라이더 초기화 안 됨
-- **정답:** `const el = getElementById('x'); if (el) { ... }`
-
-### 4. 모바일 센터링 text-align으로 시도
-- **실수:** `.hero .container { text-align: center }` 적용
-- **결과:** 블록 요소 자식들은 여전히 왼쪽 치우침
-- **정답:** 부모에 `display:flex; flex-direction:column; align-items:center` + 자식에 `width:100%`
-
-### 5. min-width px 고정 → 글자 크기 변경 시 버튼 크기 불일치
-- **실수:** `.footer-family-btn { min-width: 168px }` (px 고정)
-- **결과:** 글자 키우면 "구 홈페이지 바로가기" 버튼과 너비 달라짐
-- **정답:** `min-width: 10.5rem` (rem 기반으로 같이 스케일)
+| # | 상황 | 실수 | 결과 | 정답 |
+|---|---|---|---|---|
+| 1 | cal-schedule-box 내용 잘릴 때 | `overflow: hidden` 제거 | 박스가 옆 패널보다 커짐 | `overflow-y: auto`로 교체 |
+| 2 | 폰트 커질 때 패널 내용 잘릴 때 | `height: 560px` 고정 유지 | 글자 크기 3단계 + 6줄 달 → 일정 박스 짤림 | `min-height: 560px`로 변경, 부모 컨테이너도 동일하게 |
+| 3 | HTML 요소 주석 처리 후 | JS null-check 없이 `.addEventListener()` 호출 | TypeError → 이후 스크립트 전체 멈춤(슬라이더 사라짐) | `const el = getElementById('x'); if (el) { ... }` |
+| 4 | 모바일 가운데 정렬 | `text-align: center` 부모에 적용 | 블록 자식 요소 여전히 왼쪽 치우침 | 부모에 `display:flex; flex-direction:column; align-items:center` + 자식 `width:100%` |
+| 5 | 버튼 너비 일치시킬 때 | `min-width: 168px` (px 고정) | 글자 크기 변경 시 인접 버튼과 너비 달라짐 | `min-width: 10.5rem` (rem 기반 스케일) |
+| 6 | 한국어 텍스트 길이 제한 | `white-space: nowrap; text-overflow: ellipsis` | 폰트 커지면 텍스트 가로로 잘림 | `word-break: keep-all`로 교체, 줄바꿈 허용 |
+| 7 | CSS 파일 편집 전 | Read 없이 바로 Edit 시도 | 린터가 파일 수정 후 old_string 불일치 → Edit 실패 | 편집 직전 항상 Read로 최신 내용 확인 후 Edit |
+| 8 | 달마다 달력 높이 다를 때 | cal-cell에 min-height 미적용 | 5줄/6줄 달마다 캘린더 높이 달라져 일정 박스 출렁임 | `cal-cell { min-height: 40px }` 고정 |
 
 ---
 
@@ -87,9 +73,10 @@ git push 전 반드시 확인:
 
 - [ ] preview mode 스크립트 살아있는지 (`index.html` 내 `App.toast` 포함 클릭 차단 블록)
 - [ ] 글자 크기 3단계에서 달력 일정 박스 잘리지 않는지
-- [ ] 6줄짜리 달(5월 등)에서 레이아웃 무너지지 않는지
+- [ ] 5월, 10월 등 6줄짜리 달에서 레이아웃 무너지지 않는지
 - [ ] 글자 크기 3단계에서 패밀리사이트 버튼 너비 "구 홈페이지" 버튼과 일치하는지
 - [ ] 모바일(600px 이하) 레이아웃 깨지지 않는지
+- [ ] HTML 요소 주석 처리 시 관련 JS null-check 처리됐는지
 
 ---
 
@@ -97,6 +84,7 @@ git push 전 반드시 확인:
 
 | 날짜 | 내용 | 변경 파일 |
 |---|---|---|
+| 2026-03-25 | CLAUDE_MEMORY.md 생성 및 반복 실수 표 정리 | CLAUDE_MEMORY.md |
 | 2026-03-25 | 달력 영역 px 고정 폰트, 빈 셀 min-height 40px, content-main-grid min-height 전환 | main.css |
 | 2026-03-25 | footer-family-btn min-width rem 전환 (10.5rem) | common.css |
 | 2026-03-24 | preview mode 추가, 팝업 JS null-safety 처리, 슬라이더 복구 | index.html |
