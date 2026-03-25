@@ -176,12 +176,12 @@
                 setTimeout(() => {
 
                     // 정상 회원
-                    if (id === 'test@forest.or.kr' && pw === '1234') {
+                    if (id === 'test' && pw === '1234') {
                         App.login({ name: '김숲해설', role: 'fullMember', grade: '정회원' });
                         location.href = '../index.html';
 
                     // 관리자
-                    } else if (id === 'admin@forest.or.kr' && pw === '1234') {
+                    } else if (id === 'admin' && pw === '1234') {
                         App.login({ name: '관리자', role: 'admin', grade: '관리자' });
                         location.href = '../admin/members.html';
 
