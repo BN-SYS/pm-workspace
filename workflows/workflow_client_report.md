@@ -59,7 +59,7 @@ PM에게 받을 것:
 
 ## Step 4 — 산출물 저장
 
-- 저장 위치: `outputs/회의록_프로젝트명_YYYYMMDD.docx`
+- 저장 위치: `outputs/minutes_프로젝트명_YYYYMMDD.docx`
 
 ---
 
