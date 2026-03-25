@@ -58,10 +58,10 @@ const ADMIN_NAV = [
   {
     key: 'apply-group', ico: _ICO('inbox'), label: '기타신청관리',
     children: [
-      { key: 'apply-regular',    href: '#', label: '정회원신청 관리' },
-      { key: 'apply-instructor', href: '#', label: '강사신청 관리' },
-      { key: 'apply-forest',     href: '#', label: '숲해설신청 관리' },
-      { key: 'apply-sponsor',    href: '#', label: '후원신청 관리' },
+      { key: 'apply-regular',    href: 'apply-regular.html', label: '정회원신청 관리' },
+      { key: 'apply-instructor', href: 'apply-instructor.html', label: '강사신청 관리' },
+      { key: 'apply-forest',     href: 'apply-forest.html', label: '숲해설신청 관리' },
+      { key: 'apply-sponsor',    href: 'apply-sponsor.html', label: '후원신청 관리' },
     ]
   },
 ];
