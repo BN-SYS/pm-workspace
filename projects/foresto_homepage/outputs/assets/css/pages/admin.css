@@ -373,7 +373,7 @@ body.admin-body .site-header { display: none !important; }
 .admin-main {
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
   padding: 28px 32px;
   min-width: 0;
 }
@@ -551,6 +551,8 @@ body.admin-body .site-header { display: none !important; }
 select.form-control {
   appearance: none;
   -webkit-appearance: none;
+  padding-top: 7px;
+  padding-bottom: 7px;
   padding-right: 32px;
   background-image: url('../../../../../../common_assets/icons/chevron-down.png');
   background-repeat: no-repeat;
