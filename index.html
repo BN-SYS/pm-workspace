@@ -632,6 +632,29 @@
   </div>
 
   <script>
+    /* ── 접근 제한 ──
+       유효한 토큰 목록. 공유 URL 예시: ?token=pm2026
+       sessionStorage에 저장되므로 같은 브라우저 탭에서는 재입력 불필요 */
+    (function () {
+      const VALID_TOKENS = ['pm2026', 'bn2026'];
+      const fromUrl = new URLSearchParams(location.search).get('token');
+      const fromSession = sessionStorage.getItem('ws_token');
+      if (fromUrl && VALID_TOKENS.includes(fromUrl)) {
+        sessionStorage.setItem('ws_token', fromUrl); return;
+      }
+      if (fromSession && VALID_TOKENS.includes(fromSession)) return;
+      document.body.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+                    height:100vh;gap:16px;background:#0d0f14;font-family:sans-serif;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <p style="margin:0;color:#555;font-size:13px;letter-spacing:0.05em;">접근 권한이 없습니다.</p>
+        </div>`;
+      throw new Error('Unauthorized');
+    })();
+
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
        📍 프로젝트 데이터
        새 프로젝트 추가 시 이 배열에만 추가하면 됩니다.
