@@ -434,9 +434,11 @@ push 전 반드시 확인할 것들.
 | 기능 추가/수정/삭제 | `README.md` 해당 섹션 + `CLAUDE_MEMORY.md` 핵심 규칙 |
 | 디자인 수치 확정 | `CLAUDE_MEMORY.md` 디자인 가이드 |
 | 새로운 실수 발생 | `CLAUDE_MEMORY.md` 반복 실수 목록 |
-| git push 완료 | `CLAUDE_MEMORY.md` 최근 작업 이력 |
+| git push 완료 | `CLAUDE_MEMORY.md` 최근 작업 이력 + **`index.html` 해당 프로젝트 `updated` 날짜** |
 | 미확정 항목 확정 | `README.md` 미확정 항목 → 확정 내용으로 교체 |
 | 지침/설정 변경 | `CLAUDE.md` + 영향받는 프로젝트 `CLAUDE_MEMORY.md` |
+
+**`index.html` 날짜 업데이트 규칙**: 루트의 `index.html`에는 프로젝트별 `updated` 날짜가 있다. git push 전, 작업한 프로젝트의 `updated` 값을 **오늘 날짜(YYYY-MM-DD)**로 반드시 업데이트한다. 대시보드의 "최근 업데이트" 표시가 이 값 기준으로 자동 계산된다.
 
 작업 완료 보고 시: "코드 변경 + 문서 업데이트까지 완료했습니다" 형식으로.
 문서 업데이트를 빠뜨리면 다음 세션에서 잘못된 컨텍스트로 작업하게 된다.

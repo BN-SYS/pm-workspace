@@ -632,9 +632,6 @@
   </div>
 
   <script>
-    /* ── 접근 제한 ──
-       유효한 토큰 목록. 공유 URL 예시: ?token=pm2026
-       sessionStorage에 저장되므로 같은 브라우저 탭에서는 재입력 불필요 */
     (function () {
       const VALID_TOKENS = ['pm2026', 'bn2026'];
       const fromUrl = new URLSearchParams(location.search).get('token');
