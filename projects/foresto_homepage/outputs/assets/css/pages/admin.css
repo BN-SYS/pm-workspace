@@ -12,7 +12,8 @@ body.admin-body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow: hidden;
+  overflow-y: hidden;
+  overflow-x: auto;
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 17px;
 }
