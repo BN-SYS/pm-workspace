@@ -195,13 +195,6 @@
             <label class="form-label">내용 <span class="req">*</span></label>
             <input type="text" class="form-control" id="iText-${key}"
               value="${data.text || ''}" placeholder="항목 내용을 입력하세요" style="margin-bottom:6px">
-            <label class="img-upload-label">
-              <input type="file" accept="image/*" onchange="HistEdit.previewItemImg(this, ${key})">
-              항목 이미지 첨부 (선택, 1장)
-            </label>
-            ${data.img
-              ? `<img id="iImgPreview-${key}" class="item-img-preview" src="${data.img}" style="display:block">`
-              : `<img id="iImgPreview-${key}" class="item-img-preview">`}
           </div>
           <button class="btn btn-danger btn-xs" id="iDel-${key}" style="margin-top:20px;flex-shrink:0"
             onclick="HistEdit.removeItem(${key})">삭제</button>`;
