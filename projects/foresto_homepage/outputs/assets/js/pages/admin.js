@@ -42,8 +42,8 @@ const ADMIN_NAV = [
   {
     key: 'site-group', ico: _ICO('cog'), label: '사이트관리',
     children: [
-      { key: 'site-banner', href: '#', label: '배너 관리' },
-      { key: 'site-popup',  href: '#', label: '팝업 관리' },
+      { key: 'site-banner', href: 'banner.html', label: '배너 관리' },
+      { key: 'site-popup',  href: 'popup.html', label: '팝업 관리' },
     ]
   },
 
@@ -110,7 +110,7 @@ const AdminSidebar = {
                   onclick="AdminSidebar.toggleGroup(this, '${firstHref}')">
             <img class="nav-ico" src="${item.ico}" alt="" aria-hidden="true">
             <span class="nav-txt">${item.label}</span>
-            <span class="nav-arrow" aria-hidden="true"></span>
+            <img class="nav-arrow" src="${_ICO('chevron-right')}" alt="" aria-hidden="true">
           </button>
           <div class="nav-submenu">
             ${item.children.map(child => `

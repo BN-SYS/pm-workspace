@@ -187,13 +187,14 @@
       const mDay  = String((i % 20) + 1).padStart(2,'0');
       const mHour = String((i % 12) + 8).padStart(2,'0');
       const mMin  = String((i * 7) % 60).padStart(2,'0');
+      const mSec  = String((i * 13) % 60).padStart(2,'0');
       const hasMarketing = i % 3 === 0;
       const appCount = i % 4;
       const apps = Array.from({ length: appCount }, (_, j) => ({
         course:    SAMPLE_COURSES[(i + j) % SAMPLE_COURSES.length].name,
         type:      SAMPLE_COURSES[(i + j) % SAMPLE_COURSES.length].type,
         startDate: SAMPLE_COURSES[(i + j) % SAMPLE_COURSES.length].startDate,
-        applyDate: `2026-${mm}-${String(((i * 3 + j * 7 + 5) % 20) + 1).padStart(2,'0')} ${mHour}:${mMin}`,
+        applyDate: `2026-${mm}-${String(((i * 3 + j * 7 + 5) % 20) + 1).padStart(2,'0')} ${mHour}:${mMin}:${mSec}`,
         status:    COURSE_STATUSES[(i + j) % 4],
       }));
       const affilCount = i % 3;

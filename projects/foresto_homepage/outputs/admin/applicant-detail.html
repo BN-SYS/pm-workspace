@@ -283,12 +283,14 @@
     const dd       = String((i % 28) + 1).padStart(2, '0');
     const hh       = String((i % 10) + 9).padStart(2, '0');
     const min      = String((i * 7) % 60).padStart(2, '0');
+    const ss       = String((i * 13) % 60).padStart(2, '0');
     const applyStatus = APPLY_POOL[i % APPLY_POOL.length];
     const completionStatus = COMPLETION_POOL[i % COMPLETION_POOL.length];
     const cancelDd = String(Math.min(parseInt(dd) + 3, 28)).padStart(2, '0');
     const cancelHh = String((i % 8) + 10).padStart(2, '0');
     return {
       id:               2000 + i,
+      applyNo:          `APP-2026-${String(2000 + i).padStart(5, '0')}`,
       memberId:         `M${String(2000 + i).padStart(5, '0')}`,
       courseType:       course.type,
       academyTab:       course.academyTab,
@@ -298,10 +300,10 @@
       phone:            PHONES[i % PHONES.length],
       birthdate:        BIRTHDATES[i % BIRTHDATES.length],
       email:            EMAILS[i % EMAILS.length],
-      applyDate:        `2026-${mm}-${dd} ${hh}:${min}`,
+      applyDate:        `2026-${mm}-${dd} ${hh}:${min}:${ss}`,
       applyStatus,
       completionStatus,
-      cancelDate:       applyStatus === '취소' ? `2026-${mm}-${cancelDd} ${cancelHh}:${min}` : null,
+      cancelDate:       applyStatus === '취소' ? `2026-${mm}-${cancelDd} ${cancelHh}:${min}:${ss}` : null,
       fileRequired:     setting.fileRequired,
       certIssue:        setting.certIssue,
       submittedFile:    setting.fileRequired ? { name: DUMMY_FILE_NAMES[i % DUMMY_FILE_NAMES.length], size: `${(i % 5 + 1) * 120}KB` } : null,
@@ -349,6 +351,12 @@
     const memberCard = `
       <div class="form-card">
         <div class="form-card-head">신청자 정보</div>
+        <div class="form-row">
+          <div class="form-label">접수번호</div>
+          <div style="flex:3;padding:10px 16px;">
+            <span class="detail-val mono" style="font-weight:700;color:#2e5c2e">${a.applyNo}</span>
+          </div>
+        </div>
         <div class="form-row">
           <div class="form-label">이름</div>
           <div class="form-half">

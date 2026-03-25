@@ -475,32 +475,29 @@ const HISTORY_DATA = [
 
 
 /* ══════════════════════════════════════════════
-   4. 연혁 컨트롤러 (REQ-018)
-   - SVG stepped(직각 꺾임) 연결선 + 대형 원 아이콘
-   - ① 연도 타이틀  ② 상세내용(5개 + 더보기/접기)
-   - ③ 대형 원     ④ 연도 숫자
-   - 모바일: 수직 타임라인 자동 전환
+   4. 연혁 컨트롤러 (REQ-018) — 하이브리드 방식
+   - 상단: 가로 슬라이드 타임라인 (연도 네비게이션 전용, 고정 높이)
+   - 하단: 선택 연도 상세 영역 (항목 수 무관, 세로 자유 확장)
+   - 모바일: 세로 타임라인 자동 전환
 ══════════════════════════════════════════════ */
 const HistoryCtrl = {
 
     DATA: HISTORY_DATA,
-    FOLD_LIMIT: 5,
 
     /* ── 레이아웃 상수 */
-    _NW:   240,  /* 노드 너비 */
-    _CW:   80,   /* 연결 구간 너비 (2*RS 이상 필요) */
-    _RC:   44,   /* 대형 원 반지름 */
-    _STEM: 10,   /* 원 ↔ dot 줄기 길이 */
+    _NW:   160,  /* 노드 너비 */
+    _CW:   60,   /* 연결 구간 너비 */
+    _RC:   36,   /* 대형 원 반지름 */
+    _STEM: 8,    /* 원 ↔ dot 줄기 길이 */
     _RD:   5,    /* 연결 dot 반지름 */
-    _YT:   300,  /* 상단 dot Y */
-    _YB:   440,  /* 하단 dot Y */
-    _TH:   760,  /* 스테이지 높이 */
-    _RS:   18,   /* 꺾임 모서리 라운드 반지름 */
+    _YT:   130,  /* 상단 dot Y */
+    _YB:   210,  /* 하단 dot Y */
+    _TH:   300,  /* 스테이지 높이 (콤팩트) */
+    _RS:   16,   /* 꺾임 모서리 라운드 */
 
-    /* ── 순환 색상 팔레트 */
     _COLORS: ['#1e5c35','#2d7a4f','#3a9660','#52b37f','#6bc49a','#276847','#3d8a58','#4aad6c'],
+    _ICONS:  ['🌲','🌿','🍃','🌱','🌳','🍀','🌾','🌵'],
 
-    /* ── 연도별 타이틀 (①) */
     _LABELS: {
         2026:'2026년 사업',    2025:'2025년 주요활동',
         2023:'창립 25주년',    2021:'디지털 전환기',
@@ -510,131 +507,99 @@ const HistoryCtrl = {
         1998:'협회 창립',
     },
 
+    _selected: null,
+
     init() {
         const wrap = document.getElementById('historyTimeline');
         if (!wrap) return;
 
+        this._selected = this.DATA[0].year;
+
         const {
             _NW:NW, _CW:CW, _RC:RC, _STEM:STEM, _RD:RD,
             _YT:YT, _YB:YB, _TH:TH, _RS:RS,
-            _COLORS:COLORS, _LABELS:LABELS, DATA:data, FOLD_LIMIT:FL,
+            _COLORS:COLORS, _ICONS:ICONS, DATA:data,
         } = this;
 
         const n      = data.length;
         const totalW = n * NW + (n - 1) * CW;
-        const topCY  = YT - STEM - RC;  /* 상단 노드 원 중심 Y: 300-10-44=246 */
-        const botCY  = YB + STEM + RC;  /* 하단 노드 원 중심 Y: 440+10+44=494 */
+        const topCY  = YT - STEM - RC;
+        const botCY  = YB + STEM + RC;
 
-        /* ── SVG: stepped(직각 꺾임) 경로 ──────────────── */
-        const pathPts = [`M 0 ${YT}`];   /* 왼쪽 끝에서 시작 */
-
+        /* ── SVG 경로 (stepped) */
+        const pathPts = [`M 0 ${YT}`];
         data.forEach((_, i) => {
-            const isTop = i % 2 === 0;
-            const dotY  = isTop ? YT : YB;
-            const cx    = i * (NW + CW) + NW / 2;
-
+            const isTop    = i % 2 === 0;
+            const dotY     = isTop ? YT : YB;
+            const cx       = i * (NW + CW) + NW / 2;
             if (i === 0) {
                 pathPts.push(`L ${cx} ${dotY}`);
             } else {
                 const prevIsTop = (i - 1) % 2 === 0;
                 const prevDotY  = prevIsTop ? YT : YB;
                 const prevCx    = (i - 1) * (NW + CW) + NW / 2;
-                const cS        = prevCx + NW / 2;  /* 연결 시작 X */
-                const R         = RS;
-
+                const cS        = prevCx + NW / 2;
                 pathPts.push(`L ${cS} ${prevDotY}`);
-
                 if (prevDotY < dotY) {
-                    /* 아래로 꺾임 (상단→하단): 두 모서리 모두 CW(sweep=1) */
-                    pathPts.push(`A ${R} ${R} 0 0 1 ${cS+R} ${prevDotY+R}`);
-                    pathPts.push(`L ${cS+R} ${dotY-R}`);
-                    pathPts.push(`A ${R} ${R} 0 0 1 ${cS+2*R} ${dotY}`);
+                    pathPts.push(`A ${RS} ${RS} 0 0 1 ${cS+RS} ${prevDotY+RS}`);
+                    pathPts.push(`L ${cS+RS} ${dotY-RS}`);
+                    pathPts.push(`A ${RS} ${RS} 0 0 1 ${cS+2*RS} ${dotY}`);
                 } else {
-                    /* 위로 꺾임 (하단→상단): 두 모서리 모두 CCW(sweep=0) */
-                    pathPts.push(`A ${R} ${R} 0 0 0 ${cS+R} ${prevDotY-R}`);
-                    pathPts.push(`L ${cS+R} ${dotY+R}`);
-                    pathPts.push(`A ${R} ${R} 0 0 0 ${cS+2*R} ${dotY}`);
+                    pathPts.push(`A ${RS} ${RS} 0 0 0 ${cS+RS} ${prevDotY-RS}`);
+                    pathPts.push(`L ${cS+RS} ${dotY+RS}`);
+                    pathPts.push(`A ${RS} ${RS} 0 0 0 ${cS+2*RS} ${dotY}`);
                 }
                 pathPts.push(`L ${cx} ${dotY}`);
             }
         });
+        pathPts.push(`L ${totalW} ${(n-1) % 2 === 0 ? YT : YB}`);
 
-        /* 오른쪽 끝 연장 */
-        pathPts.push(`L ${totalW} ${(n - 1) % 2 === 0 ? YT : YB}`);
-
-        /* ── SVG: 대형 원 + 줄기 + 연결 dot ─────────────── */
-        const ICONS = ['🌲','🌿','🍃','🌱','🌳','🍀','🌾','🌵'];
+        /* ── SVG 원·dot */
         let svgE = '';
-
         data.forEach((group, i) => {
-            const isTop  = i % 2 === 0;
-            const dotY   = isTop ? YT : YB;
-            const cx     = i * (NW + CW) + NW / 2;
-            const color  = COLORS[i % COLORS.length];
-            const cirCY  = isTop ? topCY : botCY;
-
-            /* 줄기 (원 ↔ dot) */
-            const sY1 = isTop ? cirCY + RC : dotY;
-            const sY2 = isTop ? dotY       : cirCY - RC;
+            const isTop = i % 2 === 0;
+            const dotY  = isTop ? YT : YB;
+            const cx    = i * (NW + CW) + NW / 2;
+            const color = COLORS[i % COLORS.length];
+            const cirCY = isTop ? topCY : botCY;
+            const sY1   = isTop ? cirCY + RC : dotY;
+            const sY2   = isTop ? dotY       : cirCY - RC;
             svgE += `<line x1="${cx}" y1="${sY1}" x2="${cx}" y2="${sY2}" stroke="${color}" stroke-width="2" opacity="0.5"/>`;
-
-            /* 대형 원: 후광 → 점선 테두리 → 흰 채움 → 아이콘 */
-            svgE += `<circle cx="${cx}" cy="${cirCY}" r="${RC+9}" fill="${color}" opacity="0.07"/>`;
-            svgE += `<circle cx="${cx}" cy="${cirCY}" r="${RC+3}" fill="none" stroke="${color}" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.25"/>`;
-            svgE += `<circle cx="${cx}" cy="${cirCY}" r="${RC}"   fill="#fff" stroke="${color}" stroke-width="2.5"/>`;
-            svgE += `<text x="${cx}" y="${cirCY+8}" text-anchor="middle" font-size="26" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif">${ICONS[i % ICONS.length]}</text>`;
-
-            /* 연결 dot: 후광 → 채움 → 흰 중심 */
+            svgE += `<circle cx="${cx}" cy="${cirCY}" r="${RC+8}" fill="${color}" opacity="0.07"/>`;
+            svgE += `<circle cx="${cx}" cy="${cirCY}" r="${RC+2}" fill="none" stroke="${color}" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.22"/>`;
+            svgE += `<circle cx="${cx}" cy="${cirCY}" r="${RC}"   fill="#fff" stroke="${color}" stroke-width="2.5" class="ht-circle" data-year="${group.year}"/>`;
+            svgE += `<text x="${cx}" y="${cirCY+8}" text-anchor="middle" font-size="22" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif" style="pointer-events:none">${ICONS[i % ICONS.length]}</text>`;
             svgE += `<circle cx="${cx}" cy="${dotY}" r="${RD+4}" fill="${color}" opacity="0.15"/>`;
             svgE += `<circle cx="${cx}" cy="${dotY}" r="${RD}"   fill="${color}"/>`;
             svgE += `<circle cx="${cx}" cy="${dotY}" r="${RD-2}" fill="#fff"/>`;
         });
 
-        /* ── 콘텐츠 노드 HTML ────────────────────────────── */
+        /* ── 노드 HTML (연도 숫자 + 클릭 영역만) */
         const nodesHtml = data.map((group, i) => {
-            const isTop  = i % 2 === 0;
-            const leftPx = i * (NW + CW);
-            const dotY   = isTop ? YT : YB;
-            const cirCY  = isTop ? topCY : botCY;
-            const color  = COLORS[i % COLORS.length];
-            const label  = LABELS[group.year] || `${group.year}년`;
-
-            const vis = group.items.slice(0, FL);
-            const hid = group.items.slice(FL);
-
-            const renderItem = it =>
-                `<li class="ht-item">
-                   <span class="ht-month">${it.month}월</span>
-                   <span class="ht-text">${it.text}</span>
-                 </li>`;
-
-            const foldHtml = hid.length ? `
-                <div class="ht-fold-items" id="htFold${i}" style="display:none">
-                  <ul class="ht-items">${hid.map(renderItem).join('')}</ul>
-                </div>
-                <button class="ht-fold-btn" onclick="HistoryCtrl.toggleFold(${i},this)">
-                  더보기 (${hid.length}개) ▾
-                </button>` : '';
-
-            /* 콘텐츠 박스 위치 */
-            const contentStyle = isTop
-                ? `top:10px; left:8px; right:8px;`
-                : `top:${cirCY + RC + 16}px; left:8px; right:8px; bottom:10px;`;
-
-            /* 연도 숫자 (④) 위치 */
-            const yearStyle = isTop
-                ? `top:${dotY + RD + 8}px;`
-                : `top:${dotY - RD - 28}px;`;
-
+            const isTop   = i % 2 === 0;
+            const leftPx  = i * (NW + CW);
+            const dotY    = isTop ? YT : YB;
+            const cirCY   = isTop ? topCY : botCY;
+            const color   = COLORS[i % COLORS.length];
+            const yearTop = isTop
+                ? `${dotY + RD + 8}px`
+                : `${dotY - RD - 30}px`;
+            const isActive = group.year === this._selected;
             return `
-            <div class="ht-node ${isTop ? 'ht-top' : 'ht-bot'}"
-                 style="left:${leftPx}px; width:${NW}px;">
-              <div class="ht-content" style="${contentStyle}">
-                <div class="ht-label" style="color:${color};">${label}</div>
-                <ul class="ht-items">${vis.map(renderItem).join('')}</ul>
-                ${foldHtml}
-              </div>
-              <div class="ht-year" style="${yearStyle}; color:${color};">${group.year}</div>
+            <div class="ht-node ${isTop ? 'ht-top' : 'ht-bot'} ${isActive ? 'ht-active' : ''}"
+                 style="left:${leftPx}px; width:${NW}px;"
+                 onclick="HistoryCtrl.selectYear(${group.year})"
+                 data-year="${group.year}">
+              <!-- 원 위 클릭 오버레이 -->
+              <div class="ht-circle-hit"
+                   style="position:absolute;
+                          left:${NW/2 - RC - 10}px;
+                          top:${cirCY - RC - 10}px;
+                          width:${(RC+10)*2}px;
+                          height:${(RC+10)*2}px;
+                          border-radius:50%;cursor:pointer;"></div>
+              <!-- 연도 숫자 -->
+              <div class="ht-year" style="top:${yearTop}; color:${color};">${group.year}</div>
             </div>`;
         }).join('');
 
@@ -649,62 +614,86 @@ const HistoryCtrl = {
             </svg>
             ${nodesHtml}
           </div>
-        </div>`;
+        </div>
+        <!-- 하단 상세 영역 -->
+        <div class="ht-detail" id="htDetail"></div>`;
 
-        /* ── 마우스 드래그 스크롤 */
         this._initDrag(document.getElementById('htScrollOuter'));
+        this._renderDetail(this._selected);
     },
 
-    /* ── 드래그 스크롤 초기화 */
+    /* ── 연도 선택 */
+    selectYear(year) {
+        if (this._selected === year) return;
+        this._selected = year;
+
+        /* 노드 active 갱신 */
+        document.querySelectorAll('.ht-node').forEach(el => {
+            el.classList.toggle('ht-active', Number(el.dataset.year) === year);
+        });
+
+        /* 선택된 노드가 보이도록 스크롤 */
+        const outer = document.getElementById('htScrollOuter');
+        const node  = document.querySelector(`.ht-node[data-year="${year}"]`);
+        if (outer && node) {
+            const nodeCenter = node.offsetLeft + node.offsetWidth / 2;
+            const target     = nodeCenter - outer.offsetWidth / 2;
+            outer.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
+        }
+
+        this._renderDetail(year);
+    },
+
+    /* ── 상세 영역 렌더 */
+    _renderDetail(year) {
+        const detail = document.getElementById('htDetail');
+        if (!detail) return;
+
+        const group = this.DATA.find(d => d.year === year);
+        if (!group) return;
+
+        const idx   = this.DATA.findIndex(d => d.year === year);
+        const color = this._COLORS[idx % this._COLORS.length];
+        const label = this._LABELS[year] || `${year}년`;
+
+        const itemsHtml = group.items.map(it => `
+            <li class="htd-item">
+              <span class="htd-month">${it.month}월</span>
+              <span class="htd-text">${it.text}</span>
+            </li>`).join('');
+
+        detail.innerHTML = `
+          <div class="htd-inner">
+            <div class="htd-head">
+              <span class="htd-year" style="color:${color};">${year}</span>
+              <span class="htd-label" style="color:${color};">${label}</span>
+            </div>
+            <ul class="htd-list">${itemsHtml}</ul>
+          </div>`;
+
+        /* fade-in */
+        detail.classList.remove('htd-show');
+        requestAnimationFrame(() => detail.classList.add('htd-show'));
+    },
+
+    /* ── 드래그 스크롤 */
     _initDrag(el) {
         if (!el) return;
-        let isDown = false, startX = 0, scrollLeft = 0;
-
+        let isDown = false, startX = 0, scrollLeft = 0, moved = false;
         el.addEventListener('mousedown', e => {
-            isDown    = true;
-            startX    = e.pageX - el.offsetLeft;
+            isDown = true; moved = false;
+            startX = e.pageX - el.offsetLeft;
             scrollLeft = el.scrollLeft;
         });
         el.addEventListener('mouseleave', () => { isDown = false; });
         el.addEventListener('mouseup',    () => { isDown = false; });
         el.addEventListener('mousemove',  e => {
             if (!isDown) return;
-            e.preventDefault();
-            const x    = e.pageX - el.offsetLeft;
-            const walk = (x - startX) * 1.2;   /* 드래그 감도 */
-            el.scrollLeft = scrollLeft - walk;
+            e.preventDefault(); moved = true;
+            el.scrollLeft = scrollLeft - (e.pageX - el.offsetLeft - startX) * 1.2;
         });
-    },
-
-    /* ── 더보기 / 접기 토글 + 스테이지 높이 자동 확장 */
-    toggleFold(i, btn) {
-        const fold  = document.getElementById(`htFold${i}`);
-        if (!fold) return;
-        const isOpen = fold.style.display === 'none';
-        fold.style.display = isOpen ? 'block' : 'none';
-        btn.innerHTML = isOpen
-            ? '접기 ▴'
-            : `더보기 (${fold.querySelectorAll('.ht-item').length}개) ▾`;
-
-        /* 확장된 콘텐츠가 잘리지 않도록 스테이지 높이 재조정 */
-        this._resizeStage();
-    },
-
-    /* ── 스테이지 높이를 콘텐츠 최대값에 맞게 재계산 */
-    _resizeStage() {
-        const stage = document.querySelector('.ht-stage');
-        if (!stage) return;
-        let maxBottom = this._TH;
-        stage.querySelectorAll('.ht-content').forEach(el => {
-            const rect = el.getBoundingClientRect();
-            const stageRect = stage.getBoundingClientRect();
-            const bottom = (rect.bottom - stageRect.top);
-            if (bottom > maxBottom) maxBottom = bottom + 16; /* 여백 16px 추가 */
-        });
-        stage.style.height = maxBottom + 'px';
-        /* SVG 높이도 동기화 */
-        const svg = stage.querySelector('.ht-svg');
-        if (svg) svg.setAttribute('height', maxBottom);
+        /* 드래그 중 클릭 이벤트 차단 */
+        el.addEventListener('click', e => { if (moved) e.stopPropagation(); }, true);
     },
 };
 

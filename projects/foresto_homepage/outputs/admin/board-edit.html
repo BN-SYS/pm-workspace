@@ -204,8 +204,8 @@
             <input type="text" id="inputTitle" placeholder="제목을 입력하세요">
           </div>
 
-          <!-- 상단 고정 -->
-          <div class="form-group">
+          <!-- 상단 고정 (공지사항만 노출) -->
+          <div class="form-group" id="pinGroup">
             <label class="form-label">상단 고정</label>
             <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:14px">
               <input type="checkbox" id="chkPin" style="width:16px;height:16px;cursor:pointer">
@@ -335,9 +335,10 @@
   document.getElementById('pageTitle').textContent = BCONFIG.title + (isEdit ? ' 수정' : ' 등록');
   document.title = BCONFIG.title + (isEdit ? ' 수정' : ' 등록') + ' | 관리자 | 한국숲해설가협회';
 
-  /* 썸네일 안내 표시 */
+  /* 썸네일 안내 표시 / 상단고정 숨김 (썸네일 게시판) */
   if (BCONFIG.hasThumb) {
     document.getElementById('thumbNotice').style.display = 'flex';
+    document.getElementById('pinGroup').style.display = 'none';
   }
 
   /* 수정 시 기존 내용 채우기 (더미) */

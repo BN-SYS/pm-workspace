@@ -764,94 +764,112 @@
    - ① 타이틀  ② 상세내용(더보기/접기)  ③ 대형 원  ④ 연도 숫자
    ══════════════════════════════════════════════ */
 
-/* 스크롤 외부 래퍼 — 스크롤바 숨김 + 드래그 스크롤 */
+/* ══ 가로 타임라인 — 네비게이션 영역 ══ */
+
+.history-wrap { overflow: visible; }
+
 .ht-scroll-outer {
-  overflow-x: auto;             /* 좌우 스크롤만 허용 */
+  overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;        /* Firefox: 스크롤바 완전 숨김 */
+  scrollbar-width: none;
   cursor: grab;
   user-select: none;
 }
 .ht-scroll-outer:active { cursor: grabbing; }
-.ht-scroll-outer::-webkit-scrollbar { display: none; } /* Chrome/Safari: 스크롤바 완전 숨김 */
+.ht-scroll-outer::-webkit-scrollbar { display: none; }
 
-/* 스테이지가 가변 높이를 유지하도록 wrapper는 클리핑 없음 */
-.history-wrap { overflow: visible; }
+.ht-stage   { position: relative; }
+.ht-svg     { position: absolute; top: 0; left: 0; pointer-events: none; overflow: visible; }
 
-/* 스테이지 — width/height 는 JS inline */
-.ht-stage { position: relative; }
-
-/* SVG 레이어 */
-.ht-svg { position: absolute; top: 0; left: 0; pointer-events: none; overflow: visible; }
-
-/* 노드 */
-.ht-node { position: absolute; top: 0; bottom: 0; }
-
-/* ① 타이틀 + ② 상세내용 박스 — top/left/right/bottom 은 JS inline */
-.ht-content {
-  position: absolute;
-  overflow: visible;
+/* 노드: 클릭 가능 */
+.ht-node {
+  position: absolute; top: 0; bottom: 0;
+  cursor: pointer;
+  transition: opacity .15s;
 }
+.ht-node:hover { opacity: .8; }
 
-/* ① 연도 타이틀 레이블 — color 는 JS inline */
-.ht-label {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: -.2px;
-  margin-bottom: 8px;
-  word-break: keep-all;
-}
-
-/* ④ 연도 숫자 — top/color 는 JS inline */
+/* 연도 숫자 — top/color 는 JS inline */
 .ht-year {
   position: absolute;
   left: 0; right: 0;
   text-align: center;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   letter-spacing: -1px;
+  transition: transform .15s;
+}
+.ht-node.ht-active .ht-year {
+  transform: scale(1.12);
 }
 
-/* ② 항목 목록 */
-.ht-items {
+/* ══ 하단 상세 영역 ══ */
+.ht-detail {
+  margin-top: 32px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .3s ease, transform .3s ease;
+}
+.ht-detail.htd-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.htd-inner {
+  background: #fff;
+  border: 1px solid #ddecd4;
+  border-radius: 12px;
+  padding: 28px 36px 32px;
+}
+
+.htd-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e8f2e0;
+}
+.htd-year {
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1;
+}
+.htd-label {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -.3px;
+}
+
+.htd-list {
   list-style: none; padding: 0; margin: 0;
-  display: flex; flex-direction: column;
+  display: flex; flex-direction: column; gap: 0;
 }
-.ht-item {
-  display: flex; gap: 6px; align-items: flex-start;
-  padding: 5px 0;
-  border-bottom: 1px dashed var(--gray-light);
-  line-height: 1.45;
+.htd-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 13px 0;
+  border-bottom: 1px solid #f0f5eb;
 }
-.ht-item:last-child { border-bottom: none; }
-.ht-month {
+.htd-item:last-child { border-bottom: none; }
+.htd-month {
   flex-shrink: 0;
-  font-size: 11px; font-weight: 700;
+  font-size: 13px; font-weight: 700;
   color: var(--green-main);
-  min-width: 28px; padding-top: 1px;
+  min-width: 36px;
+  padding-top: 1px;
 }
-.ht-text {
-  flex: 1; font-size: 12px;
-  color: var(--gray-dark); word-break: keep-all;
+.htd-text {
+  flex: 1;
+  font-size: 15px;
+  color: #2a3a28;
+  line-height: 1.6;
+  word-break: keep-all;
 }
 
-/* 더보기 숨김 영역 */
-.ht-fold-items { margin-top: 0; }
-
-/* 더보기 / 접기 버튼 */
-.ht-fold-btn {
-  display: block; width: 100%;
-  margin-top: 6px; padding: 5px 0;
-  background: none; border: none;
-  font-size: 11px; font-weight: 700;
-  color: var(--green-main);
-  cursor: pointer; text-align: center;
-  letter-spacing: .3px;
-  transition: color .15s;
-}
-.ht-fold-btn:hover { color: var(--green-dark); }
-
-/* ── 모바일: 수직 타임라인 (≤768px) */
+/* ══ 모바일: 수직 타임라인 (≤768px) ══ */
 @media (max-width: 768px) {
   .ht-scroll-outer { overflow-x: visible; }
 
@@ -865,34 +883,35 @@
     position: absolute; left: 13px; top: 0; bottom: 0;
     width: 2px; background: var(--green-light);
   }
-
   .ht-svg { display: none; }
 
   .ht-node {
     position: relative !important;
     left: auto !important; width: auto !important;
+    bottom: auto !important;
     display: flex; flex-direction: column;
-    padding-bottom: 28px; padding-left: 4px;
+    min-height: 64px; margin-bottom: 0;
   }
   .ht-node::before {
     content: '';
-    position: absolute; left: -34px; top: 8px;
+    position: absolute; left: -34px; top: 20px;
     width: 16px; height: 16px; border-radius: 50%;
     background: var(--green-dark);
     border: 2px solid #fff;
     box-shadow: 0 0 0 2px var(--green-dark);
   }
-
+  .ht-circle-hit { display: none; }
   .ht-year {
     position: relative !important; top: auto !important;
-    text-align: left; font-size: 22px; margin-bottom: 4px;
-  }
-  .ht-content {
-    position: relative !important;
-    top: auto !important; bottom: auto !important;
-    left: auto !important; right: auto !important;
+    text-align: left; font-size: 20px;
+    padding: 16px 0 4px; transform: none !important;
   }
 
-  .ht-top .ht-year, .ht-bot .ht-year { order: 1; }
-  .ht-top .ht-content, .ht-bot .ht-content { order: 2; }
+  /* 모바일에선 상세 패널 숨기고 노드 클릭 시 inline 표시 */
+  .ht-detail { display: none; }
+
+  .htd-inner { padding: 20px; }
+  .htd-year  { font-size: 28px; }
+  .htd-label { font-size: 14px; }
+  .htd-text  { font-size: 14px; }
 }
