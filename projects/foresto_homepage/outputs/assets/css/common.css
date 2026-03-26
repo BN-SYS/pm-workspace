@@ -105,12 +105,16 @@ body {
   background: var(--green-pale); color: var(--green-dark); font-weight: 700;
 }
 .arrow {
-  display: inline-block; width: 0; height: 0;
-  border-left: 4px solid transparent; border-right: 4px solid transparent;
-  border-top: 5px solid var(--gray-mid); transition: transform .2s;
-  flex-shrink: 0; margin-top: 1px;
+  display: inline-block;
+  width: 14px; height: 14px;
+  background: url('../../../../../common_assets/icons/chevron-down.png') no-repeat center / 12px 12px;
+  opacity: 0.45;
+  transition: transform .2s, opacity .2s;
+  flex-shrink: 0;
+  vertical-align: middle;
+  margin-left: 2px;
 }
-.nav-item.has-dropdown:hover .arrow { transform: rotate(180deg); }
+.nav-item.has-dropdown:hover .arrow { transform: rotate(180deg); opacity: 0.7; }
 .dropdown {
   display: none; position: absolute; top: calc(100% + 4px); left: 0;
   min-width: 160px; background: var(--white);
@@ -381,9 +385,9 @@ body {
   flex-shrink: 0;
 }
 .footer-sns-btn:hover { transform: translateY(-2px); }
-.footer-sns-naver  { background: #e8f5e9; color: var(--green-dark); }
-.footer-sns-yt     { background: #ffebee; color: #c62828; }
-.footer-sns-insta  { background: #fce4ec; color: #ad1457; }
+.footer-sns-naver  { background: #ebebeb; color: #767676; }
+.footer-sns-yt     { background: #ebebeb; color: #767676; }
+.footer-sns-insta  { background: #ebebeb; color: #767676; }
 
 /* 푸터 로고 이미지 */
 .footer-logo-img-wrap {
