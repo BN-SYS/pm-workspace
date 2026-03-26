@@ -26,6 +26,7 @@ const NAV_DATA = [
         children: [
           { label: '조직도·임원진', href: 'about/members.html' },
           { label: '전국 지역협회', href: 'about/regions.html' },
+          { label: '지역협회 상세', href: 'about/region-detail.html', parent: 'about/regions.html', hideLnb: true },
         ],
       },
       {
@@ -33,8 +34,9 @@ const NAV_DATA = [
         children: [
           { label: '회원 규정', href: 'about/regulation.html' },
           { label: '정회원 가입 안내', href: 'participate/membership.html' },
+          { label: '정회원 신청', href: 'participate/regular-apply.html', parent: 'participate/membership.html', hideLnb: true },
           { label: '후원 안내', href: 'participate/donate-info.html' },
-          { label: '후원하기', href: 'participate/donate.html' },
+          { label: '후원하기', href: 'participate/donate.html', parent: 'participate/donate-info.html', hideLnb: true },
         ],
       },
     ],
@@ -127,7 +129,9 @@ const NAV_DATA = [
           { label: '공지사항', href: 'community/notice-list.html' },
           { label: '협회 캘린더', href: 'community/calendar.html' },
           { label: '협회지', href: 'community/newsletter.html' },
+          { label: '협회지 상세', href: 'community/newsletter-detail.html', parent: 'community/newsletter.html', hideLnb: true },
           { label: '언론 보도', href: 'community/press.html' },
+          { label: '언론보도 상세', href: 'community/press-detail.html', parent: 'community/press.html', hideLnb: true },
         ],
       },
       { label: '사진 갤러리', href: 'community/gallery.html' },
@@ -310,6 +314,13 @@ const Header = {
 
         <div class="header-actions">
           <div id="authArea">${authHtml}</div>
+          <a href="${root}sitemap.html" class="mobile-sitemap-btn" title="사이트맵" aria-label="사이트맵">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+          </a>
           <button class="hamburger" id="hamburger"
                   onclick="Header.toggleMobileMenu()"
                   aria-label="메뉴 열기/닫기"
@@ -408,9 +419,14 @@ const LNB = {
 
     if (items.length <= 1) return '';
 
-    const itemsHtml = items.map(n3 =>
+    const currentItem = items.find(n3 => n3.href === currentPath);
+    const activeHref = (currentItem && currentItem.hideLnb && currentItem.parent)
+      ? currentItem.parent
+      : currentPath;
+
+    const itemsHtml = items.filter(n3 => !n3.hideLnb).map(n3 =>
       `<a href="${root}${n3.href}"
-          class="lnb-item ${n3.href === currentPath ? 'active' : ''}"
+          class="lnb-item ${n3.href === activeHref ? 'active' : ''}"
         >${n3.label}</a>`
     ).join('');
 
@@ -424,7 +440,7 @@ const LNB = {
       </nav>`;
   },
 
-  /* 탭 너비를 가장 넓은 아이템 기준으로 통일 */
+  /* 탭 너비를 가장 넓은 아이템 기준으로 통일 + 활성 탭 스크롤 */
   equalizeTabWidths() {
     const items = document.querySelectorAll('.lnb-item');
     if (items.length < 2) return;
@@ -432,6 +448,25 @@ const LNB = {
     items.forEach(el => { el.style.width = ''; });
     const maxW = Math.max(...Array.from(items).map(el => el.offsetWidth));
     items.forEach(el => { el.style.width = maxW + 'px'; });
+
+    /* 활성 탭이 잘리지 않도록 스크롤 */
+    const active = document.querySelector('.lnb-item.active');
+    if (active) active.scrollIntoView({ block: 'nearest', inline: 'center' });
+
+    /* overflow 있을 때만 페이드 표시 */
+    const lnbItems = document.querySelector('.lnb-items');
+    const subLnb   = document.querySelector('.sub-lnb');
+    if (lnbItems && subLnb) {
+      const checkOverflow = () => {
+        const scrollable = lnbItems.scrollWidth > lnbItems.clientWidth;
+        const atEnd  = lnbItems.scrollLeft + lnbItems.clientWidth >= lnbItems.scrollWidth - 4;
+        const atStart = lnbItems.scrollLeft <= 4;
+        subLnb.classList.toggle('has-overflow',   scrollable && !atEnd);
+        subLnb.classList.toggle('scrolled-right', scrollable && !atStart);
+      };
+      checkOverflow();
+      lnbItems.addEventListener('scroll', checkOverflow, { passive: true });
+    }
   },
 
   /**
@@ -467,6 +502,10 @@ const LNB = {
         if (n3match) {
           crumbs.push({ label: n1.label, href: `${root}${n1.href}` });
           crumbs.push({ label: n2.label, href: `${root}${n2.href}` });
+          if (n3match.parent) {
+            const parentItem = n2.children.find(c => c.href === n3match.parent);
+            if (parentItem) crumbs.push({ label: parentItem.label, href: `${root}${parentItem.href}` });
+          }
           crumbs.push({ label: n3match.label, href: null });
           currentLabel = n3match.label;
           break;

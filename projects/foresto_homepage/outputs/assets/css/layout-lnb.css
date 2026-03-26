@@ -127,37 +127,61 @@
 /* ── 반응형 (≤ 768px) ──────────────────────── */
 @media (max-width: 768px) {
   .sub-layout {
-    padding-bottom: 48px;
+    padding: 0 0 40px;        /* 좌우 패딩 제거 — 자식 요소가 각자 처리 */
   }
 
   .sub-lnb {
-    padding-top: 20px;
-    margin-bottom: 32px;
+    padding: 12px 16px 0;
+    margin-bottom: 16px;
   }
 
   .lnb-group-title {
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
 
   .lnb-items {
+    height: auto;             /* 고정 72px 해제 */
     justify-content: flex-start;
     overflow-x: auto;
-    overflow-y: hidden;       /* 상하 스크롤 완전 차단 */
+    overflow-y: hidden;
     flex-wrap: nowrap;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x;      /* 좌우 스와이프만 허용 */
-    padding: 0 16px;
+    touch-action: pan-x;
+    padding: 6px 8px;
   }
   .lnb-items::-webkit-scrollbar { display: none; }
 
+  /* 스크롤 힌트 — 오른쪽(has-overflow) / 왼쪽(scrolled-right) */
+  .sub-lnb {
+    position: relative;
+  }
+  .sub-lnb.has-overflow::after,
+  .sub-lnb.scrolled-right::before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    bottom: 0;
+    width: 36px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .sub-lnb.has-overflow::after {
+    right: 16px;
+    background: linear-gradient(to right, transparent, #fff);
+  }
+  .sub-lnb.scrolled-right::before {
+    left: 16px;
+    background: linear-gradient(to left, transparent, #fff);
+  }
+
   .lnb-item {
-    padding: 10px 20px 12px;
-    font-size: 0.875rem;
+    padding: 8px 18px;
+    font-size: var(--text-sm);
     flex-shrink: 0;
   }
   .lnb-item.active {
-    padding-left: 20px;
+    padding-left: 18px;
   }
 
   .sub-content {

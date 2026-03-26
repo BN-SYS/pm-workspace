@@ -16,6 +16,10 @@
     display: flex;
   }
 
+  .mobile-sitemap-btn {
+    display: flex;
+  }
+
   /* 모바일 헤더: 인증 버튼 숨김 (모바일 드로어에서 접근 가능) */
   #authArea {
     display: none;
@@ -74,7 +78,7 @@
   }
 
   .content-wrap {
-    padding: 36px 16px 60px;
+    padding: 20px 16px 48px;
   }
 
   .page-header {
@@ -83,6 +87,16 @@
 
   .page-header h1 {
     font-size: var(--text-xl);
+  }
+
+  .page-header p {
+    font-size: var(--text-sm);
+  }
+
+  /* sub-content 안의 content-wrap: 이중 패딩 방지 */
+  .sub-content .content-wrap {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   /* ── 서브메뉴 탭: 모바일 가로 스크롤 (Plan B)

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>온라인테스트 문의 상세</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --color-bg: #f8f8f8;
+            --color-surface: #ffffff;
+            --color-text: #1a1a1a;
+            --color-heading: #111111;
+            --color-accent: #1a4fad;
+            --color-accent-hover: #163f8a;
+            --color-muted: #999999;
+            --color-border: #d8d8d8;
+            --color-success: #22863a;
+            --color-warning: #d68910;
+            --color-info: #1a4fad;
+            --font-main: 'Noto Sans KR', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 13px;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 0.8;
+        }
+
+        .admin-wrap {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--color-surface);
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== 상단 헤더 ===== */
+        .detail-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--color-border);
+            position: relative;
+        }
+
+        .detail-header h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--color-muted);
+        }
+
+        /* ===== 메인 콘텐츠 ===== */
+        .content-area {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        /* ===== 카드 ===== */
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            margin-bottom: 16px;
+        }
+
+        .card-header {
+            padding: 12px 16px;
+            background: #f5f5f5;
+            border-bottom: 1px solid var(--color-border);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .card-body {
+            padding: 0;
+        }
+
+        /* ===== 기본정보 (좌우 배치) ===== */
+        .info-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .info-row-item {
+            padding: 12px 16px;
+            border-right: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 8px;
+        }
+
+        .info-row-item:nth-child(even) {
+            border-right: none;
+        }
+
+        .info-row-item:nth-last-child(-n+2) {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--color-heading);
+            font-size: 0.85rem;
+        }
+
+        .info-value {
+            color: var(--color-text);
+            font-size: 0.9rem;
+            word-break: break-word;
+        }
+
+        /* ===== 상태 배지 (우측 상단) ===== */
+        .status-wrapper {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            height: 24px;
+            padding: 0 8px;
+            border-radius: 2px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            line-height: 24px;
+            white-space: nowrap;
+        }
+
+        .status-badge.receipt {
+            background: #e7f3ff;
+            color: var(--color-info);
+        }
+
+        .status-badge.progress {
+            background: #fff3cd;
+            color: var(--color-warning);
+        }
+
+        .status-badge.complete {
+            background: #d4edda;
+            color: var(--color-success);
+        }
+
+        /* ===== 문의내용 ===== */
+        .full-width {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .full-width-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--color-border);
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 8px;
+        }
+
+        .full-width-item:last-child {
+            border-bottom: none;
+        }
+
+        .content-value {
+            color: var(--color-text);
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.5;
+        }
+
+        /* ===== 첨부파일 ===== */
+        .attachment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .attachment-name {
+            color: var(--color-accent);
+            text-decoration: none;
+            flex: 1;
+            word-break: break-all;
+        }
+
+        .attachment-name:hover {
+            text-decoration: underline;
+        }
+
+        .attachment-size {
+            font-size: 0.8rem;
+            color: var(--color-muted);
+            white-space: nowrap;
+        }
+
+        .empty-state {
+            color: var(--color-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ===== 관리 폼 ===== */
+        .form-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .form-item:last-child {
+            border-bottom: none;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--color-heading);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-hint {
+            font-weight: 400;
+            color: var(--color-muted);
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-control {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-select,
+        .form-textarea {
+            font-family: var(--font-main);
+            font-size: 0.9rem;
+            padding: 8px 10px;
+            border: 1px solid var(--color-border);
+            background: #fff;
+            color: var(--color-text);
+            outline: none;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            padding-right: 24px;
+            cursor: pointer;
+        }
+
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 2px rgba(26, 79, 173, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-size: 0.85rem;
+        }
+
+        /* ===== 관리 카드 푸터 버튼 ===== */
+        .card-footer {
+            padding: 12px 16px;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        /* ===== 하단 버튼 ===== */
+        .button-group {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            padding: 16px;
+            border-top: 1px solid var(--color-border);
+            flex-shrink: 0;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            font-family: var(--font-main);
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .btn-save {
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        .btn-save:hover {
+            background: var(--color-accent-hover);
+        }
+
+        .btn-delete {
+            background: #f0f0f0;
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-delete:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-list {
+            background: #f0f0f0;
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-list:hover {
+            background: #e0e0e0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="admin-wrap">
+
+        <!-- 헤더 -->
+        <div class="detail-header">
+            <div>
+                <h1>온라인테스트 문의</h1>
+                <div class="header-info" style="display: none;">
+                    <span id="info-id">#1</span>
+                    <span id="info-date">2026-03-26</span>
+                </div>
+            </div>
+            <div class="status-wrapper">
+                <span class="status-badge receipt" id="status-display">접수</span>
+            </div>
+        </div>
+
+        <!-- 콘텐츠 영역 -->
+        <div class="content-area">
+
+            <!-- 기본정보 -->
+            <div class="card">
+                <div class="card-header">기본정보</div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <div class="info-row-item">
+                            <div class="info-label">문의번호</div>
+                            <div class="info-value" id="basic-id">#1</div>
+                        </div>
+                        <div class="info-row-item">
+                            <div class="info-label">접수일</div>
+                            <div class="info-value" id="basic-date">2026-03-26</div>
+                        </div>
+                        <div class="info-row-item">
+                            <div class="info-label">이름</div>
+                            <div class="info-value" id="basic-name">-</div>
+                        </div>
+                        <div class="info-row-item">
+                            <div class="info-label">출생연도</div>
+                            <div class="info-value" id="basic-birth">-</div>
+                        </div>
+                        <div class="info-row-item">
+                            <div class="info-label">이메일</div>
+                            <div class="info-value" id="basic-email">-</div>
+                        </div>
+                        <div class="info-row-item">
+                            <div class="info-label">전화번호</div>
+                            <div class="info-value" id="basic-phone">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 문의내용 -->
+            <div class="card">
+                <div class="card-header">문의내용</div>
+                <div class="card-body">
+                    <div class="full-width">
+                        <div class="full-width-item">
+                            <div class="info-label">제목</div>
+                            <div class="info-value" id="inquiry-title">-</div>
+                        </div>
+                        <div class="full-width-item">
+                            <div class="info-label">내용</div>
+                            <div class="content-value" id="inquiry-content">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 첨부파일 -->
+            <div class="card">
+                <div class="card-header">첨부파일</div>
+                <div class="card-body">
+                    <div class="full-width-item">
+                        <div class="info-label">파일</div>
+                        <div id="attachment-container">
+                            <span class="empty-state">첨부파일 없음</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 관리 -->
+            <div class="card">
+                <div class="card-header">관리</div>
+                <div class="card-body">
+                    
+                    <div class="form-item">
+                        <label class="form-label">상태</label>
+                        <div class="form-control">
+                            <select id="status-select" class="form-select">
+                                <option value="receipt">접수</option>
+                                <option value="progress">처리 중</option>
+                                <option value="complete">처리 완료</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-item">
+                        <label class="form-label">답변내용</label>
+                        <span class="form-hint">답변 등록시, 고객 이메일로 답변이 발송됩니다.</span>
+                        <div class="form-control">
+                            <textarea id="reply-field" class="form-textarea" placeholder="고객에게 발송할 답변 내용을 입력하세요"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-item">
+                        <label class="form-label">담당자 메모</label>
+                        <span class="form-hint">내부 관리용 메모입니다.</span>
+                        <div class="form-control">
+                            <textarea id="memo-field" class="form-textarea" placeholder="내부 참고사항을 기록하세요"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-save" onclick="saveChanges()">저장</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 하단 버튼 -->
+        <div class="button-group">
+            <button class="btn btn-delete" onclick="deleteInquiry()">삭제</button>
+            <button class="btn btn-list" onclick="goList()">목록</button>
+        </div>
+
+    </div>
+
+    <script>
+        const inquiryData = {
+            id: 1,
+            name: '김철수',
+            birthYear: 1990,
+            email: 'kim@gmail.com',
+            phone: '010-1234-5678',
+            title: '온라인테스트 접속이 안 됩니다',
+            content: '온라인테스트에 접속하려고 하는데 계속 오류가 발생합니다.\n오류 메시지는 "접속 실패"라고 나옵니다.\n어떻게 해야 하나요?',
+            attachments: [
+                { name: 'error_screenshot.jpg', size: '524 KB', url: '#' },
+                { name: 'system_info.txt', size: '12 KB', url: '#' }
+            ],
+            status: 'receipt',
+            createdAt: '2026-03-26',
+            memo: ''
+        };
+
+        function loadDetail() {
+            document.getElementById('info-id').textContent = `#${inquiryData.id}`;
+            document.getElementById('info-date').textContent = inquiryData.createdAt;
+            document.getElementById('basic-id').textContent = `#${inquiryData.id}`;
+            document.getElementById('basic-date').textContent = inquiryData.createdAt;
+            document.getElementById('basic-name').textContent = inquiryData.name;
+            document.getElementById('basic-birth').textContent = inquiryData.birthYear + '년';
+            document.getElementById('basic-email').textContent = inquiryData.email;
+            document.getElementById('basic-phone').textContent = inquiryData.phone || '미입력';
+            document.getElementById('inquiry-title').textContent = inquiryData.title;
+            document.getElementById('inquiry-content').textContent = inquiryData.content;
+
+            document.getElementById('status-select').value = inquiryData.status;
+            document.getElementById('memo-field').value = inquiryData.memo;
+
+            updateStatusBadge();
+            renderAttachments();
+        }
+
+        function updateStatusBadge() {
+            const statusMap = { 'receipt': '접수', 'progress': '처리 중', 'complete': '처리 완료' };
+            const badge = document.getElementById('status-display');
+            const status = document.getElementById('status-select').value;
+            badge.textContent = statusMap[status];
+            badge.className = `status-badge ${status}`;
+        }
+
+        function renderAttachments() {
+            const container = document.getElementById('attachment-container');
+            if (!inquiryData.attachments || inquiryData.attachments.length === 0) {
+                container.innerHTML = '<span class="empty-state">첨부파일 없음</span>';
+                return;
+            }
+            let html = '<div class="attachment-list">';
+            inquiryData.attachments.forEach(att => {
+                html += `
+                    <div class="attachment-item">
+                        <a href="${att.url}" class="attachment-name">${att.name}</a>
+                        <span class="attachment-size">${att.size}</span>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        document.getElementById('status-select').addEventListener('change', updateStatusBadge);
+
+        function saveChanges() {
+            const newStatus = document.getElementById('status-select').value;
+            const memo = document.getElementById('memo-field').value;
+            const reply = document.getElementById('reply-field').value.trim();
+
+            console.log('저장 데이터:', { id: inquiryData.id, newStatus, memo, reply });
+            alert('저장되었습니다.');
+        }
+
+        function deleteInquiry() {
+            if (confirm('정말 삭제하시겠습니까?')) {
+                console.log('삭제:', inquiryData.id);
+                alert('삭제되었습니다.');
+                goList();
+            }
+        }
+
+        function goList() {
+            window.location.href = '/admin/inquiry/list.html';
+        }
+
+        loadDetail();
+    </script>
+
+</body>
+</html>

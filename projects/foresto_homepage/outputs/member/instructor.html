@@ -18,8 +18,7 @@
 
 <div class="page-header">
   <div class="container">
-    <h1>숲해설 강사 신청</h1>
-    <p>숲해설 강사 활동 참여 신청</p>
+    <h1>강사 신청</h1>
   </div>
 </div>
 
@@ -62,22 +61,67 @@
           <input type="email" class="form-control" id="iEmail" placeholder="example@email.com">
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <div class="form-group">
-          <label class="form-label">거주 지역 <span class="req">*</span></label>
-          <select class="form-control" id="iRegion">
-            <option value="">선택</option>
-            <option>서울</option><option>경기</option><option>인천</option>
-            <option>부산</option><option>대구</option><option>광주</option>
-            <option>대전</option><option>울산</option><option>기타</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">활동 가능 요일</label>
-          <select class="form-control" id="iDay">
-            <option value="">선택</option>
-            <option>평일(월~금)</option><option>주말(토/일)</option><option>무관</option>
-          </select>
+      <div class="form-group">
+        <label class="form-label">거주 지역 <span class="req">*</span></label>
+        <select class="form-control" id="iRegion">
+          <option value="">선택</option>
+          <option>서울</option><option>경기</option><option>인천</option>
+          <option>부산</option><option>대구</option><option>광주</option>
+          <option>대전</option><option>울산</option><option>기타</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">활동 가능 요일 <span style="font-size:12px;font-weight:400;color:var(--gray-mid)">(중복 선택 가능)</span></label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;padding:10px 0">
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none">
+            <input type="checkbox" name="iDay" id="iDayFree" value="무관"
+              onchange="InstructorForm.onDayFree(this)"
+              style="width:16px;height:16px;accent-color:var(--green-main);cursor:pointer">
+            <span style="font-size:14px;font-weight:600;color:var(--gray-dark)">무관</span>
+          </label>
+          <span style="color:#ddd;align-self:center">|</span>
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none">
+            <input type="checkbox" name="iDay" value="월"
+              onchange="InstructorForm.onDayCheck(this)"
+              style="width:16px;height:16px;accent-color:var(--green-main);cursor:pointer">
+            <span style="font-size:14px;color:var(--gray-dark)">월</span>
+          </label>
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none">
+            <input type="checkbox" name="iDay" value="화"
+              onchange="InstructorForm.onDayCheck(this)"
+              style="width:16px;height:16px;accent-color:var(--green-main);cursor:pointer">
+            <span style="font-size:14px;color:var(--gray-dark)">화</span>
+          </label>
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none">
+            <input type="checkbox" name="iDay" value="수"
+              onchange="InstructorForm.onDayCheck(this)"
+              style="width:16px;height:16px;accent-color:var(--green-main);cursor:pointer">
+            <span style="font-size:14px;color:var(--gray-dark)">수</span>
+          </label>
+          <label style="display:inline-flex;align-items:center;gap=6px;cursor:pointer;user-select:none">
+            <input type="checkbox" name="iDay" value="목"
+              onchange="InstructorForm.onDayCheck(this)"
+              style="width:16px;height:16px;accent-color:var(--green-main);cursor:pointer">
+            <span style="font-size:14px;color:var(--gray-dark)">목</span>
+          </label>
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none">
+            <input type="checkbox" name="iDay" value="금"
+              onchange="InstructorForm.onDayCheck(this)"
+              style="width:16px;height:16px;accent-color:var(--green-main);cursor:pointer">
+            <span style="font-size:14px;color:var(--gray-dark)">금</span>
+          </label>
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none">
+            <input type="checkbox" name="iDay" value="토"
+              onchange="InstructorForm.onDayCheck(this)"
+              style="width:16px;height:16px;accent-color:var(--green-main);cursor:pointer">
+            <span style="font-size:14px;color:var(--gray-dark)">토</span>
+          </label>
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none">
+            <input type="checkbox" name="iDay" value="일"
+              onchange="InstructorForm.onDayCheck(this)"
+              style="width:16px;height:16px;accent-color:var(--green-main);cursor:pointer">
+            <span style="font-size:14px;color:var(--gray-dark)">일</span>
+          </label>
         </div>
       </div>
       <div class="form-group">
@@ -139,6 +183,21 @@
     document.getElementById('lnb').innerHTML = LNB.render('../', 'member/instructor.html');
 
   const InstructorForm = {
+    /* 무관 선택 시 → 개별 요일 모두 해제 */
+    onDayFree(cb) {
+      if (cb.checked) {
+        document.querySelectorAll('input[name="iDay"]:not(#iDayFree)')
+          .forEach(c => { c.checked = false; });
+      }
+    },
+    /* 개별 요일 선택 시 → 무관 해제 */
+    onDayCheck(cb) {
+      if (cb.checked) {
+        const free = document.getElementById('iDayFree');
+        if (free) free.checked = false;
+      }
+    },
+
     submit() {
       const name   = document.getElementById('iName').value.trim();
       const phone  = document.getElementById('iPhone').value.trim();

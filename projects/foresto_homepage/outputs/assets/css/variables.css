@@ -22,6 +22,12 @@ html[data-font="lg"] {
    font-size: 18px;
 }
 
+/* 모바일: 글자 크기 단계를 한 단계 낮춰 적용 */
+@media (max-width: 768px) {
+  html[data-font="md"] { font-size: 15px; }
+  html[data-font="lg"] { font-size: 16px; }
+}
+
 :root {
    /* 색상 */
    --green-dark: #20281A;

@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온라인테스트 문의내역 — 목록</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f2f3f5;
+            --surface: #fff;
+            --border: #dde0e7;
+            --border-l: #eceef2;
+            --text: #1a1d23;
+            --text-s: #5a6072;
+            --text-m: #9aa0b0;
+            --accent: #2563EB;
+            --gnb: #2b2e38;
+            --dark: #3a3d47;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* GNB */
+        .gnb {
+            display: flex;
+            align-items: stretch;
+            background: var(--gnb);
+            height: 60px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .gi {
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            font-size: 16px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.6);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all .15s;
+        }
+
+        .gi:hover {
+            background: rgba(255, 255, 255, 0.07);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .gi.on {
+            background: var(--accent);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Layout */
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 44px);
+        }
+
+        /* LNB */
+        .lnb {
+            width: 180px;
+            min-width: 180px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+        }
+
+        .lnb-h {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-l);
+        }
+
+        .lnb-ico {
+            width: 26px;
+            height: 26px;
+            background: linear-gradient(135deg, #2563EB, #1d4ed8);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lnb-ico svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        .lnb-t {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .lm {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 16px;
+            font-size: 14px;
+            color: var(--text-s);
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all .15s;
+        }
+
+        .lm:hover {
+            background: var(--bg);
+        }
+
+        .lm.on {
+            background: #eff6ff;
+            color: var(--accent);
+            border-left-color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            padding: 20px 24px;
+            min-width: 0;
+        }
+
+        .bc {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-m);
+            margin-bottom: 16px;
+        }
+
+        .bc span {
+            color: var(--border);
+        }
+
+        .bc b {
+            color: var(--text-s);
+        }
+
+        /* Card */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
+            animation: fu .3s ease;
+        }
+
+        @keyframes fu {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Page bar */
+        .pb {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--dark);
+            padding: 0 18px;
+            height: 42px;
+        }
+
+        .pb-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .btn-reg {
+            height: 28px;
+            padding: 0 14px;
+            background: var(--success);
+            color: #fff;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-reg:hover {
+            background: #15803d;
+        }
+
+        /* Filter */
+        .fw {
+            padding: 14px 18px 10px;
+            border-bottom: 1px solid var(--border-l);
+            background: #fafbfc;
+        }
+
+        .fr {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .fr:last-child {
+            margin-bottom: 0;
+        }
+
+        .fl {
+            width: 72px;
+            min-width: 72px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-s);
+        }
+
+        .fs,
+        .fi {
+            height: 30px;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            background: var(--surface);
+            font-family: inherit;
+            font-size: 13px;
+            color: var(--text);
+            padding: 0 10px;
+            outline: none;
+            transition: border .15s;
+        }
+
+        .fs {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239aa0b0'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            padding-right: 26px;
+            width: 120px;
+        }
+
+        .fi {
+            width: 120px;
+        }
+
+        .fs:focus,
+        .fi:focus {
+            border-color: var(--accent);
+        }
+
+        .fdash {
+            color: var(--text-m);
+            font-size: 13px;
+        }
+
+        .fsp {
+            flex: 1;
+        }
+
+        .pills {
+            display: flex;
+            gap: 4px;
+        }
+
+        .pill {
+            height: 24px;
+            padding: 0 10px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            background: var(--surface);
+            color: var(--text-s);
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .pill:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .pill.on {
+            background: var(--success);
+            border-color: var(--success);
+            color: #fff;
+        }
+
+        .fa {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            padding-top: 10px;
+        }
+
+        .btn-rst {
+            height: 30px;
+            padding: 0 16px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            background: var(--surface);
+            font-family: inherit;
+            font-size: 13px;
+            color: var(--text-s);
+            cursor: pointer;
+        }
+
+        .btn-rst:hover {
+            border-color: var(--text-s);
+        }
+
+        .btn-srch {
+            height: 30px;
+            padding: 0 20px;
+            border: none;
+            border-radius: 5px;
+            background: var(--dark);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .btn-srch:hover {
+            background: #222;
+        }
+
+        /* Table meta */
+        .tm {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 18px;
+            border-bottom: 1px solid var(--border-l);
+        }
+
+        .rc {
+            font-size: 13px;
+            color: var(--text-s);
+        }
+
+        .rc b {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .pps {
+            height: 26px;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            background: var(--surface);
+            font-family: inherit;
+            font-size: 13px;
+            color: var(--text-s);
+            padding: 0 8px;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%239aa0b0'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 6px center;
+            padding-right: 22px;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead tr {
+            background: #f7f8fa;
+        }
+
+        th {
+            padding: 9px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-s);
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        th.c,
+        td.c {
+            text-align: center;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-l);
+            color: var(--text);
+            vertical-align: middle;
+        }
+
+        td.mu {
+            color: var(--text-m);
+        }
+
+        tbody tr {
+            transition: background .1s;
+        }
+
+        tbody tr:hover {
+            background: #f4f7ff;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rl {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color .15s;
+        }
+
+        .rl:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .bb {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .by {
+            background: #fffbeb;
+            color: #b45309;
+        }
+
+        .bg {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .bgr {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        /* Pagination */
+        .pagi {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+            gap: 4px;
+        }
+
+        .pg {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-s);
+            cursor: pointer;
+            background: var(--surface);
+            transition: all .15s;
+            user-select: none;
+        }
+
+        .pg:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .pg.on {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Bulk */
+        .bulk {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 10px 18px;
+            border-top: 1px solid var(--border-l);
+            background: #fafbfc;
+        }
+
+        .btn-del {
+            height: 28px;
+            padding: 0 14px;
+            border: 1px solid #fecaca;
+            border-radius: 5px;
+            background: #fef2f2;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--danger);
+            cursor: pointer;
+        }
+
+        .btn-del:hover {
+            background: #fee2e2;
+        }
+
+        /* Description */
+        .dw {
+            margin-top: 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
+        }
+
+        .dh {
+            background: var(--dark);
+            padding: 10px 18px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: .02em;
+        }
+
+        .db {
+            padding: 18px 20px;
+        }
+
+        .desc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .desc-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.65;
+        }
+
+        .desc-list li::before {
+            content: '';
+            display: block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        .desc-list a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .desc-list a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="gnb">
+        <div class="gi">회원관리</div>
+        <div class="gi">입회테스트 관리</div>
+        <div class="gi">오리엔테이션 관리</div>
+        <div class="gi">온라인테스트 관리</div>
+        <div class="gi">결제 관리</div>
+        <div class="gi">콘텐츠 관리</div>
+        <div class="gi on">문의 관리</div>
+        <div class="gi">시스템 관리</div>
+    </nav>
+
+    <div class="layout">
+        <aside class="lnb">
+            <div class="lnb-h">
+                <div class="lnb-ico"><svg viewBox="0 0 13 13" fill="none">
+                        <path d="M2 3h9M2 6.5h6.5M2 10h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" />
+                    </svg></div>
+                <div class="lnb-t">문의 관리</div>
+            </div>
+            <div style="padding:8px 0;">
+                <div class="lm">문의 내역 <span>›</span></div>
+                <div class="lm on">온라인테스트 문의내역 <span>›</span></div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <div class="bc">HOME <span>›</span> 문의 관리 <span>›</span> <b>온라인테스트 문의내역</b></div>
+
+            <div class="card">
+                <div class="pb">
+                    <div class="pb-title">온라인테스트 문의내역</div>
+                </div>
+
+                <div class="fw">
+                    <div class="fr">
+                        <div class="fl" style="width:auto;">답변상태</div>
+                        <select class="fs">
+                            <option>전체</option>
+                            <option>답변중</option>
+                            <option>중간답변</option>
+                            <option>답변완료</option>
+                        </select>
+                    </div>
+                    <div class="fr">
+                        <div class="fl">작성일</div>
+                        <input class="fi" type="text" placeholder="YYYY-MM-DD">
+                        <div class="fdash">-</div>
+                        <input class="fi" type="text" placeholder="YYYY-MM-DD">
+                        <div class="pills">
+                            <div class="pill">오늘</div>
+                            <div class="pill">7일</div>
+                            <div class="pill on">30일</div>
+                            <div class="pill">3개월</div>
+                            <div class="pill">6개월</div>
+                        </div>
+                    </div>
+                    <div class="fr">
+                        <div class="fl">조건검색</div>
+                        <select class="fs">
+                            <option>검색기준</option>
+                            <option>이름</option>
+                            <option>이메일</option>
+                            <option>전화번호</option>
+                            <option>제목</option>
+                        </select>
+                        <input class="fi" type="text" placeholder="검색어를 입력하세요" style="width:280px;">
+                    </div>
+                    <div class="fa">
+                        <button class="btn-rst">초기화</button>
+                        <button class="btn-srch">검색</button>
+                    </div>
+                </div>
+
+                <div class="tm">
+                    <div class="rc">• 검색결과 총 <b>5</b>건</div>
+                    <select class="pps">
+                        <option>10개씩</option>
+                        <option>20개씩</option>
+                        <option>50개씩</option>
+                    </select>
+                </div>
+
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="c" style="width:38px;"><input type="checkbox" id="all"></th>
+                                <th class="c" style="width:48px;">No.</th>
+                                <th style="width:80px;">이름</th>
+                                <th style="width:72px;">출생년도</th>
+                                <th style="width:160px;">이메일</th>
+                                <th style="width:130px;">전화번호</th>
+                                <th>제목</th>
+                                <th style="width:100px;">접수일</th>
+                                <th class="c" style="width:86px;">상태</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="c"><input type="checkbox"></td>
+                                <td class="c">1</td>
+                                <td>김철수</td>
+                                <td>1990</td>
+                                <td>kim@gmail.com</td>
+                                <td class="mu">010-1234-5678</td>
+                                <td><a class="rl" href="./wireframe_detail.html">온라인테스트 접속이 안 됩니다</a></td>
+                                <td>2026-03-26</td>
+                                <td class="c"><span class="badge bb">접수</span></td>
+                            </tr>
+                            <tr>
+                                <td class="c"><input type="checkbox"></td>
+                                <td class="c">2</td>
+                                <td>박영희</td>
+                                <td>1988</td>
+                                <td>park@naver.com</td>
+                                <td class="mu">010-9876-5432</td>
+                                <td><a class="rl" href="./wireframe_detail.html">결과지 재발급 요청</a></td>
+                                <td>2026-03-25</td>
+                                <td class="c"><span class="badge by">처리중</span></td>
+                            </tr>
+                            <tr>
+                                <td class="c"><input type="checkbox"></td>
+                                <td class="c">3</td>
+                                <td>이민준</td>
+                                <td>1995</td>
+                                <td>lee@daum.net</td>
+                                <td class="mu">010-5555-1234</td>
+                                <td><a class="rl" href="./wireframe_detail.html">응시 기간 연장 요청</a></td>
+                                <td>2026-03-20</td>
+                                <td class="c"><span class="badge bg">처리 완료</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagi">
+                    <div class="pg">‹</div>
+                    <div class="pg on">1</div>
+                    <div class="pg">2</div>
+                    <div class="pg">3</div>
+                    <div class="pg">4</div>
+                    <div class="pg">5</div>
+                    <div class="pg">›</div>
+                </div>
+
+                <div class="bulk">
+                    <button class="btn-del" id="delBtn" disabled style="opacity:.4;cursor:not-allowed;">선택삭제</button>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="dw">
+                <div class="dh">Description — 온라인테스트 문의내역 목록</div>
+                <div class="db">
+                    <ul class="desc-list">
+
+                        <li>사용자 화면에서 제출된 온라인테스트
+                            문의(비회원도 가능)를 관리하기 위해 기존 문의 관리 메뉴에 하위 메뉴 <strong>'온라인테스트 문의내역'</strong> 을 추가.</li>
+                        <li>검색 필터 레이아웃은 기존 문의 내역 화면과 동일하며, 조건검색의 검색기준은 드롭다운은 <strong>이름 / 이메일 / 전화번호 / 제목</strong>으로 적용.
+                        </li>
+                        <li>문의하기와 동일하게 답변상태에 따라 행 컬러를 다르게 적용(답변중-#FFE0DC,중간답변-#FFFED4,답변완료-흰색바탕) </li>
+                        <li>체크박스 선택 후 [선택삭제] 버튼을 통해 일괄 삭제 가능.</li>
+                        <li>행 클릭시 해당 문의 상세 페이지 이동.</li>
+                    </ul>
+                    <hr style="margin:20px 0;">
+                    <ul class="desc-list">
+                        <h1>사용자 문의폼 디스크립션</h1>
+                        <li>사용자 화면(<a href="https://test.mensakorea.kr/onlinetest-Inquiry-form.php"
+                                target="_blank">https://test.mensakorea.kr/onlinetest-Inquiry-form.php</a>)</strong>
+                        </li>                        
+                        <li>
+                            응시정보인 <strong>이름·출생연도·이메일</strong>은 필수 입력 항목이다.
+                            <span class="sub">출생연도 드롭다운: 테스트응시정보 입력과 동일하게 현재 연도 기준 -8년 ~ 1930년까지 자동 생성 (JS로 초기화)</span>
+                        </li>                        
+                        <li>
+                            <strong>유효성 검사</strong>는 제출 버튼 클릭 시 실행된다. 오류 발생 시 해당 필드에 빨간 테두리와 오류 메시지가 인라인으로 표시되며, 첫 번째 오류 필드로 자동 스크롤·포커스된다.
+                            <span class="sub">필수 항목: 이름 / 출생연도 / 이메일 / 문의 제목 / 문의 내용 / 개인정보 동의</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        document.querySelectorAll('.pill').forEach(p => {
+            p.addEventListener('click', function () {
+                document.querySelectorAll('.pill').forEach(x => x.classList.remove('on'));
+                this.classList.add('on');
+            });
+        });
+        const allCb = document.getElementById('all');
+        const cbs = document.querySelectorAll('tbody input[type="checkbox"]');
+        const delBtn = document.getElementById('delBtn');
+        function syncDel() {
+            const checked = document.querySelectorAll('tbody input[type="checkbox"]:checked').length;
+            delBtn.disabled = checked === 0;
+            delBtn.style.opacity = checked === 0 ? '0.4' : '1';
+            delBtn.style.cursor = checked === 0 ? 'not-allowed' : 'pointer';
+        }
+        allCb.addEventListener('change', function () {
+            cbs.forEach(c => c.checked = this.checked);
+            syncDel();
+        });
+        cbs.forEach(c => c.addEventListener('change', syncDel));
+    </script>
+</body>
+
+</html>

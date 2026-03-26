@@ -1,59 +1,300 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>정회원신청 관리 | 관리자 | 한국숲해설가협회</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-
-    <!-- 경로 기준: v2/admin/pages/apply-regular.html -->
-    <link rel="stylesheet" href="../assets/css/common.css">
-    <link rel="stylesheet" href="../assets/css/components.css">
-    <link rel="stylesheet" href="../assets/css/responsive.css">
-    <link rel="stylesheet" href="../assets/css/list-common.css">
-    <link rel="stylesheet" href="../assets/css/pages/admin.css">
-
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>숲해설신청 관리 | 관리자 | 한국숲해설가협회</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/list-common.css">
+  <link rel="stylesheet" href="../assets/css/pages/admin.css">
+  <style>
+    .filter-card { background:#fff; border:1px solid #e3eadd; border-radius:10px; margin-bottom:16px; overflow:hidden; }
+    .filter-body { display:flex; flex-direction:column; }
+    .filter-row { display:flex; align-items:stretch; min-height:46px; border-bottom:1px solid #f0f4ee; }
+    .filter-row:last-child { border-bottom:none; }
+    .filter-label { width:84px; min-width:84px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#7a8e74; letter-spacing:.04em; text-align:center; white-space:nowrap; background:#f8faf6; border-right:1px solid #e8efe3; }
+    .filter-content { flex:1; padding:10px 18px; display:flex; align-items:center; min-width:0; gap:6px; flex-wrap:wrap; }
+    .filter-half { flex:1; display:flex; align-items:stretch; min-width:0; }
+    .filter-half + .filter-half { border-left:1px solid #f0f4ee; }
+    .date-pair { display:flex; align-items:center; gap:6px; }
+    .date-pair input[type="date"] { width:140px; height:34px; padding:0 10px; border:1px solid #d5e0ce; border-radius:6px; font-size:13px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; cursor:pointer; }
+    .date-pair input[type="date"]:focus { border-color:#508829; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
+    .date-sep { color:#aabba4; font-size:13px; padding:0 2px; }
+    .date-preset-group { display:flex; gap:4px; flex-wrap:wrap; }
+    .date-preset-btn { height:28px; padding:0 10px; border:1px solid #d5e0ce; border-radius:99px; font-size:12px; font-family:'Noto Sans KR',sans-serif; color:#6a7e64; background:#fafcf9; cursor:pointer; white-space:nowrap; transition:all .15s; }
+    .date-preset-btn:hover { background:#e8f0e2; border-color:#508829; color:#508829; }
+    .kw-wrap { display:flex; align-items:center; gap:6px; width:100%; }
+    .kw-wrap select { flex-shrink:0; width:116px; height:34px; padding:0 8px; border:1px solid #d5e0ce; border-radius:6px; font-size:13px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; cursor:pointer; }
+    .kw-wrap select:focus { border-color:#508829; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
+    .kw-input-wrap { position:relative; flex:1; }
+    .kw-input-wrap input { width:100%; height:34px; padding:0 38px 0 12px; border:1px solid #d5e0ce; border-radius:6px; font-size:13px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; box-sizing:border-box; }
+    .kw-input-wrap input:focus { border-color:#508829; background:#fff; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
+    .kw-input-wrap input::placeholder { color:#aabba4; }
+    .filter-footer { display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:12px 18px; background:#f8faf6; border-top:1px solid #e8efe3; }
+    .table-bottom-bar { display:flex; justify-content:flex-end; align-items:center; margin-top:12px; }
+    .admin-table tbody tr { cursor:pointer; }
+    .admin-table .cell-datetime { font-variant-numeric:tabular-nums; color:#111; }
+  </style>
 </head>
-
 <body class="admin-body">
-    <div class="admin-layout">
-        <aside class="admin-sidebar" id="adminSidebar">
-            <div class="admin-sidebar-head">
-                <span class="adm-sb-title">MENU</span>
-                <button class="sidebar-toggle" onclick="AdminLayout.toggleSidebar()" aria-label="사이드바 토글">☰</button>
-            </div>
-            <nav class="admin-nav" id="adminNavMount" aria-label="관리자 메뉴"></nav>
-        </aside>
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-head">
+        <span class="adm-sb-title">MENU</span>
+        <button class="sidebar-toggle" onclick="AdminLayout.toggleSidebar()" aria-label="사이드바 토글">☰</button>
+      </div>
+      <nav class="admin-nav" id="adminNavMount" aria-label="관리자 메뉴"></nav>
+    </aside>
 
-        <main class="admin-main">
-            <div class="admin-topbar">
-                <h1 class="admin-page-title" id="pageTitle">숲해설신청 관리</h1>
-                <div class="admin-topbar-actions">
-                    <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img
-                            src="../../../../common_assets/icons/refresh.png" alt="새로고침"></button>
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <h1 class="admin-page-title">숲해설신청 관리</h1>
+        <div class="admin-topbar-actions">
+          <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../../../../common_assets/icons/refresh.png" alt="새로고침"></button>
+        </div>
+      </div>
+
+      <!-- 검색 필터 -->
+      <div class="filter-card">
+        <div class="filter-body">
+
+          <!-- 행1: 신청기간 / 방문희망일 -->
+          <div class="filter-row">
+            <div class="filter-half">
+              <span class="filter-label">신청기간</span>
+              <div class="filter-content">
+                <div class="date-pair">
+                  <input type="date" id="filterDateFrom">
+                  <span class="date-sep">—</span>
+                  <input type="date" id="filterDateTo">
                 </div>
+                <div class="date-preset-group">
+                  <button class="date-preset-btn" onclick="ForestApply.setDatePreset('today')">오늘</button>
+                  <button class="date-preset-btn" onclick="ForestApply.setDatePreset(7)">7일</button>
+                  <button class="date-preset-btn" onclick="ForestApply.setDatePreset(30)">30일</button>
+                  <button class="date-preset-btn" onclick="ForestApply.setDatePreset(90)">3개월</button>
+                </div>
+              </div>
             </div>
-        </main>
-    </div>
+            <div class="filter-half">
+              <span class="filter-label">방문희망일</span>
+              <div class="filter-content">
+                <div class="date-pair">
+                  <input type="date" id="filterVisitFrom">
+                  <span class="date-sep">—</span>
+                  <input type="date" id="filterVisitTo">
+                </div>
+              </div>
+            </div>
+          </div>
 
+          <!-- 행2: 검색어 -->
+          <div class="filter-row">
+            <span class="filter-label">검색어</span>
+            <div class="filter-content">
+              <div class="kw-wrap">
+                <select id="filterSearchType">
+                  <option value="all">전체</option>
+                  <option value="orgName">기관명</option>
+                  <option value="contactName">담당자명</option>
+                  <option value="phone">연락처</option>
+                </select>
+                <div class="kw-input-wrap">
+                  <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요"
+                    onkeydown="if(event.key==='Enter') ForestApply.search()">
+                </div>
+              </div>
+            </div>
+          </div>
 
-    <!-- 경로 기준: v2/admin/pages/apply-regular.html -->
-    <script src="../assets/js/app.js"></script>
-    <script src="../assets/js/components/header.js"></script>
-    <script src="../assets/js/pages/admin.js"></script>
-    <script>
-        'use strict';
+        </div>
+        <div class="filter-footer">
+          <button class="btn btn-outline btn-sm" onclick="ForestApply.exportExcel()">엑셀 다운로드</button>
+          <button class="btn btn-gray btn-sm" onclick="ForestApply.reset()">초기화</button>
+          <button class="btn btn-primary btn-sm" onclick="ForestApply.search()">검색</button>
+        </div>
+      </div>
 
-        AdminSidebar.mount('apply-forest');
+      <!-- 목록 상단 -->
+      <div class="list-top">
+        <div class="list-count">총 <strong id="applyCount">0</strong>건</div>
+        <select class="form-control" id="pageSizeSelect" onchange="ForestApply.changePageSize(+this.value)"
+          style="width:130px;height:36px;font-size:13px">
+          <option value="10">10개씩 보기</option>
+          <option value="30">30개씩 보기</option>
+          <option value="50">50개씩 보기</option>
+          <option value="100">100개씩 보기</option>
+        </select>
+      </div>
 
-        /* 라디오 초기값 */
-        document.querySelector('input[name="filterStatus"][value=""]').checked = true;
-        document.querySelector('input[name="filterRegion"][value=""]').checked = true;
+      <!-- 테이블 -->
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width:4%">No</th>
+              <th style="width:12%">접수번호</th>
+              <th>기관명</th>
+              <th style="width:8%">담당자명</th>
+              <th style="width:12%">연락처</th>
+              <th style="width:10%">방문희망일</th>
+              <th style="width:12%">신청일</th>
+              <th style="width:12%">관리자 메모</th>
+            </tr>
+          </thead>
+          <tbody id="applyTableBody"></tbody>
+        </table>
+      </div>
 
-        RegularApply.init();
-    </script>
+      <!-- 페이지네이션 -->
+      <div class="pagination" id="applyPagination"></div>
+
+    </main>
+  </div>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/components/header.js"></script>
+  <script src="../assets/js/pages/admin.js"></script>
+  <script>
+  'use strict';
+  AdminSidebar.mount('apply-forest');
+
+  const ORGS_F    = ['도봉초등학교','서울시 북부장애인복지관','노원구청','강북구 주민센터','의정부 생태공원','인천 연수구청',
+                     '부산 금정구청','수원 영통구청','성남 분당도서관','고양 덕양구청','하남 복지관','파주 교육지원청',
+                     '광명 시청','시흥 환경센터','안산 바다여행학교','용인 처인구청','평택 시청','여주 교육청','이천 농촌체험센터','안양 만안구청'];
+  const CONTACTS_F = ['김민수','이영희','박철호','최순영','정혜진','윤대성','강미경','조현준','신태양','한지수'];
+  const PARTICIPANTS_F = ['초등 3학년 30명','유치원생 25명 (5세)','중학생 40명','성인 20명','노인 15명','장애인 10명','지역주민 50명','어린이집 영아 15명'];
+  const CONTENTS_F = [
+    '봄 숲 생태 탐방 프로그램을 희망합니다. 나무 이름 알기, 새소리 듣기 활동 포함 부탁드립니다.',
+    '장애 학생 대상 오감 자연 체험 프로그램을 신청합니다. 휠체어 접근 가능한 코스 필요합니다.',
+    '생태 환경 교육 연계 수업입니다. 탄소중립과 숲의 관계를 쉽게 설명해주시면 좋겠습니다.',
+    '지역 주민 환경 교육 행사입니다. 도심 속 숲 생태 해설 위주로 진행 부탁드립니다.',
+  ];
+
+  const ALL_DATA_F = Array.from({ length: 18 }, (_, i) => {
+    const mm  = String(((i % 3) + 1)).padStart(2, '0');
+    const dd  = String(((i % 22) + 1)).padStart(2, '0');
+    const vdd = String(((i % 28) + 5)).padStart(2, '0');
+    const hh  = String(((i * 2) % 8) + 9).padStart(2, '0');
+    const min = String((i * 13) % 60).padStart(2, '0');
+    const ss  = String((i * 19) % 60).padStart(2, '0');
+    return {
+      id:           5000 + i,
+      applyNo:      `FST-2026-${String(i + 1).padStart(5, '0')}`,
+      orgName:      ORGS_F[i % ORGS_F.length],
+      contactName:  CONTACTS_F[i % CONTACTS_F.length],
+      phone:        `0${(i % 2 === 0 ? '2' : '31')}-${String(1000 + i).padStart(4, '0')}-${String(3000 + i).padStart(4, '0')}`,
+      email:        i % 4 !== 0 ? `contact${5000 + i}@example.com` : '',
+      visitDate:    `2026-0${(i % 3) + 2}-${vdd}`,
+      participants: PARTICIPANTS_F[i % PARTICIPANTS_F.length],
+      content:      CONTENTS_F[i % CONTENTS_F.length],
+      applyDate:    `2026-${mm}-${dd}`,
+      applyDatetime:`2026-${mm}-${dd} ${hh}:${min}:${ss}`,
+      adminMemo:    ['','방문 경로 안내 전송','','','참가 인원 재확인 요청','','강사 매칭 검토 중','','','이메일 회신 대기','',''][i % 12],
+    };
+  });
+
+  const ForestApply = {
+    _data:     ALL_DATA_F,
+    _filtered: [...ALL_DATA_F],
+    _page:     1,
+    _pageSize: 10,
+
+    search() {
+      const dateFrom  = document.getElementById('filterDateFrom')?.value  || '';
+      const dateTo    = document.getElementById('filterDateTo')?.value    || '';
+      const visitFrom = document.getElementById('filterVisitFrom')?.value || '';
+      const visitTo   = document.getElementById('filterVisitTo')?.value   || '';
+      const kwType    = document.getElementById('filterSearchType')?.value || 'all';
+      const keyword   = (document.getElementById('filterKeyword')?.value  || '').trim().toLowerCase();
+
+      this._filtered = this._data.filter(d => {
+        if (dateFrom  && d.applyDate  < dateFrom)  return false;
+        if (dateTo    && d.applyDate  > dateTo)    return false;
+        if (visitFrom && d.visitDate  < visitFrom) return false;
+        if (visitTo   && d.visitDate  > visitTo)   return false;
+        if (keyword) {
+          const m = { orgName: d.orgName, contactName: d.contactName, phone: d.phone };
+          if (kwType !== 'all') return m[kwType]?.toLowerCase().includes(keyword);
+          return Object.values(m).some(v => v.toLowerCase().includes(keyword));
+        }
+        return true;
+      });
+      this._page = 1;
+      this.render();
+    },
+
+    setDatePreset(range) {
+      const to = new Date(), from = new Date();
+      if (range !== 'today') from.setDate(from.getDate() - range);
+      const fmt = d => d.toISOString().split('T')[0];
+      document.getElementById('filterDateFrom').value = fmt(from);
+      document.getElementById('filterDateTo').value   = fmt(to);
+      this.search();
+    },
+
+    reset() {
+      ['filterDateFrom','filterDateTo','filterVisitFrom','filterVisitTo','filterKeyword'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      document.getElementById('filterSearchType').value = 'all';
+      this._filtered = [...this._data];
+      this._page = 1;
+      this.render();
+    },
+
+    changePageSize(size) { this._pageSize = size; this._page = 1; this.render(); },
+
+    render() {
+      const total = this._filtered.length;
+      const start = (this._page - 1) * this._pageSize;
+      const slice = this._filtered.slice(start, start + this._pageSize);
+
+      const countEl = document.getElementById('applyCount');
+      if (countEl) countEl.textContent = total.toLocaleString();
+
+      const tbody = document.getElementById('applyTableBody');
+      if (!tbody) return;
+
+      if (!slice.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:#8a9e84">검색 결과가 없습니다.</td></tr>`;
+        App.renderPagination('applyPagination', 1, 1, () => {});
+        return;
+      }
+
+      tbody.innerHTML = slice.map((d, i) => {
+        const seq = total - start - i;
+        const memo = d.adminMemo || '';
+        const memoCell = memo
+          ? `<span style="font-size:12px;color:#5a7a5a">${memo.length > 10 ? memo.slice(0, 10) + '…' : memo}</span>`
+          : `<span style="color:#ccc;font-size:12px">—</span>`;
+        return `<tr onclick="location.href='apply-forest-detail.html?id=${d.id}'">
+          <td style="text-align:center">${seq}</td>
+          <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">${d.applyNo}</td>
+          <td style="font-weight:600">${d.orgName}</td>
+          <td style="text-align:center">${d.contactName}</td>
+          <td style="text-align:center;font-size:13px" class="cell-datetime">${d.phone}</td>
+          <td style="text-align:center;font-size:13px;color:#2e5c2e;font-weight:600">${d.visitDate}</td>
+          <td style="text-align:center;font-size:13px" class="cell-datetime">${d.applyDatetime}</td>
+          <td style="text-align:center">${memoCell}</td>
+        </tr>`;
+      }).join('');
+
+      App.renderPagination(
+        'applyPagination', this._page,
+        Math.ceil(total / this._pageSize) || 1,
+        p => { this._page = p; this.render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      );
+    },
+
+    exportExcel() { App.toast('숲해설신청 목록 엑셀 다운로드를 시작합니다.', 'info'); },
+  };
+
+  ForestApply.render();
+  </script>
 </body>
-
 </html>

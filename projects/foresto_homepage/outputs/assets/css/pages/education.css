@@ -490,6 +490,11 @@
   .job-type-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
+  /* info-table: 2열 → 세로 스택 */
+  .info-table tr { display: flex; flex-direction: column; }
+  .info-table th { width: 100%; white-space: normal; padding: 10px 12px 4px; font-size: var(--text-xs); }
+  .info-table td { padding: 4px 12px 14px; }
+
   .feature-grid  { grid-template-columns: 1fr; }
   .process-step  { flex: 0 0 100%; }
   .curriculum-phase-body { grid-template-columns: 1fr; }

@@ -7,6 +7,24 @@
     <title>상세 리포트 - 온라인 테스트</title>
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/result.css">
+    <style>
+        .result-actions {
+            margin-top: 32px;
+            text-align: center;
+        }
+
+        .pdf-note {
+            display: inline-block;
+            background: #fff8e6;
+            /* 부드러운 노랑톤 */
+            border: 1px solid #f5c26b;
+            color: #8a5a00;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+    </style>
 </head>
 
 <body>
@@ -115,23 +133,20 @@
                     <p class="footer-notice">※ 본 결과는 온라인 테스트 기준이며, 공식 멘사 가입을 위해서는 오프라인 테스트가 필요합니다.</p>
                 </div>
             </div>
-
-            <!-- 액션 버튼 (PDF 외부에 배치) -->
-            <div class="action-buttons-wrapper">
-                <button class="action-btn primary" onclick="downloadPDF()">
-                    PDF 다운로드
-                </button>
-                <button class="action-btn" onclick="printResult()">
-                    인쇄하기
-                </button>
-                <button class="action-btn" onclick="shareResult()">
-                    공유하기
-                </button>
-                <button class="action-btn" onclick="location.href='index.html'">
-                    홈으로
-                </button>
+            <div class="result-actions">
+                <p class="pdf-note">
+                    결과는 페이지 이탈 시 재확인이 불가합니다. 반드시 <strong>PDF 파일을 다운로드</strong> 하여 보관해 주세요.
+                </p>
+                <!-- 액션 버튼 (PDF 외부에 배치) -->
+                <div class="action-buttons-wrapper">
+                    <button class="action-btn primary" onclick="downloadPDF()">
+                        PDF 다운로드
+                    </button>
+                    <button class="action-btn" onclick="location.href='index.html'">
+                        홈으로
+                    </button>
+                </div>
             </div>
-        </div>
     </main>
 
     <div id="footer-placeholder"></div>

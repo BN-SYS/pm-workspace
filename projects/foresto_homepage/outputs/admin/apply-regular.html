@@ -5,163 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>정회원신청 관리 | 관리자 | 한국숲해설가협회</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <!-- 경로 기준: v2/admin/pages/apply-regular.html -->
   <link rel="stylesheet" href="../assets/css/common.css">
   <link rel="stylesheet" href="../assets/css/components.css">
   <link rel="stylesheet" href="../assets/css/responsive.css">
   <link rel="stylesheet" href="../assets/css/list-common.css">
   <link rel="stylesheet" href="../assets/css/pages/admin.css">
-
   <style>
-    /* ── 필터 카드 */
-    .filter-card {
-      background: #fff;
-      border: 1px solid #e3eadd;
-      border-radius: 10px;
-      margin-bottom: 16px;
-      overflow: hidden;
-    }
-    .filter-body { display: flex; flex-direction: column; }
-    .filter-row {
-      display: flex;
-      align-items: stretch;
-      min-height: 46px;
-      border-bottom: 1px solid #f0f4ee;
-    }
-    .filter-row:last-child { border-bottom: none; }
-    .filter-label {
-      width: 84px; min-width: 84px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700; color: #7a8e74;
-      letter-spacing: 0.04em; text-align: center; white-space: nowrap;
-      background: #f8faf6; border-right: 1px solid #e8efe3;
-    }
-    .filter-content {
-      flex: 1; padding: 10px 18px;
-      display: flex; align-items: center; min-width: 0; gap: 6px; flex-wrap: wrap;
-    }
-    .filter-half { flex: 1; display: flex; align-items: stretch; min-width: 0; }
-    .filter-half + .filter-half { border-left: 1px solid #f0f4ee; }
-
-    /* 날짜 */
-    .date-pair { display: flex; align-items: center; gap: 6px; }
-    .date-pair input[type="date"] {
-      width: 140px; height: 34px; padding: 0 10px;
-      border: 1px solid #d5e0ce; border-radius: 6px;
-      font-size: 13px; font-family: 'Noto Sans KR', sans-serif;
-      color: #2a3a26; background: #fafcf9; outline: none; cursor: pointer;
-    }
-    .date-pair input[type="date"]:focus {
-      border-color: #508829; box-shadow: 0 0 0 3px rgba(80,136,41,.08);
-    }
-    .date-sep { color: #aabba4; font-size: 13px; padding: 0 2px; }
-
-    /* 칩 */
-    .chip-group { display: flex; gap: 5px; flex-wrap: wrap; }
-    .chip { cursor: pointer; }
-    .chip input[type="radio"] { display: none; }
-    .chip span {
-      display: inline-flex; align-items: center;
-      padding: 5px 14px; border-radius: 99px;
-      font-size: 13px; font-weight: 500; font-family: 'Noto Sans KR', sans-serif;
-      border: 1px solid #d5e0ce; background: #fafcf9;
-      color: #6a7e64; transition: all .15s; white-space: nowrap; cursor: pointer;
-    }
-    .chip input[type="radio"]:checked + span {
-      background: #1a2718; color: #fff; border-color: #1a2718; font-weight: 600;
-    }
-    .chip:hover span { border-color: #508829; color: #508829; }
-    .chip input[type="radio"]:checked + span:hover { color: #fff; }
-
-    /* 검색어 */
-    .kw-wrap { display: flex; align-items: center; gap: 6px; width: 100%; }
-    .kw-input-wrap { flex: 1; }
-    .kw-input-wrap input {
-      width: 100%; height: 34px; padding: 0 12px;
-      border: 1px solid #d5e0ce; border-radius: 6px;
-      font-size: 13px; font-family: 'Noto Sans KR', sans-serif;
-      color: #2a3a26; background: #fafcf9; outline: none; box-sizing: border-box;
-    }
-    .kw-input-wrap input:focus {
-      border-color: #508829; box-shadow: 0 0 0 3px rgba(80,136,41,.08);
-    }
-    .kw-input-wrap input::placeholder { color: #aabba4; }
-    .kw-select {
-      height: 34px; padding: 0 28px 0 8px;
-      border: 1px solid #d5e0ce; border-radius: 6px;
-      font-size: 13px; font-family: 'Noto Sans KR', sans-serif;
-      color: #2a3a26; background: #fafcf9;
-      background-image: url('../../../../common_assets/icons/chevron-down.png');
-      background-repeat: no-repeat; background-position: right 8px center; background-size: 11px 11px;
-      appearance: none; -webkit-appearance: none; outline: none; cursor: pointer;
-    }
-
-    /* 필터 하단 */
-    .filter-footer {
-      display: flex; align-items: center; justify-content: flex-end;
-      gap: 8px; padding: 12px 18px;
-      background: #f8faf6; border-top: 1px solid #e8efe3;
-    }
-
-    /* 행 hover */
-    .apply-row:hover td { background: #f2f7f0; cursor: pointer; }
-
-    /* 상세 모달 */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.45); z-index: 1000;
-      align-items: center; justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal-box {
-      background: #fff; border-radius: 12px;
-      width: 580px; max-width: 96vw; max-height: 88vh;
-      overflow-y: auto; box-shadow: 0 8px 40px rgba(0,0,0,0.18);
-    }
-    .modal-head {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 20px 24px 16px; border-bottom: 1px solid #e3eadd;
-      position: sticky; top: 0; background: #fff; z-index: 1;
-    }
-    .modal-title { font-size: 17px; font-weight: 700; color: #1a2718; }
-    .modal-close { background: none; border: none; font-size: 22px; color: #8a9e84; cursor: pointer; }
-    .modal-close:hover { color: #1a2718; }
-    .modal-body { padding: 20px 24px 28px; }
-
-    /* 상세 필드 */
-    .detail-section-title {
-      font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
-      color: #7a8e74; text-transform: uppercase;
-      margin: 20px 0 8px; padding-bottom: 6px;
-      border-bottom: 1px solid #e8efe3;
-    }
-    .detail-section-title:first-child { margin-top: 0; }
-    .detail-row {
-      display: flex; gap: 0;
-      border-bottom: 1px solid #f0f4ee; font-size: 14px;
-    }
-    .detail-row:last-child { border-bottom: none; }
-    .detail-key {
-      width: 96px; flex-shrink: 0; padding: 10px 0;
-      font-weight: 700; color: #7a8e74;
-    }
-    .detail-val { flex: 1; padding: 10px 0; color: #2a3a26; line-height: 1.55; }
-
-    /* 서류 태그 */
-    .doc-tag {
-      display: inline-block;
-      background: #e8f5e9; color: #2e7d32;
-      border-radius: 4px; padding: 2px 8px;
-      font-size: 12px; margin: 2px;
-    }
+    .filter-card { background:#fff; border:1px solid #e3eadd; border-radius:10px; margin-bottom:16px; overflow:hidden; }
+    .filter-body { display:flex; flex-direction:column; }
+    .filter-row { display:flex; align-items:stretch; min-height:46px; border-bottom:1px solid #f0f4ee; }
+    .filter-row:last-child { border-bottom:none; }
+    .filter-label { width:84px; min-width:84px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#7a8e74; letter-spacing:.04em; text-align:center; white-space:nowrap; background:#f8faf6; border-right:1px solid #e8efe3; }
+    .filter-content { flex:1; padding:10px 18px; display:flex; align-items:center; min-width:0; gap:6px; flex-wrap:wrap; }
+    .filter-half { flex:1; display:flex; align-items:stretch; min-width:0; }
+    .filter-half + .filter-half { border-left:1px solid #f0f4ee; }
+    .date-pair { display:flex; align-items:center; gap:6px; }
+    .date-pair input[type="date"] { width:140px; height:34px; padding:0 10px; border:1px solid #d5e0ce; border-radius:6px; font-size:13px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; cursor:pointer; }
+    .date-pair input[type="date"]:focus { border-color:#508829; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
+    .date-sep { color:#aabba4; font-size:13px; padding:0 2px; }
+    .date-preset-group { display:flex; gap:4px; flex-wrap:wrap; }
+    .date-preset-btn { height:28px; padding:0 10px; border:1px solid #d5e0ce; border-radius:99px; font-size:12px; font-family:'Noto Sans KR',sans-serif; color:#6a7e64; background:#fafcf9; cursor:pointer; white-space:nowrap; transition:all .15s; }
+    .date-preset-btn:hover { background:#e8f0e2; border-color:#508829; color:#508829; }
+    .chip-group { display:flex; gap:5px; flex-wrap:wrap; }
+    .chip { cursor:pointer; }
+    .chip input[type="radio"] { display:none; }
+    .chip span { display:inline-flex; align-items:center; padding:5px 14px; border-radius:99px; font-size:13px; font-weight:500; font-family:'Noto Sans KR',sans-serif; border:1px solid #d5e0ce; background:#fafcf9; color:#6a7e64; transition:all .15s; white-space:nowrap; cursor:pointer; }
+    .chip input[type="radio"]:checked + span { background:#1a2718; color:#fff; border-color:#1a2718; font-weight:600; }
+    .chip:hover span { border-color:#508829; color:#508829; }
+    .chip input[type="radio"]:checked + span:hover { color:#fff; }
+    .kw-wrap { display:flex; align-items:center; gap:6px; width:100%; }
+    .kw-wrap select { flex-shrink:0; width:116px; height:34px; padding:0 8px; border:1px solid #d5e0ce; border-radius:6px; font-size:13px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; cursor:pointer; }
+    .kw-wrap select:focus { border-color:#508829; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
+    .kw-input-wrap { position:relative; flex:1; }
+    .kw-input-wrap input { width:100%; height:34px; padding:0 38px 0 12px; border:1px solid #d5e0ce; border-radius:6px; font-size:13px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; box-sizing:border-box; }
+    .kw-input-wrap input:focus { border-color:#508829; background:#fff; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
+    .kw-input-wrap input::placeholder { color:#aabba4; }
+    .filter-footer { display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:12px 18px; background:#f8faf6; border-top:1px solid #e8efe3; }
+    .table-bottom-bar { display:flex; justify-content:flex-end; align-items:center; margin-top:12px; }
+    .admin-table tbody tr { cursor:pointer; }
+    .admin-table .cell-datetime { font-variant-numeric:tabular-nums; color:#111; }
   </style>
 </head>
-
 <body class="admin-body">
   <div class="admin-layout">
-
-    <!-- 사이드바 -->
     <aside class="admin-sidebar" id="adminSidebar">
       <div class="admin-sidebar-head">
         <span class="adm-sb-title">MENU</span>
@@ -171,24 +57,20 @@
     </aside>
 
     <main class="admin-main">
-
-      <!-- 상단 타이틀 바 -->
       <div class="admin-topbar">
         <h1 class="admin-page-title">정회원신청 관리</h1>
         <div class="admin-topbar-actions">
-          <button class="btn-refresh" onclick="location.reload()" title="새로고침">
-            <img src="../../../../common_assets/icons/refresh.png" alt="새로고침">
-          </button>
+          <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../../../../common_assets/icons/refresh.png" alt="새로고침"></button>
         </div>
       </div>
 
-      <!-- 필터 카드 -->
+      <!-- 검색 필터 -->
       <div class="filter-card">
         <div class="filter-body">
 
-          <!-- 행 1: 신청일 -->
+          <!-- 행1: 신청기간 -->
           <div class="filter-row">
-            <span class="filter-label">신청일</span>
+            <span class="filter-label">신청기간</span>
             <div class="filter-content">
               <div class="date-pair">
                 <input type="date" id="filterDateFrom">
@@ -200,16 +82,17 @@
                 <button class="date-preset-btn" onclick="RegularApply.setDatePreset(7)">7일</button>
                 <button class="date-preset-btn" onclick="RegularApply.setDatePreset(30)">30일</button>
                 <button class="date-preset-btn" onclick="RegularApply.setDatePreset(90)">3개월</button>
+                <button class="date-preset-btn" onclick="RegularApply.setDatePreset(180)">6개월</button>
               </div>
             </div>
           </div>
 
-          <!-- 행 2: 지역 -->
+          <!-- 행2: 지역 -->
           <div class="filter-row">
             <span class="filter-label">지역</span>
             <div class="filter-content">
               <div class="chip-group">
-                <label class="chip"><input type="radio" name="filterRegion" value=""><span>전체</span></label>
+                <label class="chip"><input type="radio" name="filterRegion" value="" checked><span>전체</span></label>
                 <label class="chip"><input type="radio" name="filterRegion" value="서울"><span>서울</span></label>
                 <label class="chip"><input type="radio" name="filterRegion" value="경기"><span>경기</span></label>
                 <label class="chip"><input type="radio" name="filterRegion" value="인천"><span>인천</span></label>
@@ -220,15 +103,16 @@
             </div>
           </div>
 
-          <!-- 행 3: 검색어 -->
+          <!-- 행3: 검색어 -->
           <div class="filter-row">
-            <span class="filter-label">검색</span>
+            <span class="filter-label">검색어</span>
             <div class="filter-content">
               <div class="kw-wrap">
-                <select class="kw-select" id="filterSearchType">
-                  <option value="all">이름+이메일</option>
+                <select id="filterSearchType">
+                  <option value="all">전체</option>
                   <option value="name">이름</option>
                   <option value="email">이메일</option>
+                  <option value="phone">연락처</option>
                 </select>
                 <div class="kw-input-wrap">
                   <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요"
@@ -241,41 +125,36 @@
         </div>
         <div class="filter-footer">
           <button class="btn btn-outline btn-sm" onclick="RegularApply.exportExcel()">엑셀 다운로드</button>
-          <button class="btn btn-gray btn-sm"    onclick="RegularApply.reset()">초기화</button>
+          <button class="btn btn-gray btn-sm" onclick="RegularApply.reset()">초기화</button>
           <button class="btn btn-primary btn-sm" onclick="RegularApply.search()">검색</button>
         </div>
       </div>
 
-      <!-- 목록 상단 바 -->
+      <!-- 목록 상단 -->
       <div class="list-top">
         <div class="list-count">총 <strong id="applyCount">0</strong>건</div>
-        <select class="form-control" onchange="RegularApply.changePageSize(+this.value)"
+        <select class="form-control" id="pageSizeSelect" onchange="RegularApply.changePageSize(+this.value)"
           style="width:130px;height:36px;font-size:13px">
           <option value="10">10개씩 보기</option>
           <option value="30">30개씩 보기</option>
           <option value="50">50개씩 보기</option>
+          <option value="100">100개씩 보기</option>
         </select>
       </div>
 
       <!-- 테이블 -->
       <div class="table-wrap">
-        <table class="admin-table" style="table-layout:fixed;width:100%">
-          <colgroup>
-            <col style="width:44px">   <!-- No -->
-            <col>                      <!-- 이름 -->
-            <col style="width:7%">     <!-- 지역 -->
-            <col style="width:18%">    <!-- 이메일 -->
-            <col style="width:13%">    <!-- 연락처 -->
-            <col style="width:10%">    <!-- 신청일 -->
-          </colgroup>
+        <table class="admin-table">
           <thead>
             <tr>
-              <th>No</th>
-              <th>이름</th>
-              <th style="text-align:center">지역</th>
-              <th style="text-align:center">이메일</th>
-              <th style="text-align:center">연락처</th>
-              <th style="text-align:center">신청일</th>
+              <th style="width:4%">No</th>
+              <th style="width:13%">접수번호</th>
+              <th style="width:8%">이름</th>
+              <th style="width:7%">지역</th>
+              <th style="width:13%">연락처</th>
+              <th>이메일</th>
+              <th style="width:13%">신청일</th>
+              <th style="width:12%">관리자 메모</th>
             </tr>
           </thead>
           <tbody id="applyTableBody"></tbody>
@@ -288,29 +167,152 @@
     </main>
   </div>
 
-
-  <!-- 상세보기 모달 (신청 폼 내용 읽기 전용) -->
-  <div class="modal-overlay" id="applyDetailModal" role="dialog" aria-modal="true">
-    <div class="modal-box">
-      <div class="modal-head">
-        <span class="modal-title">정회원신청서 상세</span>
-        <button class="modal-close" onclick="App.closeModal('applyDetailModal')" aria-label="닫기">×</button>
-      </div>
-      <div class="modal-body" id="applyDetailBody"></div>
-    </div>
-  </div>
-
-
-  <!-- 경로 기준: v2/admin/pages/apply-regular.html -->
   <script src="../assets/js/app.js"></script>
   <script src="../assets/js/components/header.js"></script>
   <script src="../assets/js/pages/admin.js"></script>
-  <script src="../assets/js/pages/admin-apply-regular.js"></script>
   <script>
-    'use strict';
-    AdminSidebar.mount('apply-regular');
-    document.querySelector('input[name="filterRegion"][value=""]').checked = true;
-    RegularApply.init();
+  'use strict';
+  AdminSidebar.mount('apply-regular');
+
+  const NAMES_R   = ['김숲해설','이초록','박자연','최나무','정바람','윤하늘','강숲속','조생태','신나뭇잎','한자연',
+                     '문청산','류이슬','백솔밭','안햇살','송나비','임물결','권하늘','오구름','황봄비','노꽃길'];
+  const REGIONS_R = ['서울','경기','인천','부산','대구','서울','경기','서울','인천','기타'];
+  const CAREERS   = [
+    '숲해설가 활동 3년 (도봉구 초등학교 연계 프로그램)',
+    '환경부 자연환경해설사 2년',
+    '국립공원 자원봉사 해설 5년',
+    '유아숲지도사로 어린이집 연계 활동 2년',
+    '숲체험지도사 자격 취득 후 주민센터 강의 1년',
+  ];
+  const CERTS_R   = ['숲해설가 자격증 (한국산림복지진흥원)','자연환경해설사 (환경부)','유아숲지도사 2급','숲체험지도사 1급','산림치유지도사 2급'];
+  const DOC_SETS  = [['재직증명서','신분증 사본','자격증 사본'],['활동확인서','신분증 사본'],['자격증 사본','재직증명서'],['신분증 사본','경력기술서']];
+  const MOTIVES   = [
+    '협회 활동을 통해 더 많은 분들과 숲의 소중함을 나누고 싶어 정회원에 지원합니다.',
+    '지역 숲해설 네트워크를 넓히고 전문성을 강화하고자 정회원 전환을 신청합니다.',
+    '환경교육 분야에서 오랫동안 활동해왔으며, 협회와 함께 성장하고 싶습니다.',
+    '숲 생태 교육에 대한 열정으로 준회원 활동을 해왔고, 이제 더 깊이 참여하고 싶습니다.',
+  ];
+
+  const ALL_DATA_R = Array.from({ length: 24 }, (_, i) => {
+    const mm  = String(((i % 3) + 1)).padStart(2, '0');
+    const dd  = String(((i % 20) + 1)).padStart(2, '0');
+    const hh  = String(((i * 3) % 12) + 9).padStart(2, '0');
+    const min = String((i * 7) % 60).padStart(2, '0');
+    const ss  = String((i * 13) % 60).padStart(2, '0');
+    return {
+      id:         3000 + i,
+      applyNo:    `REG-2026-${String(i + 1).padStart(5, '0')}`,
+      name:       NAMES_R[i % NAMES_R.length],
+      email:      `user${3000 + i}@example.com`,
+      phone:      `010-${String(1000 + i).padStart(4, '0')}-${String(2000 + i).padStart(4, '0')}`,
+      region:     REGIONS_R[i % REGIONS_R.length],
+      birth:      `${1975 + (i % 20)}-${mm}-${dd}`,
+      applyDate:  `2026-${mm}-${dd}`,
+      applyDatetime: `2026-${mm}-${dd} ${hh}:${min}:${ss}`,
+      career:     CAREERS[i % CAREERS.length],
+      cert:       CERTS_R[i % CERTS_R.length],
+      docs:       DOC_SETS[i % DOC_SETS.length],
+      motivation: MOTIVES[i % MOTIVES.length],
+      adminMemo:  ['','','추가 서류 요청 필요','','전화 확인 완료','','','담당자 재연락 예정','','검토 중','',''][i % 12],
+    };
+  });
+
+  const RegularApply = {
+    _data:     ALL_DATA_R,
+    _filtered: [...ALL_DATA_R],
+    _page:     1,
+    _pageSize: 10,
+
+    search() {
+      const dateFrom = document.getElementById('filterDateFrom')?.value || '';
+      const dateTo   = document.getElementById('filterDateTo')?.value   || '';
+      const region   = document.querySelector('input[name="filterRegion"]:checked')?.value || '';
+      const kwType   = document.getElementById('filterSearchType')?.value || 'all';
+      const keyword  = (document.getElementById('filterKeyword')?.value || '').trim().toLowerCase();
+
+      this._filtered = this._data.filter(d => {
+        if (dateFrom && d.applyDate < dateFrom) return false;
+        if (dateTo   && d.applyDate > dateTo)   return false;
+        if (region   && d.region !== region)    return false;
+        if (keyword) {
+          const m = { name: d.name, email: d.email, phone: d.phone };
+          if (kwType !== 'all') return m[kwType]?.toLowerCase().includes(keyword);
+          return Object.values(m).some(v => v.toLowerCase().includes(keyword));
+        }
+        return true;
+      });
+      this._page = 1;
+      this.render();
+    },
+
+    setDatePreset(range) {
+      const to = new Date(), from = new Date();
+      if (range !== 'today') from.setDate(from.getDate() - range);
+      const fmt = d => d.toISOString().split('T')[0];
+      document.getElementById('filterDateFrom').value = fmt(from);
+      document.getElementById('filterDateTo').value   = fmt(to);
+      this.search();
+    },
+
+    reset() {
+      document.getElementById('filterDateFrom').value = '';
+      document.getElementById('filterDateTo').value   = '';
+      document.getElementById('filterKeyword').value  = '';
+      document.getElementById('filterSearchType').value = 'all';
+      document.querySelector('input[name="filterRegion"][value=""]').checked = true;
+      this._filtered = [...this._data];
+      this._page = 1;
+      this.render();
+    },
+
+    changePageSize(size) { this._pageSize = size; this._page = 1; this.render(); },
+
+    render() {
+      const total = this._filtered.length;
+      const start = (this._page - 1) * this._pageSize;
+      const slice = this._filtered.slice(start, start + this._pageSize);
+
+      const countEl = document.getElementById('applyCount');
+      if (countEl) countEl.textContent = total.toLocaleString();
+
+      const tbody = document.getElementById('applyTableBody');
+      if (!tbody) return;
+
+      if (!slice.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:#8a9e84">검색 결과가 없습니다.</td></tr>`;
+        App.renderPagination('applyPagination', 1, 1, () => {});
+        return;
+      }
+
+      tbody.innerHTML = slice.map((d, i) => {
+        const seq = total - start - i;
+        const memo = d.adminMemo || '';
+        const memoCell = memo
+          ? `<span style="font-size:12px;color:#5a7a5a">${memo.length > 10 ? memo.slice(0, 10) + '…' : memo}</span>`
+          : `<span style="color:#ccc;font-size:12px">—</span>`;
+        return `<tr onclick="location.href='apply-regular-detail.html?id=${d.id}'">
+          <td style="text-align:center">${seq}</td>
+          <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">${d.applyNo}</td>
+          <td style="font-weight:600">${d.name}</td>
+          <td style="text-align:center;font-size:13px">${d.region}</td>
+          <td style="text-align:center;font-size:13px" class="cell-datetime">${d.phone}</td>
+          <td style="font-size:13px">${d.email}</td>
+          <td style="text-align:center;font-size:13px" class="cell-datetime">${d.applyDatetime}</td>
+          <td style="text-align:center">${memoCell}</td>
+        </tr>`;
+      }).join('');
+
+      App.renderPagination(
+        'applyPagination', this._page,
+        Math.ceil(total / this._pageSize) || 1,
+        p => { this._page = p; this.render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      );
+    },
+
+    exportExcel() { App.toast('정회원신청 목록 엑셀 다운로드를 시작합니다.', 'info'); },
+  };
+
+  RegularApply.render();
   </script>
 </body>
 </html>

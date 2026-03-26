@@ -183,6 +183,18 @@ body {
 }
 .sitemap-label { font-size: 12px; }
 
+/* ── 모바일 전용 사이트맵 버튼 (로고 옆) */
+.mobile-sitemap-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px; height: 32px;
+  color: var(--gray-mid);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.mobile-sitemap-btn:hover { color: var(--green-main); }
+
 /* ── 모바일 햄버거 */
 .hamburger {
   display: none;

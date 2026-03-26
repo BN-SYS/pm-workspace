@@ -103,3 +103,5 @@ git push 전 반드시 확인:
 | 2026-03-25 | 팝업관리 목록/등록수정 신규, admin.js popup href 연결 | popup.html, popup-edit.html, admin.js |
 | 2026-03-25 | 관리자 새로고침 버튼(btn-refresh) + 날짜 프리셋(오늘/7일/30일/3개월/6개월) 전 목록 페이지 적용 | admin.css, members.html, members-withdrawn.html, courses.html, applicants.html, board.html, calendar.html, history.html, popup.html, banner.html |
 | 2026-03-25 | 회원아카데미 탭 메뉴 admin-topbar 인라인 배치 (has-tabs 클래스), 탭 min-width 통일(96px) | courses.html |
+| 2026-03-26 | 기타신청관리 4종 목록+상세 신규 (정회원/강사/숲해설/후원), admin.js nav href 연결 | apply-regular.html, apply-regular-detail.html, apply-instructor.html, apply-instructor-detail.html, apply-forest.html, apply-forest-detail.html, apply-sponsor.html, apply-sponsor-detail.html, admin.js |
+| 2026-03-26 | 강사신청 활동요일 체크박스 전환 (무관+개별 상호배제), 정회원신청 사용자 폼 신규, membership.html CTA 버튼 연결 | instructor.html, regular-apply.html, membership.html |

@@ -1,58 +1,338 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>정회원신청 관리 | 관리자 | 한국숲해설가협회</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-
-    <!-- 경로 기준: v2/admin/pages/apply-regular.html -->
-    <link rel="stylesheet" href="../assets/css/common.css">
-    <link rel="stylesheet" href="../assets/css/components.css">
-    <link rel="stylesheet" href="../assets/css/responsive.css">
-    <link rel="stylesheet" href="../assets/css/list-common.css">
-    <link rel="stylesheet" href="../assets/css/pages/admin.css">
-
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>강사신청 관리 | 관리자 | 한국숲해설가협회</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/list-common.css">
+  <link rel="stylesheet" href="../assets/css/pages/admin.css">
+  <style>
+    .filter-card { background:#fff; border:1px solid #e3eadd; border-radius:10px; margin-bottom:16px; overflow:hidden; }
+    .filter-body { display:flex; flex-direction:column; }
+    .filter-row { display:flex; align-items:stretch; min-height:46px; border-bottom:1px solid #f0f4ee; }
+    .filter-row:last-child { border-bottom:none; }
+    .filter-label { width:84px; min-width:84px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#7a8e74; letter-spacing:.04em; text-align:center; white-space:nowrap; background:#f8faf6; border-right:1px solid #e8efe3; }
+    .filter-content { flex:1; padding:10px 18px; display:flex; align-items:center; min-width:0; gap:6px; flex-wrap:wrap; }
+    .filter-half { flex:1; display:flex; align-items:stretch; min-width:0; }
+    .filter-half + .filter-half { border-left:1px solid #f0f4ee; }
+    .date-pair { display:flex; align-items:center; gap:6px; }
+    .date-pair input[type="date"] { width:140px; height:34px; padding:0 10px; border:1px solid #d5e0ce; border-radius:6px; font-size:13px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; cursor:pointer; }
+    .date-pair input[type="date"]:focus { border-color:#508829; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
+    .date-sep { color:#aabba4; font-size:13px; padding:0 2px; }
+    .date-preset-group { display:flex; gap:4px; flex-wrap:wrap; }
+    .date-preset-btn { height:28px; padding:0 10px; border:1px solid #d5e0ce; border-radius:99px; font-size:12px; font-family:'Noto Sans KR',sans-serif; color:#6a7e64; background:#fafcf9; cursor:pointer; white-space:nowrap; transition:all .15s; }
+    .date-preset-btn:hover { background:#e8f0e2; border-color:#508829; color:#508829; }
+    .chip-group { display:flex; gap:5px; flex-wrap:wrap; }
+    .chip { cursor:pointer; }
+    .chip input[type="radio"] { display:none; }
+    .chip span { display:inline-flex; align-items:center; padding:5px 14px; border-radius:99px; font-size:13px; font-weight:500; font-family:'Noto Sans KR',sans-serif; border:1px solid #d5e0ce; background:#fafcf9; color:#6a7e64; transition:all .15s; white-space:nowrap; cursor:pointer; }
+    .chip input[type="radio"]:checked + span { background:#1a2718; color:#fff; border-color:#1a2718; font-weight:600; }
+    .chip:hover span { border-color:#508829; color:#508829; }
+    .chip input[type="radio"]:checked + span:hover { color:#fff; }
+    .kw-wrap { display:flex; align-items:center; gap:6px; width:100%; }
+    .kw-wrap select { flex-shrink:0; width:116px; height:34px; padding:0 8px; border:1px solid #d5e0ce; border-radius:6px; font-size:13px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; cursor:pointer; }
+    .kw-wrap select:focus { border-color:#508829; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
+    .kw-input-wrap { position:relative; flex:1; }
+    .kw-input-wrap input { width:100%; height:34px; padding:0 38px 0 12px; border:1px solid #d5e0ce; border-radius:6px; font-size:13px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; box-sizing:border-box; }
+    .kw-input-wrap input:focus { border-color:#508829; background:#fff; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
+    .kw-input-wrap input::placeholder { color:#aabba4; }
+    .filter-footer { display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:12px 18px; background:#f8faf6; border-top:1px solid #e8efe3; }
+    .table-bottom-bar { display:flex; justify-content:flex-end; align-items:center; margin-top:12px; }
+    .admin-table tbody tr { cursor:pointer; }
+    .admin-table .cell-datetime { font-variant-numeric:tabular-nums; color:#111; }
+  </style>
 </head>
-
 <body class="admin-body">
-    <div class="admin-layout">
-        <aside class="admin-sidebar" id="adminSidebar">
-            <div class="admin-sidebar-head">
-                <span class="adm-sb-title">MENU</span>
-                <button class="sidebar-toggle" onclick="AdminLayout.toggleSidebar()" aria-label="사이드바 토글">☰</button>
-            </div>
-            <nav class="admin-nav" id="adminNavMount" aria-label="관리자 메뉴"></nav>
-        </aside>
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-head">
+        <span class="adm-sb-title">MENU</span>
+        <button class="sidebar-toggle" onclick="AdminLayout.toggleSidebar()" aria-label="사이드바 토글">☰</button>
+      </div>
+      <nav class="admin-nav" id="adminNavMount" aria-label="관리자 메뉴"></nav>
+    </aside>
 
-        <main class="admin-main">
-            <div class="admin-topbar">
-                <h1 class="admin-page-title" id="pageTitle">강사신청 관리</h1>
-                <div class="admin-topbar-actions">
-                    <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img
-                            src="../../../../common_assets/icons/refresh.png" alt="새로고침"></button>
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <h1 class="admin-page-title">강사신청 관리</h1>
+        <div class="admin-topbar-actions">
+          <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../../../../common_assets/icons/refresh.png" alt="새로고침"></button>
+        </div>
+      </div>
+
+      <!-- 검색 필터 -->
+      <div class="filter-card">
+        <div class="filter-body">
+
+          <!-- 행1: 신청기간 -->
+          <div class="filter-row">
+            <span class="filter-label">신청기간</span>
+            <div class="filter-content">
+              <div class="date-pair">
+                <input type="date" id="filterDateFrom">
+                <span class="date-sep">—</span>
+                <input type="date" id="filterDateTo">
+              </div>
+              <div class="date-preset-group">
+                <button class="date-preset-btn" onclick="InstructorApply.setDatePreset('today')">오늘</button>
+                <button class="date-preset-btn" onclick="InstructorApply.setDatePreset(7)">7일</button>
+                <button class="date-preset-btn" onclick="InstructorApply.setDatePreset(30)">30일</button>
+                <button class="date-preset-btn" onclick="InstructorApply.setDatePreset(90)">3개월</button>
+                <button class="date-preset-btn" onclick="InstructorApply.setDatePreset(180)">6개월</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 행2: 거주지역 / 활동가능요일 -->
+          <div class="filter-row">
+            <div class="filter-half">
+              <span class="filter-label">거주지역</span>
+              <div class="filter-content">
+                <div class="chip-group">
+                  <label class="chip"><input type="radio" name="filterRegion" value="" checked><span>전체</span></label>
+                  <label class="chip"><input type="radio" name="filterRegion" value="서울"><span>서울</span></label>
+                  <label class="chip"><input type="radio" name="filterRegion" value="경기"><span>경기</span></label>
+                  <label class="chip"><input type="radio" name="filterRegion" value="인천"><span>인천</span></label>
+                  <label class="chip"><input type="radio" name="filterRegion" value="부산"><span>부산</span></label>
+                  <label class="chip"><input type="radio" name="filterRegion" value="기타"><span>기타</span></label>
                 </div>
+              </div>
             </div>
-        </main>
-    </div>
+            <div class="filter-half">
+              <span class="filter-label">활동요일</span>
+              <div class="filter-content">
+                <div class="chip-group">
+                  <label class="chip"><input type="radio" name="filterDay" value="" checked><span>전체</span></label>
+                  <label class="chip"><input type="radio" name="filterDay" value="월"><span>월</span></label>
+                  <label class="chip"><input type="radio" name="filterDay" value="화"><span>화</span></label>
+                  <label class="chip"><input type="radio" name="filterDay" value="수"><span>수</span></label>
+                  <label class="chip"><input type="radio" name="filterDay" value="목"><span>목</span></label>
+                  <label class="chip"><input type="radio" name="filterDay" value="금"><span>금</span></label>
+                  <label class="chip"><input type="radio" name="filterDay" value="토"><span>토</span></label>
+                  <label class="chip"><input type="radio" name="filterDay" value="일"><span>일</span></label>
+                  <label class="chip"><input type="radio" name="filterDay" value="무관"><span>무관</span></label>
+                </div>
+              </div>
+            </div>
+          </div>
 
+          <!-- 행3: 검색어 -->
+          <div class="filter-row">
+            <span class="filter-label">검색어</span>
+            <div class="filter-content">
+              <div class="kw-wrap">
+                <select id="filterSearchType">
+                  <option value="all">전체</option>
+                  <option value="name">이름</option>
+                  <option value="email">이메일</option>
+                  <option value="phone">연락처</option>
+                </select>
+                <div class="kw-input-wrap">
+                  <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요"
+                    onkeydown="if(event.key==='Enter') InstructorApply.search()">
+                </div>
+              </div>
+            </div>
+          </div>
 
-    <script src="../assets/js/app.js"></script>
-    <script src="../assets/js/components/header.js"></script>
-    <script src="../assets/js/pages/admin.js"></script>
-    <script>
-        'use strict';
+        </div>
+        <div class="filter-footer">
+          <button class="btn btn-outline btn-sm" onclick="InstructorApply.exportExcel()">엑셀 다운로드</button>
+          <button class="btn btn-gray btn-sm" onclick="InstructorApply.reset()">초기화</button>
+          <button class="btn btn-primary btn-sm" onclick="InstructorApply.search()">검색</button>
+        </div>
+      </div>
 
-        AdminSidebar.mount('apply-instructor');
+      <!-- 목록 상단 -->
+      <div class="list-top">
+        <div class="list-count">총 <strong id="applyCount">0</strong>건</div>
+        <select class="form-control" id="pageSizeSelect" onchange="InstructorApply.changePageSize(+this.value)"
+          style="width:130px;height:36px;font-size:13px">
+          <option value="10">10개씩 보기</option>
+          <option value="30">30개씩 보기</option>
+          <option value="50">50개씩 보기</option>
+          <option value="100">100개씩 보기</option>
+        </select>
+      </div>
 
-        /* 라디오 초기값 */
-        document.querySelector('input[name="filterStatus"][value=""]').checked = true;
-        document.querySelector('input[name="filterRegion"][value=""]').checked = true;
+      <!-- 테이블 -->
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width:4%">No</th>
+              <th style="width:12%">접수번호</th>
+              <th style="width:8%">이름</th>
+              <th style="width:7%">거주지역</th>
+              <th style="width:7%">활동요일</th>
+              <th style="width:12%">연락처</th>
+              <th>이메일</th>
+              <th style="width:12%">신청일</th>
+              <th style="width:12%">관리자 메모</th>
+            </tr>
+          </thead>
+          <tbody id="applyTableBody"></tbody>
+        </table>
+      </div>
 
-        RegularApply.init();
-    </script>
+      <!-- 페이지네이션 -->
+      <div class="pagination" id="applyPagination"></div>
+
+    </main>
+  </div>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/components/header.js"></script>
+  <script src="../assets/js/pages/admin.js"></script>
+  <script>
+  'use strict';
+  AdminSidebar.mount('apply-instructor');
+
+  const NAMES_I   = ['이초록','박나무','김하늘','최바람','정숲','윤생태','강자연','조청산','신이슬','한나비',
+                     '문솔잎','류햇살','백물결','안구름','송봄비','임꽃길','권들판','오숲속','황모래','노파도'];
+  const REGIONS_I = ['서울','경기','인천','부산','경기','서울','서울','인천','기타','경기'];
+  const DAYS_I    = [['월','수','금'],['무관'],['화','목'],['토','일'],['월','화','수','목','금'],
+                     ['무관'],['수','금'],['토'],['월','목'],['무관'],['월','화','목','금'],['일']];
+  const AREAS_I   = [
+    '서울 북부 지역 학교 연계 숲 생태 교육',
+    '경기 남부 유치원·어린이집 산림 체험 활동',
+    '인천·부천 지역 시민 대상 숲해설 프로그램',
+    '자연환경해설, 도시 공원 해설 위주',
+    '도봉·노원 산림 치유 프로그램, 생태 탐방',
+  ];
+  const COURSES_I = ['50기','52기','53기','51기','49기','48기','54기','47기','55기',''];
+
+  const ALL_DATA_I = Array.from({ length: 20 }, (_, i) => {
+    const mm  = String(((i % 3) + 1)).padStart(2, '0');
+    const dd  = String(((i % 25) + 1)).padStart(2, '0');
+    const hh  = String(((i * 2) % 10) + 9).padStart(2, '0');
+    const min = String((i * 11) % 60).padStart(2, '0');
+    const ss  = String((i * 17) % 60).padStart(2, '0');
+    return {
+      id:         4000 + i,
+      applyNo:    `INS-2026-${String(i + 1).padStart(5, '0')}`,
+      name:       NAMES_I[i % NAMES_I.length],
+      email:      `inst${4000 + i}@example.com`,
+      phone:      `010-${String(3000 + i).padStart(4, '0')}-${String(7000 + i).padStart(4, '0')}`,
+      region:     REGIONS_I[i % REGIONS_I.length],
+      days:       DAYS_I[i % DAYS_I.length],
+      area:       AREAS_I[i % AREAS_I.length],
+      course:     COURSES_I[i % COURSES_I.length],
+      note:       i % 3 === 0 ? '장애인 대상 프로그램 경험 있음' : '',
+      applyDate:  `2026-${mm}-${dd}`,
+      applyDatetime: `2026-${mm}-${dd} ${hh}:${min}:${ss}`,
+      adminMemo:  ['','서류 검토 완료','','활동지역 재확인 필요','','','이력서 요청함','','','연락처 변경 안내','',''][i % 12],
+    };
+  });
+
+  const InstructorApply = {
+    _data:     ALL_DATA_I,
+    _filtered: [...ALL_DATA_I],
+    _page:     1,
+    _pageSize: 10,
+
+    search() {
+      const dateFrom = document.getElementById('filterDateFrom')?.value || '';
+      const dateTo   = document.getElementById('filterDateTo')?.value   || '';
+      const region   = document.querySelector('input[name="filterRegion"]:checked')?.value || '';
+      const day      = document.querySelector('input[name="filterDay"]:checked')?.value    || '';
+      const kwType   = document.getElementById('filterSearchType')?.value || 'all';
+      const keyword  = (document.getElementById('filterKeyword')?.value || '').trim().toLowerCase();
+
+      this._filtered = this._data.filter(d => {
+        if (dateFrom && d.applyDate < dateFrom) return false;
+        if (dateTo   && d.applyDate > dateTo)   return false;
+        if (region   && d.region !== region)    return false;
+        /* days는 배열: 특정 요일 선택 시 해당 요일 포함 여부 or 무관 포함 여부 */
+        if (day) {
+          if (day === '무관') { if (!d.days.includes('무관')) return false; }
+          else { if (!d.days.includes(day) && !d.days.includes('무관')) return false; }
+        }
+        if (keyword) {
+          const m = { name: d.name, email: d.email, phone: d.phone };
+          if (kwType !== 'all') return m[kwType]?.toLowerCase().includes(keyword);
+          return Object.values(m).some(v => v.toLowerCase().includes(keyword));
+        }
+        return true;
+      });
+      this._page = 1;
+      this.render();
+    },
+
+    setDatePreset(range) {
+      const to = new Date(), from = new Date();
+      if (range !== 'today') from.setDate(from.getDate() - range);
+      const fmt = d => d.toISOString().split('T')[0];
+      document.getElementById('filterDateFrom').value = fmt(from);
+      document.getElementById('filterDateTo').value   = fmt(to);
+      this.search();
+    },
+
+    reset() {
+      document.getElementById('filterDateFrom').value = '';
+      document.getElementById('filterDateTo').value   = '';
+      document.getElementById('filterKeyword').value  = '';
+      document.getElementById('filterSearchType').value = 'all';
+      document.querySelector('input[name="filterRegion"][value=""]').checked = true;
+      document.querySelector('input[name="filterDay"][value=""]').checked    = true;
+      this._filtered = [...this._data];
+      this._page = 1;
+      this.render();
+    },
+
+    changePageSize(size) { this._pageSize = size; this._page = 1; this.render(); },
+
+    render() {
+      const total = this._filtered.length;
+      const start = (this._page - 1) * this._pageSize;
+      const slice = this._filtered.slice(start, start + this._pageSize);
+
+      const countEl = document.getElementById('applyCount');
+      if (countEl) countEl.textContent = total.toLocaleString();
+
+      const tbody = document.getElementById('applyTableBody');
+      if (!tbody) return;
+
+      if (!slice.length) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:#8a9e84">검색 결과가 없습니다.</td></tr>`;
+        App.renderPagination('applyPagination', 1, 1, () => {});
+        return;
+      }
+
+      tbody.innerHTML = slice.map((d, i) => {
+        const seq = total - start - i;
+        const memo = d.adminMemo || '';
+        const memoCell = memo
+          ? `<span style="font-size:12px;color:#5a7a5a">${memo.length > 10 ? memo.slice(0, 10) + '…' : memo}</span>`
+          : `<span style="color:#ccc;font-size:12px">—</span>`;
+        return `<tr onclick="location.href='apply-instructor-detail.html?id=${d.id}'">
+          <td style="text-align:center">${seq}</td>
+          <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">${d.applyNo}</td>
+          <td style="font-weight:600">${d.name}</td>
+          <td style="text-align:center;font-size:13px">${d.region}</td>
+          <td style="text-align:center;font-size:13px">${d.days.join('·')}</td>
+          <td style="text-align:center;font-size:13px" class="cell-datetime">${d.phone}</td>
+          <td style="font-size:13px">${d.email}</td>
+          <td style="text-align:center;font-size:13px" class="cell-datetime">${d.applyDatetime}</td>
+          <td style="text-align:center">${memoCell}</td>
+        </tr>`;
+      }).join('');
+
+      App.renderPagination(
+        'applyPagination', this._page,
+        Math.ceil(total / this._pageSize) || 1,
+        p => { this._page = p; this.render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      );
+    },
+
+    exportExcel() { App.toast('강사신청 목록 엑셀 다운로드를 시작합니다.', 'info'); },
+  };
+
+  InstructorApply.render();
+  </script>
 </body>
-
 </html>

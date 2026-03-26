@@ -3,7 +3,11 @@
     "allow": [
       "Bash(powershell.exe -ExecutionPolicy Bypass -File \"c:/Users/BN659/Desktop/배은아/기획PM/auto_commit.ps1\")",
       "Bash(powershell.exe -Command \"cd ''c:/Users/BN659/Desktop/배은아/기획PM''; \\(Get-Location\\).Path\")",
-      "Bash(grep -l \"admin-table\" \"c:/Users/BN659/Desktop/배은아/기획PM/projects/foresto_homepage/outputs/admin/\"*.html)"
+      "Bash(grep -l \"admin-table\" \"c:/Users/BN659/Desktop/배은아/기획PM/projects/foresto_homepage/outputs/admin/\"*.html)",
+      "Bash(grep -v \"^admin$\")",
+      "Bash(find c:UsersBN659Desktop배은아기획PMprojectsforesto_homepageoutputs -name *apply* -o -name *신청*)",
+      "Bash(head -10 grep -n \"applyNo\\\\|table-bottom-bar\\\\|APP-2026\" \"c:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\outputs\\\\admin\\\\apply-forest.html\")",
+      "Bash(head -10 grep -n \"applyNo\\\\|table-bottom-bar\\\\|APP-2026\" \"c:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\outputs\\\\admin\\\\apply-sponsor.html\")"
     ]
   }
 }

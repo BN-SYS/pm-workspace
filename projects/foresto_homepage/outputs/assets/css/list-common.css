@@ -131,7 +131,21 @@
 /* ── 반응형 (≤ 768px) */
 @media (max-width: 768px) {
   .list-section-title { font-size: 17px; }
-  .list-filter-row    { flex-wrap: wrap; }
-  .list-filter-item   { flex: 1 1 calc(50% - 8px); min-width: 0; }
+  .list-filter-box    { padding: 14px 16px; }
+  .list-filter-row    { flex-wrap: wrap; gap: 12px; }
+  .list-filter-item   { flex: 1 1 100%; min-width: 0; }
   .list-filter-btn    { width: 100%; margin-left: 0; }
+}
+
+/* ── 반응형 (≤ 480px) — 날짜 입력 세로 배치 */
+@media (max-width: 480px) {
+  .list-filter-date-inputs {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .list-filter-date-inputs .list-filter-input {
+    width: 100%;
+    flex: none;
+  }
+  .list-filter-sep { display: none; }
 }
