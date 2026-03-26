@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>한국숲해설가협회 — 화면 목록</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', -apple-system, sans-serif;
+      background: #f4f5f7;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── 사이드바 */
+    .sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      background: #1a2718;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .sidebar-head {
+      padding: 20px 18px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+      flex-shrink: 0;
+    }
+    .sidebar-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #8fc76a;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .sidebar-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,.4);
+    }
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0 16px;
+    }
+    .sidebar-nav::-webkit-scrollbar { width: 4px; }
+    .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+    .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 2px; }
+
+    .nav-group-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255,255,255,.3);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 14px 18px 6px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 18px;
+      cursor: pointer;
+      transition: background .12s;
+      border-left: 3px solid transparent;
+    }
+    .nav-item:hover { background: rgba(255,255,255,.06); }
+    .nav-item.active {
+      background: rgba(143,199,106,.12);
+      border-left-color: #8fc76a;
+    }
+    .nav-num {
+      font-size: 10px;
+      color: rgba(255,255,255,.3);
+      flex-shrink: 0;
+      min-width: 22px;
+    }
+    .nav-item.active .nav-num { color: #8fc76a; }
+    .nav-label {
+      font-size: 12.5px;
+      color: rgba(255,255,255,.7);
+      line-height: 1.4;
+    }
+    .nav-item.active .nav-label { color: #fff; font-weight: 500; }
+
+    /* ── 메인 영역 */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid #e0e4e8;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .topbar-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a2718;
+    }
+    .topbar-path {
+      font-size: 12px;
+      color: #8a9e84;
+      margin-top: 2px;
+    }
+    .topbar-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-arrow {
+      width: 32px; height: 32px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      color: #4a5545;
+      transition: all .12s;
+    }
+    .nav-arrow:hover:not(:disabled) { border-color: #508829; color: #508829; }
+    .nav-arrow:disabled { opacity: .3; cursor: default; }
+    .nav-counter {
+      font-size: 12px;
+      color: #8a9e84;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .viewer {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: #e8eceb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+    }
+    .viewer img {
+      display: block;
+      width: 80%;
+      height: auto;
+      background: #fff;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <div class="sidebar-title">Foresto Homepage</div>
+      <div class="sidebar-sub">화면 목록 · 52페이지</div>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-name" id="topbarName">-</div>
+        <div class="topbar-path" id="topbarPath">-</div>
+      </div>
+      <div class="topbar-nav">
+        <button class="nav-arrow" id="btnPrev" onclick="move(-1)">&#8592;</button>
+        <span class="nav-counter" id="counter">1 / 52</span>
+        <button class="nav-arrow" id="btnNext" onclick="move(1)">&#8594;</button>
+      </div>
+    </div>
+    <div class="viewer">
+      <img id="viewerImg" src="" alt="">
+    </div>
+  </div>
+
+  <script>
+    const PAGES = [
+      { num:'01', group:'홈',      label:'메인',           file:'01_홈_메인.png' },
+      { num:'02', group:'소개',    label:'인사말',         file:'02_소개_인사말.png' },
+      { num:'03', group:'소개',    label:'미션 & 비전',    file:'03_소개_미션비전.png' },
+      { num:'04', group:'소개',    label:'주요사업',       file:'04_소개_주요사업.png' },
+      { num:'05', group:'소개',    label:'연혁',           file:'05_소개_연혁.png' },
+      { num:'06', group:'소개',    label:'오시는 길',      file:'06_소개_오시는길.png' },
+      { num:'07', group:'소개',    label:'조직도·임원진',  file:'07_소개_조직도임원진.png' },
+      { num:'08', group:'소개',    label:'전국지역협회',   file:'08_소개_전국지역협회.png' },
+      { num:'09', group:'소개',    label:'지역협회 상세',  file:'09_소개_지역협회상세.png' },
+      { num:'10', group:'소개',    label:'회원 규정',      file:'10_소개_회원규정.png' },
+      { num:'11', group:'소개',    label:'정회원 가입안내',file:'11_소개_정회원가입안내.png' },
+      { num:'12', group:'소개',    label:'정회원 신청',    file:'12_소개_정회원신청.png' },
+      { num:'13', group:'소개',    label:'후원 안내',      file:'13_소개_후원안내.png' },
+      { num:'14', group:'소개',    label:'후원하기',       file:'14_소개_후원하기.png' },
+      { num:'15', group:'교육',    label:'숲해설가란',     file:'15_교육_숲해설가란.png' },
+      { num:'16', group:'교육',    label:'FAQ',            file:'16_교육_FAQ.png' },
+      { num:'17', group:'교육',    label:'기초과정 개요',  file:'17_교육_기초과정개요.png' },
+      { num:'18', group:'교육',    label:'기초과정 신청',  file:'18_교육_기초과정신청.png' },
+      { num:'19', group:'교육',    label:'자격취득과정',   file:'19_교육_자격취득과정.png' },
+      { num:'20', group:'교육',    label:'과정 신청목록',  file:'20_교육_과정신청목록.png' },
+      { num:'21', group:'교육',    label:'과정 상세',      file:'21_교육_과정상세.png' },
+      { num:'22', group:'교육',    label:'수료생 후기',    file:'22_교육_수료생후기.png' },
+      { num:'23', group:'교육',    label:'수료생 후기 상세',file:'23_교육_수료생후기상세.png' },
+      { num:'24', group:'교육',    label:'역량강화과정',   file:'24_교육_역량강화과정.png' },
+      { num:'25', group:'교육',    label:'역량강화 신청',  file:'25_교육_역량강화신청.png' },
+      { num:'26', group:'회원',    label:'특강 목록',      file:'26_회원_특강목록.png' },
+      { num:'27', group:'회원',    label:'특강 상세',      file:'27_회원_특강상세.png' },
+      { num:'28', group:'회원',    label:'강좌 목록',      file:'28_회원_강좌목록.png' },
+      { num:'29', group:'회원',    label:'강좌 상세',      file:'29_회원_강좌상세.png' },
+      { num:'30', group:'회원',    label:'멘토링 목록',    file:'30_회원_멘토링목록.png' },
+      { num:'31', group:'회원',    label:'멘토링 상세',    file:'31_회원_멘토링상세.png' },
+      { num:'32', group:'회원',    label:'사공단',         file:'32_회원_사공단.png' },
+      { num:'33', group:'회원',    label:'사공단 소식',    file:'33_회원_사공단소식.png' },
+      { num:'34', group:'회원',    label:'사공단 일지',    file:'34_회원_사공단일지.png' },
+      { num:'35', group:'회원',    label:'동아리단',       file:'35_회원_동아리단.png' },
+      { num:'36', group:'회원',    label:'강사 신청',      file:'36_회원_강사신청.png' },
+      { num:'37', group:'커뮤니티',label:'공지사항',       file:'37_커뮤_공지사항.png' },
+      { num:'38', group:'커뮤니티',label:'공지 상세',      file:'38_커뮤_공지상세.png' },
+      { num:'39', group:'커뮤니티',label:'협회 캘린더',    file:'39_커뮤_협회캘린더.png' },
+      { num:'40', group:'커뮤니티',label:'협회지 목록',    file:'40_커뮤_협회지목록.png' },
+      { num:'41', group:'커뮤니티',label:'협회지 상세',    file:'41_커뮤_협회지상세.png' },
+      { num:'42', group:'커뮤니티',label:'언론보도 목록',  file:'42_커뮤_언론보도목록.png' },
+      { num:'43', group:'커뮤니티',label:'언론보도 상세',  file:'43_커뮤_언론보도상세.png' },
+      { num:'44', group:'커뮤니티',label:'갤러리',         file:'44_커뮤_갤러리.png' },
+      { num:'45', group:'커뮤니티',label:'갤러리 상세',    file:'45_커뮤_갤러리상세.png' },
+      { num:'46', group:'커뮤니티',label:'자료실',         file:'46_커뮤_자료실.png' },
+      { num:'47', group:'커뮤니티',label:'자료실 상세',    file:'47_커뮤_자료실상세.png' },
+      { num:'48', group:'기타',    label:'숲해설 신청',    file:'48_숲해설신청.png' },
+      { num:'49', group:'기타',    label:'사이트맵',       file:'49_사이트맵.png' },
+      { num:'50', group:'기타',    label:'이용약관',       file:'50_이용약관.png' },
+      { num:'51', group:'기타',    label:'개인정보처리방침',file:'51_개인정보처리방침.png' },
+      { num:'52', group:'기타',    label:'이메일 무단수집거부',file:'52_이메일무단수집거부.png' },
+    ];
+
+    let current = 0;
+
+    /* ── 사이드바 렌더 */
+    function buildSidebar() {
+      const nav = document.getElementById('sidebarNav');
+      let lastGroup = '';
+      nav.innerHTML = PAGES.map((p, i) => {
+        let html = '';
+        if (p.group !== lastGroup) {
+          html += `<div class="nav-group-label">${p.group}</div>`;
+          lastGroup = p.group;
+        }
+        html += `<div class="nav-item${i === 0 ? ' active' : ''}" id="nav-${i}" onclick="select(${i})">
+          <span class="nav-num">${p.num}</span>
+          <span class="nav-label">${p.label}</span>
+        </div>`;
+        return html;
+      }).join('');
+    }
+
+    /* ── 화면 전환 */
+    function select(idx) {
+      const prev = document.getElementById(`nav-${current}`);
+      if (prev) prev.classList.remove('active');
+      current = idx;
+      const next = document.getElementById(`nav-${current}`);
+      if (next) {
+        next.classList.add('active');
+        next.scrollIntoView({ block: 'nearest' });
+      }
+
+      const p = PAGES[idx];
+      document.getElementById('viewerImg').src = p.file;
+      document.getElementById('topbarName').textContent = `${p.num}. ${p.label}`;
+      document.getElementById('topbarPath').textContent = p.file;
+      document.getElementById('counter').textContent = `${idx + 1} / ${PAGES.length}`;
+      document.getElementById('btnPrev').disabled = idx === 0;
+      document.getElementById('btnNext').disabled = idx === PAGES.length - 1;
+
+      // 뷰어 스크롤 초기화
+      document.querySelector('.viewer').scrollTop = 0;
+    }
+
+    function move(dir) { select(Math.max(0, Math.min(PAGES.length - 1, current + dir))); }
+
+    /* ── 키보드 */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') move(1);
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   move(-1);
+    });
+
+    buildSidebar();
+    select(0);
+  </script>
+</body>
+</html>
