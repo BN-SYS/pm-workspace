@@ -1,4 +1,4 @@
-# ============================================
+﻿# ============================================
 # foresto_homepage 전체 페이지 풀스크린샷 캡처
 # Chrome CDP (DevTools Protocol) 사용
 # fixed 헤더 → relative 변환 후 캡처 (중간 반복 방지)
@@ -80,6 +80,10 @@ $fixHeaderJS = @"
     hdr.style.zIndex = '1';
   }
   document.body.style.paddingTop = '0';
+  // 스크롤바 gutter 제거 → 콘텐츠가 뷰포트 전체 너비(1920px)를 사용하도록
+  var st = document.createElement('style');
+  st.textContent = '::-webkit-scrollbar{width:0!important;height:0!important}html,body{scrollbar-width:none!important;overflow-y:visible!important}';
+  document.head.appendChild(st);
   // 모바일 드로어 닫기
   var nav = document.getElementById('mobileNav');
   if(nav) nav.style.display = 'none';
@@ -98,12 +102,17 @@ function Send-CDP {
 
 function Recv-CDP {
   param($ws, [int]$timeoutMs = 8000)
-  $buf = [byte[]]::new(4194304)   # 4MB 버퍼 (고해상도 이미지 대응)
-  $seg = [System.ArraySegment[byte]]::new($buf)
-  $cts = [System.Threading.CancellationTokenSource]::new($timeoutMs)
+  # 청크 방식으로 수신 - 스크린샷 base64가 수십 MB를 초과해도 안전하게 처리
+  $chunk = [byte[]]::new(65536)   # 64KB 청크
+  $seg   = [System.ArraySegment[byte]]::new($chunk)
+  $acc   = [System.Collections.Generic.List[byte]]::new()
+  $cts   = [System.Threading.CancellationTokenSource]::new($timeoutMs)
   try {
-    $r = $ws.ReceiveAsync($seg, $cts.Token).GetAwaiter().GetResult()
-    return [System.Text.Encoding]::UTF8.GetString($buf, 0, $r.Count) | ConvertFrom-Json
+    do {
+      $r = $ws.ReceiveAsync($seg, $cts.Token).GetAwaiter().GetResult()
+      $acc.AddRange([System.ArraySegment[byte]]::new($chunk, 0, $r.Count))
+    } while (-not $r.EndOfMessage)
+    return [System.Text.Encoding]::UTF8.GetString($acc.ToArray()) | ConvertFrom-Json
   } catch { return $null }
 }
 
@@ -172,7 +181,7 @@ foreach ($page in $pages) {
 
     # 3. 전체 페이지 높이 재측정 (레이아웃 변경 반영)
     Send-CDP $ws $msgId "Runtime.evaluate" @{
-      expression    = "Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)"
+      expression    = "(function(){var f=document.getElementById('ftr');if(f){var r=f.getBoundingClientRect();return Math.round(r.bottom+window.scrollY);}return Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);})();"
       returnByValue = $true
     }
     $hResp = Wait-CDP $ws $msgId 5000
@@ -183,7 +192,7 @@ foreach ($page in $pages) {
 
     # 4. 뷰포트를 전체 높이로 설정
     Send-CDP $ws $msgId "Emulation.setDeviceMetricsOverride" @{
-      width             = 1440
+      width             = 1920
       height            = $pageH
       deviceScaleFactor = 1
       mobile            = $false
@@ -194,7 +203,7 @@ foreach ($page in $pages) {
     # 5. 스크린샷 캡처
     Send-CDP $ws $msgId "Page.captureScreenshot" @{
       format = "png"
-      clip   = @{ x=0; y=0; width=1440; height=$pageH; scale=1 }
+      clip   = @{ x=0; y=0; width=1920; height=$pageH; scale=1 }
     }
     $ssResp = Wait-CDP $ws $msgId 20000
     $msgId++

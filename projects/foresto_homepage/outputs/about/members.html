@@ -25,128 +25,128 @@
   <div class="sub-layout">
     <div id="lnb"></div>
     <main class="sub-content">
-  <div class="content-wrap">
+      <div class="content-wrap">
 
-    <!-- 조직도 -->
-    <h2 class="section-heading">조직도</h2>
-    <div class="org-chart">
-      <!-- 총회 -->
-      <div class="org-box type-top">총 회</div>
-      <div class="org-vline"></div>
-
-      <!-- 이사회 -->
-      <div class="org-box type-mid">이 사 회</div>
-      <div class="org-vline"></div>
-
-      <!-- 상임대표 -->
-      <div class="org-box type-mid">상임대표</div>
-      <div class="org-vline"></div>
-
-      <!-- 2단 분기: 사무처장 + 감사 -->
-      <div class="org-fork org-fork--2col">
-        <div class="org-fork-item org-fork-item--wide">
-          <div class="org-vline"></div>
-          <div class="org-box type-sub">사무처장</div>
+        <!-- 조직도 -->
+        <h2 class="section-heading">조직도</h2>
+        <div id="orgChartSection">
+          <!-- 관리자에서 이미지 등록 시 표시 -->
+          <div class="org-img-empty">
+            관리자 페이지에서 조직도 이미지를 등록하면 이 영역에 표시됩니다.
+          </div>
         </div>
-        <div class="org-fork-item org-fork-item--wide">
-          <div class="org-vline"></div>
-          <div class="org-box type-gray">감 사</div>
-        </div>
+
+        <!-- 임원진 -->
+        <h2 class="section-heading section-heading--mt">임원진</h2>
+        <div class="og-list" id="officerList"></div>
+
+
       </div>
-
-      <div class="org-vline"></div>
-
-      <!-- 4개 부서 -->
-      <div class="org-fork org-fork--4col">
-        <div class="org-fork-item org-fork-item--std">
-          <div class="org-vline"></div>
-          <div class="org-box type-sub org-box--dept">교육부</div>
-        </div>
-        <div class="org-fork-item org-fork-item--std">
-          <div class="org-vline"></div>
-          <div class="org-box type-sub org-box--dept">사회공헌부</div>
-        </div>
-        <div class="org-fork-item org-fork-item--std">
-          <div class="org-vline"></div>
-          <div class="org-box type-sub org-box--dept">회원관리부</div>
-        </div>
-        <div class="org-fork-item org-fork-item--std">
-          <div class="org-vline"></div>
-          <div class="org-box type-sub org-box--dept">홍보출판부</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 임원진 -->
-    <h2 class="section-heading section-heading--mt">임원진</h2>
-    <table class="member-table">
-      <tbody>
-        <tr>
-          <td class="role-cell">상임대표</td>
-          <td>
-            <span class="name-item">○○○</span>
-          </td>
-        </tr>
-        <tr>
-          <td class="role-cell">부대표</td>
-          <td class="name-row--lg">
-            <span class="name-item">○○○</span>
-            <span class="name-item">○○○</span>
-          </td>
-        </tr>
-        <tr>
-          <td class="role-cell">이사</td>
-          <td>
-            <span class="name-item">○○○ <span class="name-sub">(교육부)</span></span>
-            <span class="name-item">○○○ <span class="name-sub">(사회공헌부)</span></span>
-            <span class="name-item">○○○ <span class="name-sub">(회원관리부)</span></span>
-            <span class="name-item">○○○ <span class="name-sub">(홍보출판부)</span></span>
-            <span class="name-item">○○○</span>
-            <span class="name-item">○○○</span>
-            <span class="name-item">○○○</span>
-            <span class="name-item">○○○</span>
-          </td>
-        </tr>
-        <tr>
-          <td class="role-cell">감사</td>
-          <td class="name-row--lg">
-            <span class="name-item">○○○</span>
-            <span class="name-item">○○○</span>
-          </td>
-        </tr>
-        <tr>
-          <td class="role-cell">사무처장</td>
-          <td>
-            <span class="name-item">○○○</span>
-          </td>
-        </tr>
-        <tr>
-          <td class="role-cell">간사</td>
-          <td class="name-row--lg">
-            <span class="name-item">○○○</span>
-            <span class="name-item">○○○</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="alert alert-info alert--top-gap">
-      ℹ임원진 정보는 정기총회 결과에 따라 변경될 수 있습니다. 최신 정보는 협회 사무국으로 문의하시기 바랍니다.
-    </div>
-
-  </div>
     </main>
   </div>
 
-
   <div id="ftr"></div>
+
   <script src="../assets/js/app.js"></script>
   <script src="../assets/js/components/header.js"></script>
   <script>
     document.getElementById('hdr').innerHTML = Header.render('협회소개', '../');
     document.getElementById('ftr').innerHTML = Footer.render('../');
-    document.getElementById('bc').innerHTML = LNB.breadcrumb('../', 'about/members.html');
+    document.getElementById('bc').innerHTML  = LNB.breadcrumb('../', 'about/members.html');
     document.getElementById('lnb').innerHTML = LNB.render('../', 'about/members.html');
+  </script>
+
+  <script>
+    /* ── 임원진 데이터 (관리자 organization.html과 동일 구조) */
+    const OFFICER_DATA = [
+      {
+        gid: 1, name: '함께하는 사람들',
+        officers: [
+          { oid: 1,  title: '상임 대표', name: '김국희',          detail: '',                               img: 'https://picsum.photos/seed/k1/270/360' },
+          { oid: 2,  title: '고문',      name: '김성혁',          detail: '전 농림부 장관',                 img: 'https://picsum.photos/seed/k2/270/360' },
+          { oid: 3,  title: '고문',      name: '김동근',          detail: '전 산림청장, 전 농림부장관급',   img: 'https://picsum.photos/seed/k3/270/360' },
+          { oid: 4,  title: '고문',      name: '조연환',          detail: '전 산림청장',                    img: null },
+          { oid: 5,  title: '공동 대표', name: '최병암',          detail: '전 산림청장',                    img: 'https://picsum.photos/seed/k5/270/360' },
+          { oid: 6,  title: '공동 대표', name: '임진석',          detail: '법무법인 린 대표변호사',         img: 'https://picsum.photos/seed/k6/270/360' },
+          { oid: 7,  title: '감사',      name: '석락준, 마철노',  detail: '',                               img: null },
+          { oid: 8,  title: '이사',      name: '이수원 외 다수',  detail: '숲해설가 이하 통일',             img: null },
+          { oid: 9,  title: '사무처',    name: '양동회',          detail: '사무처장',                       img: null },
+        ],
+      },
+      {
+        gid: 2, name: '지역 대표자 명단',
+        officers: [
+          { oid: 10, title: '강원협회',           name: '김론수', detail: '상임대표 / 사무처장: 서세정',  img: null },
+          { oid: 11, title: '경북협회',           name: '김영삼', detail: '상임대표 / 사무국장: 원지환',  img: null },
+          { oid: 12, title: '광주전남협회',       name: '이미영', detail: '상임대표 / 사무처장: 김미성',  img: null },
+          { oid: 13, title: '대전세종충남협회',   name: '김인승', detail: '상임대표 / 사무국장: 신상열',  img: null },
+          { oid: 14, title: '부경협회',           name: '도정훈', detail: '상임대표 / 사무국장: 나영숙',  img: null },
+          { oid: 15, title: '충북협회',           name: '이상태', detail: '상임대표 / 사무처장: 이의영',  img: null },
+        ],
+      },
+      {
+        gid: 3, name: '지회 대표자 명단',
+        officers: [
+          { oid: 16, title: '경기남부지회', name: '정필묵', detail: '회장 / 부회장: 경재일, 김기정, 박원근, 장관진', img: null },
+          { oid: 17, title: '경기북부지회', name: '김관홍', detail: '회장 / 부회장: 이상전',                         img: null },
+          { oid: 18, title: '경기서부지회', name: '김경대', detail: '회장 / 부회장: 최태영',                         img: null },
+          { oid: 19, title: '제주지회',     name: '양인효', detail: '회장',                                          img: null },
+          { oid: 20, title: '평창지회',     name: '강경하', detail: '대표 / 사무국장: 원희찬',                        img: null },
+        ],
+      },
+      {
+        gid: 4, name: '협회 전문위원 명단',
+        officers: [
+          { oid: 21, title: '전문위원', name: '김해경', detail: '한국숲해설가협회 / 세밀화 강사',             img: null },
+          { oid: 22, title: '전문위원', name: '박병권', detail: '원광 디지털대 교수 / 생물학 박사',           img: null },
+          { oid: 23, title: '전문위원', name: '박정호', detail: '한국수서생태연구소 소장 / 이학 박사',        img: null },
+          { oid: 24, title: '전문위원', name: '송증선', detail: '민속식물연구소장 / 농학박사 / 들꽃동정 강사', img: null },
+          { oid: 25, title: '전문위원', name: '신경섭', detail: '한국생태문화연구소장 / 생물학박사',          img: null },
+          { oid: 26, title: '전문위원', name: '심삼목', detail: '핫샐 자연학교장',                            img: null },
+          { oid: 27, title: '전문위원', name: '윤주복', detail: '야생화 / 나무 쉽게 찾기 도감 저자',          img: null },
+          { oid: 28, title: '전문위원', name: '이기선', detail: '한국환경생태연구소 소장 / 생물학 박사',      img: null },
+          { oid: 29, title: '전문위원', name: '이영희', detail: '가천대학교 환경학박사',                      img: null },
+          { oid: 30, title: '전문위원', name: '조계중', detail: '순천대학교 산림학과 교수 / 산림휴양학회 박사', img: null },
+          { oid: 31, title: '전문위원', name: '우종영', detail: '푸른 공간(주) 나무병원 원장, 게으른 산행 외 숲생태관련저서 다수', img: null },
+          { oid: 32, title: '전문위원', name: '지석용', detail: '환경부 모카리나 강사, 동아 오카리나 대표', img: null },
+          { oid: 33, title: '전문위원', name: '차두경', detail: '경원대학교 조경학과 교수 / 산림학 박사',   img: null },
+        ],
+      },
+    ];
+
+    /* ── 렌더링 */
+    function renderOfficers() {
+      const container = document.getElementById('officerList');
+      if (!container) return;
+
+      container.innerHTML = OFFICER_DATA.map(group => {
+        const body = `<div class="og-card-grid">` + group.officers.map(o => {
+          const avatarInner = o.img
+            ? `<img src="${o.img}" alt="${o.name}">`
+            : `<span class="og-card-avatar-ph"></span>`;
+          const detail = o.detail ? `<div class="og-card-detail">${o.detail}</div>` : '';
+          const photoTip = o.img ? `<span class="og-photo-tip"><img src="${o.img}" alt="${o.name}"></span>` : '';
+          return `
+            <div class="og-card${o.img ? ' has-photo' : ''}">
+              ${photoTip}
+              <div class="og-card-avatar">${avatarInner}</div>
+              <div class="og-card-info">
+                <div class="og-card-role">${o.title}</div>
+                <div class="og-card-name">${o.name}</div>
+                ${detail}
+              </div>
+            </div>`;
+        }).join('') + `</div>`;
+
+        return `
+          <div class="og-section">
+            <h3 class="og-section-title">${group.name}</h3>
+            ${body}
+          </div>`;
+      }).join('');
+    }
+
+    renderOfficers();
   </script>
 </body>
 </html>
