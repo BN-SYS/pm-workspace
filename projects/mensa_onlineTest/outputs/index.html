@@ -7,70 +7,298 @@
     <title>멘사형 사고력 온라인 테스트</title>
     <link rel="stylesheet" href="css/common.css">
     <style>
-        /* 페이지 기본 설정 */
-        body {
-            margin: 0;
-            padding: 0;
-            background: #f5f5f5;
-            /* 여백 배경색 */
+        /* ── 배경 */
+        .test-list-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 96px 24px 72px;
+            background: #fafbfc;
         }
 
-        /* 헤더 고정 */
-        .header {
-            position: fixed;
+        /* ── 헤더 */
+        .test-list-header {
+            text-align: center;
+            margin-bottom: 72px;
+            max-width: 620px;
+        }
+
+        .test-list-header .eyebrow {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .test-list-header h1 {
+            font-size: 42px;
+            font-weight: 300;
+            color: #0d1117;
+            letter-spacing: -0.8px;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .test-list-header h1 strong {
+            font-weight: 700;
+        }
+
+        .test-list-header p {
+            font-size: 16px;
+            color: #57606a;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* ── 카드 그리드 */
+        .test-card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            width: 100%;
+            max-width: 1040px;
+            margin-bottom: 56px;
+        }
+
+        /* ── 카드 공통 */
+        .test-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 44px 36px 40px;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 활성 카드 */
+        a.test-card.active {
+            text-decoration: none;
+            color: inherit;
+            border-color: #667eea;
+            background: #ffffff;
+            box-shadow: 0 0 0 1px #667eea, 0 8px 24px rgba(102, 126, 234, 0.12);
+        }
+
+        a.test-card.active::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            z-index: 1000;
-            background: white;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
         }
 
-        /* 이미지 영역 - 헤더 아래부터 시작 */
-        .fullscreen-image-wrapper {
-            margin-top: 70px;
-            /* 헤더 높이만큼 여백 */
-            width: 100%;
-            min-height: calc(100vh - 70px);
-            /* 최소 높이 */
+        a.test-card.active:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 0 1px #667eea, 0 16px 40px rgba(102, 126, 234, 0.16);
+        }
+
+        a.test-card:not(.active) {
+            cursor: pointer;
+        }
+
+        a.test-card:not(.active):hover {
+            border-color: #d1d5db;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            transform: translateY(-4px);
+        }
+
+        /* Coming Soon 카드 */
+        .test-card.coming-soon {
+            background: #f8f9fa;
+            border-color: #e9ecef;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* ── 배지 */
+        .test-card-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 16px;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-active {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .badge-soon {
+            background: #e9ecef;
+            color: #adb5bd;
+        }
+
+        /* ── 텍스트 */
+        .test-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0d1117;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            letter-spacing: -0.3px;
+        }
+
+        .test-card p {
+            font-size: 14px;
+            color: #57606a;
+            line-height: 1.7;
+            flex: 1;
+            font-weight: 400;
+        }
+
+        .test-card-meta {
+            margin-top: 28px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .meta-chip {
+            font-size: 12px;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        a.test-card.active .meta-chip {
+            background: rgba(102, 126, 234, 0.08);
+            color: #667eea;
+        }
+
+        a.test-card:not(.active):not(.coming-soon) .meta-chip {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .test-card.coming-soon .meta-chip {
+            background: #f0f0f0;
+            color: #bbb;
+        }
+
+        /* ── Coming Soon 상태 */
+        .test-card.coming-soon {
+            align-items: center;
+            text-align: center;
+        }
+
+        .coming-soon-placeholder {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #fff;
-            /* 이미지 배경 */
-            padding: 20px 0;
-            /* 상하 여백 */
-        }
-
-        .fullscreen-image {
             width: 100%;
-            height: auto;
-            /* 원본 비율 유지 */
-            max-width: 100%;
-            display: block;
+            padding: 24px 0;
         }
 
-        /* 푸터는 이미지 아래에 배치 */
-        #footer-placeholder {
-            position: relative;
-            z-index: 10;
+        .coming-soon-label {
+            font-size: 18px;
+            font-weight: 400;
+            color: #d1d5db;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        /* 반응형 - 태블릿 */
-        @media (max-width: 768px) {
-            .fullscreen-image-wrapper {
-                margin-top: 60px;
-                min-height: calc(100vh - 60px);
-                padding: 15px 0;
+        /* ── 온라인문의 버튼 */
+        .inquiry-wrap {
+            width: 100%;
+            max-width: 1040px;
+            display: flex;
+            justify-content: center;
+            padding-bottom: 20px;
+        }
+
+        .btn-inquiry {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: transparent;
+            border: 1px solid #e5e7eb;
+            color: #57606a;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.28s ease;
+            border-radius: 8px;
+            letter-spacing: 0.2px;
+        }
+
+        .btn-inquiry:hover {
+            color: #667eea;
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.04);
+        }
+
+        .btn-inquiry::after {
+            content: '→';
+            transition: transform 0.28s ease;
+        }
+
+        .btn-inquiry:hover::after {
+            transform: translateX(3px);
+        }
+
+        /* ── 반응형 */
+        @media (max-width: 1024px) {
+            .test-card-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+                max-width: 680px;
             }
         }
 
-        /* 반응형 - 모바일 */
-        @media (max-width: 480px) {
-            .fullscreen-image-wrapper {
-                margin-top: 56px;
-                min-height: calc(100vh - 56px);
-                padding: 10px 0;
+        @media (max-width: 640px) {
+            .test-list-section {
+                padding: 60px 20px 48px;
             }
+
+            .test-list-header {
+                margin-bottom: 48px;
+            }
+
+            .test-list-header h1 {
+                font-size: 28px;
+            }
+
+            .test-list-header p {
+                font-size: 15px;
+            }
+
+            .test-card-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                max-width: 100%;
+            }
+
+            .test-card {
+                padding: 32px 24px 28px;
+            }
+
+            .inquiry-wrap {
+                max-width: 100%;
+            }
+        }
+
+        /* ── 세련된 포커스 상태 */
+        a.test-card.active:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #667eea, 0 8px 24px rgba(102, 126, 234, 0.12);
         }
     </style>
 </head>
@@ -80,12 +308,55 @@
     <!-- 헤더 (고정) -->
     <div id="header-placeholder"></div>
     <main>
+        <div class="test-list-section">
 
-        <!-- 전체 화면 이미지 (헤더 아래부터 시작) -->
-        <div class="fullscreen-image-wrapper">
-            <img src="./image/test.mensakorea.kr_.png" alt="멘사형 사고력 테스트" class="fullscreen-image">
+            <div class="test-list-header">
+                <span class="eyebrow">Online Test</span>
+                <h1>멘사코리아 <strong>온라인 테스트</strong></h1>
+                <p>나의 두뇌 레벨을 측정하고 종합 인지 능력을 확인해 보세요.</p>
+            </div>
+
+            <div class="test-card-grid">
+
+                <!-- 카드 1: 두뇌 테스트 (활성) -->
+                <a href="consent.html" class="test-card active">
+                    <span class="test-card-badge badge-active">진행 중</span>
+                    <h3>두뇌 능력 테스트</h3>
+                    <p>패턴 인식, 논리적 사고, 종합 인지 능력을 정밀하게 측정하는 종합 테스트입니다.</p>
+                    <div class="test-card-meta">
+                        <span class="meta-chip">약 40분</span>
+                        <span class="meta-chip">3단계</span>
+                    </div>
+                </a>
+
+                <!-- 카드 2: Coming Soon -->
+                <div class="test-card coming-soon">
+                    <span class="test-card-badge badge-soon">준비 중</span>
+                    <div class="coming-soon-placeholder">
+                        <span class="coming-soon-label">Coming Soon</span>
+                    </div>
+                </div>
+
+                <!-- 카드 3: Coming Soon -->
+                <div class="test-card coming-soon">
+                    <span class="test-card-badge badge-soon">준비 중</span>
+                    <div class="coming-soon-placeholder">
+                        <span class="coming-soon-label">Coming Soon</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 온라인 문의 버튼 -->
+            <div class="inquiry-wrap">
+                <a href="onlinetest-Inquiry-form.html" class="btn-inquiry">
+                    온라인테스트 문의
+                </a>
+            </div>
+
         </div>
     </main>
+
     <!-- 푸터 -->
     <div id="footer-placeholder"></div>
 

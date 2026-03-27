@@ -7,7 +7,25 @@
       "Bash(grep -v \"^admin$\")",
       "Bash(find c:UsersBN659Desktop배은아기획PMprojectsforesto_homepageoutputs -name *apply* -o -name *신청*)",
       "Bash(head -10 grep -n \"applyNo\\\\|table-bottom-bar\\\\|APP-2026\" \"c:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\outputs\\\\admin\\\\apply-forest.html\")",
-      "Bash(head -10 grep -n \"applyNo\\\\|table-bottom-bar\\\\|APP-2026\" \"c:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\outputs\\\\admin\\\\apply-sponsor.html\")"
+      "Bash(head -10 grep -n \"applyNo\\\\|table-bottom-bar\\\\|APP-2026\" \"c:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\outputs\\\\admin\\\\apply-sponsor.html\")",
+      "Bash(npm --version)",
+      "Bash(where node:*)",
+      "Read(//c/Program Files/nodejs/**)",
+      "Read(//c/Program Files \\(x86\\)/nodejs/**)",
+      "Bash(cmd /c \"node --version\")",
+      "Bash(cmd /c \"npm --version\")",
+      "Bash(cmd /c \"where node\")",
+      "Bash(cmd /c \"node -v & npm -v & npx --version\")",
+      "Bash(cmd /c \"where node 2>&1\")",
+      "Bash(cmd /c \"dir \"\"C:\\\\Program Files\\\\nodejs\\\\\"\" 2>&1\")",
+      "Bash(cmd /c \"python --version 2>&1 & python3 --version 2>&1 & pip --version 2>&1\")",
+      "Bash(powershell -Command \"node --version; npm --version\")",
+      "Bash(powershell -Command \"python --version; pip --version\")",
+      "Bash(powershell -Command \"Get-Command chrome, msedge, ''C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe'' -ErrorAction SilentlyContinue | Select-Object Name, Source\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_screens.ps1\")",
+      "Bash(powershell -Command \"\\(Get-Content -Path ''C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_screens.ps1'' -Encoding UTF8\\) | Set-Content -Path ''C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_screens.ps1'' -Encoding UTF8\")",
+      "Bash(powershell -Command \"\\(Get-Content -Path ''C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_members.ps1'' -Encoding UTF8\\) | Set-Content -Path ''C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_members.ps1'' -Encoding UTF8\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_members.ps1\")"
     ]
   }
 }

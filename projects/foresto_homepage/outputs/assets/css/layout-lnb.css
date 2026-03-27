@@ -51,6 +51,7 @@
   overflow-y: hidden;
   position: static;
   top: auto;
+  margin-bottom: 48px; /* 탭 아래 여백 — 모든 서브 페이지 통일 */
 }
 
 /* 그룹 타이틀 (카테고리명) — 탭 위 노출 안 함 */
@@ -104,6 +105,11 @@
   width: 100%;
   min-width: 0;
   padding: 0 24px;
+}
+
+/* content-wrap 상단 패딩 제거 — tab-nav 아래 여백은 cd-wrap margin-top 24px 로 통일 */
+.sub-content .content-wrap {
+  padding-top: 0;
 }
 
 /* 서브 콘텐츠 상단 타이틀 */
