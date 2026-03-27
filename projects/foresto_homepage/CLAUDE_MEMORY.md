@@ -106,3 +106,6 @@ git push 전 반드시 확인:
 | 2026-03-26 | 기타신청관리 4종 목록+상세 신규 (정회원/강사/숲해설/후원), admin.js nav href 연결 | apply-regular.html, apply-regular-detail.html, apply-instructor.html, apply-instructor-detail.html, apply-forest.html, apply-forest-detail.html, apply-sponsor.html, apply-sponsor-detail.html, admin.js |
 | 2026-03-26 | 강사신청 활동요일 체크박스 전환 (무관+개별 상호배제), 정회원신청 사용자 폼 신규, membership.html CTA 버튼 연결 | instructor.html, regular-apply.html, membership.html |
 | 2026-03-26 | 조직도·임원진 사용자 페이지 전면 개편 — 조직도 이미지 영역, 임원진 카드 그리드(2열), 사진 hover portrait, 직책 중복 통합, 전체 스크린샷 52장 + members 단독 스크린샷 스크립트 | members.html, about.css, capture_screens.ps1, capture_members.ps1 |
+| 2026-03-27 | 후원신청 3단계 마법사 → 단일 통합폼 전환 (정회원신청 패턴 동일), form-section-label 클래스 신규 | donate.html, participate.css |
+| 2026-03-27 | 탭메뉴(.sub-lnb) 하단 여백 48px 통일 — sub-lnb margin-bottom 단일 기준, content-wrap padding-top 제거 | layout-lnb.css, components.css |
+| 2026-03-27 | 스크린샷 뷰어 PAGES 배열 재넘버링(01~39), 동일 디자인 태깅(design 필드), 미캡처 placeholder, 3개 미포함 페이지 추가 | screenshots/index.html |
