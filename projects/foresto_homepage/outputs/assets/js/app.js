@@ -36,7 +36,7 @@ const App = {
     };
     this.toast('로그아웃 되었습니다.');
     setTimeout(() => {
-      location.href = 'pm-workspace/projects/foresto_homepage/outputs/index.html';  // ← 여기로 무조건 고정
+      location.href = '/outputs/index.html';  // ← 여기로 무조건 고정
     }, 800);
   },
 
