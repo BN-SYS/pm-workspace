@@ -393,6 +393,7 @@ const DonateCtrl = {
 const HISTORY_DATA = [
     {
         year: 2026,
+        img: 'https://picsum.photos/seed/hist2026/760/280',
         items: [
             { month: '03', text: '제55기 숲해설가 전문가과정 모집 시작', img: null },
             { month: '01', text: '2026년도 정기 이사회 개최, 사업계획 확정', img: null },
@@ -400,6 +401,7 @@ const HISTORY_DATA = [
     },
     {
         year: 2025,
+        img: 'https://picsum.photos/seed/hist2025/760/280',
         items: [
             { month: '11', text: '제54기 전문가과정 수료식, 수료생 42명 배출', img: null },
             { month: '09', text: '전국 지역 숲해설가 연합 워크숍 개최 (전주)', img: null },
@@ -526,6 +528,15 @@ const HistoryCtrl = {
         const topCY  = YT - STEM - RC;
         const botCY  = YB + STEM + RC;
 
+        /* 이미지 원(RC*3) 클리핑 방지 — 스테이지 밖으로 넘치는 여백 계산 */
+        const imgR3   = RC * 3;
+        const padTop  = data.some((g, i) => g.img && i % 2 === 0)
+                        ? Math.max(0, imgR3 - topCY + 10) : 0;
+        const padBot  = data.some((g, i) => g.img && i % 2 !== 0)
+                        ? Math.max(0, botCY + imgR3 - TH + 10) : 0;
+        const padLeft = data[0]?.img
+                        ? Math.max(0, imgR3 - NW / 2 + 10) : 0;
+
         /* ── SVG 경로 (stepped) */
         const pathPts = [`M 0 ${YT}`];
         data.forEach((_, i) => {
@@ -555,6 +566,7 @@ const HistoryCtrl = {
         pathPts.push(`L ${totalW} ${(n-1) % 2 === 0 ? YT : YB}`);
 
         /* ── SVG 원·dot */
+        let svgDefs = '';
         let svgE = '';
         data.forEach((group, i) => {
             const isTop = i % 2 === 0;
@@ -562,13 +574,24 @@ const HistoryCtrl = {
             const cx    = i * (NW + CW) + NW / 2;
             const color = COLORS[i % COLORS.length];
             const cirCY = isTop ? topCY : botCY;
-            const sY1   = isTop ? cirCY + RC : dotY;
-            const sY2   = isTop ? dotY       : cirCY - RC;
+            const imgR  = group.img ? RC * 3 : RC;   /* 이미지 있는 년도만 3배 */
+            const sY1   = isTop ? cirCY + imgR : dotY;
+            const sY2   = isTop ? dotY         : cirCY - imgR;
             svgE += `<line x1="${cx}" y1="${sY1}" x2="${cx}" y2="${sY2}" stroke="${color}" stroke-width="2" opacity="0.5"/>`;
-            svgE += `<circle cx="${cx}" cy="${cirCY}" r="${RC+8}" fill="${color}" opacity="0.07"/>`;
-            svgE += `<circle cx="${cx}" cy="${cirCY}" r="${RC+2}" fill="none" stroke="${color}" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.22"/>`;
-            svgE += `<circle cx="${cx}" cy="${cirCY}" r="${RC}"   fill="#fff" stroke="${color}" stroke-width="2.5" class="ht-circle" data-year="${group.year}"/>`;
-            svgE += `<text x="${cx}" y="${cirCY+8}" text-anchor="middle" font-size="22" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif" style="pointer-events:none">${ICONS[i % ICONS.length]}</text>`;
+            if (!group.img) {
+                svgE += `<circle cx="${cx}" cy="${cirCY}" r="${RC+8}" fill="${color}" opacity="0.07"/>`;
+                svgE += `<circle cx="${cx}" cy="${cirCY}" r="${RC+2}" fill="none" stroke="${color}" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.22"/>`;
+            }
+            svgE += `<circle cx="${cx}" cy="${cirCY}" r="${imgR}" fill="#fff" stroke="${color}" stroke-width="${group.img ? 3 : 2.5}" class="ht-circle" data-year="${group.year}"/>`;
+            if (group.img) {
+                /* 년도 이미지 → 3배 원 안에 클립 */
+                const clipId = `htClip${group.year}`;
+                const ir = imgR - 3;
+                svgDefs += `<clipPath id="${clipId}"><circle cx="${cx}" cy="${cirCY}" r="${ir}"/></clipPath>`;
+                svgE += `<image href="${group.img}" x="${cx - ir}" y="${cirCY - ir}" width="${ir * 2}" height="${ir * 2}" clip-path="url(#${clipId})" preserveAspectRatio="xMidYMid slice" style="pointer-events:none"/>`;
+            } else {
+                svgE += `<text x="${cx}" y="${cirCY+8}" text-anchor="middle" font-size="22" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif" style="pointer-events:none">${ICONS[i % ICONS.length]}</text>`;
+            }
             svgE += `<circle cx="${cx}" cy="${dotY}" r="${RD+4}" fill="${color}" opacity="0.15"/>`;
             svgE += `<circle cx="${cx}" cy="${dotY}" r="${RD}"   fill="${color}"/>`;
             svgE += `<circle cx="${cx}" cy="${dotY}" r="${RD-2}" fill="#fff"/>`;
@@ -581,6 +604,7 @@ const HistoryCtrl = {
             const dotY    = isTop ? YT : YB;
             const cirCY   = isTop ? topCY : botCY;
             const color   = COLORS[i % COLORS.length];
+            const imgR    = group.img ? RC * 3 : RC;
             const yearTop = isTop
                 ? `${dotY + RD + 8}px`
                 : `${dotY - RD - 30}px`;
@@ -593,10 +617,10 @@ const HistoryCtrl = {
               <!-- 원 위 클릭 오버레이 -->
               <div class="ht-circle-hit"
                    style="position:absolute;
-                          left:${NW/2 - RC - 10}px;
-                          top:${cirCY - RC - 10}px;
-                          width:${(RC+10)*2}px;
-                          height:${(RC+10)*2}px;
+                          left:${NW/2 - imgR - 10}px;
+                          top:${cirCY - imgR - 10}px;
+                          width:${(imgR+10)*2}px;
+                          height:${(imgR+10)*2}px;
                           border-radius:50%;cursor:pointer;"></div>
               <!-- 연도 숫자 -->
               <div class="ht-year" style="top:${yearTop}; color:${color};">${group.year}</div>
@@ -605,14 +629,17 @@ const HistoryCtrl = {
 
         wrap.innerHTML = `
         <div class="ht-scroll-outer" id="htScrollOuter">
-          <div class="ht-stage" style="width:${totalW}px; height:${TH}px;">
-            <svg class="ht-svg" width="${totalW}" height="${TH}" aria-hidden="true">
-              <path d="${pathPts.join(' ')}"
-                    fill="none" stroke="#c5dfc8" stroke-width="2.5"
-                    stroke-linecap="round" stroke-linejoin="round"/>
-              ${svgE}
-            </svg>
-            ${nodesHtml}
+          <div style="padding:${padTop}px 20px ${padBot}px ${padLeft}px;display:inline-block;vertical-align:top;">
+            <div class="ht-stage" style="width:${totalW}px; height:${TH}px;">
+              <svg class="ht-svg" width="${totalW}" height="${TH}" aria-hidden="true">
+                ${svgDefs ? `<defs>${svgDefs}</defs>` : ''}
+                <path d="${pathPts.join(' ')}"
+                      fill="none" stroke="#c5dfc8" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+                ${svgE}
+              </svg>
+              ${nodesHtml}
+            </div>
           </div>
         </div>
         <!-- 하단 상세 영역 -->
@@ -658,7 +685,6 @@ const HistoryCtrl = {
 
         const itemsHtml = group.items.map(it => `
             <li class="htd-item">
-              <span class="htd-month">${it.month}월</span>
               <span class="htd-text">${it.text}</span>
             </li>`).join('');
 
@@ -666,7 +692,6 @@ const HistoryCtrl = {
           <div class="htd-inner">
             <div class="htd-head">
               <span class="htd-year" style="color:${color};">${year}</span>
-              <span class="htd-label" style="color:${color};">${label}</span>
             </div>
             <ul class="htd-list">${itemsHtml}</ul>
           </div>`;

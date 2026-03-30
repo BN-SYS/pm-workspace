@@ -111,3 +111,5 @@ git push 전 반드시 확인:
 | 2026-03-27 | 스크린샷 뷰어 PAGES 배열 재넘버링(01~39), 동일 디자인 태깅(design 필드), 미캡처 placeholder, 3개 미포함 페이지 추가 | screenshots/index.html |
 | 2026-03-30 | 갤러리 검색 필터, 갤러리·협회지·언론보도·숲일터 관리자 게시판 연결, 동아리자료방 삭제, 자료실→회원활동 이동, 숲일터 신규 페이지 생성 | community/gallery.html, archive.html, archive-detail.html, admin.js, admin/board.html, board-edit.html, board-detail.html, header.js, community.js, member/forest-work.html, member/forest-work-detail.html |
 | 2026-03-30 | 헤더 메가 드롭다운 적용 — 2depth 컬럼 헤더 + 3depth 링크, hideLnb 항목 메가패널 미노출, 자료실·숲일터·강사신청 flat 컬럼 처리 | common.css, header.js |
+| 2026-03-30 | 메인 달력 일정 링크 아이콘(SVG) 노출 및 클릭 이동, 공지사항 행 클릭 → notice-detail 이동, 연혁 라벨·월 삭제 + 년도 이미지 노출 | index.html, main.css, about.js, about.css |
+| 2026-03-30 | 연혁 년도 이미지 원 RC×3(108px) 확대, SVG clipPath 원형 클립, 패딩 래퍼 div로 overflow 잘림 방지 | about.js |

@@ -513,6 +513,16 @@
 
 .cal-schedule-item:hover { color: #508829; }
 
+.cal-link-icon {
+  display: inline-block;
+  width: 13px; height: 13px;
+  vertical-align: middle;
+  margin-left: 5px;
+  color: var(--green-main);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
 .cal-schedule-empty {
   font-size: 18px;
   line-height: 1.4;
