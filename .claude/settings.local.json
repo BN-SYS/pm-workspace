@@ -25,7 +25,9 @@
       "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_screens.ps1\")",
       "Bash(powershell -Command \"\\(Get-Content -Path ''C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_screens.ps1'' -Encoding UTF8\\) | Set-Content -Path ''C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_screens.ps1'' -Encoding UTF8\")",
       "Bash(powershell -Command \"\\(Get-Content -Path ''C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_members.ps1'' -Encoding UTF8\\) | Set-Content -Path ''C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_members.ps1'' -Encoding UTF8\")",
-      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_members.ps1\")"
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_members.ps1\")",
+      "Bash(rm -rf \"c:/Users/BN659/.claude/plugins/marketplaces/bkit-marketplace\")",
+      "Bash(rm -rf \"c:/Users/BN659/.claude/plugins/cache/bkit-marketplace\")"
     ]
   }
 }

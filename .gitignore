@@ -18,3 +18,8 @@ Thumbs.db
 
 # 기타
 CLAUDE_md_PM_Guide.docx
+
+# bkit 플러그인 로컬 상태
+.bkit/
+node
+npm

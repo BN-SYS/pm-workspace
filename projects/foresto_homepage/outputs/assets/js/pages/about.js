@@ -395,19 +395,19 @@ const HISTORY_DATA = [
         year: 2026,
         img: 'https://picsum.photos/seed/hist2026/760/280',
         items: [
-            { month: '03', text: '제55기 숲해설가 전문가과정 모집 시작', img: null },
-            { month: '01', text: '2026년도 정기 이사회 개최, 사업계획 확정', img: null },
+            { month: '03', text: '03.30 제55기 숲해설가 전문가과정 모집 시작', img: null },
+            { month: '01', text: '03.30 2026년도 정기 이사회 개최, 사업계획 확정', img: null },
         ],
     },
     {
         year: 2025,
         img: 'https://picsum.photos/seed/hist2025/760/280',
         items: [
-            { month: '11', text: '제54기 전문가과정 수료식, 수료생 42명 배출', img: null },
-            { month: '09', text: '전국 지역 숲해설가 연합 워크숍 개최 (전주)', img: null },
-            { month: '07', text: '산림복지진흥원 업무협약(MOU) 갱신', img: null },
-            { month: '04', text: '제53기 전문가과정 수료, 온라인 교육 병행 첫 시행', img: null },
-            { month: '03', text: '협회 홈페이지 전면 개편 오픈', img: null },
+            { month: '11', text: '03.30 제54기 전문가과정 수료식, 수료생 42명 배출', img: null },
+            { month: '09', text: '03.30 전국 지역 숲해설가 연합 워크숍 개최 (전주)', img: null },
+            { month: '07', text: '03.30 산림복지진흥원 업무협약(MOU) 갱신', img: null },
+            { month: '04', text: '03.30 제53기 전문가과정 수료, 온라인 교육 병행 첫 시행', img: null },
+            { month: '03', text: '03.30 협회 홈페이지 전면 개편 오픈', img: null },
         ],
     },
     {
@@ -490,7 +490,7 @@ const HistoryCtrl = {
     _NW:   160,  /* 노드 너비 */
     _CW:   60,   /* 연결 구간 너비 */
     _RC:   36,   /* 대형 원 반지름 */
-    _STEM: 8,    /* 원 ↔ dot 줄기 길이 */
+    _STEM: 30,   /* 원 ↔ dot 줄기 길이 */
     _RD:   5,    /* 연결 dot 반지름 */
     _YT:   130,  /* 상단 dot Y */
     _YB:   210,  /* 하단 dot Y */
@@ -525,17 +525,15 @@ const HistoryCtrl = {
 
         const n      = data.length;
         const totalW = n * NW + (n - 1) * CW;
-        const topCY  = YT - STEM - RC;
-        const botCY  = YB + STEM + RC;
+        /* 원 반지름 RC*1.5, dot 외곽에 원 배치 */
+        const imgR3  = Math.round(RC * 1.5);             /* 54px */
+        const topCY  = YT - STEM - imgR3;                /* 원 하단이 dot 위에 위치 */
+        const botCY  = YB + STEM + imgR3;                /* 원 상단이 dot 아래에 위치 */
 
-        /* 이미지 원(RC*3) 클리핑 방지 — 스테이지 밖으로 넘치는 여백 계산 */
-        const imgR3   = RC * 3;
-        const padTop  = data.some((g, i) => g.img && i % 2 === 0)
-                        ? Math.max(0, imgR3 - topCY + 10) : 0;
-        const padBot  = data.some((g, i) => g.img && i % 2 !== 0)
-                        ? Math.max(0, botCY + imgR3 - TH + 10) : 0;
-        const padLeft = data[0]?.img
-                        ? Math.max(0, imgR3 - NW / 2 + 10) : 0;
+        /* 원이 스테이지 밖으로 넘치는 경우 패딩 계산 */
+        const padTop  = Math.max(0, imgR3 - topCY + 10);
+        const padBot  = Math.max(0, botCY + imgR3 - TH + 10);
+        const padLeft = Math.max(0, imgR3 - NW / 2 + 10);
 
         /* ── SVG 경로 (stepped) */
         const pathPts = [`M 0 ${YT}`];
@@ -574,24 +572,17 @@ const HistoryCtrl = {
             const cx    = i * (NW + CW) + NW / 2;
             const color = COLORS[i % COLORS.length];
             const cirCY = isTop ? topCY : botCY;
-            const imgR  = group.img ? RC * 3 : RC;   /* 이미지 있는 년도만 3배 */
+            const imgR  = imgR3;   /* 모든 원 동일 크기 (RC*1.5) */
+            const imgSrc = group.img || `https://picsum.photos/seed/forest${group.year}/200/200`;
             const sY1   = isTop ? cirCY + imgR : dotY;
             const sY2   = isTop ? dotY         : cirCY - imgR;
             svgE += `<line x1="${cx}" y1="${sY1}" x2="${cx}" y2="${sY2}" stroke="${color}" stroke-width="2" opacity="0.5"/>`;
-            if (!group.img) {
-                svgE += `<circle cx="${cx}" cy="${cirCY}" r="${RC+8}" fill="${color}" opacity="0.07"/>`;
-                svgE += `<circle cx="${cx}" cy="${cirCY}" r="${RC+2}" fill="none" stroke="${color}" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.22"/>`;
-            }
-            svgE += `<circle cx="${cx}" cy="${cirCY}" r="${imgR}" fill="#fff" stroke="${color}" stroke-width="${group.img ? 3 : 2.5}" class="ht-circle" data-year="${group.year}"/>`;
-            if (group.img) {
-                /* 년도 이미지 → 3배 원 안에 클립 */
-                const clipId = `htClip${group.year}`;
-                const ir = imgR - 3;
-                svgDefs += `<clipPath id="${clipId}"><circle cx="${cx}" cy="${cirCY}" r="${ir}"/></clipPath>`;
-                svgE += `<image href="${group.img}" x="${cx - ir}" y="${cirCY - ir}" width="${ir * 2}" height="${ir * 2}" clip-path="url(#${clipId})" preserveAspectRatio="xMidYMid slice" style="pointer-events:none"/>`;
-            } else {
-                svgE += `<text x="${cx}" y="${cirCY+8}" text-anchor="middle" font-size="22" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif" style="pointer-events:none">${ICONS[i % ICONS.length]}</text>`;
-            }
+            svgE += `<circle cx="${cx}" cy="${cirCY}" r="${imgR}" fill="#fff" stroke="${color}" stroke-width="3" class="ht-circle" data-year="${group.year}"/>`;
+            /* 이미지 클립 */
+            const clipId = `htClip${group.year}`;
+            const ir = imgR - 3;
+            svgDefs += `<clipPath id="${clipId}"><circle cx="${cx}" cy="${cirCY}" r="${ir}"/></clipPath>`;
+            svgE += `<image href="${imgSrc}" x="${cx - ir}" y="${cirCY - ir}" width="${ir * 2}" height="${ir * 2}" clip-path="url(#${clipId})" preserveAspectRatio="xMidYMid slice" style="pointer-events:none"/>`;
             svgE += `<circle cx="${cx}" cy="${dotY}" r="${RD+4}" fill="${color}" opacity="0.15"/>`;
             svgE += `<circle cx="${cx}" cy="${dotY}" r="${RD}"   fill="${color}"/>`;
             svgE += `<circle cx="${cx}" cy="${dotY}" r="${RD-2}" fill="#fff"/>`;
@@ -604,10 +595,11 @@ const HistoryCtrl = {
             const dotY    = isTop ? YT : YB;
             const cirCY   = isTop ? topCY : botCY;
             const color   = COLORS[i % COLORS.length];
-            const imgR    = group.img ? RC * 3 : RC;
+            const imgR    = imgR3;
+            /* 연도 텍스트: dot 기준, 원 반대편에 배치 (원과 분리) */
             const yearTop = isTop
                 ? `${dotY + RD + 8}px`
-                : `${dotY - RD - 30}px`;
+                : `${dotY - RD - 44}px`;
             const isActive = group.year === this._selected;
             return `
             <div class="ht-node ${isTop ? 'ht-top' : 'ht-bot'} ${isActive ? 'ht-active' : ''}"
