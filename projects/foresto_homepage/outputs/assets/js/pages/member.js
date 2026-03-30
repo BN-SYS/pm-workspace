@@ -539,7 +539,7 @@ const CompetencyCtrl = {
         <div class="cd-body">
           <div class="cd-guide">${item.guide || ''}</div>
           <div class="cd-map-placeholder">
-            <span>지도 / 이미지 영역 (실제 구현 시 삽입)</span>
+            <span>이미지 영역 (실제 구현 시 삽입)</span>
           </div>
         </div>
 
@@ -650,7 +650,7 @@ function renderCourseDetail(containerId, types, detailPage, listPage) {
       <div class="cd-body">
         <div class="cd-guide">${item.guide || ''}</div>
         <div class="cd-map-placeholder">
-          <span>지도 / 이미지 영역 (실제 구현 시 삽입)</span>
+          <span>이미지 영역 (실제 구현 시 삽입)</span>
         </div>
       </div>
       ${navHtml}
