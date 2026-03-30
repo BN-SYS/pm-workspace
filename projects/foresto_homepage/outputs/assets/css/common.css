@@ -87,7 +87,9 @@ body {
 
 /* ── 네비게이션 */
 .main-nav { display: flex; align-items: center; gap: 36px; }
-.nav-item { position: relative; }
+.nav-item { 
+  position: relative; 
+}
 .nav-item > a {
   display: flex;
   align-items: center;
@@ -115,21 +117,49 @@ body {
   margin-left: 2px;
 }
 .nav-item.has-dropdown:hover .arrow { transform: rotate(180deg); opacity: 0.7; }
+
+/* ── 드롭다운 (2뎁스 메뉴) */
 .dropdown {
-  display: none; position: absolute; top: calc(100% + 4px); left: 0;
-  min-width: 160px; background: var(--white);
-  border: 1px solid var(--gray-light); border-radius: var(--radius);
-  box-shadow: var(--shadow-md); padding: 6px; flex-direction: column; z-index: 300;
+  display: none; 
+  position: absolute; 
+  top: 100%;
+  left: 0;
+  min-width: 160px; 
+  background: var(--white);
+  border: 1px solid var(--gray-light); 
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md); 
+  padding: 6px; 
+  flex-direction: column; 
+  z-index: 300;
+  margin-top: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  visibility: hidden;
 }
-.nav-item.has-dropdown:hover .dropdown { display: flex; }
+
+.nav-item.has-dropdown:hover .dropdown { 
+  display: flex;
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
 .sub-item {
-  display: block; padding: 8px 14px;
+  display: block; 
+  padding: 8px 14px;
   font-size: var(--text-lg);
   font-weight: 500;
-  color: var(--gray-dark); border-radius: var(--radius); white-space: nowrap;
+  color: var(--gray-dark); 
+  border-radius: var(--radius); 
+  white-space: nowrap;
   transition: var(--trans);
 }
-.sub-item:hover { background: var(--green-pale); color: var(--green-dark); }
+.sub-item:hover { 
+  background: var(--green-pale); 
+  color: var(--green-dark); 
+}
 
 /* ── 헤더 액션 */
 .header-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
@@ -607,4 +637,3 @@ body {
   color: var(--gray-mid);
   text-align: center;
 }
-
