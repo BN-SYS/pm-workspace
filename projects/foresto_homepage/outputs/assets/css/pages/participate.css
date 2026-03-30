@@ -6,7 +6,7 @@
 
 /* ── 폼 섹션 구분선 (후원하기 / 정회원신청 공통) */
 .form-section-label {
-  padding: 16px 20px 0;
+  padding: 16px 4px 0;
   font-size: 12px;
   font-weight: 700;
   color: var(--green-main);

@@ -109,3 +109,5 @@ git push 전 반드시 확인:
 | 2026-03-27 | 후원신청 3단계 마법사 → 단일 통합폼 전환 (정회원신청 패턴 동일), form-section-label 클래스 신규 | donate.html, participate.css |
 | 2026-03-27 | 탭메뉴(.sub-lnb) 하단 여백 48px 통일 — sub-lnb margin-bottom 단일 기준, content-wrap padding-top 제거 | layout-lnb.css, components.css |
 | 2026-03-27 | 스크린샷 뷰어 PAGES 배열 재넘버링(01~39), 동일 디자인 태깅(design 필드), 미캡처 placeholder, 3개 미포함 페이지 추가 | screenshots/index.html |
+| 2026-03-30 | 갤러리 검색 필터, 갤러리·협회지·언론보도·숲일터 관리자 게시판 연결, 동아리자료방 삭제, 자료실→회원활동 이동, 숲일터 신규 페이지 생성 | community/gallery.html, archive.html, archive-detail.html, admin.js, admin/board.html, board-edit.html, board-detail.html, header.js, community.js, member/forest-work.html, member/forest-work-detail.html |
+| 2026-03-30 | 헤더 메가 드롭다운 적용 — 2depth 컬럼 헤더 + 3depth 링크, hideLnb 항목 메가패널 미노출, 자료실·숲일터·강사신청 flat 컬럼 처리 | common.css, header.js |

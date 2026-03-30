@@ -83,7 +83,7 @@ const NAV_DATA = [
 
   /* ──────────────────────────────────────────
      1depth: 회원활동
-     2depth: 회원아카데미 / 사회공헌사업단 / 숲동아리단 / 강사 신청
+     2depth: 회원아카데미 / 사회공헌사업단 / 숲동아리단 / 숲일터 / 자료실 / 강사 신청
   ────────────────────────────────────────── */
   {
     label: '회원활동', href: 'member/competency.html',
@@ -109,16 +109,17 @@ const NAV_DATA = [
         children: [
           { label: '동아리 소개', href: 'member/club.html' },
           { label: '동아리 소식', href: 'member/club.html?tab=news' },
-          { label: '동아리 자료방', href: 'member/club.html?tab=archive' },
         ],
       },
+      { label: '자료실', href: 'community/archive.html' },
+      { label: '숲일터', href: 'member/forest-work.html' },
       { label: '강사 신청', href: 'member/instructor.html' },
     ],
   },
 
   /* ──────────────────────────────────────────
      1depth: 커뮤니티
-     2depth: 소식 / 사진 갤러리(flat) / 자료실(flat)
+     2depth: 소식 / 사진 갤러리(flat)
   ────────────────────────────────────────── */
   {
     label: '커뮤니티', href: 'community/notice-list.html',
@@ -135,7 +136,6 @@ const NAV_DATA = [
         ],
       },
       { label: '사진 갤러리', href: 'community/gallery.html' },
-      { label: '자료실', href: 'community/archive.html' },
     ],
   },
 
@@ -195,25 +195,21 @@ const Header = {
           || c.children?.some(gc => gc.href === activePage)
         );
 
-      /* 드롭다운 렌더 */
-      const subHtml = n.children
-        ? n.children.map(c =>
-          `<a href="${root}${c.href}" class="sub-item">${c.label}</a>`
-        ).join('')
-        : '';
-
       if (!n.children) {
         return `<div class="nav-item ${isActive ? 'active' : ''}">
-                  <a href="${root}${n.href}">${n.label}</a>
-                </div>`;
-      }
-      return `
-        <div class="nav-item has-dropdown ${isActive ? 'active' : ''}">
-          <a href="${root}${n.href}">
-            ${n.label}<span class="arrow"></span>
-          </a>
-          <div class="dropdown">${subHtml}</div>
+          <a href="${root}${n.href}">${n.label}</a>
         </div>`;
+      }
+
+      /* 2depth 전체를 세로 목록으로 */
+      const subHtml = n.children.map(c =>
+        `<a href="${root}${c.href}" class="sub-item">${c.label}</a>`
+      ).join('');
+
+      return `<div class="nav-item has-dropdown ${isActive ? 'active' : ''}">
+        <a href="${root}${n.href}">${n.label}<span class="arrow"></span></a>
+        <div class="dropdown">${subHtml}</div>
+      </div>`;
     }).join('');
 
     /* ── 로그인 여부에 따른 우측 버튼 분기 */

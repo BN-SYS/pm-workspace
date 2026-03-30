@@ -35,6 +35,11 @@
 
     <div class="list-top" style="margin-bottom:16px">
       <span class="list-count">전체 <strong id="galleryCount">0</strong>건</span>
+      <div class="list-search">
+        <input type="text" class="list-search-input" id="galleryKeyword" placeholder="검색어를 입력하세요"
+          onkeydown="if(event.key==='Enter') GalleryCtrl.search()">
+        <button class="list-search-btn" onclick="GalleryCtrl.search()">검색</button>
+      </div>
     </div>
 
     <!-- 썸네일 카드 그리드 -->

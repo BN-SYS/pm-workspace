@@ -79,7 +79,7 @@
 | 구분 | 내용 |
 |---|---|
 | 백엔드 | PHP (Laravel 또는 CodeIgniter) |
-| 프론트엔드 | HTML / CSS / Vanilla JS |
+| 프론트엔드 | React |
 | DB | MySQL |
 | 배포 환경 | (확인 필요) |
 | 결제 | (PG사 연동 여부 확인 필요) |

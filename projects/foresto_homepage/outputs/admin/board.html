@@ -151,10 +151,14 @@
      게시판 설정
      ══════════════════════════════════════ */
   const BOARD_CONFIG = {
-    notice: { title: '공지사항 관리',     navKey: 'board-notice', hasThumb: false },
-    region: { title: '전국지역협회 관리', navKey: 'board-region', hasThumb: true  },
-    intro:  { title: '사공단소개 관리',   navKey: 'board-intro',  hasThumb: true  },
-    club:   { title: '동아리소개 관리',   navKey: 'board-club',   hasThumb: true  },
+    notice:       { title: '공지사항 관리',  navKey: 'board-notice',       hasThumb: false },
+    newsletter:   { title: '협회지 관리',   navKey: 'board-newsletter',   hasThumb: false },
+    press:        { title: '언론보도 관리', navKey: 'board-press',        hasThumb: false },
+    gallery:      { title: '갤러리 관리',   navKey: 'board-gallery',      hasThumb: true  },
+    'forest-work':{ title: '숲일터 관리',   navKey: 'board-forest-work',  hasThumb: false },
+    region:  { title: '전국지역협회 관리', navKey: 'board-region',   hasThumb: true  },
+    intro:   { title: '사공단소개 관리',   navKey: 'board-intro',    hasThumb: true  },
+    club:    { title: '동아리소개 관리',   navKey: 'board-club',     hasThumb: true  },
   };
 
   const params  = new URLSearchParams(location.search);
@@ -183,7 +187,29 @@
     '새소리 탐조 동아리', '버섯 연구 소모임', '약초 동아리 소개',
     '도시숲 가꾸기 모임', '꽃 이야기 동아리', '숲 사진 동아리', '걷기 명상 동아리',
   ];
-  const TITLE_MAP = { notice: NOTICE_TITLES, region: REGION_TITLES, intro: INTRO_TITLES, club: CLUB_TITLES };
+  const GALLERY_TITLES = [
+    '2026 봄 숲해설 현장', '신규 회원 오리엔테이션', '제55기 교육 수료식',
+    '정기총회 행사 스케치', '여름 숲캠프 활동', '협회 창립기념 행사',
+    '강사 역량강화 교육', '전국지역협회 워크숍', '생태환경 탐방 프로그램', '가을 숲해설 현장',
+  ];
+  const NEWSLETTER_TITLES = [
+    '소식지 2026년 상반기호', '소식지 2025년 하반기호', '소식지 2025년 상반기호',
+    '소식지 2024년 하반기호', '소식지 2024년 상반기호', '소식지 2023년 하반기호',
+    '소식지 2023년 상반기호', '소식지 2022년 하반기호', '소식지 2022년 상반기호', '소식지 2021년 하반기호',
+  ];
+  const PRESS_TITLES = [
+    '한국숲해설가협회, 산림 생태 교육 확대 나서', '숲해설가 자격증 취득자 3만 명 돌파',
+    '도심 속 숲 교육, 어린이 정서 발달에 효과', '한국숲해설가협회, 사회공헌 우수기관 선정',
+    '전문 숲해설가 양성 프로그램 인기몰이', '자연과 함께하는 치유 숲 프로그램 주목',
+    '숲 교육, 청소년 스트레스 완화에 효과', '협회, 전국 산림 교육 우수기관 시상', '도시 숲 확대 운동 주목', '숲해설 프로그램 수요 급증',
+  ];
+  const FOREST_WORK_TITLES = [
+    '2026 상반기 숲일터 활동 모집 공고', '전국 국립공원 숲해설 파견 안내',
+    '서울 도시숲 해설 활동 참가자 모집', '경기도 생태환경 해설 인력 모집',
+    '어린이 숲체험 해설 봉사 모집', '지자체 숲해설 파견 인력 모집',
+    '2026 숲일터 하반기 활동 공고', '숲일터 신규 참여자 모집', '국립산림과학원 협력 해설사 모집', '숲일터 정기 활동 일정 안내',
+  ];
+  const TITLE_MAP = { notice: NOTICE_TITLES, newsletter: NEWSLETTER_TITLES, press: PRESS_TITLES, gallery: GALLERY_TITLES, 'forest-work': FOREST_WORK_TITLES, region: REGION_TITLES, intro: INTRO_TITLES, club: CLUB_TITLES };
 
   let nextId = 5000;
   const ALL_POSTS = Object.keys(BOARD_CONFIG).flatMap(type => {

@@ -319,10 +319,14 @@
   <script src="../assets/js/pages/admin.js"></script>
   <script>
   const BOARD_CONFIG = {
-    notice: { title: '공지사항',     navKey: 'board-notice', hasThumb: false },
-    region: { title: '전국지역협회', navKey: 'board-region', hasThumb: true  },
-    intro:  { title: '사공단소개',   navKey: 'board-intro',  hasThumb: true  },
-    club:   { title: '동아리소개',   navKey: 'board-club',   hasThumb: true  },
+    notice:          { title: '공지사항', navKey: 'board-notice',       hasThumb: false },
+    newsletter:      { title: '협회지',   navKey: 'board-newsletter',   hasThumb: false },
+    press:           { title: '언론보도', navKey: 'board-press',        hasThumb: false },
+    gallery:         { title: '갤러리',   navKey: 'board-gallery',      hasThumb: true  },
+    'forest-work':   { title: '숲일터',   navKey: 'board-forest-work',  hasThumb: false },
+    region:  { title: '전국지역협회', navKey: 'board-region',   hasThumb: true  },
+    intro:   { title: '사공단소개',   navKey: 'board-intro',    hasThumb: true  },
+    club:    { title: '동아리소개',   navKey: 'board-club',     hasThumb: true  },
   };
 
   const params  = new URLSearchParams(location.search);

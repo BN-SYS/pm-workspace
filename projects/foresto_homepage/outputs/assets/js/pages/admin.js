@@ -32,10 +32,14 @@ const ADMIN_NAV = [
   {
     key: 'board-group', ico: _ICO('collection'), label: '게시판관리',
     children: [
-      { key: 'board-notice', href: 'board.html?type=notice', label: '공지사항 관리' },
-      { key: 'board-region', href: 'board.html?type=region', label: '전국지역협회 관리' },
-      { key: 'board-intro',  href: 'board.html?type=intro',  label: '사공단소개 관리' },
-      { key: 'board-club',   href: 'board.html?type=club',   label: '동아리소개 관리' },
+      { key: 'board-notice',       href: 'board.html?type=notice',       label: '공지사항 관리' },
+      { key: 'board-newsletter',   href: 'board.html?type=newsletter',   label: '협회지 관리' },
+      { key: 'board-press',        href: 'board.html?type=press',        label: '언론보도 관리' },
+      { key: 'board-gallery',      href: 'board.html?type=gallery',      label: '갤러리 관리' },
+      { key: 'board-forest-work',  href: 'board.html?type=forest-work',  label: '숲일터 관리' },
+      { key: 'board-region',  href: 'board.html?type=region',  label: '전국지역협회 관리' },
+      { key: 'board-intro',   href: 'board.html?type=intro',   label: '사공단소개 관리' },
+      { key: 'board-club',    href: 'board.html?type=club',    label: '동아리소개 관리' },
     ]
   },
 

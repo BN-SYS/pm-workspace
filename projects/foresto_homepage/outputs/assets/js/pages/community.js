@@ -244,7 +244,7 @@ const GALLERY_DATA = Array.from({ length: 24 }, (_, i) => {
     return {
         id: 24 - i,
         title: GALLERY_TITLES[i % 8],
-        author: ['사무국', '김회원', '이회원', '박회원'][i % 4],
+        author: '관리자',
         date: commMakeDate(i),
         imgUrl,
         content: `<img src="${imgUrl}" alt="${GALLERY_TITLES[i % 8]}" style="width:100%;border-radius:6px;margin-bottom:16px">
@@ -252,6 +252,25 @@ ${GALLERY_CONTENTS[i % 8]}`,
         link: i % 3 === 0 ? '#' : null,
     };
 });
+
+/* ── 1-5-b. 숲일터 */
+const FOREST_WORK_DATA = {
+    pinned: [],
+    normals: Array.from({ length: 15 }, (_, i) => ({
+        id: 15 - i,
+        title: [
+            '2026 상반기 숲일터 활동 모집 공고',
+            '전국 국립공원 숲해설 파견 안내',
+            '서울 도시숲 해설 활동 참가자 모집',
+            '경기도 생태환경 해설 인력 모집',
+            '어린이 숲체험 해설 봉사 모집',
+        ][i % 5],
+        author: '관리자',
+        date: commMakeDate(i),
+        content: `<p>숲일터 공고 ${15 - i}번 게시물입니다.</p>
+                  <p>자세한 사항은 사무국(02-000-0000)으로 문의 바랍니다.</p>`,
+    })),
+};
 
 /* ── 1-6. 협회 일정 이벤트 */
 const CALENDAR_EVENTS = [
@@ -1079,6 +1098,79 @@ const GalleryCtrl = {
 
 
 /* ══════════════════════════════════════════════
+   8. 숲일터 컨트롤러 (관리자 등록 전용)
+══════════════════════════════════════════════ */
+const ForestWorkCtrl = {
+    _board: null,
+
+    init() {
+        this._board = createCommunityBoard({
+            data: FOREST_WORK_DATA.normals,
+            tableBodyId: 'forestWorkTableBody',
+            paginationId: 'forestWorkPagination',
+            countId: 'forestWorkCount',
+            rowRenderer: (row, seq) => `
+  <tr>
+    <td class="col-num">${seq}</td>
+    <td class="td-title">
+      <a href="forest-work-detail.html?id=${row.id}">${row.title}</a>
+    </td>
+    <td class="col-author">${row.author}</td>
+    <td class="col-date">${row.date}</td>
+  </tr>`,
+        });
+        this._board.init();
+    },
+
+    search() {
+        const keyword = document.getElementById('forestWorkKeyword')?.value || '';
+        this._board?.search(keyword);
+    },
+
+    renderDetail() {
+        const id   = App.getParam('id');
+        const all  = [...FOREST_WORK_DATA.normals];
+        const item = all.find(d => String(d.id) === String(id));
+        const el   = document.getElementById('forestWorkDetail');
+        if (!el) return;
+        if (!item) {
+            el.innerHTML = `<div style="text-align:center;padding:48px;color:var(--gray-mid)">게시물을 찾을 수 없습니다.</div>`;
+            return;
+        }
+        const idx  = all.findIndex(d => d.id === item.id);
+        const next = all[idx - 1];
+        const prev = all[idx + 1];
+        const navHtml = (next || prev) ? `
+          <div class="cd-nav">
+            ${next ? `<div class="cd-nav-item" onclick="location.href='forest-work-detail.html?id=${next.id}'">
+              <span class="cd-nav-label">다음글</span>
+              <span class="cd-nav-title">${next.title}</span>
+            </div>` : ''}
+            ${prev ? `<div class="cd-nav-item" onclick="location.href='forest-work-detail.html?id=${prev.id}'">
+              <span class="cd-nav-label">이전글</span>
+              <span class="cd-nav-title">${prev.title}</span>
+            </div>` : ''}
+          </div>` : '';
+        el.innerHTML = `
+          <div class="cd-wrap">
+            <div class="cd-head">
+              <div class="cd-head-left"><h2 class="cd-title">${item.title}</h2></div>
+              <span class="cd-date">${item.date}</span>
+            </div>
+            <div class="cd-meta"><span>작성자 <strong>${item.author}</strong></span></div>
+            <hr class="cd-divider">
+            <div class="cd-body"><div class="cd-content">${item.content || ''}</div></div>
+            ${navHtml}
+            <div class="cd-actions">
+              <button class="btn btn-primary btn-sm cd-btn-list"
+                      onclick="location.href='forest-work.html'">목록</button>
+            </div>
+          </div>`;
+    },
+};
+
+
+/* ══════════════════════════════════════════════
    10. 페이지 자동 초기화 (소식지·자료실 제외 → community-media.js 참조)
 ══════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
@@ -1094,8 +1186,10 @@ document.addEventListener('DOMContentLoaded', () => {
         'press-detail':    () => PressCtrl.renderDetail(),
         'job':             () => JobCtrl.init(),
         'job-detail':      () => JobCtrl.renderDetail(),
-        'gallery':         () => GalleryCtrl.init(),
-        'gallery-detail':  () => GalleryCtrl.renderDetail(),
+        'gallery':           () => GalleryCtrl.init(),
+        'gallery-detail':    () => GalleryCtrl.renderDetail(),
+        'forest-work':       () => ForestWorkCtrl.init(),
+        'forest-work-detail':() => ForestWorkCtrl.renderDetail(),
         /* 'newsletter' / 'archive' → community-media.js 에서 처리 */
     };
 
