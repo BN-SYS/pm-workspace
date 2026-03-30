@@ -119,7 +119,7 @@ const NAV_DATA = [
 
   /* ──────────────────────────────────────────
      1depth: 커뮤니티
-     2depth: 소식 / 사진 갤러리(flat)
+     2depth: 소식 / 갤러리(flat)
   ────────────────────────────────────────── */
   {
     label: '커뮤니티', href: 'community/notice-list.html',
@@ -135,7 +135,7 @@ const NAV_DATA = [
           { label: '언론보도 상세', href: 'community/press-detail.html', parent: 'community/press.html', hideLnb: true },
         ],
       },
-      { label: '사진 갤러리', href: 'community/gallery.html' },
+      { label: '갤러리', href: 'community/gallery.html' },
     ],
   },
 
