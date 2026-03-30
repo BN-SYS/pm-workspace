@@ -36,14 +36,10 @@ const App = {
     };
     this.toast('로그아웃 되었습니다.');
     setTimeout(() => {
-      /* 현재 경로에서 v2/ 루트의 index.html 로 이동
-         pathname 예: /v2/admin/index.html → depth 2 → ../../index.html */
-      const parts = location.pathname.split('/').filter(Boolean);
-      const v2Idx = parts.lastIndexOf('v2');
-      const depth = v2Idx >= 0 ? parts.length - v2Idx - 1 : 0;
-      location.href = (depth > 0 ? '../'.repeat(depth) : './') + 'index.html';
+      location.href = '/projects/foresto_homepage/outputs/index.html';  // ← 여기로 무조건 고정
     }, 800);
   },
+
 
   /* ── 세션 복원 (모든 페이지 진입 시 자동 호출) */
   restoreSession() {
@@ -242,23 +238,23 @@ const App = {
       /* 3. CSS 변수 px 값도 scale에 맞게 덮어쓰기
             기준(step=0): md=18px(목록/본문), lg=22px(타이틀 = md+4px) */
       const r = document.documentElement;
-      r.style.setProperty('--text-xs',   Math.round(13 * scale) + 'px'); /* 13px */
-      r.style.setProperty('--text-sm',   Math.round(15 * scale) + 'px'); /* 15px */
-      r.style.setProperty('--text-md',   Math.round(18 * scale) + 'px'); /* 18px — 목록·본문 기준 */
+      r.style.setProperty('--text-xs', Math.round(13 * scale) + 'px'); /* 13px */
+      r.style.setProperty('--text-sm', Math.round(15 * scale) + 'px'); /* 15px */
+      r.style.setProperty('--text-md', Math.round(18 * scale) + 'px'); /* 18px — 목록·본문 기준 */
       r.style.setProperty('--text-base', Math.round(20 * scale) + 'px'); /* 20px */
-      r.style.setProperty('--text-lg',   Math.round(22 * scale) + 'px'); /* 22px — 타이틀 */
-      r.style.setProperty('--text-xl',   Math.round(24 * scale) + 'px'); /* 24px */
-      r.style.setProperty('--text-2xl',  Math.round(30 * scale) + 'px'); /* 30px */
-      r.style.setProperty('--text-3xl',  Math.round(36 * scale) + 'px'); /* 36px */
-      r.style.setProperty('--text-4xl',  Math.round(44 * scale) + 'px'); /* 44px */
+      r.style.setProperty('--text-lg', Math.round(22 * scale) + 'px'); /* 22px — 타이틀 */
+      r.style.setProperty('--text-xl', Math.round(24 * scale) + 'px'); /* 24px */
+      r.style.setProperty('--text-2xl', Math.round(30 * scale) + 'px'); /* 30px */
+      r.style.setProperty('--text-3xl', Math.round(36 * scale) + 'px'); /* 36px */
+      r.style.setProperty('--text-4xl', Math.round(44 * scale) + 'px'); /* 44px */
 
       /* 4. 헤더 글자크기 버튼 active 상태 동기화 */
       document.querySelectorAll('.font-btn').forEach(btn => {
         btn.classList.remove('active');
         const sz = btn.dataset.size;
         if ((sz === 'sm' && this._step < 0) ||
-            (sz === 'md' && this._step === 0) ||
-            (sz === 'lg' && this._step > 0)) {
+          (sz === 'md' && this._step === 0) ||
+          (sz === 'lg' && this._step > 0)) {
           btn.classList.add('active');
         }
       });
@@ -312,8 +308,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeTab = pageTabs.querySelector('.page-tab.active');
     if (activeTab) {
       /* active 탭을 컨테이너 중앙에 배치 (페이지 전체 스크롤 방지) */
-      const tabLeft    = activeTab.offsetLeft;
-      const tabWidth   = activeTab.offsetWidth;
+      const tabLeft = activeTab.offsetLeft;
+      const tabWidth = activeTab.offsetWidth;
       const containerW = pageTabs.offsetWidth;
       pageTabs.scrollLeft = tabLeft - (containerW / 2) + (tabWidth / 2);
     }
