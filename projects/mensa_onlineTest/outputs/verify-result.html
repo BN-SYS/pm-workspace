@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결과 확인 - 멘사 온라인 테스트</title>
+    <style>
+        /* ===== CSS 변수 ===== */
+        :root {
+            --color-bg: #f8f8f8;
+            --color-surface: #ffffff;
+            --color-logo: #00559D;
+            --color-text: #1a1a1a;
+            --color-heading: #111111;
+            --color-accent: #1a4fad;
+            --color-accent-hover: #163f8a;
+            --color-muted: #666666;
+            --color-border: #d8d8d8;
+            --color-border-focus: #1a4fad;
+            --color-input-bg: #ffffff;
+            --color-required: #d0021b;
+            --color-success: #2e7d32;
+            --color-success-bg: #e8f5e9;
+            --color-error-bg: #ffebee;
+
+            --font-main: 'Noto Sans KR', sans-serif;
+            --radius: 3px;
+            --transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== 리셋 ===== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 14px;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-image: radial-gradient(circle, rgba(180, 180, 180, 0.18) 1px, transparent 1px);
+            background-size: 22px 22px;
+        }
+
+        /* ===== 진입 애니메이션 ===== */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== 메인 컨테이너 ===== */
+        .verify-container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 80px 24px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: fadeUp 0.45s ease both;
+        }
+
+        /* ===== 헤더 섹션 ===== */
+        .verify-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .verify-header .logo {
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: var(--color-logo);
+            font-weight: 900;
+        }
+
+        .verify-header h1 {
+            font-size: 1.64rem;
+            font-weight: 700;
+            color: var(--color-heading);
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .verify-header p {
+            font-size: 0.95rem;
+            color: var(--color-muted);
+            line-height: 1.7;
+        }
+
+        /* ===== 폼 카드 ===== */
+        .verify-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            padding: 36px 32px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        /* ===== 안내 박스 ===== */
+        .info-box {
+            background: #f5f9ff;
+            border-left: 4px solid var(--color-accent);
+            padding: 16px 18px;
+            margin-bottom: 28px;
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            color: #2c3e50;
+            line-height: 1.7;
+        }
+
+        .info-box strong {
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        /* ===== 필드 그룹 ===== */
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0;
+        }
+
+        .field-label {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--color-heading);
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+
+        .field-label .required {
+            color: var(--color-required);
+            margin-left: 2px;
+            font-size: 0.78rem;
+        }
+
+        /* ===== 인풋 ===== */
+        .field-input {
+            width: 100%;
+            font-family: var(--font-main);
+            font-size: 0.95rem;
+            color: var(--color-text);
+            background: var(--color-input-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            padding: 11px 14px;
+            outline: none;
+            transition: var(--transition);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .field-input::placeholder {
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+
+        .field-input:focus {
+            border-color: var(--color-border-focus);
+            box-shadow: 0 0 0 3px rgba(26, 79, 173, 0.08);
+        }
+
+        .field-input.error {
+            border-color: var(--color-required);
+            box-shadow: 0 0 0 3px rgba(208, 2, 27, 0.07);
+        }
+
+        /* ===== 오류 메시지 (입력 필드 아래) ===== */
+        .field-error {
+            font-size: 0.76rem;
+            color: var(--color-required);
+            margin-top: 5px;
+            display: none;
+        }
+
+        .field-error.visible {
+            display: block;
+        }
+
+        /* ===== 버튼 ===== */
+        .form-footer {
+            margin-top: 32px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px 24px;
+            font-family: var(--font-main);
+            font-size: 0.96rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: -0.01em;
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            background: var(--color-accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(26, 79, 173, 0.22);
+        }
+
+        .btn-submit:disabled {
+            background: #ccc;
+            color: #999;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* ===== 상태 박스 (폼 위) ===== */
+        .status-box {
+            padding: 16px 18px;
+            border-radius: 4px;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            display: none;
+            border-left: 4px solid;
+        }
+
+        /* 형식 오류 (핑크) */
+        .status-box.format-error {
+            background: #ffe0e0;
+            border-left-color: var(--color-required);
+            color: var(--color-required);
+            display: block;
+        }
+
+        /* 불일치 오류 (핑크) */
+        .status-box.mismatch-error {
+            background: #ffe0e0;
+            border-left-color: var(--color-required);
+            color: var(--color-required);
+            display: block;
+        }
+
+        /* 성공 (초록) */
+        .status-box.success {
+            background: var(--color-success-bg);
+            border-left-color: var(--color-success);
+            color: var(--color-success);
+            display: block;
+        }
+
+        /* 기타 오류 (핑크) */
+        .status-box.error {
+            background: var(--color-error-bg);
+            border-left-color: var(--color-required);
+            color: var(--color-required);
+            display: block;
+        }
+
+        .status-box strong {
+            font-weight: 700;
+        }
+
+        /* ===== 스피너 ===== */
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(26, 79, 173, 0.2);
+            border-top-color: var(--color-accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== 반응형 ===== */
+        @media (max-width: 720px) {
+            .verify-container {
+                padding: 60px 20px;
+            }
+
+            .verify-header {
+                margin-bottom: 36px;
+            }
+
+            .verify-header h1 {
+                font-size: 1.36rem;
+            }
+
+            .verify-card {
+                padding: 28px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .verify-container {
+                padding: 48px 16px;
+            }
+
+            .verify-header h1 {
+                font-size: 1.2rem;
+            }
+
+            .verify-header p {
+                font-size: 0.88rem;
+            }
+
+            .verify-card {
+                padding: 24px 18px;
+            }
+
+            .info-box {
+                font-size: 0.85rem;
+                padding: 14px 16px;
+            }
+
+            .field-label {
+                font-size: 0.82rem;
+            }
+
+            .field-input {
+                font-size: 0.9rem;
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="verify-container">
+
+        <!-- 헤더 -->
+        <div class="verify-header">
+            <div class="logo">MENSA KOREA</div>
+            <h1>온라인테스트 결과 확인</h1>
+            <p>테스트 응시 시 입력하신 이메일 주소를 확인하면<br />결과를 확인하실 수 있습니다.</p>
+        </div>
+
+        <!-- 폼 카드 -->
+        <div class="verify-card">
+
+            <!-- 상태 메시지 (폼 위) -->
+            <div class="status-box" id="statusBox"></div>
+
+            <!-- 안내문 -->
+            <div class="info-box">
+                <strong>올바른 이메일 확인 필요</strong><br />
+                테스트 응시 시 입력하신 이메일 주소와 동일해야 결과를 확인할 수 있습니다.
+            </div>
+
+            <!-- 폼 -->
+            <form id="verifyForm">
+
+                <!-- 이메일 필드 -->
+                <div class="field-group">
+                    <label class="field-label">
+                        이메일 주소 <span class="required">*</span>
+                    </label>
+                    <input
+                        type="email"
+                        id="emailInput"
+                        class="field-input"
+                        placeholder="example@email.com"
+                        maxlength="100"
+                    />
+                    <span class="field-error" id="emailError"></span>
+                </div>
+
+                <!-- 버튼 -->
+                <div class="form-footer">
+                    <button type="submit" class="btn-submit" id="submitBtn" disabled>결과 확인하기</button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script>
+        // ===== 이메일 입력 시 버튼 활성화/비활성화 =====
+        document.getElementById('emailInput').addEventListener('input', function () {
+            const email = this.value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const submitBtn = document.getElementById('submitBtn');
+            const statusBox = document.getElementById('statusBox');
+
+            // 이메일이 유효하면 버튼 활성화
+            if (emailRegex.test(email)) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+
+            // 입력 중일 때 상태박스 제거
+            statusBox.className = '';
+            statusBox.innerHTML = '';
+
+            // 입력 중일 때 필드 오류 제거
+            if (this.classList.contains('error')) {
+                if (emailRegex.test(email)) {
+                    this.classList.remove('error');
+                    document.getElementById('emailError').classList.remove('visible');
+                }
+            }
+        });
+
+        // ===== 유효성 검사 (형식만 체크) =====
+        function validateEmailFormat() {
+            const email = document.getElementById('emailInput').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!email || !emailRegex.test(email)) {
+                return false;
+            }
+            return true;
+        }
+
+        // ===== 폼 제출 =====
+        document.getElementById('verifyForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // 1단계: 형식 검사
+            if (!validateEmailFormat()) {
+                const emailInput = document.getElementById('emailInput');
+                const emailError = document.getElementById('emailError');
+                const statusBox = document.getElementById('statusBox');
+
+                emailInput.classList.add('error');
+                emailError.textContent = '올바른 이메일 형식을 입력해주세요.';
+                emailError.classList.add('visible');
+                statusBox.className = 'status-box format-error';
+                statusBox.innerHTML = '<strong>✗ 형식 오류</strong><br />올바른 이메일 형식이 아닙니다. (예: example@email.com)';
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const statusBox = document.getElementById('statusBox');
+            const email = document.getElementById('emailInput').value.trim();
+            const verificationCode = getUrlParam('code');
+
+            // 로딩 상태
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span>검증 중...';
+            statusBox.className = '';
+            statusBox.innerHTML = '';
+
+            try {
+                // API 호출
+                const response = await fetch('/api/verify-result', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        email: email,
+                        code: verificationCode
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // 성공 상태
+                    statusBox.className = 'status-box success';
+                    statusBox.innerHTML = `<strong>✓ 확인 완료!</strong><br />결과를 불러오는 중입니다...`;
+
+                    // 결과 페이지로 이동
+                    setTimeout(() => {
+                        window.location.href = `/result.html?email=${encodeURIComponent(email)}&token=${data.token}`;
+                    }, 1200);
+                } else if (data.errorType === 'mismatch') {
+                    // 2단계: 불일치 오류 (이메일이 등록 기록과 다름)
+                    statusBox.className = 'status-box mismatch-error';
+                    statusBox.innerHTML = `<strong>✗ 이메일 불일치</strong><br />입력하신 이메일이 응시 기록의 이메일과 일치하지 않습니다. 다시 확인해주세요.`;
+
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '결과 확인하기';
+                } else {
+                    // 기타 오류
+                    statusBox.className = 'status-box error';
+                    statusBox.innerHTML = `<strong>✗ 오류 발생</strong><br />일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.`;
+
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '결과 확인하기';
+                }
+
+            } catch (error) {
+                // 네트워크 오류
+                statusBox.className = 'status-box error';
+                statusBox.innerHTML = `<strong>✗ 오류 발생</strong><br />일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.`;
+
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '결과 확인하기';
+            }
+        });
+
+        // ===== 유틸리티 =====
+        function getUrlParam(name) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(name);
+        }
+    </script>
+
+</body>
+
+</html>

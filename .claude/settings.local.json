@@ -27,7 +27,28 @@
       "Bash(powershell -Command \"\\(Get-Content -Path ''C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_members.ps1'' -Encoding UTF8\\) | Set-Content -Path ''C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_members.ps1'' -Encoding UTF8\")",
       "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\capture_members.ps1\")",
       "Bash(rm -rf \"c:/Users/BN659/.claude/plugins/marketplaces/bkit-marketplace\")",
-      "Bash(rm -rf \"c:/Users/BN659/.claude/plugins/cache/bkit-marketplace\")"
+      "Bash(rm -rf \"c:/Users/BN659/.claude/plugins/cache/bkit-marketplace\")",
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Read(//c/Users/BN659/Desktop/배은아/기획PM/projects/foresto_homepage/outputs/admin/**)",
+      "Bash(do)",
+      "Bash(echo \"=== $f \\(style block\\) ===\")",
+      "Bash(sed -n '/^  <style>/,/^  <\\\\/style>/p' \"c:/Users/BN659/Desktop/배은아/기획PM/projects/foresto_homepage/outputs/admin/$f\")",
+      "Bash(done)",
+      "Bash(python -c \":*)",
+      "Bash(where python:*)",
+      "Bash(py --version)",
+      "Bash(python -W ignore -c \":*)",
+      "Bash(node -e \":*)",
+      "Bash(echo \"=== $f ===\")",
+      "Bash(sed -n '117,130p' calendar-edit.html)",
+      "Bash(sed -n '450,465p' board-edit.html)",
+      "Bash(sed -n '778,792p' course-edit.html)",
+      "Bash(node _fix_ajax.js)",
+      "Bash(node _fix_list.js)",
+      "Bash(rm _fix_list.js)",
+      "Bash(echo \"=== $f \\(처음 30줄\\) ===\")",
+      "Read(//c/Users/BN659/Desktop/배은아/기획PM/projects/foresto_homepage/outputs/assets/js/pages/**)"
     ]
   }
 }
