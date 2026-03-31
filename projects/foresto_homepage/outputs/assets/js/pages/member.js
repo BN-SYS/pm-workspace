@@ -1147,7 +1147,7 @@ const ClubCtrl = {
           </td>
           <td class="td-title">
             <a href="?tab=news&id=${row.id}">${row.title}</a>
-            <span style="color:#b45309;font-weight:700;font-size:12px;margin-left:5px">(★회원모집중)</span>
+            <span style="color:#b45309;font-weight:700;font-size:12px;margin-left:5px">- ★회원모집중★ </span>
           </td>
           <td class="col-author center">${row.author}</td>
           <td class="col-date center">${row.date}</td>
@@ -1160,7 +1160,7 @@ const ClubCtrl = {
           </td>
           <td class="td-title">
             <a href="?tab=news&id=${row.id}">${row.title}</a>
-            ${row.pinned ? `<span style="color:#b45309;font-weight:700;font-size:12px;margin-left:5px">(★회원모집중)</span>` : ''}
+            ${row.pinned ? `<span style="color:#b45309;font-weight:700;font-size:12px;margin-left:5px">- ★회원모집중★</span>` : ''}
           </td>
           <td class="col-author center">${row.author}</td>
           <td class="col-date center">${row.date}</td>
@@ -1234,7 +1234,7 @@ const ClubCtrl = {
       const pinMark = c.recruiting
         ? `<div style="position:absolute;top:10px;left:10px;background:#b45309;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px">고정</div>`
         : '';
-      const recruitText = c.recruiting ? ' (★회원모집중)' : '';
+      const recruitText = c.recruiting ? ' - ★회원모집중★' : '';
       return `
         <div class="gallery-card" onclick="location.href='?tab=intro&id=${c.id}'"
              style="cursor:pointer;position:relative">
@@ -1273,11 +1273,13 @@ const ClubCtrl = {
           <span class="cd-nav-title">${prev.name}</span>
         </div>` : ''}
       </div>` : '';
+    const pinBadge    = item.recruiting ? `<span style="display:inline-block;background:#b45309;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;margin-right:8px;vertical-align:middle">고정</span>` : '';
+    const recruitText = item.recruiting ? ' - ★회원모집중★' : '';
     el.innerHTML = `
       <div class="cd-wrap">
         <div class="cd-head">
           <div class="cd-head-left">
-            <h2 class="cd-title">${item.name}</h2>
+            <h2 class="cd-title">${pinBadge}${item.name}${recruitText}</h2>
           </div>
         </div>
         <hr class="cd-divider">
