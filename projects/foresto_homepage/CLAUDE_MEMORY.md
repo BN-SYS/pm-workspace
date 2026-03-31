@@ -122,4 +122,4 @@ git push 전 반드시 확인:
 | 2026-03-31 | 기타신청관리 회원구분 추가 — 정회원/강사/후원 목록 회원구분 필터·컬럼·이름(ID) 노출, 숲해설신청 제외 | apply-regular.html, apply-instructor.html, apply-sponsor.html |
 | 2026-03-31 | 게시판 상단고정 — board.html 전 게시판 pinned:true 더미, 목록 토글 제거(표시만), board-edit.html 전 게시판 고정 체크박스 노출 | board.html, board-edit.html |
 | 2026-03-31 | 기타신청 상세 첨부파일 다운로드 UI — doc-tag 배지 제거, 파일명 클릭 다운로드, file-list flex:1 전폭 | apply-regular-detail.html, apply-instructor-detail.html, apply-forest-detail.html |
-| 2026-03-31 | 동아리 소개 갤러리 회원모집중 표시 — CLUB_DATA recruiting 필드, 고정 배지 + 회원모집중 배지 카드 노출 | member.js |
+| 2026-03-31 | 동아리 소개 갤러리 회원모집중 제목추가 표시 — CLUB_DATA recruiting 필드, 고정 배지 카드 노출 | member.js |

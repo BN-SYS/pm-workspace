@@ -220,7 +220,7 @@ const Header = {
          <a href="${root}mypage/index.html"
             class="btn btn-primary btn-sm">마이페이지</a>
          ${App.user.role === 'admin'
-        ? `<a href="${root}admin/index.html"
+        ? `<a href="${root}admin/members.html"
                  class="btn btn-gray btn-sm">관리자</a>`
         : ''}
          <button class="btn btn-gray btn-sm"
