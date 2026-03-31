@@ -14,6 +14,10 @@
 - **preview mode 유지.** `index.html`에 서브페이지 링크 차단 스크립트가 있다. 삭제하지 마.
 - **팝업 HTML 주석 처리 상태.** 관련 JS는 null-check 처리되어 있다. 팝업 HTML 복구 시 JS 확인 필요.
 - **글자 크기 조절 버튼은 달력 영역에 영향 안 줘야 한다.** 달력 관련 CSS는 px 고정값 사용.
+- **관리자 반응형 기준: 1100px.** 1100px 이하에서 사이드바 overlay(`.mobile-open`), backdrop(`#sidebarBackdrop`), 햄버거(`.adm-mobile-menu-btn`). `AdminLayout.closeSidebar()`로 닫기. PC 아이콘 모드(sidebar-collapsed)는 1101px 이상에서만 작동. CSS·JS 둘 다 `<= 1100` 기준으로 통일.
+- **admin filter-card CSS는 admin.css(Section 17)에 있다.** 각 HTML 파일에 인라인 중복 작성 금지. 페이지 고유 CSS만 `<style>` 블록에 남긴다.
+- **ADMIN_API 상수는 admin.js에 있다.** 각 HTML에서 별도 URL 하드코딩 금지. 엔드포인트 변경 시 admin.js 한 곳만 수정.
+- **PHP 연동 전환 가이드는 admin/DEV_HANDOFF.md 참조.** 개발자 인수인계 문서. 수정 시 동기화 유지.
 
 ---
 
@@ -113,3 +117,9 @@ git push 전 반드시 확인:
 | 2026-03-30 | 헤더 메가 드롭다운 적용 — 2depth 컬럼 헤더 + 3depth 링크, hideLnb 항목 메가패널 미노출, 자료실·숲일터·강사신청 flat 컬럼 처리 | common.css, header.js |
 | 2026-03-30 | 메인 달력 일정 링크 아이콘(SVG) 노출 및 클릭 이동, 공지사항 행 클릭 → notice-detail 이동, 연혁 라벨·월 삭제 + 년도 이미지 노출 | index.html, main.css, about.js, about.css |
 | 2026-03-30 | 연혁 년도 이미지 원 RC×3(108px) 확대, SVG clipPath 원형 클립, 패딩 래퍼 div로 overflow 잘림 방지 | about.js |
+| 2026-03-31 | 관리자 PHP 연동 준비 — filter-card CSS 공통화(admin.css), 목록 HTML 인라인 style 제거, ADMIN_API 엔드포인트 config 추가, AJAX TODO 주석 삽입, DEV_HANDOFF.md 신규 | admin.css, admin.js, members.html, members-withdrawn.html, courses.html, applicants.html, calendar.html, board.html, apply-*.html, admin/DEV_HANDOFF.md |
+| 2026-03-31 | 관리자 모바일 반응형 — 768px 이하 사이드바 slide-in overlay(backdrop), 상단바 햄버거 버튼, 필터 세로 스택, 통계 1열, 테이블/리스트 하단바 스택 | admin.css, admin.js |
+| 2026-03-31 | 기타신청관리 회원구분 추가 — 정회원/강사/후원 목록 회원구분 필터·컬럼·이름(ID) 노출, 숲해설신청 제외 | apply-regular.html, apply-instructor.html, apply-sponsor.html |
+| 2026-03-31 | 게시판 상단고정 — board.html 전 게시판 pinned:true 더미, 목록 토글 제거(표시만), board-edit.html 전 게시판 고정 체크박스 노출 | board.html, board-edit.html |
+| 2026-03-31 | 기타신청 상세 첨부파일 다운로드 UI — doc-tag 배지 제거, 파일명 클릭 다운로드, file-list flex:1 전폭 | apply-regular-detail.html, apply-instructor-detail.html, apply-forest-detail.html |
+| 2026-03-31 | 동아리 소개 갤러리 회원모집중 표시 — CLUB_DATA recruiting 필드, 고정 배지 + 회원모집중 배지 카드 노출 | member.js |

@@ -339,10 +339,9 @@
   document.getElementById('pageTitle').textContent = BCONFIG.title + (isEdit ? ' 수정' : ' 등록');
   document.title = BCONFIG.title + (isEdit ? ' 수정' : ' 등록') + ' | 관리자 | 한국숲해설가협회';
 
-  /* 썸네일 안내 표시 / 상단고정 숨김 (썸네일 게시판) */
+  /* 썸네일 안내 표시 (썸네일 게시판) — 상단고정은 전 게시판 공통 노출 */
   if (BCONFIG.hasThumb) {
     document.getElementById('thumbNotice').style.display = 'flex';
-    document.getElementById('pinGroup').style.display = 'none';
   }
 
   /* 수정 시 기존 내용 채우기 (더미) */
@@ -454,6 +453,7 @@
       if (!content || content === '<br>') {
         App.toast('내용을 입력해주세요.', 'error'); return;
       }
+      /* TODO: AJAX — fetch(ADMIN_API.boardSave, { method:'POST', body:JSON.stringify(payload) }) */
       App.toast(isEdit ? '게시글이 수정되었습니다.' : '게시글이 등록되었습니다.', 'success');
       setTimeout(() => { location.href = `board.html?type=${BTYPE}`; }, 800);
     },

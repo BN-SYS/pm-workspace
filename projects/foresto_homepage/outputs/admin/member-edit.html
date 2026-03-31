@@ -589,6 +589,11 @@
         const grade  = document.getElementById('fGrade')?.value;
         const status = document.querySelector('input[name="fStatus"]:checked')?.value;
 
+        /* TODO: AJAX
+         * const payload = { id, name, email, phone, grade, status, ... };
+         * fetch(ADMIN_API.memberSave, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken }, body: JSON.stringify(payload) })
+         *   .then(r => r.json()).then(data => { App.toast(successMsg, 'success'); setTimeout(() => location.href = 'members.html', 1500); });
+         */
         if (this._isEdit) {
           App.toast(`${name}님의 정보가 수정되었습니다.`, 'success');
         } else {

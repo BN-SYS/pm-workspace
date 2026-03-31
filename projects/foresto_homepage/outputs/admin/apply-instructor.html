@@ -10,41 +10,6 @@
   <link rel="stylesheet" href="../assets/css/responsive.css">
   <link rel="stylesheet" href="../assets/css/list-common.css">
   <link rel="stylesheet" href="../assets/css/pages/admin.css">
-  <style>
-    .filter-card { background:#fff; border:1px solid #e3eadd; border-radius:10px; margin-bottom:16px; overflow:hidden; }
-    .filter-body { display:flex; flex-direction:column; }
-    .filter-row { display:flex; align-items:stretch; min-height:46px; border-bottom:1px solid #f0f4ee; }
-    .filter-row:last-child { border-bottom:none; }
-    .filter-label { width:84px; min-width:84px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#7a8e74; letter-spacing:.04em; text-align:center; white-space:nowrap; background:#f8faf6; border-right:1px solid #e8efe3; }
-    .filter-content { flex:1; padding:10px 18px; display:flex; align-items:center; min-width:0; gap:6px; flex-wrap:wrap; }
-    .filter-half { flex:1; display:flex; align-items:stretch; min-width:0; }
-    .filter-half + .filter-half { border-left:1px solid #f0f4ee; }
-    .date-pair { display:flex; align-items:center; gap:6px; }
-    .date-pair input[type="date"] { width:140px; height:34px; padding:0 10px; border:1px solid #d5e0ce; border-radius:6px; font-size:13px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; cursor:pointer; }
-    .date-pair input[type="date"]:focus { border-color:#508829; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
-    .date-sep { color:#aabba4; font-size:13px; padding:0 2px; }
-    .date-preset-group { display:flex; gap:4px; flex-wrap:wrap; }
-    .date-preset-btn { height:28px; padding:0 10px; border:1px solid #d5e0ce; border-radius:99px; font-size:12px; font-family:'Noto Sans KR',sans-serif; color:#6a7e64; background:#fafcf9; cursor:pointer; white-space:nowrap; transition:all .15s; }
-    .date-preset-btn:hover { background:#e8f0e2; border-color:#508829; color:#508829; }
-    .chip-group { display:flex; gap:5px; flex-wrap:wrap; }
-    .chip { cursor:pointer; }
-    .chip input[type="radio"] { display:none; }
-    .chip span { display:inline-flex; align-items:center; padding:5px 14px; border-radius:99px; font-size:13px; font-weight:500; font-family:'Noto Sans KR',sans-serif; border:1px solid #d5e0ce; background:#fafcf9; color:#6a7e64; transition:all .15s; white-space:nowrap; cursor:pointer; }
-    .chip input[type="radio"]:checked + span { background:#1a2718; color:#fff; border-color:#1a2718; font-weight:600; }
-    .chip:hover span { border-color:#508829; color:#508829; }
-    .chip input[type="radio"]:checked + span:hover { color:#fff; }
-    .kw-wrap { display:flex; align-items:center; gap:6px; width:100%; }
-    .kw-wrap select { flex-shrink:0; width:116px; height:34px; padding:0 8px; border:1px solid #d5e0ce; border-radius:6px; font-size:13px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; cursor:pointer; }
-    .kw-wrap select:focus { border-color:#508829; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
-    .kw-input-wrap { position:relative; flex:1; }
-    .kw-input-wrap input { width:100%; height:34px; padding:0 38px 0 12px; border:1px solid #d5e0ce; border-radius:6px; font-size:13px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; box-sizing:border-box; }
-    .kw-input-wrap input:focus { border-color:#508829; background:#fff; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
-    .kw-input-wrap input::placeholder { color:#aabba4; }
-    .filter-footer { display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:12px 18px; background:#f8faf6; border-top:1px solid #e8efe3; }
-    .table-bottom-bar { display:flex; justify-content:flex-end; align-items:center; margin-top:12px; }
-    .admin-table tbody tr { cursor:pointer; }
-    .admin-table .cell-datetime { font-variant-numeric:tabular-nums; color:#111; }
-  </style>
 </head>
 <body class="admin-body">
   <div class="admin-layout">
@@ -120,7 +85,19 @@
             </div>
           </div>
 
-          <!-- 행3: 검색어 -->
+          <!-- 행3: 회원구분 -->
+          <div class="filter-row">
+            <span class="filter-label">회원구분</span>
+            <div class="filter-content">
+              <div class="chip-group">
+                <label class="chip"><input type="radio" name="filterMemberType" value="" checked><span>전체</span></label>
+                <label class="chip"><input type="radio" name="filterMemberType" value="member"><span>회원</span></label>
+                <label class="chip"><input type="radio" name="filterMemberType" value="guest"><span>비회원</span></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 행4: 검색어 -->
           <div class="filter-row">
             <span class="filter-label">검색어</span>
             <div class="filter-content">
@@ -165,8 +142,9 @@
           <thead>
             <tr>
               <th style="width:4%">No</th>
-              <th style="width:12%">접수번호</th>
+              <th style="width:11%">접수번호</th>
               <th style="width:8%">이름</th>
+              <th style="width:7%">회원구분</th>
               <th style="width:7%">거주지역</th>
               <th style="width:7%">활동요일</th>
               <th style="width:12%">연락처</th>
@@ -212,10 +190,13 @@
     const hh  = String(((i * 2) % 10) + 9).padStart(2, '0');
     const min = String((i * 11) % 60).padStart(2, '0');
     const ss  = String((i * 17) % 60).padStart(2, '0');
+    const isMember = i % 3 !== 0;
     return {
       id:         4000 + i,
       applyNo:    `INS-2026-${String(i + 1).padStart(5, '0')}`,
       name:       NAMES_I[i % NAMES_I.length],
+      isMember,
+      userId:     isMember ? `ins${4001 + i}` : null,
       email:      `inst${4000 + i}@example.com`,
       phone:      `010-${String(3000 + i).padStart(4, '0')}-${String(7000 + i).padStart(4, '0')}`,
       region:     REGIONS_I[i % REGIONS_I.length],
@@ -238,23 +219,25 @@
     search() {
       const dateFrom = document.getElementById('filterDateFrom')?.value || '';
       const dateTo   = document.getElementById('filterDateTo')?.value   || '';
-      const region   = document.querySelector('input[name="filterRegion"]:checked')?.value || '';
-      const day      = document.querySelector('input[name="filterDay"]:checked')?.value    || '';
-      const kwType   = document.getElementById('filterSearchType')?.value || 'all';
-      const keyword  = (document.getElementById('filterKeyword')?.value || '').trim().toLowerCase();
+      const region     = document.querySelector('input[name="filterRegion"]:checked')?.value     || '';
+      const day        = document.querySelector('input[name="filterDay"]:checked')?.value        || '';
+      const memberType = document.querySelector('input[name="filterMemberType"]:checked')?.value || '';
+      const kwType     = document.getElementById('filterSearchType')?.value || 'all';
+      const keyword    = (document.getElementById('filterKeyword')?.value || '').trim().toLowerCase();
 
       this._filtered = this._data.filter(d => {
         if (dateFrom && d.applyDate < dateFrom) return false;
         if (dateTo   && d.applyDate > dateTo)   return false;
         if (region   && d.region !== region)    return false;
-        /* days는 배열: 특정 요일 선택 시 해당 요일 포함 여부 or 무관 포함 여부 */
         if (day) {
           if (day === '무관') { if (!d.days.includes('무관')) return false; }
           else { if (!d.days.includes(day) && !d.days.includes('무관')) return false; }
         }
+        if (memberType === 'member' && !d.isMember) return false;
+        if (memberType === 'guest'  &&  d.isMember) return false;
         if (keyword) {
-          const m = { name: d.name, email: d.email, phone: d.phone };
-          if (kwType !== 'all') return m[kwType]?.toLowerCase().includes(keyword);
+          const m = { name: d.name, email: d.email, phone: d.phone, userId: d.userId || '' };
+          if (kwType !== 'all') return (m[kwType] || '').toLowerCase().includes(keyword);
           return Object.values(m).some(v => v.toLowerCase().includes(keyword));
         }
         return true;
@@ -277,8 +260,9 @@
       document.getElementById('filterDateTo').value   = '';
       document.getElementById('filterKeyword').value  = '';
       document.getElementById('filterSearchType').value = 'all';
-      document.querySelector('input[name="filterRegion"][value=""]').checked = true;
-      document.querySelector('input[name="filterDay"][value=""]').checked    = true;
+      document.querySelector('input[name="filterRegion"][value=""]').checked     = true;
+      document.querySelector('input[name="filterDay"][value=""]').checked        = true;
+      document.querySelector('input[name="filterMemberType"][value=""]').checked = true;
       this._filtered = [...this._data];
       this._page = 1;
       this.render();
@@ -298,7 +282,7 @@
       if (!tbody) return;
 
       if (!slice.length) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:#8a9e84">검색 결과가 없습니다.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:40px;color:#8a9e84">검색 결과가 없습니다.</td></tr>`;
         App.renderPagination('applyPagination', 1, 1, () => {});
         return;
       }
@@ -309,10 +293,17 @@
         const memoCell = memo
           ? `<span style="font-size:12px;color:#5a7a5a">${memo.length > 10 ? memo.slice(0, 10) + '…' : memo}</span>`
           : `<span style="color:#ccc;font-size:12px">—</span>`;
+        const nameCell = d.isMember
+          ? `${d.name}<span style="color:#5a7a5a;font-size:12px">(${d.userId})</span>`
+          : d.name;
+        const memberBadge = d.isMember
+          ? `<span class="badge badge-green">회원</span>`
+          : `<span class="badge badge-gray">비회원</span>`;
         return `<tr onclick="location.href='apply-instructor-detail.html?id=${d.id}'">
           <td style="text-align:center">${seq}</td>
           <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">${d.applyNo}</td>
-          <td style="font-weight:600">${d.name}</td>
+          <td style="font-weight:600">${nameCell}</td>
+          <td style="text-align:center">${memberBadge}</td>
           <td style="text-align:center;font-size:13px">${d.region}</td>
           <td style="text-align:center;font-size:13px">${d.days.join('·')}</td>
           <td style="text-align:center;font-size:13px" class="cell-datetime">${d.phone}</td>
@@ -329,6 +320,7 @@
       );
     },
 
+    // TODO: AJAX — window.location.href = ADMIN_API.applyInstructor + '/export?' + new URLSearchParams(currentFilter);
     exportExcel() { App.toast('강사신청 목록 엑셀 다운로드를 시작합니다.', 'info'); },
   };
 

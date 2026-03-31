@@ -129,6 +129,7 @@
     .img-preview-clear {
       display: inline-block; margin-top: 6px; font-size: 11px;
       color: #dc2626; cursor: pointer; text-decoration: underline;
+      position: relative; z-index: 10;
     }
 
     /* SE2 목업 */
@@ -698,6 +699,7 @@
     save() {
       if (!this.validate()) return;
       const isEdit = this.editId !== null;
+      /* TODO: AJAX — fetch(ADMIN_API.popupSave, { method:'POST', body:JSON.stringify(payload) }) */
       App.toast(isEdit ? '팝업이 수정되었습니다.' : '팝업이 등록되었습니다.', 'success');
       setTimeout(() => { location.href = 'popup.html'; }, 700);
     },

@@ -21,9 +21,13 @@
     .detail-val { font-size:14px; color:#111; line-height:1.6; }
     .detail-val.mono { font-variant-numeric:tabular-nums; }
     .detail-val.long { line-height:1.8; }
-    .doc-tag { display:inline-flex; align-items:center; padding:4px 12px; border-radius:99px; font-size:12px; font-weight:600; background:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; margin:2px; }
     .detail-bottom-bar { display:flex; align-items:center; justify-content:space-between; padding:4px 0 8px; }
     .btn-group-right { display:flex; gap:8px; }
+    .file-list { display:flex; flex-direction:column; gap:6px; flex:1; min-width:0; }
+    .file-item { display:flex; align-items:center; gap:10px; padding:7px 12px; background:#f8faf6; border:1px solid #e3eadd; border-radius:6px; }
+    .file-name-link { font-size:13px; color:#05803e; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
+    .file-name-link:hover { color:#20281A; }
+    .file-size { font-size:11px; color:#9aaa94; white-space:nowrap; }
     /* 관리자 메모 */
     .memo-textarea { width:100%; min-height:120px; padding:12px 14px; border:1px solid #d5e0ce; border-radius:8px; font-size:14px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; resize:vertical; box-sizing:border-box; line-height:1.7; }
     .memo-textarea:focus { border-color:#508829; background:#fff; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
@@ -74,7 +78,12 @@
     '숲체험지도사 자격 취득 후 주민센터 강의 1년',
   ];
   const CERTS_R   = ['숲해설가 자격증 (한국산림복지진흥원)','자연환경해설사 (환경부)','유아숲지도사 2급','숲체험지도사 1급','산림치유지도사 2급'];
-  const DOC_SETS  = [['재직증명서','신분증 사본','자격증 사본'],['활동확인서','신분증 사본'],['자격증 사본','재직증명서'],['신분증 사본','경력기술서']];
+  const FILE_SETS_R = [
+    [{name:'재직증명서.pdf',size:'142 KB',ext:'pdf'},{name:'신분증사본.jpg',size:'87 KB',ext:'img'},{name:'자격증사본.pdf',size:'215 KB',ext:'pdf'}],
+    [{name:'활동확인서.pdf',size:'198 KB',ext:'pdf'},{name:'신분증사본.jpg',size:'65 KB',ext:'img'}],
+    [{name:'자격증사본.pdf',size:'310 KB',ext:'pdf'},{name:'재직증명서.pdf',size:'124 KB',ext:'pdf'}],
+    [{name:'신분증사본.jpg',size:'72 KB',ext:'img'},{name:'경력기술서.docx',size:'45 KB',ext:'doc'}],
+  ];
   const MOTIVES   = [
     '협회 활동을 통해 더 많은 분들과 숲의 소중함을 나누고 싶어 정회원에 지원합니다.',
     '지역 숲해설 네트워크를 넓히고 전문성을 강화하고자 정회원 전환을 신청합니다.',
@@ -98,13 +107,25 @@
       applyDatetime: `2026-${mm}-${dd} ${hh}:${min}:${ss}`,
       career:     CAREERS[i % CAREERS.length],
       cert:       CERTS_R[i % CERTS_R.length],
-      docs:       DOC_SETS[i % DOC_SETS.length],
+      files:      FILE_SETS_R[i % FILE_SETS_R.length],
       motivation: MOTIVES[i % MOTIVES.length],
     };
   });
 
+  function _fileListHtml(files) {
+    if (!files || !files.length) return '<span class="detail-val muted">첨부된 파일 없음</span>';
+    return '<div class="file-list">' + files.map(f =>
+      `<div class="file-item">
+        <span class="file-name-link" onclick="downloadFile('${f.name}')">${f.name}</span>
+        <span class="file-size">${f.size}</span>
+      </div>`).join('') + '</div>';
+  }
+  function downloadFile(name) {
+    /* TODO: AJAX — fetch(ADMIN_API.base + '/files/download?name=' + encodeURIComponent(name)) */
+    App.toast('PHP 연동 후 파일을 다운로드할 수 있습니다.', 'info');
+  }
+
   function renderDetail(d) {
-    const docTags = d.docs.map(doc => `<span class="doc-tag">${doc}</span>`).join('');
 
     document.getElementById('detailContent').innerHTML = `
 
@@ -175,9 +196,9 @@
       <!-- 카드3: 제출 서류 -->
       <div class="form-card">
         <div class="form-card-head">제출 서류</div>
-        <div class="form-row">
-          <div class="form-label">첨부 서류</div>
-          <div class="form-content">${docTags}</div>
+        <div class="form-row" style="align-items:flex-start">
+          <div class="form-label" style="padding-top:14px">첨부 서류</div>
+          <div class="form-content" style="align-items:flex-start;padding-top:12px;padding-bottom:12px">${_fileListHtml(d.files)}</div>
         </div>
         <div class="form-row">
           <div class="form-label">개인정보 동의</div>
@@ -209,6 +230,7 @@
 
   function saveMemo(id) {
     const memo = document.getElementById('adminMemo')?.value || '';
+    /* TODO: AJAX — fetch(ADMIN_API.applyStatusSave, { method: 'POST', body: JSON.stringify({ id, status, memo }) }) */
     App.toast('관리자 메모가 저장되었습니다.', 'success');
   }
   function clearMemo() {

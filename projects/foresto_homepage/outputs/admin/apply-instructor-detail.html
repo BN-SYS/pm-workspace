@@ -24,6 +24,11 @@
     .detail-val.muted { color:#7a8e74; font-size:13px; }
     .detail-bottom-bar { display:flex; align-items:center; justify-content:space-between; padding:4px 0 8px; }
     .btn-group-right { display:flex; gap:8px; }
+    .file-list { display:flex; flex-direction:column; gap:6px; flex:1; min-width:0; }
+    .file-item { display:flex; align-items:center; gap:10px; padding:7px 12px; background:#f8faf6; border:1px solid #e3eadd; border-radius:6px; }
+    .file-name-link { font-size:13px; color:#05803e; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
+    .file-name-link:hover { color:#20281A; }
+    .file-size { font-size:11px; color:#9aaa94; white-space:nowrap; }
     .memo-textarea { width:100%; min-height:120px; padding:12px 14px; border:1px solid #d5e0ce; border-radius:8px; font-size:14px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; resize:vertical; box-sizing:border-box; line-height:1.7; }
     .memo-textarea:focus { border-color:#508829; background:#fff; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
     .memo-textarea::placeholder { color:#aabba4; }
@@ -91,8 +96,22 @@
       course:     COURSES_I[i % COURSES_I.length],
       note:       i % 3 === 0 ? '장애인 대상 프로그램 경험 있음' : '',
       applyDatetime: `2026-${mm}-${dd} ${hh}:${min}:${ss}`,
+      files:      i % 3 === 2 ? [] : [{name:`자격증사본_${NAMES_I[i % NAMES_I.length]}.pdf`, size:`${130 + i * 11} KB`, ext:'pdf'}],
     };
   });
+
+  function _fileListHtml(files) {
+    if (!files || !files.length) return '<span class="detail-val muted">첨부된 파일 없음</span>';
+    return '<div class="file-list">' + files.map(f =>
+      `<div class="file-item">
+        <span class="file-name-link" onclick="downloadFile('${f.name}')">${f.name}</span>
+        <span class="file-size">${f.size}</span>
+      </div>`).join('') + '</div>';
+  }
+  function downloadFile(name) {
+    /* TODO: AJAX — fetch(ADMIN_API.base + '/files/download?name=' + encodeURIComponent(name)) */
+    App.toast('PHP 연동 후 파일을 다운로드할 수 있습니다.', 'info');
+  }
 
   function renderDetail(d) {
     document.getElementById('detailContent').innerHTML = `
@@ -160,6 +179,10 @@
           <div class="form-content">
             <span class="detail-val">${d.note || '<span class="detail-val muted">없음</span>'}</span>
           </div>
+        </div>
+        <div class="form-row" style="align-items:flex-start">
+          <div class="form-label" style="padding-top:14px">첨부파일</div>
+          <div class="form-content" style="align-items:flex-start;padding-top:12px;padding-bottom:12px">${_fileListHtml(d.files)}</div>
         </div>
         <div class="form-row">
           <div class="form-label">개인정보 동의</div>

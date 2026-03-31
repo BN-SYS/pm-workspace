@@ -780,6 +780,7 @@
     save() {
       if (!this.validate()) return;
 
+      /* TODO: AJAX — fetch(ADMIN_API.courseSave, { method: 'POST', body: formData }) */
       /* 실제 구현 시 FormData 구성 후 fetch/AJAX */
       App.toast('저장되었습니다.', 'success');
       const p   = new URLSearchParams(location.search);

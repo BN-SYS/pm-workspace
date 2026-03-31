@@ -254,6 +254,11 @@
           else { items.push({ text, img: null }); }
         });
 
+        /* TODO: AJAX
+         * const payload = { year, items };
+         * fetch(ADMIN_API.historySave, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken }, body: JSON.stringify(payload) })
+         *   .then(r => r.json()).then(data => { App.toast(msg, 'success'); });
+         */
         if (hasError) { App.toast('모든 항목의 내용을 입력해주세요.', 'warning'); return; }
         if (!items.length) { App.toast('항목을 1개 이상 추가해주세요.', 'warning'); return; }
 

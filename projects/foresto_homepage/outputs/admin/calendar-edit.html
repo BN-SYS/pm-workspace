@@ -119,6 +119,7 @@
           if (idx > -1) CalAdmin._events[idx] = { ...CalAdmin._events[idx], date, cat, title, link: link || null };
         }
 
+        /* TODO: AJAX — fetch(ADMIN_API.calendarSave, { method:'POST', body:JSON.stringify(payload) }) */
         App.toast('일정이 저장되었습니다.');
         setTimeout(() => history.back(), 900);
       },

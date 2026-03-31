@@ -11,139 +11,14 @@
   <link rel="stylesheet" href="../assets/css/list-common.css">
   <link rel="stylesheet" href="../assets/css/pages/admin.css">
   <style>
-    /* ════════════════════════════════════════
-       필터 카드 — courses.html 기준 표준
-       ════════════════════════════════════════ */
-    .filter-card {
-      background: #fff;
-      border: 1px solid #e3eadd;
-      border-radius: 10px;
-      margin-bottom: 16px;
-      overflow: hidden;
-    }
-    .filter-body { display: flex; flex-direction: column; }
-    .filter-row {
-      display: flex;
-      align-items: center;
-      min-height: 46px;
-      border-bottom: 1px solid #f0f4ee;
-    }
-    .filter-row:last-child { border-bottom: none; }
-    .filter-label {
-      width: 84px;
-      min-width: 84px;
-      flex-shrink: 0;
-      align-self: stretch;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      color: #7a8e74;
-      letter-spacing: 0.04em;
-      white-space: nowrap;
-      background: #f8faf6;
-      border-right: 1px solid #e8efe3;
-    }
-    .filter-content {
-      flex: 1;
-      padding: 10px 18px;
-      display: flex;
-      align-items: center;
-      min-width: 0;
-    }
-    .date-pair { display: flex; align-items: center; gap: 6px; }
-    .date-pair input[type="date"] {
-      width: 140px;
-      height: 34px;
-      padding: 0 10px;
-      border: 1px solid #d5e0ce;
-      border-radius: 6px;
-      font-size: 13px;
-      font-family: 'Noto Sans KR', sans-serif;
-      color: #2a3a26;
-      background: #fafcf9;
-      outline: none;
-      cursor: pointer;
-    }
-    .date-pair input[type="date"]:focus {
-      border-color: #508829;
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(80,136,41,0.08);
-    }
-    .date-sep { color: #aabba4; font-size: 13px; padding: 0 2px; }
+    /* 날짜 범위 힌트 텍스트 */
     .date-hint { font-size: 11px; color: #aabba4; margin-left: 10px; }
 
-    /* 칩 */
-    .chip-group { display: flex; gap: 5px; flex-wrap: wrap; }
-    .chip { cursor: pointer; }
-    .chip input[type="radio"] { display: none; }
-    .chip span {
-      display: inline-flex;
-      align-items: center;
-      padding: 5px 14px;
-      border-radius: 99px;
-      font-size: 13px;
-      font-weight: 500;
-      font-family: 'Noto Sans KR', sans-serif;
-      border: 1px solid #d5e0ce;
-      background: #fafcf9;
-      color: #6a7e64;
-      transition: all 0.15s;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-    .chip input[type="radio"]:checked + span {
-      background: #1a2718; color: #fff; border-color: #1a2718; font-weight: 600;
-    }
-    .chip:hover span { border-color: #508829; color: #508829; }
-    .chip input[type="radio"]:checked + span:hover { color: #fff; }
-
-    /* 검색어 */
-    .kw-wrap { display: flex; align-items: center; gap: 6px; width: 100%; }
-    .kw-input-wrap { position: relative; flex: 1; }
-    .kw-input-wrap input {
-      width: 100%;
-      height: 34px;
-      padding: 0 12px;
-      border: 1px solid #d5e0ce;
-      border-radius: 6px;
-      font-size: 13px;
-      font-family: 'Noto Sans KR', sans-serif;
-      color: #2a3a26;
-      background: #fafcf9;
-      outline: none;
-      box-sizing: border-box;
-    }
-    .kw-input-wrap input:focus {
-      border-color: #508829;
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(80,136,41,0.08);
-    }
-    .kw-input-wrap input::placeholder { color: #aabba4; }
-
-    /* 필터 푸터 */
-    .filter-footer {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 8px;
-      padding: 12px 18px;
-      background: #f8faf6;
-      border-top: 1px solid #e8efe3;
-    }
-
-    /* ════════════════════════════════════════
-       카테고리 뱃지
-       ════════════════════════════════════════ */
+    /* 카테고리 배지 */
     .cat-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 10px;
-      border-radius: 99px;
-      font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
+      display: inline-flex; align-items: center;
+      padding: 2px 10px; border-radius: 99px;
+      font-size: 12px; font-weight: 600; white-space: nowrap;
     }
     .cat-edu    { background: #e8f5e9; color: #2e7d32; }
     .cat-event  { background: #e3f2fd; color: #1565c0; }
@@ -151,36 +26,19 @@
     .cat-public { background: #f3e5f5; color: #6a1b9a; }
     .cat-etc    { background: #f5f5f5; color: #616161; }
 
-    /* 링크 셀 */
+    /* 일정 링크 셀 */
     .link-cell a {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      font-size: 12px;
-      color: #1565c0;
-      text-decoration: none;
-      padding: 2px 8px;
-      border: 1px solid #90caf9;
-      border-radius: 4px;
-      background: #e3f2fd;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 12px; color: #1565c0; text-decoration: none;
+      padding: 2px 8px; border: 1px solid #90caf9;
+      border-radius: 4px; background: #e3f2fd; white-space: nowrap;
     }
     .link-cell a:hover { background: #bbdefb; }
 
-    /* 하단 바 */
-    .table-bottom-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 12px;
-    }
+    /* 등록 폼 힌트 */
+    .form-hint { font-size: 12px; color: #aabba4; margin-top: 4px; }
 
-    /* 모달 form */
-    .form-hint {
-      font-size: 12px;
-      color: #aabba4;
-      margin-top: 4px;
-    }
+    .admin-table tbody tr { cursor: pointer; }
   </style>
 </head>
 <body class="admin-body">
