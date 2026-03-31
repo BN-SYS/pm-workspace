@@ -87,6 +87,24 @@ const ALL_COURSES_RAW = [
       c.to = lastDay;
     }
   });
+
+  /* ── 접수중 항목 보장: 전문과정·회원강좌에서 접수중이 없으면 첫 항목을 오늘 기준으로 조정 */
+  ['전문과정', '회원강좌'].forEach(function(type) {
+    const hasOpen = ALL_COURSES_RAW.some(function(c) {
+      return c.type === type && c.from <= today && c.to >= today;
+    });
+    if (!hasOpen) {
+      const target = ALL_COURSES_RAW.find(function(c) { return c.type === type; });
+      if (target) {
+        const d    = new Date(today);
+        const from = new Date(d); from.setDate(d.getDate() - 7);
+        const to   = new Date(d); to.setDate(d.getDate() + 14);
+        target.from = from.toISOString().slice(0, 10);
+        target.to   = to.toISOString().slice(0, 10);
+        target.date = today + ' 10:00:00';
+      }
+    }
+  });
 })();
 
 /* member.js 에서 window.ALL_COURSES_RAW 로 접근 가능하도록 노출 */

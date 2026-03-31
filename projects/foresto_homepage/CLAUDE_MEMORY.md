@@ -123,3 +123,4 @@ git push 전 반드시 확인:
 | 2026-03-31 | 게시판 상단고정 — board.html 전 게시판 pinned:true 더미, 목록 토글 제거(표시만), board-edit.html 전 게시판 고정 체크박스 노출 | board.html, board-edit.html |
 | 2026-03-31 | 기타신청 상세 첨부파일 다운로드 UI — doc-tag 배지 제거, 파일명 클릭 다운로드, file-list flex:1 전폭 | apply-regular-detail.html, apply-instructor-detail.html, apply-forest-detail.html |
 | 2026-03-31 | 동아리 소개 갤러리 회원모집중 제목추가 표시 — CLUB_DATA recruiting 필드, 고정 배지 카드 노출 | member.js |
+| 2026-03-31 | 교육과정·회원아카데미 접수중 1개 보장 — IIFE에 타입별 hasOpen 체크, 없으면 첫 항목 from/to를 오늘 기준 -7~+14일로 동적 조정 | education.js |
