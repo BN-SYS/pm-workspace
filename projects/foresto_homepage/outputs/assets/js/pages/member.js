@@ -349,7 +349,6 @@ const CLUB_NEWS_DATA = Array.from({ length: 24 }, (_, i) => ({
   date:    makeDate(i),
   content: `<p>동아리 소식 ${24 - i}번 게시물입니다.</p>
             <p>동아리 활동 내용을 공유드립니다.</p>`,
-  pinned:  i < 2,  /* 최신 2건 고정 더미 */
 }));
 
 /* ── 1-7. 동아리 자료방 데이터 (12건) */
@@ -1136,21 +1135,6 @@ const ClubCtrl = {
       tableBodyId:      'clubNewsTableBody',
       paginationId:     'clubNewsPagination',
       countId:          'clubNewsCount',
-      pinnedData:       CLUB_NEWS_DATA.filter(r => r.pinned),
-      pinnedRowRenderer: (row) => `
-        <tr style="background:#fffbeb;">
-          <td class="col-num center">
-            <span style="display:inline-block;font-size:11px;font-weight:700;color:#b45309;background:#fef3c7;border:1px solid #fcd34d;border-radius:3px;padding:1px 6px;">고정</span>
-          </td>
-          <td class="col-extra center">
-            <span class="badge badge-green" style="font-size:11px">${row.club}</span>
-          </td>
-          <td class="td-title">
-            <a href="?tab=news&id=${row.id}">${row.title}</a>
-          </td>
-          <td class="col-author center">${row.author}</td>
-          <td class="col-date center">${row.date}</td>
-        </tr>`,
       rowRenderer:  (row, seq) => `
         <tr>
           <td class="col-num center">${seq}</td>
