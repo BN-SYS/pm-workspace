@@ -1231,11 +1231,15 @@ const ClubCtrl = {
       const thumb = c.imgUrl
         ? `<div class="gallery-thumb" style="background-image:url('${c.imgUrl}')"></div>`
         : `<div class="gallery-thumb-placeholder"></div>`;
+      const pinMark = c.recruiting
+        ? `<div style="position:absolute;top:10px;left:10px;background:#b45309;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px">고정</div>`
+        : '';
       const recruitText = c.recruiting ? ' (★회원모집중)' : '';
       return `
         <div class="gallery-card" onclick="location.href='?tab=intro&id=${c.id}'"
-             style="cursor:pointer">
+             style="cursor:pointer;position:relative">
           ${thumb}
+          ${pinMark}
           <div class="gallery-info">
             <div class="gallery-title">${c.name}${recruitText}</div>
           </div>
