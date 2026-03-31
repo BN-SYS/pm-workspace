@@ -1226,23 +1226,18 @@ const ClubCtrl = {
       grid.innerHTML = '<p style="padding:40px;text-align:center;color:var(--gray-mid)">등록된 동아리가 없습니다.</p>';
       return;
     }
-    grid.innerHTML = CLUB_DATA.map(c => {
+    const sorted = [...CLUB_DATA].sort((a, b) => (b.recruiting ? 1 : 0) - (a.recruiting ? 1 : 0));
+    grid.innerHTML = sorted.map(c => {
       const thumb = c.imgUrl
         ? `<div class="gallery-thumb" style="background-image:url('${c.imgUrl}')"></div>`
         : `<div class="gallery-thumb-placeholder"></div>`;
-      const recruitBadge = c.recruiting
-        ? `<span style="display:inline-block;background:#b45309;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;margin-left:6px;vertical-align:middle">★ 회원모집중</span>`
-        : '';
-      const pinMark = c.recruiting
-        ? `<div style="position:absolute;top:10px;left:10px;background:#b45309;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px">고정</div>`
-        : '';
+      const recruitText = c.recruiting ? ' (★회원모집중)' : '';
       return `
         <div class="gallery-card" onclick="location.href='?tab=intro&id=${c.id}'"
-             style="cursor:pointer;position:relative">
+             style="cursor:pointer">
           ${thumb}
-          ${pinMark}
           <div class="gallery-info">
-            <div class="gallery-title">${c.name}${recruitBadge}</div>
+            <div class="gallery-title">${c.name}${recruitText}</div>
           </div>
         </div>`;
     }).join('');
