@@ -124,4 +124,5 @@ git push 전 반드시 확인:
 | 2026-03-31 | 기타신청 상세 첨부파일 다운로드 UI — doc-tag 배지 제거, 파일명 클릭 다운로드, file-list flex:1 전폭 | apply-regular-detail.html, apply-instructor-detail.html, apply-forest-detail.html |
 | 2026-03-31 | 동아리 소개 갤러리 회원모집중 제목추가 표시 — CLUB_DATA recruiting 필드, 고정 배지 카드 노출 | member.js |
 | 2026-03-31 | 동아리 소식 상단고정 유지, 제목 옆 ★회원모집중★ 텍스트 제거 (pinnedRowRenderer·rowRenderer 양쪽) | member.js |
+| 2026-04-01 | 동아리 소식 고정 배지·상단노출 완전 제거 (pinnedData·pinnedRowRenderer 삭제, pinned 필드 제거), 유관기관 바로가기 레이블 16px·슬라이드 카드 16px | member.js, common.css |
 | 2026-03-31 | 교육과정·회원아카데미 접수중 1개 보장 — IIFE에 타입별 hasOpen 체크, 없으면 첫 항목 from/to를 오늘 기준 -7~+14일로 동적 조정 | education.js |
