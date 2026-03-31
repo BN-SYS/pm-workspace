@@ -1147,7 +1147,6 @@ const ClubCtrl = {
           </td>
           <td class="td-title">
             <a href="?tab=news&id=${row.id}">${row.title}</a>
-            <span style="color:#b45309;font-weight:700;font-size:12px;margin-left:5px">- ★회원모집중★ </span>
           </td>
           <td class="col-author center">${row.author}</td>
           <td class="col-date center">${row.date}</td>
@@ -1160,7 +1159,6 @@ const ClubCtrl = {
           </td>
           <td class="td-title">
             <a href="?tab=news&id=${row.id}">${row.title}</a>
-            ${row.pinned ? `<span style="color:#b45309;font-weight:700;font-size:12px;margin-left:5px">- ★회원모집중★</span>` : ''}
           </td>
           <td class="col-author center">${row.author}</td>
           <td class="col-date center">${row.date}</td>
