@@ -5,7 +5,7 @@
 
 /* ── 강좌 데이터 */
 const ALL_COURSES_RAW = [
-  ...Array.from({ length: 12 }, (_, i) => ({
+  ...Array.from({ length: 3 }, (_, i) => ({
     id: 1000 + i, type: '전문과정',
     title: `[전문과정] ${44 + i}기 숲해설가 전문가과정`,
     date:  `2026-${String(i + 1).padStart(2, '0')}-10 10:00:00`,
@@ -20,7 +20,7 @@ const ALL_COURSES_RAW = [
     ] : [],
     guide: `■신청기간 : ${(i%9)+1}월 ${(i%20)+1}일 오전 10시 - ${(i%9)+1}월 ${(i%20)+5}일 오후 3시\n■모집인원 : 선착순 30명\n■현장강의로 원활한 강의 진행을 위해 선착순 30명으로 참여인원을 제한합니다.\n■준비물 : 1000ml 유백/1개, 가위\n(해당 물품은 개인 준비 사항으로, 협회에서 별도 제공되지 않으니 꼭 준비해 오시기 바랍니다.)`,
   })),
-  ...Array.from({ length: 10 }, (_, i) => ({
+  ...Array.from({ length: 3 }, (_, i) => ({
     id: 2000 + i, type: '시민아카데미',
     title: `[시민아카데미] ${['겨울나무의 이해','봄꽃 산책','여름 숲 탐방','가을 단풍 해설','야생화 특강','버섯 생태','새소리 탐조','나무 이름표 달기','숲 치유 체험','곤충 관찰'][i]}`,
     date: `2026-0${(i%9)+1}-${String((i%20)+1).padStart(2,'0')} 10:00:00`,
@@ -28,9 +28,9 @@ const ALL_COURSES_RAW = [
     to:   `2026-0${(i%9)+1}-${String((i%20)+5).padStart(2,'0')}`,
     status: ['open','ready','closed','open','closed'][i % 5],
     attachments: i % 2 === 0 ? [{ name: '시민아카데미_신청서.hwp', size: '28K' }] : [],
-    guide: `■강좌: 시민아카데미\n■대상: 일반 시민 누구나\n■교육 장소: 협회 지정 숲 현장\n■준비물: 편한 운동화, 긴 바지 권장\n■문의: 협회 사무국 02-000-0000`,
+    guide: `■강좌: 시민아카데미\n■대상: 일반 시민 누구나\n■교육 장소: 협회 지정 숲 현장\n■준비물: 편한 운동화, 긴 바지 권장\n■문의: 협회 사무국 02-747-6518`,
   })),
-  ...Array.from({ length: 8 }, (_, i) => ({
+  ...Array.from({ length: 3 }, (_, i) => ({
     id: 3000 + i, type: '직무교육',
     title: `[직무교육] ${['직무 기본과정','현장 안전 교육','해설 역량 향상','디지털 자료 제작','생태 모니터링','환경 법령 이해','고객 응대 실습','보고서 작성'][i]}`,
     date: `2026-0${(i%9)+1}-${String((i%20)+1).padStart(2,'0')} 09:00:00`,
@@ -38,9 +38,9 @@ const ALL_COURSES_RAW = [
     to:   `2026-0${(i%9)+1}-${String((i%20)+5).padStart(2,'0')}`,
     status: ['open','ready','closed','closed'][i % 4],
     attachments: i % 2 === 0 ? [{ name: '직무교육_신청서.hwp', size: '32K' }] : [],
-    guide: `■강좌: 직무교육\n■대상: 현직 숲해설가\n■이수 시 직무교육 이수증 발급\n■문의: 협회 사무국 02-000-0000`,
+    guide: `■강좌: 직무교육\n■대상: 현직 숲해설가\n■이수 시 직무교육 이수증 발급\n■문의: 협회 사무국 02-747-6518`,
   })),
-  ...Array.from({ length: 8 }, (_, i) => ({
+  ...Array.from({ length: 3 }, (_, i) => ({
     id: 4000 + i, type: '역량강화',
     title: `[역량강화] ${['리더십 워크숍','커뮤니케이션 역량','팀빌딩 프로그램','멘토링 과정','자기계발 세미나','전문가 특강','해외 사례 공유','네트워킹 데이'][i]}`,
     date: `2026-0${(i%9)+1}-${String((i%20)+1).padStart(2,'0')} 10:00:00`,
@@ -48,11 +48,11 @@ const ALL_COURSES_RAW = [
     to:   `2026-0${(i%9)+1}-${String((i%20)+5).padStart(2,'0')}`,
     status: ['open','ready','closed','closed'][i % 4],
     attachments: i % 2 === 0 ? [{ name: '역량강화_신청서.hwp', size: '26K' }] : [],
-    guide: `■강좌: 역량강화\n■대상: 회원 숲해설가 (정회원 우선)\n■수료 시 이수증 발급\n■문의: 협회 사무국 02-000-0000`,
+    guide: `■강좌: 역량강화\n■대상: 회원 숲해설가 (정회원 우선)\n■수료 시 이수증 발급\n■문의: 협회 사무국 02-747-6518`,
   })),
 
   /* ── 회원강좌 (5000+) — 회원아카데미 > 강좌 */
-  ...Array.from({ length: 10 }, (_, i) => ({
+  ...Array.from({ length: 3 }, (_, i) => ({
     id: 5000 + i, type: '회원강좌',
     title: `[회원강좌] ${['숲 생태 기초','해설 화법 연습','생태 사진 촬영','숲 치유 이론','야생조류 관찰','식물 분류 실습','토양 생태계 이해','숲 놀이 프로그램 개발','계절별 해설 전략','지역 생태 자원 조사'][i]}`,
     date: `2026-0${(i%9)+1}-${String((i%20)+2).padStart(2,'0')} 10:00:00`,
@@ -60,11 +60,11 @@ const ALL_COURSES_RAW = [
     to:   `2026-0${(i%9)+1}-${String((i%20)+6).padStart(2,'0')}`,
     status: ['open','open','ready','closed','closed'][i % 5],
     attachments: i % 2 === 0 ? [{ name: '회원강좌_신청서.hwp', size: '24K' }] : [],
-    guide: `■강좌: 회원강좌\n■대상: 협회 정회원\n■교육 장소: 협회 강의실 및 숲 현장\n■수료 시 이수증 발급\n■문의: 협회 사무국 02-000-0000`,
+    guide: `■강좌: 회원강좌\n■대상: 협회 정회원\n■교육 장소: 협회 강의실 및 숲 현장\n■수료 시 이수증 발급\n■문의: 협회 사무국 02-747-6518`,
   })),
 
   /* ── 멘토링 숲학교 (6000+) — 회원아카데미 > 멘토링 숲학교 */
-  ...Array.from({ length: 8 }, (_, i) => ({
+  ...Array.from({ length: 3 }, (_, i) => ({
     id: 6000 + i, type: '멘토링',
     title: `[멘토링 숲학교] ${['선배와 함께하는 현장 해설','1:1 해설 코칭','그룹 멘토링 — 봄 숲','그룹 멘토링 — 여름 숲','해설 피드백 워크숍','신규 해설가 입문 멘토링','베테랑 해설 노하우 공유','현장 적용 실습 멘토링'][i]}`,
     date: `2026-0${(i%9)+1}-${String((i%20)+3).padStart(2,'0')} 09:00:00`,
@@ -72,7 +72,20 @@ const ALL_COURSES_RAW = [
     to:   `2026-0${(i%9)+1}-${String((i%20)+4).padStart(2,'0')}`,
     status: ['open','ready','closed','open'][i % 4],
     attachments: i % 2 === 0 ? [{ name: '멘토링_참가신청서.hwp', size: '20K' }] : [],
-    guide: `■강좌: 멘토링 숲학교\n■대상: 협회 정회원 (경력 1년 이상 우선)\n■선배 해설가와 1:1 또는 소그룹 현장 멘토링\n■수료 시 멘토링 이수증 발급\n■문의: 협회 사무국 02-000-0000`,
+    guide: `■강좌: 멘토링 숲학교\n■대상: 협회 정회원 (경력 1년 이상 우선)\n■선배 해설가와 1:1 또는 소그룹 현장 멘토링\n■수료 시 멘토링 이수증 발급\n■문의: 협회 사무국 02-747-6518`,
+  })),
+
+  /* ── 강사활동 (7000+) — 회원 > 강사 신청 */
+  ...Array.from({ length: 3 }, (_, i) => ({
+    id: 7000 + i, type: '강사활동',
+    title: `[강사활동] ${['학교 연계 숲 생태교육 강사','도심 공원 숲해설 강사','유아숲체험원 해설 강사','시민 대상 숲치유 프로그램 강사','여름방학 생태캠프 해설 강사','가을 단풍 숲해설 강사','지역사회 생태교육 강사','초등학교 숲 탐방 해설 강사'][i]}`,
+    date:  `2026-${String((i % 6) + 1).padStart(2,'0')}-${String((i % 20) + 5).padStart(2,'0')} 10:00:00`,
+    from:  `2026-${String((i % 6) + 1).padStart(2,'0')}-${String((i % 20) + 1).padStart(2,'0')}`,
+    to:    `2026-${String((i % 6) + 1).padStart(2,'0')}-${String((i % 20) + 10).padStart(2,'0')}`,
+    quota: [20, 15, 25, 10, 20, 15, 20, 12][i],
+    status: ['open','open','ready','closed','open','ready','closed','open'][i],
+    attachments: i % 2 === 0 ? [{ name: '강사활동_신청서.hwp', size: '30K' }] : [],
+    guide: `■활동구분: ${['학교 연계','공원 프로그램','유아숲체험원','시민강좌','생태캠프','숲해설','지역사회','초등탐방'][i]}\n■모집인원: ${[20, 15, 25, 10, 20, 15, 20, 12][i]}명 (선착순)\n■대상: 협회 정회원 (숲해설가 자격 소지자)\n■활동 일자: 2026년 ${(i % 6) + 1}월 중\n■활동 장소: 협회 지정 숲·공원 현장\n■준비물: 명찰, 협회 조끼, 개인 물병\n■문의: 협회 사무국 02-747-6518`,
   })),
 ];
 
@@ -88,8 +101,8 @@ const ALL_COURSES_RAW = [
     }
   });
 
-  /* ── 접수중 항목 보장: 전문과정·회원강좌에서 접수중이 없으면 첫 항목을 오늘 기준으로 조정 */
-  ['전문과정', '회원강좌'].forEach(function(type) {
+  /* ── 접수중 항목 보장: 전문과정·회원강좌·강사활동에서 접수중이 없으면 첫 항목을 오늘 기준으로 조정 */
+  ['전문과정', '회원강좌', '강사활동'].forEach(function(type) {
     const hasOpen = ALL_COURSES_RAW.some(function(c) {
       return c.type === type && c.from <= today && c.to >= today;
     });
@@ -356,7 +369,7 @@ class CourseListController {
               <div id="completeDetail" style="font-size:14px;color:var(--gray-dark);line-height:1.8;margin-bottom:12px;"></div>
               <p style="font-size:13px;color:var(--gray-mid);line-height:1.8;">
                 신청 내역은 마이페이지 → 교육이수내역에서 확인 가능합니다.<br>
-                문의사항은 협회 사무국(02-000-0000)으로 연락 주세요.
+                문의사항은 협회 사무국(02-747-6518)으로 연락 주세요.
               </p>
             </div>
           </div>
@@ -422,8 +435,11 @@ class CourseDetailController extends CourseListController {
             '직무교육':    'job-training-apply.html',
             '역량강화':    'job-training-apply.html',
             '멘토링':      'mentoring.html',
+            '강사활동':    'instructor.html',
         };
         const backHref = backMap[course.type] || 'course-list.html';
+        /* 이전/다음 네비에서 사용할 상세 페이지 파일명 (교육상세: course-detail.html, 강사활동상세: instructor-detail.html) */
+        const detailPage = this.detailPage || (course.type === '강사활동' ? 'instructor-detail.html' : 'course-detail.html');
 
         /* 첨부파일 렌더 */
         const atts = course.attachments || [];
@@ -497,11 +513,11 @@ class CourseDetailController extends CourseListController {
                 const prev2 = sameType[idx2 + 1];
                 if (!next2 && !prev2) return '';
                 return `<div class="cd-nav">
-                  ${next2 ? `<div class="cd-nav-item" onclick="location.href='course-detail.html?id=${next2.id}'">
+                  ${next2 ? `<div class="cd-nav-item" onclick="location.href='${detailPage}?id=${next2.id}'">
                     <span class="cd-nav-label">다음글</span>
                     <span class="cd-nav-title">${next2.title}</span>
                   </div>` : ''}
-                  ${prev2 ? `<div class="cd-nav-item" onclick="location.href='course-detail.html?id=${prev2.id}'">
+                  ${prev2 ? `<div class="cd-nav-item" onclick="location.href='${detailPage}?id=${prev2.id}'">
                     <span class="cd-nav-label">이전글</span>
                     <span class="cd-nav-title">${prev2.title}</span>
                   </div>` : ''}

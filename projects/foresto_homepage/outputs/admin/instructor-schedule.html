@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>강사 활동 일정관리 | 관리자 | 한국숲해설가협회</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/list-common.css">
+  <link rel="stylesheet" href="../assets/css/pages/admin.css">
+  <style>
+    .period-cell { font-variant-numeric: tabular-nums; color: #111; white-space: nowrap; }
+    .admin-table tbody tr { cursor: pointer; }
+  </style>
+</head>
+<body class="admin-body">
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-head">
+        <span class="adm-sb-title">MENU</span>
+        <button class="sidebar-toggle" onclick="AdminLayout.toggleSidebar()" aria-label="사이드바 토글">☰</button>
+      </div>
+      <nav class="admin-nav" id="adminNavMount" aria-label="관리자 메뉴"></nav>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <h1 class="admin-page-title">강사 활동 일정관리</h1>
+        <div class="admin-topbar-actions">
+          <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../../../../common_assets/icons/refresh.png" alt="새로고침"></button>
+          <button class="btn btn-primary btn-sm" onclick="location.href='instructor-schedule-edit.html'">+ 일정 등록</button>
+        </div>
+      </div>
+
+      <!-- 검색 필터 -->
+      <div class="filter-card">
+        <div class="filter-body">
+
+          <!-- 행 1: 활동일자 -->
+          <div class="filter-row">
+            <span class="filter-label">활동일자</span>
+            <div class="filter-content">
+              <div class="date-pair">
+                <input type="date" id="filterDateFrom">
+                <span class="date-sep">—</span>
+                <input type="date" id="filterDateTo">
+              </div>
+              <div class="date-preset-group">
+                <button class="date-preset-btn" onclick="InstrSchedule.setDatePreset('today')">오늘</button>
+                <button class="date-preset-btn" onclick="InstrSchedule.setDatePreset(7)">7일</button>
+                <button class="date-preset-btn" onclick="InstrSchedule.setDatePreset(30)">30일</button>
+                <button class="date-preset-btn" onclick="InstrSchedule.setDatePreset(90)">3개월</button>
+                <button class="date-preset-btn" onclick="InstrSchedule.setDatePreset(180)">6개월</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 행 2: 상태 -->
+          <div class="filter-row">
+            <span class="filter-label">접수상태</span>
+            <div class="filter-content">
+              <div class="chip-group" id="statusChips">
+                <label class="chip"><input type="radio" name="filterStatus" value="" checked><span>전체</span></label>
+                <label class="chip"><input type="radio" name="filterStatus" value="ready"><span>준비중</span></label>
+                <label class="chip"><input type="radio" name="filterStatus" value="open"><span>접수중</span></label>
+                <label class="chip"><input type="radio" name="filterStatus" value="closed"><span>마감</span></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 행 3: 검색어 -->
+          <div class="filter-row">
+            <span class="filter-label">검색어</span>
+            <div class="filter-content">
+              <div class="kw-wrap">
+                <div class="kw-input-wrap">
+                  <input type="text" id="filterKeyword" placeholder="일정명 검색"
+                    onkeydown="if(event.key==='Enter') InstrSchedule.search()">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="filter-footer">
+          <button class="btn btn-gray btn-sm" onclick="InstrSchedule.reset()">초기화</button>
+          <button class="btn btn-primary btn-sm" onclick="InstrSchedule.search()">검색</button>
+        </div>
+      </div>
+
+      <!-- 목록 상단 -->
+      <div class="list-top">
+        <div class="list-count">총 <strong id="scheduleCount">0</strong>건</div>
+        <select class="form-control" id="pageSizeSelect" onchange="InstrSchedule.changePageSize(+this.value)"
+          style="width:130px;height:36px;font-size:13px">
+          <option value="10">10개씩 보기</option>
+          <option value="30">30개씩 보기</option>
+          <option value="50">50개씩 보기</option>
+        </select>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width:5%">No</th>
+              <th>활동명</th>
+              <th style="width:10%">활동일자</th>
+              <th style="width:20%">접수 기간</th>
+              <th style="width:7%">정원</th>
+              <th style="width:8%">신청인원</th>
+              <th style="width:8%">접수상태</th>
+              <th style="width:8%">관리</th>
+            </tr>
+          </thead>
+          <tbody id="scheduleBody"></tbody>
+        </table>
+      </div>
+
+      <!-- 페이지네이션 -->
+      <div class="pagination" id="schedulePagination"></div>
+
+    </main>
+  </div>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/components/header.js"></script>
+  <script src="../assets/js/pages/admin.js"></script>
+  <script src="../assets/js/pages/education.js"></script>
+  <script>
+  'use strict';
+  AdminSidebar.mount('instructor-schedule');
+
+  /* 강사활동 타입 데이터 */
+  const INSTR_SCHEDULES = (window.ALL_COURSES_RAW || [])
+    .filter(c => c.type === '강사활동')
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  /* 더미 신청인원 */
+  const DUMMY_APPLY_CNT = { 7000:12, 7001:8, 7002:15, 7003:5, 7004:0, 7005:9, 7006:3, 7007:11 };
+
+  function calcStatus(c) {
+    const today = new Date().toISOString().slice(0,10);
+    if (today < c.from) return 'ready';
+    if (today > c.to)   return 'closed';
+    return 'open';
+  }
+
+  const STATUS_LABEL = { ready:'준비중', open:'접수중', closed:'마감' };
+  const STATUS_CLS   = { ready:'badge-gray', open:'badge-green', closed:'badge-danger' };
+
+  const InstrSchedule = {
+    _data:     INSTR_SCHEDULES,
+    _filtered: [...INSTR_SCHEDULES],
+    _page:     1,
+    _pageSize: 10,
+
+    search() {
+      const dateFrom = document.getElementById('filterDateFrom')?.value || '';
+      const dateTo   = document.getElementById('filterDateTo')?.value   || '';
+      const status   = document.querySelector('input[name="filterStatus"]:checked')?.value || '';
+      const keyword  = (document.getElementById('filterKeyword')?.value || '').trim().toLowerCase();
+
+      this._filtered = this._data.filter(c => {
+        if (dateFrom && c.date.slice(0,10) < dateFrom) return false;
+        if (dateTo   && c.date.slice(0,10) > dateTo)   return false;
+        const cs = calcStatus(c);
+        if (status && cs !== status) return false;
+        if (keyword && !c.title.toLowerCase().includes(keyword)) return false;
+        return true;
+      });
+      this._page = 1;
+      this.render();
+    },
+
+    setDatePreset(range) {
+      const to = new Date(), from = new Date();
+      if (range !== 'today') from.setDate(from.getDate() - range);
+      const fmt = d => d.toISOString().split('T')[0];
+      document.getElementById('filterDateFrom').value = fmt(from);
+      document.getElementById('filterDateTo').value   = fmt(to);
+      this.search();
+    },
+
+    reset() {
+      document.getElementById('filterDateFrom').value = '';
+      document.getElementById('filterDateTo').value   = '';
+      document.getElementById('filterKeyword').value  = '';
+      document.querySelector('input[name="filterStatus"][value=""]').checked = true;
+      this._filtered = [...this._data];
+      this._page = 1;
+      this.render();
+    },
+
+    changePageSize(size) { this._pageSize = size; this._page = 1; this.render(); },
+
+    render() {
+      const total = this._filtered.length;
+      const start = (this._page - 1) * this._pageSize;
+      const slice = this._filtered.slice(start, start + this._pageSize);
+
+      const countEl = document.getElementById('scheduleCount');
+      if (countEl) countEl.textContent = total.toLocaleString();
+
+      const tbody = document.getElementById('scheduleBody');
+      if (!tbody) return;
+
+      if (!slice.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:#8a9e84">검색 결과가 없습니다.</td></tr>`;
+        App.renderPagination('schedulePagination', 1, 1, () => {});
+        return;
+      }
+
+      tbody.innerHTML = slice.map((c, i) => {
+        const seq    = total - start - i;
+        const cs     = calcStatus(c);
+        const applyCnt = DUMMY_APPLY_CNT[c.id] ?? 0;
+        const quota  = c.quota || '-';
+        const full   = quota !== '-' && applyCnt >= quota;
+        const badge  = `<span class="badge ${STATUS_CLS[cs]}">${STATUS_LABEL[cs]}</span>`;
+        const applyCntCell = full
+          ? `<span style="color:#c0392b;font-weight:700">${applyCnt}/${quota} <span style="font-size:11px">(마감)</span></span>`
+          : `${applyCnt}/${quota}`;
+        return `<tr>
+          <td style="text-align:center">${seq}</td>
+          <td style="font-weight:500;cursor:pointer" onclick="location.href='instructor-schedule-edit.html?id=${c.id}'">${c.title}</td>
+          <td class="period-cell" style="text-align:center">${c.date.slice(0,10)}</td>
+          <td class="period-cell" style="text-align:center">${c.from} ~ ${c.to}</td>
+          <td style="text-align:center">${quota}</td>
+          <td style="text-align:center;font-size:13px">${applyCntCell}</td>
+          <td style="text-align:center">${badge}</td>
+          <td style="text-align:center">
+            <button class="btn btn-outline btn-xs" style="font-size:11px;padding:3px 8px"
+              onclick="event.stopPropagation();location.href='apply-instructor.html?scheduleId=${c.id}'">신청자</button>
+            <button class="btn btn-gray btn-xs" style="font-size:11px;padding:3px 8px;margin-left:4px"
+              onclick="event.stopPropagation();location.href='instructor-schedule-edit.html?id=${c.id}'">수정</button>
+          </td>
+        </tr>`;
+      }).join('');
+
+      App.renderPagination(
+        'schedulePagination', this._page,
+        Math.ceil(total / this._pageSize) || 1,
+        p => { this._page = p; this.render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      );
+    },
+  };
+
+  InstrSchedule.render();
+  </script>
+</body>
+</html>

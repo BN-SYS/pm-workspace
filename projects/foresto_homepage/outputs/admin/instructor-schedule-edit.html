@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>강사 활동 일정 등록/수정 | 관리자 | 한국숲해설가협회</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/pages/admin.css">
+  <style>
+    .form-card { background:#fff; border:1px solid #e3eadd; border-radius:10px; margin-bottom:20px; overflow:hidden; }
+    .form-card-head { padding:14px 20px; border-bottom:1px solid #e3eadd; background:#f8faf6; font-size:13px; font-weight:700; color:#2e5c2e; letter-spacing:.03em; }
+    .form-row { display:flex; align-items:stretch; min-height:52px; border-bottom:1px solid #f0f4ee; }
+    .form-row:last-child { border-bottom:none; }
+    .form-label { width:140px; min-width:140px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#7a8e74; letter-spacing:.04em; white-space:nowrap; background:#f8faf6; border-right:1px solid #e8efe3; padding:0 12px; text-align:center; }
+    .form-label.required::after { content:' *'; color:#c0392b; }
+    .form-content { flex:1; display:flex; align-items:center; padding:10px 16px; gap:8px; flex-wrap:wrap; }
+    .form-input { height:36px; padding:0 12px; border:1px solid #d0dbc8; border-radius:6px; font-size:13px; color:#2c3e2c; outline:none; transition:border-color .15s; font-family:'Noto Sans KR',sans-serif; }
+    .form-input:focus { border-color:#4a7c59; box-shadow:0 0 0 2px rgba(74,124,89,.12); }
+    .form-input.full { width:100%; }
+    .form-input.w120 { width:120px; }
+    .form-input.w80  { width:80px; }
+    .form-input[type="date"] { padding:0 10px; cursor:pointer; }
+    .date-sep { font-size:13px; color:#888; flex-shrink:0; }
+    .input-suffix { display:flex; align-items:center; gap:6px; }
+    .input-suffix span { font-size:13px; color:#666; }
+    .toggle-wrap { display:flex; align-items:center; gap:12px; }
+    .toggle-switch { position:relative; display:inline-block; width:44px; height:24px; }
+    .toggle-switch input { display:none; }
+    .toggle-slider { position:absolute; inset:0; background:#ccc; border-radius:24px; cursor:pointer; transition:background .2s; }
+    .toggle-slider::before { content:''; position:absolute; width:18px; height:18px; left:3px; top:3px; background:#fff; border-radius:50%; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+    .toggle-switch input:checked + .toggle-slider { background:#4a7c59; }
+    .toggle-switch input:checked + .toggle-slider::before { transform:translateX(20px); }
+    .toggle-desc { font-size:12px; color:#888; }
+    .se-textarea { width:100%; min-height:220px; padding:14px 16px; border:none; outline:none; font-size:14px; color:#2c3e2c; line-height:1.7; resize:vertical; font-family:'Noto Sans KR',sans-serif; box-sizing:border-box; }
+    .smarteditor-mock { border:1px solid #d0dbc8; border-radius:6px; overflow:hidden; width:100%; }
+    .se-toolbar { display:flex; flex-wrap:wrap; gap:2px; padding:6px 8px; background:#f5f7f4; border-bottom:1px solid #e3eadd; }
+    .se-toolbar-group { display:flex; align-items:center; gap:2px; padding-right:8px; margin-right:4px; border-right:1px solid #d0dbc8; }
+    .se-toolbar-group:last-child { border-right:none; }
+    .se-btn { height:26px; min-width:26px; padding:0 5px; border:1px solid transparent; border-radius:4px; background:none; font-size:12px; color:#444; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .se-btn:hover { background:#e8efe3; border-color:#c8d9be; }
+    .file-attach-wrap { display:flex; flex-direction:column; gap:8px; width:100%; }
+    .file-attach-row { display:flex; align-items:center; gap:8px; }
+    .file-fake-name { flex:1; height:36px; padding:0 12px; border:1px solid #d0dbc8; border-radius:6px; font-size:13px; color:#888; background:#fafafa; display:flex; align-items:center; }
+    .file-fake-name.has-file { color:#2c3e2c; background:#fff; }
+    .btn-file-browse { height:36px; padding:0 14px; border:1px solid #4a7c59; border-radius:6px; background:#fff; color:#4a7c59; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; }
+    .btn-file-browse:hover { background:#f0f8f0; }
+    .btn-file-remove { height:36px; min-width:36px; border:1px solid #e3eadd; border-radius:6px; background:#fff; color:#888; font-size:18px; line-height:1; cursor:pointer; }
+    .existing-file { display:flex; align-items:center; gap:6px; padding:6px 10px; background:#f0f8f0; border:1px solid #c8e0c8; border-radius:6px; font-size:13px; color:#2e5c2e; }
+    .file-hint { font-size:12px; color:#9aaa94; margin-top:2px; }
+    .form-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:24px; padding-bottom:40px; }
+  </style>
+</head>
+<body class="admin-body">
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-head">
+        <span class="adm-sb-title">MENU</span>
+        <button class="sidebar-toggle" onclick="AdminLayout.toggleSidebar()" aria-label="사이드바 토글">☰</button>
+      </div>
+      <nav class="admin-nav" id="adminNavMount" aria-label="관리자 메뉴"></nav>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <h1 class="admin-page-title" id="pageTitle">강사 활동 일정 등록</h1>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-gray btn-sm" onclick="history.back()">목록</button>
+        </div>
+      </div>
+
+      <!-- 기본 정보 -->
+      <div class="form-card">
+        <div class="form-card-head">기본 정보</div>
+
+        <div class="form-row">
+          <span class="form-label required">활동명</span>
+          <div class="form-content">
+            <input type="text" class="form-input full" id="fTitle" placeholder="활동명을 입력하세요">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <span class="form-label required">활동일자</span>
+          <div class="form-content">
+            <input type="date" class="form-input w120" id="fDate">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <span class="form-label required">접수기간</span>
+          <div class="form-content">
+            <input type="date" class="form-input w120" id="fFrom">
+            <span class="date-sep">~</span>
+            <input type="date" class="form-input w120" id="fTo">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <span class="form-label required">정원</span>
+          <div class="form-content">
+            <div class="input-suffix">
+              <input type="number" class="form-input w80" id="fQuota" min="1" placeholder="0">
+              <span>명</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <span class="form-label">활동 장소</span>
+          <div class="form-content">
+            <input type="text" class="form-input full" id="fPlace" placeholder="활동 장소를 입력하세요 (예: 서울숲 생태학습원)">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <span class="form-label">노출여부</span>
+          <div class="form-content">
+            <div class="toggle-wrap">
+              <label class="toggle-switch">
+                <input type="checkbox" id="fVisible" checked>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-desc" id="visibleDesc">노출 중</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 활동 안내 -->
+      <div class="form-card">
+        <div class="form-card-head">활동 안내</div>
+        <div class="form-row" style="flex-direction:column;align-items:stretch;padding:0">
+          <div class="smarteditor-mock">
+            <div class="se-toolbar">
+              <div class="se-toolbar-group">
+                <button class="se-btn" title="굵게"><b>B</b></button>
+                <button class="se-btn" title="기울임"><i>I</i></button>
+                <button class="se-btn" title="밑줄"><u>U</u></button>
+              </div>
+              <div class="se-toolbar-group">
+                <button class="se-btn">목록</button>
+                <button class="se-btn">번호목록</button>
+              </div>
+              <div class="se-toolbar-group">
+                <button class="se-btn">이미지</button>
+                <button class="se-btn">링크</button>
+              </div>
+            </div>
+            <textarea class="se-textarea" id="fGuide"
+              placeholder="■활동구분:&#10;■모집인원:&#10;■대상: 협회 정회원 (숲해설가 자격 소지자)&#10;■활동 일자:&#10;■활동 장소:&#10;■준비물:&#10;■문의: 협회 사무국 02-747-6518"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- 첨부파일 -->
+      <div class="form-card">
+        <div class="form-card-head">첨부파일</div>
+
+        <div class="form-row" style="min-height:auto">
+          <span class="form-label">신청서 양식</span>
+          <div class="form-content" style="flex-direction:column;align-items:flex-start;padding:14px 16px">
+            <div id="existingFile" style="display:none" class="existing-file">
+              <span>📎</span>
+              <span id="existingFileName"></span>
+              <button class="btn btn-xs btn-gray" style="font-size:11px;padding:2px 8px"
+                onclick="document.getElementById('existingFile').style.display='none'">삭제</button>
+            </div>
+            <div class="file-attach-wrap">
+              <div class="file-attach-row">
+                <span class="file-fake-name" id="fileNameDisplay">파일을 선택하세요</span>
+                <label class="btn-file-browse" for="fAttach">찾아보기</label>
+                <input type="file" id="fAttach" style="display:none" accept=".pdf,.hwp,.docx"
+                  onchange="const n=this.files[0]?.name||''; document.getElementById('fileNameDisplay').textContent=n||'파일을 선택하세요'; document.getElementById('fileNameDisplay').className='file-fake-name'+(n?' has-file':'');">
+              </div>
+              <div class="file-hint">허용 형식: PDF, HWP, DOCX / 최대 10MB</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 하단 버튼 -->
+      <div class="form-actions">
+        <button class="btn btn-gray" onclick="history.back()">취소</button>
+        <button class="btn btn-primary" onclick="InstrScheduleEdit.save()">저장</button>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/components/header.js"></script>
+  <script src="../assets/js/pages/admin.js"></script>
+  <script src="../assets/js/pages/education.js"></script>
+  <script>
+  'use strict';
+  AdminSidebar.mount('instructor-schedule');
+
+  /* 토글 라벨 동기화 */
+  const visibleChk = document.getElementById('fVisible');
+  if (visibleChk) {
+    visibleChk.addEventListener('change', function() {
+      const desc = document.getElementById('visibleDesc');
+      if (desc) desc.textContent = this.checked ? '노출 중' : '숨김';
+    });
+  }
+
+  const InstrScheduleEdit = {
+    _id: null,
+
+    init() {
+      const id = Number(App.getParam('id'));
+      if (!id) return; /* 신규 등록 */
+      this._id = id;
+      document.getElementById('pageTitle').textContent = '강사 활동 일정 수정';
+
+      const course = (window.ALL_COURSES_RAW || []).find(c => c.id === id);
+      if (!course) return;
+
+      document.getElementById('fTitle').value   = course.title;
+      document.getElementById('fDate').value    = course.date.slice(0, 10);
+      document.getElementById('fFrom').value    = course.from;
+      document.getElementById('fTo').value      = course.to;
+      document.getElementById('fQuota').value   = course.quota || '';
+      document.getElementById('fGuide').value   = course.guide || '';
+
+      const atts = course.attachments || [];
+      if (atts.length) {
+        const ef = document.getElementById('existingFile');
+        const fn = document.getElementById('existingFileName');
+        if (ef && fn) { ef.style.display = 'flex'; fn.textContent = atts[0].name; }
+      }
+    },
+
+    save() {
+      const title = document.getElementById('fTitle')?.value.trim();
+      const date  = document.getElementById('fDate')?.value;
+      const from  = document.getElementById('fFrom')?.value;
+      const to    = document.getElementById('fTo')?.value;
+      const quota = document.getElementById('fQuota')?.value;
+
+      if (!title) { App.toast('활동명을 입력해주세요.', 'warning'); return; }
+      if (!date)  { App.toast('활동일자를 선택해주세요.', 'warning'); return; }
+      if (!from || !to) { App.toast('접수기간을 입력해주세요.', 'warning'); return; }
+      if (!quota) { App.toast('정원을 입력해주세요.', 'warning'); return; }
+      if (from > to) { App.toast('접수 시작일이 종료일보다 늦습니다.', 'warning'); return; }
+
+      /* TODO: AJAX — POST/PUT ADMIN_API.instructorSchedule */
+      App.toast(this._id ? '일정이 수정되었습니다.' : '일정이 등록되었습니다.', 'success');
+      setTimeout(() => location.href = 'instructor-schedule.html', 800);
+    },
+  };
+
+  InstrScheduleEdit.init();
+  </script>
+</body>
+</html>

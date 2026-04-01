@@ -118,8 +118,8 @@ const NOTICE_DATA = {
             content: `<p>개인정보처리방침 개정 내용을 안내드립니다.</p>`,
         },
     ],
-    normals: Array.from({ length: 25 }, (_, i) => ({
-        id: 25 - i,
+    normals: Array.from({ length: 3 }, (_, i) => ({
+        id: 3 - i,
         title: [
             '55기 전문가과정 모집 안내', '[긴급] 3월 이사회 일정 변경',
             '2026년 협회비 납부 안내', '홈페이지 개편 작업 예고',
@@ -130,15 +130,15 @@ const NOTICE_DATA = {
         author: '관리자',
         date: commMakeDate(i),
         content: `<p>공지사항 ${25 - i}번 게시물 내용입니다.</p>
-              <p>자세한 사항은 사무국(02-000-0000)으로 문의 바랍니다.</p>`,
+              <p>자세한 사항은 사무국(02-747-6518)으로 문의 바랍니다.</p>`,
     })),
 };
 
 /* ── 1-2. 자유게시판 */
 const FREE_DATA = {
     pinned: [],
-    normals: Array.from({ length: 30 }, (_, i) => ({
-        id: 30 - i,
+    normals: Array.from({ length: 3 }, (_, i) => ({
+        id: 3 - i,
         title: [
             '봄 숲 탐방 다녀왔어요 🌸', '초보 숲해설가의 첫 현장 후기',
             '식물 이름이 헷갈려요 - 도움 요청', '숲해설 관련 좋은 책 추천',
@@ -161,8 +161,8 @@ const PRESS_DATA = {
             content: `<p>2026년 협회 관련 주요 언론 보도 자료를 모아 제공합니다.</p>`,
         },
     ],
-    normals: Array.from({ length: 18 }, (_, i) => ({
-        id: 18 - i,
+    normals: Array.from({ length: 3 }, (_, i) => ({
+        id: 3 - i,
         title: [
             '한국숲해설가협회, 산림 생태 교육 확대 나서',
             '숲해설가 자격증 취득자 3만 명 돌파',
@@ -194,8 +194,8 @@ const JOB_DATA = {
                       <p>산림교육전문가, 숲해설가 등 주요 자격 시험 일정을 확인하세요.</p>`,
         },
     ],
-    normals: Array.from({ length: 22 }, (_, i) => ({
-        id: 22 - i,
+    normals: Array.from({ length: 3 }, (_, i) => ({
+        id: 3 - i,
         title: [
             '국립수목원 숲해설가 채용 공고',
             '생태관광 전문가 양성 과정 모집',
@@ -238,11 +238,11 @@ const GALLERY_CONTENTS = [
 ];
 /* 갤러리 샘플 이미지 — Picsum Photos (숲/자연 테마 시드) */
 const GALLERY_IMG_IDS = [15, 28, 56, 74, 82, 110, 133, 148, 175, 190, 213, 237];
-const GALLERY_DATA = Array.from({ length: 24 }, (_, i) => {
+const GALLERY_DATA = Array.from({ length: 4 }, (_, i) => {
     const seed = GALLERY_IMG_IDS[i % GALLERY_IMG_IDS.length];
     const imgUrl = `https://picsum.photos/seed/${seed + i}/600/400`;
     return {
-        id: 24 - i,
+        id: 4 - i,
         title: GALLERY_TITLES[i % 8],
         author: '관리자',
         date: commMakeDate(i),
@@ -256,8 +256,8 @@ ${GALLERY_CONTENTS[i % 8]}`,
 /* ── 1-5-b. 숲일터 */
 const FOREST_WORK_DATA = {
     pinned: [],
-    normals: Array.from({ length: 15 }, (_, i) => ({
-        id: 15 - i,
+    normals: Array.from({ length: 3 }, (_, i) => ({
+        id: 3 - i,
         title: [
             '2026 상반기 숲일터 활동 모집 공고',
             '전국 국립공원 숲해설 파견 안내',
@@ -268,7 +268,7 @@ const FOREST_WORK_DATA = {
         author: '관리자',
         date: commMakeDate(i),
         content: `<p>숲일터 공고 ${15 - i}번 게시물입니다.</p>
-                  <p>자세한 사항은 사무국(02-000-0000)으로 문의 바랍니다.</p>`,
+                  <p>자세한 사항은 사무국(02-747-6518)으로 문의 바랍니다.</p>`,
     })),
 };
 

@@ -35,7 +35,6 @@ const ADMIN_NAV = [
       { key: 'board-notice',       href: 'board.html?type=notice',       label: '공지사항 관리' },
       { key: 'board-newsletter',   href: 'board.html?type=newsletter',   label: '협회지 관리' },
       { key: 'board-press',        href: 'board.html?type=press',        label: '언론보도 관리' },
-      { key: 'board-gallery',      href: 'board.html?type=gallery',      label: '갤러리 관리' },
       { key: 'board-forest-work',  href: 'board.html?type=forest-work',  label: '숲일터 관리' },
       { key: 'board-region',  href: 'board.html?type=region',  label: '전국지역협회 관리' },
       { key: 'board-intro',   href: 'board.html?type=intro',   label: '사공단소개 관리' },
@@ -62,10 +61,11 @@ const ADMIN_NAV = [
   {
     key: 'apply-group', ico: _ICO('inbox'), label: '기타신청관리',
     children: [
-      { key: 'apply-regular',    href: 'apply-regular.html',    label: '정회원신청 관리' },
-      { key: 'apply-instructor', href: 'apply-instructor.html', label: '강사신청 관리' },
-      { key: 'apply-forest',     href: 'apply-forest.html',     label: '숲해설신청 관리' },
-      { key: 'apply-sponsor',    href: 'apply-sponsor.html',    label: '후원신청 관리' },
+      { key: 'apply-regular',       href: 'apply-regular.html',          label: '정회원신청자 관리' },
+      { key: 'apply-forest',        href: 'apply-forest.html',            label: '숲해설신청자 관리' },
+      { key: 'apply-sponsor',       href: 'apply-sponsor.html',           label: '후원신청자 관리' },
+      { key: 'instructor-schedule', href: 'instructor-schedule.html',     label: '강사신청 일정관리' },
+      { key: 'apply-instructor',    href: 'apply-instructor.html',        label: '강사신청자 관리' },
     ]
   },
 ];

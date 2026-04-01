@@ -227,8 +227,8 @@ const MENTORING_TITLES = [
   '가을 단풍 해설', '겨울 나무 관찰', '숲 해설 Q&A',
 ];
 
-const MENTORING_DATA = Array.from({ length: 18 }, (_, i) => ({
-  id:      18 - i,
+const MENTORING_DATA = Array.from({ length: 3 }, (_, i) => ({
+  id:      3 - i,
   title:   `[멘토링] ${MENTORING_TITLES[i % MENTORING_TITLES.length]}`,
   author:  pickAuthor('mentor', i),
   date:    makeDate(i),
@@ -246,8 +246,8 @@ const RECRUIT_LOCATIONS = [
   '관악구 낙성대 숲길', '동작구 국립현충원', '금천구 자연체험 교육',
 ];
 
-const RECRUIT_DATA = Array.from({ length: 15 }, (_, i) => ({
-  id:        15 - i,
+const RECRUIT_DATA = Array.from({ length: 3 }, (_, i) => ({
+  id:        3 - i,
   title:     `[모집] ${RECRUIT_LOCATIONS[i]}`,
   author:    '사무국',
   date:      makeDate(i),
@@ -286,8 +286,8 @@ const NEWS_SUBTITLES = [
 
 const SAGONGDAN_TEAM_NAMES = SAGONGDAN_DATA.map(t => t.name);
 
-const SAGONGDAN_NEWS_DATA = Array.from({ length: 20 }, (_, i) => ({
-  id:      20 - i,
+const SAGONGDAN_NEWS_DATA = Array.from({ length: 3 }, (_, i) => ({
+  id:      3 - i,
   team:    SAGONGDAN_TEAM_NAMES[i % 3],
   title:   `${NEWS_SUBTITLES[i % NEWS_SUBTITLES.length]} ${Math.floor(i / NEWS_SUBTITLES.length) + 1}호`,
   author:  pickAuthor('staff', i),
@@ -311,8 +311,8 @@ const LOG_SUBTITLES = [
   '용인수지장애인복지관 활동일지',
 ];
 
-const SAGONGDAN_LOG_DATA = Array.from({ length: 15 }, (_, i) => ({
-  id:      15 - i,
+const SAGONGDAN_LOG_DATA = Array.from({ length: 3 }, (_, i) => ({
+  id:      3 - i,
   team:    SAGONGDAN_TEAM_NAMES[i % SAGONGDAN_TEAM_NAMES.length],
   title:   `[활동일지] ${LOG_SUBTITLES[i % LOG_SUBTITLES.length]}`,
   author:  pickAuthor('staff', i),
@@ -341,8 +341,8 @@ const CLUB_NEWS_SUBTITLES = [
   '동아리 사진 공유', '활동 일정 안내', '월간 소식',
 ];
 
-const CLUB_NEWS_DATA = Array.from({ length: 24 }, (_, i) => ({
-  id:      24 - i,
+const CLUB_NEWS_DATA = Array.from({ length: 3 }, (_, i) => ({
+  id:      3 - i,
   title:   `[${CLUB_NAMES[i % 3]}] ${CLUB_NEWS_SUBTITLES[i % CLUB_NEWS_SUBTITLES.length]}`,
   club:    CLUB_NAMES[i % 3],
   author:  pickAuthor('member', i),
@@ -361,8 +361,8 @@ const ARCHIVE_FILES = [
   '식물도감.pdf', '사진모음.zip', '활동양식.docx',
 ];
 
-const CLUB_ARCHIVE_DATA = Array.from({ length: 12 }, (_, i) => ({
-  id:      12 - i,
+const CLUB_ARCHIVE_DATA = Array.from({ length: 3 }, (_, i) => ({
+  id:      3 - i,
   club:    CLUB_NAMES[i % 3],
   title:   `${ARCHIVE_TITLES[i % ARCHIVE_TITLES.length]} v${i + 1}`,
   author:  pickAuthor('member', i),
@@ -392,7 +392,7 @@ const QNA_DATA = Array.from({ length: QNA_QUESTIONS.length }, (_, i) => ({
   answer:   i % 3 === 0
     ? null
     : `<p>문의해 주셔서 감사합니다.</p>
-       <p>${QNA_QUESTIONS[i]}에 대한 답변입니다. 자세한 사항은 사무국(02-000-0000)으로 문의 부탁드립니다.</p>`,
+       <p>${QNA_QUESTIONS[i]}에 대한 답변입니다. 자세한 사항은 사무국(02-747-6518)으로 문의 부탁드립니다.</p>`,
   content:  `<p>${QNA_QUESTIONS[i]}</p>
              <p>자세한 안내 부탁드립니다.</p>`,
 }));
@@ -415,7 +415,7 @@ const COMPETENCY_DATA = Array.from({ length: COMPETENCY_TITLES.length }, (_, i) 
   status:   ['open', 'ready', 'closed', 'done'][i % 4],
   capacity: 20,
   attachments: i % 2 === 0 ? [{ name: '역량강화_신청서.hwp', size: '26K' }] : [],
-  guide:    `■강좌: ${COMPETENCY_TITLES[i]}\n■대상: 정회원 (회원 우선 접수)\n■정원: 20명\n■교육 장소: 협회 강의실\n■문의: 협회 사무국 02-000-0000`,
+  guide:    `■강좌: ${COMPETENCY_TITLES[i]}\n■대상: 정회원 (회원 우선 접수)\n■정원: 20명\n■교육 장소: 협회 강의실\n■문의: 협회 사무국 02-747-6518`,
   content:  `<p>[역량강화] ${COMPETENCY_TITLES[i]} 강좌 안내입니다.</p>`,
 }));
 

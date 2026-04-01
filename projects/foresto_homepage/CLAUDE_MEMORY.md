@@ -126,3 +126,5 @@ git push 전 반드시 확인:
 | 2026-03-31 | 동아리 소식 상단고정 유지, 제목 옆 ★회원모집중★ 텍스트 제거 (pinnedRowRenderer·rowRenderer 양쪽) | member.js |
 | 2026-04-01 | 동아리 소식 고정 배지·상단노출 완전 제거 (pinnedData·pinnedRowRenderer 삭제, pinned 필드 제거), 유관기관 바로가기 레이블 16px·슬라이드 카드 16px | member.js, common.css |
 | 2026-03-31 | 교육과정·회원아카데미 접수중 1개 보장 — IIFE에 타입별 hasOpen 체크, 없으면 첫 항목 from/to를 오늘 기준 -7~+14일로 동적 조정 | education.js |
+| 2026-04-01 | 갤러리 회원 작성 기능 추가 — 로그인 회원 글쓰기 버튼 노출, gallery-write.html 신규 (이미지 최대 10장, 첫 장 대표 이미지, 미리보기 그리드) | community/gallery.html, community/gallery-write.html |
+| 2026-04-01 | 강사신청 폼→일정 기반으로 전환 — 사용자: 일정목록(instructor.html)/상세+신청모달(instructor-detail.html 신규), 관리자: 일정관리(instructor-schedule.html 신규)/일정등록수정(instructor-schedule-edit.html 신규)/신청자관리(apply-instructor.html 일정필터+배너 개편), admin.js nav에 강사신청 일정관리 추가, education.js 강사활동 타입(7000+) 추가 | member/instructor.html, member/instructor-detail.html, admin/instructor-schedule.html, admin/instructor-schedule-edit.html, admin/apply-instructor.html, admin.js, education.js |

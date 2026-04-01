@@ -5,39 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>사이트맵 | 한국숲해설가협회</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/reset.css">
   <link rel="stylesheet" href="assets/css/common.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
   <style>
     .sitemap-wrap {
-      max-width: 1000px;
+      max-width: 1700px;
       margin: 48px auto;
-      padding: 0 24px 80px;
+      padding: 0 40px 80px;
     }
 
     /* ── PC: 5열 그리드 */
     .sitemap-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 32px 24px;
+      gap: 40px 32px;
     }
-    .sitemap-group {}
+    .sitemap-group { border: 1px solid var(--gray-line); padding: 16px; }
     .sitemap-depth1 {
-      font-size: var(--text-md);
+      font-size: var(--text-lg);
       font-weight: 700;
       color: var(--green-dark);
-      padding: 10px 0 8px;
+      padding: 10px 0 10px;
       border-bottom: 2px solid var(--green-main);
-      margin-bottom: 12px;
+      margin-bottom: 16px;
       letter-spacing: .02em;
     }
-    .sitemap-depth2 { margin-bottom: 14px; }
+    .sitemap-depth2 { margin-bottom: 18px; }
     .sitemap-depth2-label {
-      font-size: var(--text-xs);
+      font-size: var(--text-md);
       font-weight: 700;
       color: #444;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -45,15 +44,15 @@
     .sitemap-depth2-label::before {
       content: '';
       display: inline-block;
-      width: 4px; height: 4px;
+      width: 5px; height: 5px;
       border-radius: 50%;
       background: var(--green-main);
       flex-shrink: 0;
     }
-    .sitemap-depth3 { list-style: none; padding: 0; margin: 0 0 0 10px; }
-    .sitemap-depth3 li { padding: 3px 0; }
+    .sitemap-depth3 { list-style: none; padding: 0; margin: 0 0 0 12px; }
+    .sitemap-depth3 li { padding: 4px 0; }
     .sitemap-depth3 a {
-      font-size: var(--text-xs);
+      font-size: var(--text-md);
       color: var(--gray-dark);
       text-decoration: none;
       display: flex;
@@ -61,20 +60,20 @@
       gap: 6px;
       transition: color .15s;
     }
-    .sitemap-depth3 a::before { content: '–'; color: var(--gray-mid); font-size: var(--text-2xs); }
+    .sitemap-depth3 a::before { content: '–'; color: var(--gray-mid); font-size: calc(var(--text-xs) * 1.6); }
     .sitemap-depth3 a:hover { color: var(--green-main); }
     .sitemap-flat-link {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: var(--text-xs);
+      font-size: var(--text-md);
       color: var(--gray-dark);
       text-decoration: none;
       margin-top: 2px;
       transition: color .15s;
     }
     .sitemap-flat-link:hover { color: var(--green-main); }
-    .sitemap-flat-link::before { content: '–'; color: var(--gray-mid); font-size: var(--text-2xs); }
+    .sitemap-flat-link::before { content: '–'; color: var(--gray-mid); font-size: calc(var(--text-xs) * 1.6); }
 
     /* ── 모바일: 아코디언 */
     .sitemap-accordion { display: none; }
@@ -90,7 +89,7 @@
       background: none;
       border: none;
       font-family: var(--font-base);
-      font-size: var(--text-md);
+      font-size: var(--text-lg);
       font-weight: 700;
       color: var(--green-dark);
       cursor: pointer;
@@ -110,8 +109,8 @@
     }
     .sm-item.open .sm-body { display: block; }
     .sm-body .sitemap-depth2 { margin-bottom: 10px; }
-    .sm-body .sitemap-depth2-label { font-size: var(--text-xs); }
-    .sm-body .sitemap-depth3 a { font-size: var(--text-xs); }
+    .sm-body .sitemap-depth2-label { font-size: var(--text-md); }
+    .sm-body .sitemap-depth3 a { font-size: var(--text-md); }
     /* 단독 flat 항목 (숲해설 신청) */
     .sm-flat {
       border-bottom: 1px solid var(--gray-line);
@@ -120,7 +119,7 @@
       display: flex;
       align-items: center;
       padding: 14px 4px;
-      font-size: var(--text-md);
+      font-size: var(--text-lg);
       font-weight: 700;
       color: var(--green-dark);
       text-decoration: none;

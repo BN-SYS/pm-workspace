@@ -3,13 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>강사신청 관리 | 관리자 | 한국숲해설가협회</title>
+  <title>강사신청자 관리 | 관리자 | 한국숲해설가협회</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/common.css">
   <link rel="stylesheet" href="../assets/css/components.css">
   <link rel="stylesheet" href="../assets/css/responsive.css">
   <link rel="stylesheet" href="../assets/css/list-common.css">
   <link rel="stylesheet" href="../assets/css/pages/admin.css">
+  <style>
+    /* 검색 필드 셀렉트 */
+    .kw-select {
+      height: 34px; padding: 0 28px 0 8px;
+      border: 1px solid #d5e0ce; border-radius: 6px;
+      font-size: 13px; font-family: 'Noto Sans KR', sans-serif;
+      color: #2a3a26; background: #fafcf9;
+      background-image: url('../../../../common_assets/icons/chevron-down.png');
+      background-repeat: no-repeat; background-position: right 8px center; background-size: 11px 11px;
+      appearance: none; -webkit-appearance: none; outline: none; cursor: pointer;
+    }
+    .applicant-row:hover td { background: #f2f7f0; cursor: pointer; }
+    /* 일정 선택 배너 */
+    .schedule-banner {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 16px; margin-bottom: 16px;
+      background: #f0f8f0; border: 1px solid #c8e0c8; border-radius: 8px;
+      font-size: 13px;
+    }
+    .schedule-banner strong { color: #2e5c2e; font-size: 14px; }
+    .schedule-banner .banner-meta { color: #5a7a5a; }
+    .schedule-banner .btn-clear { margin-left: auto; }
+  </style>
 </head>
 <body class="admin-body">
   <div class="admin-layout">
@@ -23,19 +46,38 @@
 
     <main class="admin-main">
       <div class="admin-topbar">
-        <h1 class="admin-page-title">강사신청 관리</h1>
+        <h1 class="admin-page-title">강사신청자 관리</h1>
         <div class="admin-topbar-actions">
           <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../../../../common_assets/icons/refresh.png" alt="새로고침"></button>
         </div>
+      </div>
+
+      <!-- 선택된 일정 배너 (일정 목록에서 "신청자" 버튼 클릭 시 표시) -->
+      <div class="schedule-banner" id="scheduleBanner" style="display:none">
+        <div>
+          <strong id="bannerTitle"></strong>
+          <span class="banner-meta" id="bannerMeta"></span>
+        </div>
+        <button class="btn btn-gray btn-xs btn-clear" onclick="InstructorApply.clearScheduleFilter()">전체 보기</button>
       </div>
 
       <!-- 검색 필터 -->
       <div class="filter-card">
         <div class="filter-body">
 
-          <!-- 행1: 신청기간 -->
+          <!-- 행 1: 일정 선택 -->
           <div class="filter-row">
-            <span class="filter-label">신청기간</span>
+            <span class="filter-label">활동 일정</span>
+            <div class="filter-content">
+              <select id="filterSchedule" style="height:34px;padding:0 10px;border:1px solid #d5e0ce;border-radius:6px;font-size:13px;font-family:'Noto Sans KR',sans-serif;min-width:300px;max-width:100%">
+                <option value="">전체 일정</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 행 2: 신청일 -->
+          <div class="filter-row">
+            <span class="filter-label">신청일</span>
             <div class="filter-content">
               <div class="date-pair">
                 <input type="date" id="filterDateFrom">
@@ -52,7 +94,7 @@
             </div>
           </div>
 
-          <!-- 행2: 거주지역 / 활동가능요일 -->
+          <!-- 행 3: 거주지역 / 회원구분 -->
           <div class="filter-row">
             <div class="filter-half">
               <span class="filter-label">거주지역</span>
@@ -68,41 +110,23 @@
               </div>
             </div>
             <div class="filter-half">
-              <span class="filter-label">활동요일</span>
+              <span class="filter-label">회원구분</span>
               <div class="filter-content">
                 <div class="chip-group">
-                  <label class="chip"><input type="radio" name="filterDay" value="" checked><span>전체</span></label>
-                  <label class="chip"><input type="radio" name="filterDay" value="월"><span>월</span></label>
-                  <label class="chip"><input type="radio" name="filterDay" value="화"><span>화</span></label>
-                  <label class="chip"><input type="radio" name="filterDay" value="수"><span>수</span></label>
-                  <label class="chip"><input type="radio" name="filterDay" value="목"><span>목</span></label>
-                  <label class="chip"><input type="radio" name="filterDay" value="금"><span>금</span></label>
-                  <label class="chip"><input type="radio" name="filterDay" value="토"><span>토</span></label>
-                  <label class="chip"><input type="radio" name="filterDay" value="일"><span>일</span></label>
-                  <label class="chip"><input type="radio" name="filterDay" value="무관"><span>무관</span></label>
+                  <label class="chip"><input type="radio" name="filterMemberType" value="" checked><span>전체</span></label>
+                  <label class="chip"><input type="radio" name="filterMemberType" value="member"><span>회원</span></label>
+                  <label class="chip"><input type="radio" name="filterMemberType" value="guest"><span>비회원</span></label>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- 행3: 회원구분 -->
-          <div class="filter-row">
-            <span class="filter-label">회원구분</span>
-            <div class="filter-content">
-              <div class="chip-group">
-                <label class="chip"><input type="radio" name="filterMemberType" value="" checked><span>전체</span></label>
-                <label class="chip"><input type="radio" name="filterMemberType" value="member"><span>회원</span></label>
-                <label class="chip"><input type="radio" name="filterMemberType" value="guest"><span>비회원</span></label>
-              </div>
-            </div>
-          </div>
-
-          <!-- 행4: 검색어 -->
+          <!-- 행 4: 검색어 -->
           <div class="filter-row">
             <span class="filter-label">검색어</span>
             <div class="filter-content">
               <div class="kw-wrap">
-                <select id="filterSearchType">
+                <select id="filterSearchType" class="kw-select">
                   <option value="all">전체</option>
                   <option value="name">이름</option>
                   <option value="email">이메일</option>
@@ -143,14 +167,14 @@
             <tr>
               <th style="width:4%">No</th>
               <th style="width:11%">접수번호</th>
-              <th style="width:8%">이름</th>
+              <th style="width:18%">활동 일정</th>
+              <th style="width:7%">이름</th>
               <th style="width:7%">회원구분</th>
               <th style="width:7%">거주지역</th>
-              <th style="width:7%">활동요일</th>
-              <th style="width:12%">연락처</th>
+              <th style="width:11%">연락처</th>
               <th>이메일</th>
-              <th style="width:12%">신청일</th>
-              <th style="width:12%">관리자 메모</th>
+              <th style="width:11%">신청일</th>
+              <th style="width:11%">관리자 메모</th>
             </tr>
           </thead>
           <tbody id="applyTableBody"></tbody>
@@ -166,25 +190,32 @@
   <script src="../assets/js/app.js"></script>
   <script src="../assets/js/components/header.js"></script>
   <script src="../assets/js/pages/admin.js"></script>
+  <script src="../assets/js/pages/education.js"></script>
   <script>
   'use strict';
   AdminSidebar.mount('apply-instructor');
 
+  /* ── 강사신청 일정 목록 (필터 셀렉트 채우기) */
+  const INSTR_SCHEDULES_ADMIN = (window.ALL_COURSES_RAW || [])
+    .filter(c => c.type === '강사활동')
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  const scheduleSelect = document.getElementById('filterSchedule');
+  INSTR_SCHEDULES_ADMIN.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = String(c.id);
+    opt.textContent = `${c.title.replace('[강사활동] ', '')} (${c.date.slice(0,10)})`;
+    scheduleSelect.appendChild(opt);
+  });
+
+  /* ── 더미 신청자 데이터 (일정별) */
   const NAMES_I   = ['이초록','박나무','김하늘','최바람','정숲','윤생태','강자연','조청산','신이슬','한나비',
                      '문솔잎','류햇살','백물결','안구름','송봄비','임꽃길','권들판','오숲속','황모래','노파도'];
   const REGIONS_I = ['서울','경기','인천','부산','경기','서울','서울','인천','기타','경기'];
-  const DAYS_I    = [['월','수','금'],['무관'],['화','목'],['토','일'],['월','화','수','목','금'],
-                     ['무관'],['수','금'],['토'],['월','목'],['무관'],['월','화','목','금'],['일']];
-  const AREAS_I   = [
-    '서울 북부 지역 학교 연계 숲 생태 교육',
-    '경기 남부 유치원·어린이집 산림 체험 활동',
-    '인천·부천 지역 시민 대상 숲해설 프로그램',
-    '자연환경해설, 도시 공원 해설 위주',
-    '도봉·노원 산림 치유 프로그램, 생태 탐방',
-  ];
-  const COURSES_I = ['50기','52기','53기','51기','49기','48기','54기','47기','55기',''];
 
-  const ALL_DATA_I = Array.from({ length: 20 }, (_, i) => {
+  const ALL_DATA_I = Array.from({ length: 60 }, (_, i) => {
+    const scheduleIdx = i % INSTR_SCHEDULES_ADMIN.length;
+    const sc = INSTR_SCHEDULES_ADMIN[scheduleIdx];
     const mm  = String(((i % 3) + 1)).padStart(2, '0');
     const dd  = String(((i % 25) + 1)).padStart(2, '0');
     const hh  = String(((i * 2) % 10) + 9).padStart(2, '0');
@@ -192,18 +223,16 @@
     const ss  = String((i * 17) % 60).padStart(2, '0');
     const isMember = i % 3 !== 0;
     return {
-      id:         4000 + i,
+      id:         5000 + i,
       applyNo:    `INS-2026-${String(i + 1).padStart(5, '0')}`,
+      scheduleId: sc.id,
+      scheduleTitle: sc.title,
       name:       NAMES_I[i % NAMES_I.length],
       isMember,
-      userId:     isMember ? `ins${4001 + i}` : null,
-      email:      `inst${4000 + i}@example.com`,
+      userId:     isMember ? `ins${5001 + i}` : null,
+      email:      `inst${5000 + i}@example.com`,
       phone:      `010-${String(3000 + i).padStart(4, '0')}-${String(7000 + i).padStart(4, '0')}`,
       region:     REGIONS_I[i % REGIONS_I.length],
-      days:       DAYS_I[i % DAYS_I.length],
-      area:       AREAS_I[i % AREAS_I.length],
-      course:     COURSES_I[i % COURSES_I.length],
-      note:       i % 3 === 0 ? '장애인 대상 프로그램 경험 있음' : '',
       applyDate:  `2026-${mm}-${dd}`,
       applyDatetime: `2026-${mm}-${dd} ${hh}:${min}:${ss}`,
       adminMemo:  ['','서류 검토 완료','','활동지역 재확인 필요','','','이력서 요청함','','','연락처 변경 안내','',''][i % 12],
@@ -216,23 +245,39 @@
     _page:     1,
     _pageSize: 10,
 
+    clearScheduleFilter() {
+      document.getElementById('filterSchedule').value = '';
+      document.getElementById('scheduleBanner').style.display = 'none';
+      this.search();
+    },
+
     search() {
-      const dateFrom = document.getElementById('filterDateFrom')?.value || '';
-      const dateTo   = document.getElementById('filterDateTo')?.value   || '';
-      const region     = document.querySelector('input[name="filterRegion"]:checked')?.value     || '';
-      const day        = document.querySelector('input[name="filterDay"]:checked')?.value        || '';
-      const memberType = document.querySelector('input[name="filterMemberType"]:checked')?.value || '';
-      const kwType     = document.getElementById('filterSearchType')?.value || 'all';
-      const keyword    = (document.getElementById('filterKeyword')?.value || '').trim().toLowerCase();
+      const scheduleId  = document.getElementById('filterSchedule')?.value || '';
+      const dateFrom    = document.getElementById('filterDateFrom')?.value || '';
+      const dateTo      = document.getElementById('filterDateTo')?.value   || '';
+      const region      = document.querySelector('input[name="filterRegion"]:checked')?.value     || '';
+      const memberType  = document.querySelector('input[name="filterMemberType"]:checked')?.value || '';
+      const kwType      = document.getElementById('filterSearchType')?.value || 'all';
+      const keyword     = (document.getElementById('filterKeyword')?.value || '').trim().toLowerCase();
+
+      /* 일정 배너 업데이트 */
+      const banner = document.getElementById('scheduleBanner');
+      if (scheduleId) {
+        const sc = INSTR_SCHEDULES_ADMIN.find(c => String(c.id) === scheduleId);
+        if (sc && banner) {
+          banner.style.display = 'flex';
+          document.getElementById('bannerTitle').textContent = sc.title;
+          document.getElementById('bannerMeta').textContent  = ` — 활동일 ${sc.date.slice(0,10)} | 접수기간 ${sc.from} ~ ${sc.to}`;
+        }
+      } else {
+        if (banner) banner.style.display = 'none';
+      }
 
       this._filtered = this._data.filter(d => {
+        if (scheduleId && String(d.scheduleId) !== scheduleId) return false;
         if (dateFrom && d.applyDate < dateFrom) return false;
         if (dateTo   && d.applyDate > dateTo)   return false;
         if (region   && d.region !== region)    return false;
-        if (day) {
-          if (day === '무관') { if (!d.days.includes('무관')) return false; }
-          else { if (!d.days.includes(day) && !d.days.includes('무관')) return false; }
-        }
         if (memberType === 'member' && !d.isMember) return false;
         if (memberType === 'guest'  &&  d.isMember) return false;
         if (keyword) {
@@ -256,13 +301,15 @@
     },
 
     reset() {
-      document.getElementById('filterDateFrom').value = '';
-      document.getElementById('filterDateTo').value   = '';
-      document.getElementById('filterKeyword').value  = '';
+      document.getElementById('filterSchedule').value  = '';
+      document.getElementById('filterDateFrom').value  = '';
+      document.getElementById('filterDateTo').value    = '';
+      document.getElementById('filterKeyword').value   = '';
       document.getElementById('filterSearchType').value = 'all';
       document.querySelector('input[name="filterRegion"][value=""]').checked     = true;
-      document.querySelector('input[name="filterDay"][value=""]').checked        = true;
       document.querySelector('input[name="filterMemberType"][value=""]').checked = true;
+      const banner = document.getElementById('scheduleBanner');
+      if (banner) banner.style.display = 'none';
       this._filtered = [...this._data];
       this._page = 1;
       this.render();
@@ -299,13 +346,14 @@
         const memberBadge = d.isMember
           ? `<span class="badge badge-green">회원</span>`
           : `<span class="badge badge-gray">비회원</span>`;
-        return `<tr onclick="location.href='apply-instructor-detail.html?id=${d.id}'">
+        const scheduleLabel = d.scheduleTitle.replace('[강사활동] ', '');
+        return `<tr class="applicant-row" onclick="location.href='apply-instructor-detail.html?id=${d.id}'">
           <td style="text-align:center">${seq}</td>
           <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">${d.applyNo}</td>
+          <td style="font-size:12px;color:#4a7c59">${scheduleLabel}</td>
           <td style="font-weight:600">${nameCell}</td>
           <td style="text-align:center">${memberBadge}</td>
           <td style="text-align:center;font-size:13px">${d.region}</td>
-          <td style="text-align:center;font-size:13px">${d.days.join('·')}</td>
           <td style="text-align:center;font-size:13px" class="cell-datetime">${d.phone}</td>
           <td style="font-size:13px">${d.email}</td>
           <td style="text-align:center;font-size:13px" class="cell-datetime">${d.applyDatetime}</td>
@@ -324,7 +372,14 @@
     exportExcel() { App.toast('강사신청 목록 엑셀 다운로드를 시작합니다.', 'info'); },
   };
 
-  InstructorApply.render();
+  /* URL에서 일정 필터 자동 적용 (instructor-schedule.html "신청자" 버튼 클릭 시) */
+  const presetScheduleId = App.getParam('scheduleId');
+  if (presetScheduleId) {
+    const sel = document.getElementById('filterSchedule');
+    if (sel) sel.value = presetScheduleId;
+  }
+
+  InstructorApply.search();
   </script>
 </body>
 </html>

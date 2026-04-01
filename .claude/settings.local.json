@@ -48,7 +48,18 @@
       "Bash(node _fix_list.js)",
       "Bash(rm _fix_list.js)",
       "Bash(echo \"=== $f \\(처음 30줄\\) ===\")",
-      "Read(//c/Users/BN659/Desktop/배은아/기획PM/projects/foresto_homepage/outputs/assets/js/pages/**)"
+      "Read(//c/Users/BN659/Desktop/배은아/기획PM/projects/foresto_homepage/outputs/assets/js/pages/**)",
+      "Bash(BASE=\"c:/Users/BN659/Desktop/배은아/기획PM/projects/foresto_homepage/outputs\" __NEW_LINE_2bd722a616734652__ echo \"=== 샘플 데이터 카운트 \\(JS 파일별\\) ===\" __NEW_LINE_2bd722a616734652__ echo \"-- education.js: ALL_COURSES_RAW 항목 수 --\" grep -c \"id:\" \"$BASE/assets/js/pages/education.js\" __NEW_LINE_2bd722a616734652__ echo \"-- community.js: 더미 데이터 배열 크기 --\" grep -E \"^\\\\s+\\\\{$|id: [0-9]+\" \"$BASE/assets/js/pages/community.js\")",
+      "Read(//c/Users/BN659/Desktop/배은아/기획PM/$BASE/assets/js/pages/**)",
+      "Read(//c/Users/BN659/Desktop/배은아/기획PM/**)",
+      "Bash(BASE=\"c:/Users/BN659/Desktop/배은아/기획PM/projects/foresto_homepage/outputs\" __NEW_LINE_acc38fc3b798697e__ echo \"=== reset.css가 누락된 페이지 \\(로드 안 함\\) ===\" find \"$BASE\" -not -path \"*/admin/*\" -name \"*.html\")",
+      "Bash(while read:*)",
+      "Bash(do rel=\"$f#$BASE/\" if ! grep -q \"reset.css\" \"$f\")",
+      "Bash(then echo:*)",
+      "Bash(do rel=\"$f#$BASE/\" if grep -q \"variables.css\" \"$f\")",
+      "Bash(BASE=\"c:/Users/BN659/Desktop/배은아/기획PM/projects/foresto_homepage/outputs\" __NEW_LINE_330001f5433e2d36__ echo \"=== reset.css 별도 로드 중복 \\(common.css에 이미 @import됨\\) ===\" find \"$BASE\" -not -path \"*/admin/*\" -name \"*.html\")",
+      "Bash(do rel=\"$f#$BASE/\" if grep -q \"reset.css\" \"$f\")",
+      "Bash(done echo:*)"
     ]
   }
 }
