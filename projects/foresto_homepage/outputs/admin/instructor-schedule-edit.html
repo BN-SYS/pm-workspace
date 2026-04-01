@@ -22,7 +22,8 @@
     .form-input.full { width:100%; }
     .form-input.w120 { width:120px; }
     .form-input.w80  { width:80px; }
-    .form-input[type="date"] { padding:0 10px; cursor:pointer; }
+    .form-input[type="date"],
+    .form-input[type="datetime-local"] { padding:0 10px; cursor:pointer; }
     .date-sep { font-size:13px; color:#888; flex-shrink:0; }
     .input-suffix { display:flex; align-items:center; gap:6px; }
     .input-suffix span { font-size:13px; color:#666; }
@@ -34,23 +35,30 @@
     .toggle-switch input:checked + .toggle-slider { background:#4a7c59; }
     .toggle-switch input:checked + .toggle-slider::before { transform:translateX(20px); }
     .toggle-desc { font-size:12px; color:#888; }
-    .se-textarea { width:100%; min-height:220px; padding:14px 16px; border:none; outline:none; font-size:14px; color:#2c3e2c; line-height:1.7; resize:vertical; font-family:'Noto Sans KR',sans-serif; box-sizing:border-box; }
     .smarteditor-mock { border:1px solid #d0dbc8; border-radius:6px; overflow:hidden; width:100%; }
     .se-toolbar { display:flex; flex-wrap:wrap; gap:2px; padding:6px 8px; background:#f5f7f4; border-bottom:1px solid #e3eadd; }
     .se-toolbar-group { display:flex; align-items:center; gap:2px; padding-right:8px; margin-right:4px; border-right:1px solid #d0dbc8; }
     .se-toolbar-group:last-child { border-right:none; }
-    .se-btn { height:26px; min-width:26px; padding:0 5px; border:1px solid transparent; border-radius:4px; background:none; font-size:12px; color:#444; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .se-btn { height:26px; min-width:26px; padding:0 5px; border:1px solid transparent; border-radius:4px; background:none; font-size:12px; color:#444; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .1s, border-color .1s; }
     .se-btn:hover { background:#e8efe3; border-color:#c8d9be; }
+    .se-btn.active { background:#d5e8d4; border-color:#4a7c59; color:#2e5c2e; }
+    .se-select { height:26px; padding:0 6px; border:1px solid #d0dbc8; border-radius:4px; background:#fff; font-size:12px; color:#444; cursor:pointer; }
+    .se-textarea { width:100%; min-height:280px; padding:14px 16px; border:none; outline:none; font-size:14px; color:#2c3e2c; line-height:1.7; resize:vertical; font-family:'Noto Sans KR',sans-serif; box-sizing:border-box; }
     .file-attach-wrap { display:flex; flex-direction:column; gap:8px; width:100%; }
     .file-attach-row { display:flex; align-items:center; gap:8px; }
-    .file-fake-name { flex:1; height:36px; padding:0 12px; border:1px solid #d0dbc8; border-radius:6px; font-size:13px; color:#888; background:#fafafa; display:flex; align-items:center; }
+    .file-attach-input-wrap { flex:1; display:flex; align-items:center; gap:6px; }
+    .file-fake-name { flex:1; height:36px; padding:0 12px; border:1px solid #d0dbc8; border-radius:6px; font-size:13px; color:#888; background:#fafafa; display:flex; align-items:center; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
     .file-fake-name.has-file { color:#2c3e2c; background:#fff; }
-    .btn-file-browse { height:36px; padding:0 14px; border:1px solid #4a7c59; border-radius:6px; background:#fff; color:#4a7c59; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; }
+    .btn-file-browse { height:36px; padding:0 14px; border:1px solid #4a7c59; border-radius:6px; background:#fff; color:#4a7c59; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; transition:background .15s; }
     .btn-file-browse:hover { background:#f0f8f0; }
-    .btn-file-remove { height:36px; min-width:36px; border:1px solid #e3eadd; border-radius:6px; background:#fff; color:#888; font-size:18px; line-height:1; cursor:pointer; }
-    .existing-file { display:flex; align-items:center; gap:6px; padding:6px 10px; background:#f0f8f0; border:1px solid #c8e0c8; border-radius:6px; font-size:13px; color:#2e5c2e; }
-    .file-hint { font-size:12px; color:#9aaa94; margin-top:2px; }
-    .form-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:24px; padding-bottom:40px; }
+    .btn-file-remove { width:32px; height:32px; border:none; background:none; color:#bbb; font-size:18px; cursor:pointer; border-radius:4px; display:flex; align-items:center; justify-content:center; transition:color .15s, background .15s; }
+    .btn-file-remove:hover { color:#e74c3c; background:#fef0f0; }
+    .btn-file-remove.hidden { visibility:hidden; pointer-events:none; }
+    .file-hint { font-size:11px; color:#999; margin-top:2px; }
+    .form-bottom-bar { display:flex; align-items:center; justify-content:flex-end; gap:10px; padding:16px 0 4px; }
+    .status-info-box { background:#f0f8f0; border:1px solid #c8e0c8; border-radius:8px; padding:12px 16px; margin-bottom:8px; }
+    .status-info-box p { font-size:12px; color:#5a7a5a; margin:0; line-height:1.8; }
+    .status-info-box strong { color:#2e5c2e; }
   </style>
 </head>
 <body class="admin-body">
@@ -67,128 +75,216 @@
       <div class="admin-topbar">
         <h1 class="admin-page-title" id="pageTitle">강사 활동 일정 등록</h1>
         <div style="display:flex;gap:8px">
-          <button class="btn btn-gray btn-sm" onclick="history.back()">목록</button>
+          <button class="btn btn-gray btn-sm" onclick="history.back()">취소</button>
+          <button class="btn btn-primary btn-sm" onclick="InstrScheduleEdit.save()">저장</button>
         </div>
       </div>
 
-      <!-- 기본 정보 -->
-      <div class="form-card">
-        <div class="form-card-head">기본 정보</div>
+      <div class="admin-content">
 
-        <div class="form-row">
-          <span class="form-label required">활동명</span>
-          <div class="form-content">
-            <input type="text" class="form-input full" id="fTitle" placeholder="활동명을 입력하세요">
-          </div>
-        </div>
+        <!-- 기본 정보 -->
+        <div class="form-card">
+          <div class="form-card-head">기본 정보</div>
 
-        <div class="form-row">
-          <span class="form-label required">활동일자</span>
-          <div class="form-content">
-            <input type="date" class="form-input w120" id="fDate">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <span class="form-label required">접수기간</span>
-          <div class="form-content">
-            <input type="date" class="form-input w120" id="fFrom">
-            <span class="date-sep">~</span>
-            <input type="date" class="form-input w120" id="fTo">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <span class="form-label required">정원</span>
-          <div class="form-content">
-            <div class="input-suffix">
-              <input type="number" class="form-input w80" id="fQuota" min="1" placeholder="0">
-              <span>명</span>
+          <!-- 활동명 -->
+          <div class="form-row">
+            <div class="form-label required">활동명</div>
+            <div class="form-content">
+              <input type="text" id="fTitle" class="form-input full"
+                     placeholder="활동명을 입력해주세요" maxlength="100">
             </div>
           </div>
-        </div>
 
-        <div class="form-row">
-          <span class="form-label">활동 장소</span>
-          <div class="form-content">
-            <input type="text" class="form-input full" id="fPlace" placeholder="활동 장소를 입력하세요 (예: 서울숲 생태학습원)">
+          <!-- 활동기간 -->
+          <div class="form-row">
+            <div class="form-label required">활동기간</div>
+            <div class="form-content">
+              <input type="date" id="fDateStart" class="form-input">
+              <span class="date-sep">~</span>
+              <input type="date" id="fDateEnd" class="form-input">
+              <span class="date-sep" style="font-size:11px;color:#aaa">(하루 활동인 경우 시작일 = 종료일)</span>
+            </div>
           </div>
-        </div>
 
-        <div class="form-row">
-          <span class="form-label">노출여부</span>
-          <div class="form-content">
-            <div class="toggle-wrap">
-              <label class="toggle-switch">
-                <input type="checkbox" id="fVisible" checked>
-                <span class="toggle-slider"></span>
+          <!-- 접수기간 -->
+          <div class="form-row">
+            <div class="form-label required">접수기간</div>
+            <div class="form-content">
+              <input type="datetime-local" id="fFrom" class="form-input">
+              <span class="date-sep">~</span>
+              <input type="datetime-local" id="fTo" class="form-input">
+            </div>
+          </div>
+
+          <!-- 정원 -->
+          <div class="form-row">
+            <div class="form-label required">정원</div>
+            <div class="form-content">
+              <div class="input-suffix">
+                <input type="number" id="fQuota" class="form-input w80"
+                       min="1" max="9999" placeholder="0">
+                <span>명</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 총 활동 횟수 / 총 활동 시간 -->
+          <div class="form-row">
+            <div class="form-label">총 활동 횟수</div>
+            <div class="form-content" style="border-right:1px solid #f0f4ee; flex:1">
+              <div class="input-suffix">
+                <input type="number" id="fActivityCount" class="form-input w80"
+                       min="0" placeholder="0">
+                <span>회</span>
+              </div>
+            </div>
+            <div class="form-label">총 활동 시간</div>
+            <div class="form-content" style="flex:1">
+              <div class="input-suffix">
+                <input type="number" id="fActivityHours" class="form-input w80"
+                       min="0" step="0.5" placeholder="0">
+                <span>시간</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 신청파일첨부 -->
+          <div class="form-row">
+            <div class="form-label">신청파일첨부</div>
+            <div class="form-content">
+              <label class="toggle-wrap">
+                <span class="toggle-switch">
+                  <input type="checkbox" id="fFileRequired">
+                  <span class="toggle-slider"></span>
+                </span>
+                <span class="toggle-desc" id="fileRequiredDesc">비활성화 — 신청폼에 파일첨부 미사용</span>
               </label>
-              <span class="toggle-desc" id="visibleDesc">노출 중</span>
+            </div>
+          </div>
+
+          <!-- 활동확인서 발급 -->
+          <div class="form-row">
+            <div class="form-label">활동확인서 발급</div>
+            <div class="form-content">
+              <label class="toggle-wrap">
+                <span class="toggle-switch">
+                  <input type="checkbox" id="fConfirmIssue">
+                  <span class="toggle-slider"></span>
+                </span>
+                <span class="toggle-desc" id="confirmIssueDesc">비활성화 — 활동 처리 시 활동확인서 자동발급 안함</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 일정상태 -->
+          <div class="form-row" style="align-items:flex-start; padding:14px 0;">
+            <div class="form-label" style="padding-top:4px">일정상태</div>
+            <div class="form-content" style="flex-direction:column; align-items:flex-start; gap:0;">
+              <div class="status-info-box">
+                <p>
+                  일정 상태는 <strong>자동 산출</strong>됩니다. 직접 변경하지 않아도 됩니다.<br>
+                  ∙ <strong>준비중</strong>: 접수 시작일 이전<br>
+                  ∙ <strong>접수중</strong>: 접수기간 내 + 정원 여유 있음<br>
+                  ∙ <strong>접수마감</strong>: 정원 초과 또는 접수 종료일 경과
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- 활동 안내 -->
-      <div class="form-card">
-        <div class="form-card-head">활동 안내</div>
-        <div class="form-row" style="flex-direction:column;align-items:stretch;padding:0">
-          <div class="smarteditor-mock">
-            <div class="se-toolbar">
-              <div class="se-toolbar-group">
-                <button class="se-btn" title="굵게"><b>B</b></button>
-                <button class="se-btn" title="기울임"><i>I</i></button>
-                <button class="se-btn" title="밑줄"><u>U</u></button>
+        <!-- 활동 안내 (SmartEditor2 모의) -->
+        <div class="form-card">
+          <div class="form-card-head">활동 안내</div>
+
+          <div style="padding:16px;">
+            <div class="smarteditor-mock">
+              <div class="se-toolbar">
+                <div class="se-toolbar-group">
+                  <select class="se-select" title="글자 크기">
+                    <option>10pt</option>
+                    <option selected>12pt</option>
+                    <option>14pt</option>
+                    <option>16pt</option>
+                    <option>18pt</option>
+                    <option>24pt</option>
+                    <option>32pt</option>
+                  </select>
+                </div>
+                <div class="se-toolbar-group">
+                  <button class="se-btn" title="굵게 (Ctrl+B)" onclick="SeEditor.toggleFormat(this, 'bold')"><b>B</b></button>
+                  <button class="se-btn" title="기울임 (Ctrl+I)" onclick="SeEditor.toggleFormat(this, 'italic')"><i>I</i></button>
+                  <button class="se-btn" title="밑줄 (Ctrl+U)" onclick="SeEditor.toggleFormat(this, 'underline')"><u>U</u></button>
+                  <button class="se-btn" title="취소선" onclick="SeEditor.toggleFormat(this, 'strikethrough')"><s>S</s></button>
+                </div>
+                <div class="se-toolbar-group">
+                  <button class="se-btn" title="글자색" onclick="SeEditor.showMock('글자색 선택')">
+                    <span style="display:flex;flex-direction:column;align-items:center;gap:1px">
+                      <span style="font-size:12px;line-height:1">A</span>
+                      <span style="width:14px;height:3px;background:#e74c3c;border-radius:2px"></span>
+                    </span>
+                  </button>
+                  <button class="se-btn" title="배경색" onclick="SeEditor.showMock('배경색 선택')">
+                    <span style="display:flex;flex-direction:column;align-items:center;gap:1px">
+                      <span style="font-size:12px;line-height:1">H</span>
+                      <span style="width:14px;height:3px;background:#f7ca18;border-radius:2px"></span>
+                    </span>
+                  </button>
+                </div>
+                <div class="se-toolbar-group">
+                  <button class="se-btn" title="왼쪽 정렬" onclick="SeEditor.toggleFormat(this, 'align-left')">≡</button>
+                  <button class="se-btn active" title="가운데 정렬" onclick="SeEditor.toggleFormat(this, 'align-center')">≡</button>
+                  <button class="se-btn" title="오른쪽 정렬" onclick="SeEditor.toggleFormat(this, 'align-right')">≡</button>
+                </div>
+                <div class="se-toolbar-group">
+                  <button class="se-btn" title="순서 없는 목록" onclick="SeEditor.showMock('목록 삽입')">☰</button>
+                  <button class="se-btn" title="순서 있는 목록" onclick="SeEditor.showMock('번호 목록 삽입')">☷</button>
+                </div>
+                <div class="se-toolbar-group">
+                  <button class="se-btn" title="표 삽입" onclick="SeEditor.showMock('표 삽입')">⊞</button>
+                  <button class="se-btn" title="이미지 삽입" onclick="SeEditor.showMock('이미지 삽입')">🖼</button>
+                  <button class="se-btn" title="링크 삽입" onclick="SeEditor.showMock('링크 삽입')">🔗</button>
+                  <button class="se-btn" title="동영상 삽입" onclick="SeEditor.showMock('동영상 삽입')">▶</button>
+                </div>
+                <div class="se-toolbar-group">
+                  <button class="se-btn" title="실행취소 (Ctrl+Z)" onclick="SeEditor.showMock('실행취소')">↩</button>
+                  <button class="se-btn" title="다시실행 (Ctrl+Y)" onclick="SeEditor.showMock('다시실행')">↪</button>
+                </div>
+                <div class="se-toolbar-group">
+                  <button class="se-btn" title="HTML 소스 보기" onclick="SeEditor.toggleHtml(this)">&lt;/&gt;</button>
+                </div>
               </div>
-              <div class="se-toolbar-group">
-                <button class="se-btn">목록</button>
-                <button class="se-btn">번호목록</button>
-              </div>
-              <div class="se-toolbar-group">
-                <button class="se-btn">이미지</button>
-                <button class="se-btn">링크</button>
-              </div>
+              <textarea id="seContent" class="se-textarea"
+                        placeholder="활동에 대한 상세 내용을 입력해주세요.&#10;&#10;예시) 활동 목표, 일정, 준비물, 모집 대상, 유의사항 등을 입력하실 수 있습니다."></textarea>
             </div>
-            <textarea class="se-textarea" id="fGuide"
-              placeholder="■활동구분:&#10;■모집인원:&#10;■대상: 협회 정회원 (숲해설가 자격 소지자)&#10;■활동 일자:&#10;■활동 장소:&#10;■준비물:&#10;■문의: 협회 사무국 02-747-6518"></textarea>
           </div>
         </div>
-      </div>
 
-      <!-- 첨부파일 -->
-      <div class="form-card">
-        <div class="form-card-head">첨부파일</div>
+        <!-- 첨부파일 -->
+        <div class="form-card">
+          <div class="form-card-head">첨부파일 <span style="font-size:11px;font-weight:400;color:#999">(최대 3개 / 파일당 최대 10MB)</span></div>
 
-        <div class="form-row" style="min-height:auto">
-          <span class="form-label">신청서 양식</span>
-          <div class="form-content" style="flex-direction:column;align-items:flex-start;padding:14px 16px">
-            <div id="existingFile" style="display:none" class="existing-file">
-              <span>📎</span>
-              <span id="existingFileName"></span>
-              <button class="btn btn-xs btn-gray" style="font-size:11px;padding:2px 8px"
-                onclick="document.getElementById('existingFile').style.display='none'">삭제</button>
+          <div style="padding:16px;">
+            <div class="file-attach-wrap" id="fileAttachWrap">
+              <!-- JS로 3개 렌더링 -->
             </div>
-            <div class="file-attach-wrap">
-              <div class="file-attach-row">
-                <span class="file-fake-name" id="fileNameDisplay">파일을 선택하세요</span>
-                <label class="btn-file-browse" for="fAttach">찾아보기</label>
-                <input type="file" id="fAttach" style="display:none" accept=".pdf,.hwp,.docx"
-                  onchange="const n=this.files[0]?.name||''; document.getElementById('fileNameDisplay').textContent=n||'파일을 선택하세요'; document.getElementById('fileNameDisplay').className='file-fake-name'+(n?' has-file':'');">
-              </div>
-              <div class="file-hint">허용 형식: PDF, HWP, DOCX / 최대 10MB</div>
-            </div>
+            <p class="file-hint">허용 형식: PDF, HWP, DOCX, XLSX, JPG, PNG, ZIP</p>
           </div>
         </div>
-      </div>
 
-      <!-- 하단 버튼 -->
-      <div class="form-actions">
-        <button class="btn btn-gray" onclick="history.back()">취소</button>
-        <button class="btn btn-primary" onclick="InstrScheduleEdit.save()">저장</button>
-      </div>
+        <!-- 하단 버튼 -->
+        <div class="form-bottom-bar">
+          <button class="btn btn-gray" onclick="history.back()">취소</button>
+          <button class="btn btn-primary" onclick="InstrScheduleEdit.save()">저장</button>
+        </div>
 
+      </div><!-- /admin-content -->
     </main>
-  </div>
+  </div><!-- /admin-layout -->
+
+  <!-- hidden file inputs -->
+  <input type="file" id="fileInput0" style="display:none" onchange="FileAttach.handleChange(0, this)">
+  <input type="file" id="fileInput1" style="display:none" onchange="FileAttach.handleChange(1, this)">
+  <input type="file" id="fileInput2" style="display:none" onchange="FileAttach.handleChange(2, this)">
 
   <script src="../assets/js/app.js"></script>
   <script src="../assets/js/components/header.js"></script>
@@ -196,64 +292,149 @@
   <script src="../assets/js/pages/education.js"></script>
   <script>
   'use strict';
-  AdminSidebar.mount('instructor-schedule');
 
-  /* 토글 라벨 동기화 */
-  const visibleChk = document.getElementById('fVisible');
-  if (visibleChk) {
-    visibleChk.addEventListener('change', function() {
-      const desc = document.getElementById('visibleDesc');
-      if (desc) desc.textContent = this.checked ? '노출 중' : '숨김';
-    });
-  }
+  document.addEventListener('DOMContentLoaded', () => {
+    AdminSidebar.mount('instructor-schedule');
 
-  const InstrScheduleEdit = {
-    _id: null,
-
-    init() {
-      const id = Number(App.getParam('id'));
-      if (!id) return; /* 신규 등록 */
-      this._id = id;
+    const id = new URLSearchParams(location.search).get('id');
+    if (id) {
       document.getElementById('pageTitle').textContent = '강사 활동 일정 수정';
+      document.title = '강사 활동 일정 수정 | 관리자 | 한국숲해설가협회';
+      InstrScheduleEdit.load(id);
+    }
 
-      const course = (window.ALL_COURSES_RAW || []).find(c => c.id === id);
-      if (!course) return;
+    FileAttach.render();
 
-      document.getElementById('fTitle').value   = course.title;
-      document.getElementById('fDate').value    = course.date.slice(0, 10);
-      document.getElementById('fFrom').value    = course.from;
-      document.getElementById('fTo').value      = course.to;
-      document.getElementById('fQuota').value   = course.quota || '';
-      document.getElementById('fGuide').value   = course.guide || '';
+    document.getElementById('fFileRequired').addEventListener('change', function () {
+      document.getElementById('fileRequiredDesc').textContent = this.checked
+        ? '활성화 — 신청폼에 파일첨부 필드 표시 (필수 제출)'
+        : '비활성화 — 신청폼에 파일첨부 미사용';
+    });
 
-      const atts = course.attachments || [];
-      if (atts.length) {
-        const ef = document.getElementById('existingFile');
-        const fn = document.getElementById('existingFileName');
-        if (ef && fn) { ef.style.display = 'flex'; fn.textContent = atts[0].name; }
-      }
+    document.getElementById('fConfirmIssue').addEventListener('change', function () {
+      document.getElementById('confirmIssueDesc').textContent = this.checked
+        ? '활성화 — 활동 처리 시 활동확인서 자동발급'
+        : '비활성화 — 활동 처리 시 활동확인서 자동발급 안함';
+    });
+  });
+
+
+  /* 파일첨부 모듈 */
+  const FileAttach = {
+    files: [null, null, null],
+
+    render() {
+      const wrap = document.getElementById('fileAttachWrap');
+      wrap.innerHTML = this.files.map((f, i) => `
+        <div class="file-attach-row" id="fileRow${i}">
+          <div class="file-attach-input-wrap">
+            <div class="file-fake-name ${f ? 'has-file' : ''}" id="fileName${i}">
+              ${f ? f.name : '파일을 선택해주세요'}
+            </div>
+            <button class="btn-file-browse" onclick="FileAttach.browse(${i})">파일 선택</button>
+          </div>
+          <button class="btn-file-remove ${f ? '' : 'hidden'}"
+                  onclick="FileAttach.remove(${i})" title="삭제">×</button>
+        </div>`).join('');
     },
 
-    save() {
-      const title = document.getElementById('fTitle')?.value.trim();
-      const date  = document.getElementById('fDate')?.value;
-      const from  = document.getElementById('fFrom')?.value;
-      const to    = document.getElementById('fTo')?.value;
-      const quota = document.getElementById('fQuota')?.value;
+    browse(idx) { document.getElementById(`fileInput${idx}`).click(); },
 
-      if (!title) { App.toast('활동명을 입력해주세요.', 'warning'); return; }
-      if (!date)  { App.toast('활동일자를 선택해주세요.', 'warning'); return; }
-      if (!from || !to) { App.toast('접수기간을 입력해주세요.', 'warning'); return; }
-      if (!quota) { App.toast('정원을 입력해주세요.', 'warning'); return; }
-      if (from > to) { App.toast('접수 시작일이 종료일보다 늦습니다.', 'warning'); return; }
+    handleChange(idx, input) {
+      const file = input.files[0];
+      if (!file) return;
+      if (file.size > 10 * 1024 * 1024) {
+        App.toast('파일 크기는 10MB 이하만 가능합니다.', 'warning');
+        input.value = '';
+        return;
+      }
+      this.files[idx] = file;
+      this.render();
+    },
 
-      /* TODO: AJAX — POST/PUT ADMIN_API.instructorSchedule */
-      App.toast(this._id ? '일정이 수정되었습니다.' : '일정이 등록되었습니다.', 'success');
-      setTimeout(() => location.href = 'instructor-schedule.html', 800);
+    remove(idx) {
+      this.files[idx] = null;
+      document.getElementById(`fileInput${idx}`).value = '';
+      this.render();
     },
   };
 
-  InstrScheduleEdit.init();
+
+  /* SmartEditor2 모의 동작 */
+  const SeEditor = {
+    htmlMode: false,
+
+    toggleFormat(btn, format) {
+      if (format.startsWith('align-')) {
+        btn.closest('.se-toolbar-group').querySelectorAll('.se-btn').forEach(b => b.classList.remove('active'));
+      }
+      btn.classList.toggle('active');
+    },
+
+    toggleHtml(btn) {
+      this.htmlMode = !this.htmlMode;
+      btn.classList.toggle('active', this.htmlMode);
+      const ta = document.getElementById('seContent');
+      if (this.htmlMode) {
+        ta.placeholder = 'HTML 소스를 직접 편집합니다.';
+        ta.style.fontFamily = 'monospace';
+        ta.style.fontSize   = '12px';
+      } else {
+        ta.placeholder = '활동에 대한 상세 내용을 입력해주세요.';
+        ta.style.fontFamily = '';
+        ta.style.fontSize   = '';
+      }
+    },
+
+    showMock(feature) {
+      App.toast(`[SmartEditor2 모의] ${feature} 기능은 실제 구현 시 활성화됩니다.`, 'info');
+    },
+  };
+
+
+  /* InstrScheduleEdit — 저장 / 불러오기 */
+  const InstrScheduleEdit = {
+
+    load(id) {
+      const course = (window.ALL_COURSES_RAW || []).find(c => c.id === Number(id));
+      if (!course) return;
+
+      document.getElementById('fTitle').value         = course.title || '';
+      document.getElementById('fDateStart').value     = (course.date || '').slice(0, 10);
+      document.getElementById('fDateEnd').value       = (course.date || '').slice(0, 10);
+      document.getElementById('fFrom').value          = course.from  ? course.from + 'T00:00'  : '';
+      document.getElementById('fTo').value            = course.to    ? course.to   + 'T23:59'  : '';
+      document.getElementById('fQuota').value         = course.quota || '';
+      document.getElementById('seContent').value      = course.guide || '';
+    },
+
+    validate() {
+      const title     = document.getElementById('fTitle').value.trim();
+      const dateStart = document.getElementById('fDateStart').value;
+      const dateEnd   = document.getElementById('fDateEnd').value;
+      const from      = document.getElementById('fFrom').value;
+      const to        = document.getElementById('fTo').value;
+      const quota     = document.getElementById('fQuota').value;
+
+      if (!title)     { App.toast('활동명을 입력해주세요.', 'warning'); document.getElementById('fTitle').focus(); return false; }
+      if (!dateStart) { App.toast('활동 시작일을 선택해주세요.', 'warning'); return false; }
+      if (!dateEnd)   { App.toast('활동 종료일을 선택해주세요.', 'warning'); return false; }
+      if (dateStart > dateEnd) { App.toast('활동 종료일이 시작일보다 빠를 수 없습니다.', 'warning'); return false; }
+      if (!from)      { App.toast('접수 시작일시를 선택해주세요.', 'warning'); return false; }
+      if (!to)        { App.toast('접수 종료일시를 선택해주세요.', 'warning'); return false; }
+      if (from >= to) { App.toast('접수 종료일시가 시작일시보다 빠를 수 없습니다.', 'warning'); return false; }
+      if (!quota || quota < 1) { App.toast('정원을 1명 이상 입력해주세요.', 'warning'); document.getElementById('fQuota').focus(); return false; }
+
+      return true;
+    },
+
+    save() {
+      if (!this.validate()) return;
+      /* TODO: AJAX — POST/PUT ADMIN_API.instructorSchedule */
+      App.toast('저장되었습니다.', 'success');
+      setTimeout(() => { location.href = 'instructor-schedule.html'; }, 900);
+    },
+  };
   </script>
 </body>
 </html>

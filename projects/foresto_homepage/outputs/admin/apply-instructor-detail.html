@@ -78,14 +78,14 @@
   ];
   const COURSES_I = ['50기','52기','53기','51기','49기','48기','54기','47기','55기',''];
 
-  const ALL_DATA_I = Array.from({ length: 20 }, (_, i) => {
+  const ALL_DATA_I = Array.from({ length: 60 }, (_, i) => {
     const mm  = String(((i % 3) + 1)).padStart(2, '0');
     const dd  = String(((i % 25) + 1)).padStart(2, '0');
     const hh  = String(((i * 2) % 10) + 9).padStart(2, '0');
     const min = String((i * 11) % 60).padStart(2, '0');
     const ss  = String((i * 17) % 60).padStart(2, '0');
     return {
-      id:         4000 + i,
+      id:         5000 + i,
       applyNo:    `INS-2026-${String(i + 1).padStart(5, '0')}`,
       name:       NAMES_I[i % NAMES_I.length],
       email:      `inst${4000 + i}@example.com`,

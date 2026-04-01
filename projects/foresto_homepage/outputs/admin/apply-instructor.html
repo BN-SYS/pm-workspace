@@ -94,29 +94,17 @@
             </div>
           </div>
 
-          <!-- 행 3: 거주지역 / 회원구분 -->
+          <!-- 행 3: 거주지역 -->
           <div class="filter-row">
-            <div class="filter-half">
-              <span class="filter-label">거주지역</span>
-              <div class="filter-content">
-                <div class="chip-group">
-                  <label class="chip"><input type="radio" name="filterRegion" value="" checked><span>전체</span></label>
-                  <label class="chip"><input type="radio" name="filterRegion" value="서울"><span>서울</span></label>
-                  <label class="chip"><input type="radio" name="filterRegion" value="경기"><span>경기</span></label>
-                  <label class="chip"><input type="radio" name="filterRegion" value="인천"><span>인천</span></label>
-                  <label class="chip"><input type="radio" name="filterRegion" value="부산"><span>부산</span></label>
-                  <label class="chip"><input type="radio" name="filterRegion" value="기타"><span>기타</span></label>
-                </div>
-              </div>
-            </div>
-            <div class="filter-half">
-              <span class="filter-label">회원구분</span>
-              <div class="filter-content">
-                <div class="chip-group">
-                  <label class="chip"><input type="radio" name="filterMemberType" value="" checked><span>전체</span></label>
-                  <label class="chip"><input type="radio" name="filterMemberType" value="member"><span>회원</span></label>
-                  <label class="chip"><input type="radio" name="filterMemberType" value="guest"><span>비회원</span></label>
-                </div>
+            <span class="filter-label">거주지역</span>
+            <div class="filter-content">
+              <div class="chip-group">
+                <label class="chip"><input type="radio" name="filterRegion" value="" checked><span>전체</span></label>
+                <label class="chip"><input type="radio" name="filterRegion" value="서울"><span>서울</span></label>
+                <label class="chip"><input type="radio" name="filterRegion" value="경기"><span>경기</span></label>
+                <label class="chip"><input type="radio" name="filterRegion" value="인천"><span>인천</span></label>
+                <label class="chip"><input type="radio" name="filterRegion" value="부산"><span>부산</span></label>
+                <label class="chip"><input type="radio" name="filterRegion" value="기타"><span>기타</span></label>
               </div>
             </div>
           </div>
@@ -159,14 +147,13 @@
           <thead>
             <tr>
               <th style="width:4%">No</th>
-              <th style="width:11%">접수번호</th>
-              <th style="width:18%">활동 일정</th>
-              <th style="width:7%">이름</th>
-              <th style="width:7%">회원구분</th>
-              <th style="width:7%">거주지역</th>
-              <th style="width:11%">연락처</th>
+              <th style="width:12%">접수번호</th>
+              <th style="width:20%">활동 일정</th>
+              <th style="width:8%">이름</th>
+              <th style="width:8%">거주지역</th>
+              <th style="width:12%">연락처</th>
               <th>이메일</th>
-              <th style="width:11%">신청일</th>
+              <th style="width:12%">신청일</th>
               <th style="width:11%">관리자 메모</th>
             </tr>
           </thead>
@@ -214,15 +201,13 @@
     const hh  = String(((i * 2) % 10) + 9).padStart(2, '0');
     const min = String((i * 11) % 60).padStart(2, '0');
     const ss  = String((i * 17) % 60).padStart(2, '0');
-    const isMember = i % 3 !== 0;
     return {
       id:         5000 + i,
       applyNo:    `INS-2026-${String(i + 1).padStart(5, '0')}`,
       scheduleId: sc.id,
       scheduleTitle: sc.title,
       name:       NAMES_I[i % NAMES_I.length],
-      isMember,
-      userId:     isMember ? `ins${5001 + i}` : null,
+      userId:     `ins${5001 + i}`,
       email:      `inst${5000 + i}@example.com`,
       phone:      `010-${String(3000 + i).padStart(4, '0')}-${String(7000 + i).padStart(4, '0')}`,
       region:     REGIONS_I[i % REGIONS_I.length],
@@ -248,8 +233,7 @@
       const scheduleId  = document.getElementById('filterSchedule')?.value || '';
       const dateFrom    = document.getElementById('filterDateFrom')?.value || '';
       const dateTo      = document.getElementById('filterDateTo')?.value   || '';
-      const region      = document.querySelector('input[name="filterRegion"]:checked')?.value     || '';
-      const memberType  = document.querySelector('input[name="filterMemberType"]:checked')?.value || '';
+      const region      = document.querySelector('input[name="filterRegion"]:checked')?.value || '';
       const kwType      = document.getElementById('filterSearchType')?.value || 'all';
       const keyword     = (document.getElementById('filterKeyword')?.value || '').trim().toLowerCase();
 
@@ -270,9 +254,7 @@
         if (scheduleId && String(d.scheduleId) !== scheduleId) return false;
         if (dateFrom && d.applyDate < dateFrom) return false;
         if (dateTo   && d.applyDate > dateTo)   return false;
-        if (region   && d.region !== region)    return false;
-        if (memberType === 'member' && !d.isMember) return false;
-        if (memberType === 'guest'  &&  d.isMember) return false;
+        if (region && d.region !== region) return false;
         if (keyword) {
           const m = { name: d.name, email: d.email, phone: d.phone, userId: d.userId || '' };
           if (kwType !== 'all') return (m[kwType] || '').toLowerCase().includes(keyword);
@@ -299,8 +281,7 @@
       document.getElementById('filterDateTo').value    = '';
       document.getElementById('filterKeyword').value   = '';
       document.getElementById('filterSearchType').value = 'all';
-      document.querySelector('input[name="filterRegion"][value=""]').checked     = true;
-      document.querySelector('input[name="filterMemberType"][value=""]').checked = true;
+      document.querySelector('input[name="filterRegion"][value=""]').checked = true;
       const banner = document.getElementById('scheduleBanner');
       if (banner) banner.style.display = 'none';
       this._filtered = [...this._data];
@@ -322,7 +303,7 @@
       if (!tbody) return;
 
       if (!slice.length) {
-        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:40px;color:#8a9e84">검색 결과가 없습니다.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:#8a9e84">검색 결과가 없습니다.</td></tr>`;
         App.renderPagination('applyPagination', 1, 1, () => {});
         return;
       }
@@ -333,19 +314,13 @@
         const memoCell = memo
           ? `<span style="font-size:12px;color:#5a7a5a">${memo.length > 10 ? memo.slice(0, 10) + '…' : memo}</span>`
           : `<span style="color:#ccc;font-size:12px">—</span>`;
-        const nameCell = d.isMember
-          ? `${d.name}<span style="color:#5a7a5a;font-size:12px">(${d.userId})</span>`
-          : d.name;
-        const memberBadge = d.isMember
-          ? `<span class="badge badge-green">회원</span>`
-          : `<span class="badge badge-gray">비회원</span>`;
+        const nameCell = `${d.name}<span style="color:#5a7a5a;font-size:12px">(${d.userId})</span>`;
         const scheduleLabel = d.scheduleTitle.replace('[강사활동] ', '');
         return `<tr class="applicant-row" onclick="location.href='apply-instructor-detail.html?id=${d.id}'">
           <td style="text-align:center">${seq}</td>
           <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">${d.applyNo}</td>
           <td style="font-size:12px;color:#4a7c59">${scheduleLabel}</td>
           <td style="font-weight:600">${nameCell}</td>
-          <td style="text-align:center">${memberBadge}</td>
           <td style="text-align:center;font-size:13px">${d.region}</td>
           <td style="text-align:center;font-size:13px" class="cell-datetime">${d.phone}</td>
           <td style="font-size:13px">${d.email}</td>
