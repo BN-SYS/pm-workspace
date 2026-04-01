@@ -20,7 +20,7 @@
     </div>
   </div>
 
-  <div class="container">
+  <div class="my-wrap">
     <div class="my-layout">
       <!-- 사이드바 -->
       <aside class="my-sidebar">
@@ -32,7 +32,7 @@
         </div>
         <nav class="side-nav">
           <a onclick="MyPage.showPanel('info')" id="nav-info" class="active">회원정보 수정</a>
-          <a onclick="MyPage.showPanel('cert')" id="nav-cert">교육신청내역</a>
+          <a onclick="MyPage.showPanel('cert')" id="nav-cert">신청내역</a>
         </nav>
       </aside>
 
@@ -102,33 +102,18 @@
           </div>
         </div>
 
-        <!-- 교육신청내역 패널 (REQ-055) -->
+        <!-- 신청내역 패널 -->
         <div class="my-panel" id="panel-cert">
           <div class="info-card">
-            <div class="info-card-title">교육이수내역</div>
+            <div class="info-card-title">신청내역</div>
 
-            <!-- <div class="edu-stats">
-              <div class="edu-stat-card"><div class="stat-n" id="statTotal">0</div><div class="stat-l">전체</div></div>
-              <div class="edu-stat-card"><div class="stat-n" id="statDone">0</div><div class="stat-l">이수완료</div></div>
-              <div class="edu-stat-card"><div class="stat-n" id="statProgress">0</div><div class="stat-l">수강중</div></div>
-              <div class="edu-stat-card"><div class="stat-n" id="statApplied">0</div><div class="stat-l">신청완료</div></div>
-            </div> -->
-
-            <!-- 데스크탑: 탭 필터 -->
-            <!-- <div class="edu-filter-tabs">
-              <button class="edu-tab active" onclick="MyPage.filterEdu('all',this)">전체</button>
-              <button class="edu-tab" onclick="MyPage.filterEdu('done',this)">이수완료</button>
-              <button class="edu-tab" onclick="MyPage.filterEdu('progress',this)">수강중</button>
-              <button class="edu-tab" onclick="MyPage.filterEdu('applied',this)">신청완료</button>
-              <button class="edu-tab" onclick="MyPage.filterEdu('cancel',this)">취소</button>
-            </div> -->
-            <!-- 모바일: 드롭다운 필터 -->
-            <select class="edu-filter-select" id="eduFilterSelect"
-                    onchange="MyPage.filterEdu(this.value,null)">
+            <!-- 필터 드롭다운 -->
+            <select class="edu-filter-select" id="applyFilterSelect"
+                    onchange="MyPage.filterApply(this.value)">
               <option value="all">전체</option>
-              <option value="done">이수완료</option>
-              <option value="progress">수강중</option>
-              <option value="applied">신청완료</option>
+              <option value="applied">신청</option>
+              <option value="unselected">미선정</option>
+              <option value="done">완료</option>
               <option value="cancel">취소</option>
             </select>
 
@@ -137,19 +122,19 @@
                 <thead>
                   <tr>
                     <th style="width:44px;">NO.</th>
-                    <th>강좌명</th>
-                    <th style="width:120px;">구분</th>
-                    <th style="width:110px;">수강일자</th>
-                    <th style="width:80px;">이수시간</th>
-                    <th style="width:80px;">상태</th>
-                    <th style="width:80px;">수료증</th>
+                    <th>신청명</th>
+                    <th style="width:100px;">구분</th>
+                    <th style="width:110px;">일자</th>
+                    <th style="width:72px;">시간</th>
+                    <th style="width:72px;">상태</th>
+                    <th style="width:88px;">증명서</th>
                     <th style="width:80px;">후기</th>
                   </tr>
                 </thead>
-                <tbody id="eduTableBody"></tbody>
+                <tbody id="applyTableBody"></tbody>
               </table>
             </div>
-            <div class="pagination" id="eduPagination"></div>
+            <div class="pagination" id="applyPagination"></div>
           </div>
         </div>
 

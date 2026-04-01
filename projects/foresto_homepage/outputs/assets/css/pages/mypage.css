@@ -2,6 +2,15 @@
    mypage.css | 마이페이지 전용 스타일
    ============================================= */
 
+/* ── 전체 래퍼 (헤더 메뉴 폭과 동일) */
+.my-wrap {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
 /* ── 레이아웃 */
 .my-layout {
   display: grid; grid-template-columns: 220px 1fr;
@@ -145,10 +154,8 @@
 .edu-badge.done     { background: var(--green-pale); color: #1b4332; }
 .edu-badge.progress { background: #fff3e0;            color: #e65100; }
 .edu-badge.applied  { background: var(--info-pale);   color: var(--info); }
-.edu-badge.cancel   {
-  background: var(--gray-bg); color: var(--gray-mid);
-  border: 1px solid var(--gray-light);
-}
+.edu-badge.cancel     { background: var(--gray-bg); color: var(--gray-mid); border: 1px solid var(--gray-light); }
+.edu-badge.unselected { background: #fdecea; color: #b71c1c; }
 
 /* ── 반응형 */
 @media (max-width: 900px) {

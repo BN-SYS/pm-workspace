@@ -269,7 +269,7 @@
       <div class="cert-no" id="certNo"></div>
 
       <!-- 제목 -->
-      <div class="cert-title">수 료 증</div>
+      <div class="cert-title" id="certTitle">수 료 증</div>
       <hr class="cert-divider">
 
       <!-- 필드 -->
@@ -281,32 +281,28 @@
             <td class="f-colon">:</td>
             <td class="f-value" id="certName"></td>
           </tr>
-          <!-- 교육과정 -->
+          <!-- 과정명/활동명 -->
           <tr>
-            <td class="f-label" style="padding-top:14px;">교&ensp;육&ensp;과&ensp;정</td>
+            <td class="f-label" id="labelCourse" style="padding-top:14px;">교&ensp;육&ensp;과&ensp;정</td>
             <td class="f-colon" style="padding-top:14px;">:</td>
             <td class="f-value" style="padding-top:14px;" id="certCourse"></td>
           </tr>
-          <!-- 교육기간 -->
+          <!-- 교육기간/활동기간 -->
           <tr>
-            <td class="f-label">교&ensp;육&ensp;기&ensp;간</td>
+            <td class="f-label" id="labelPeriod">교&ensp;육&ensp;기&ensp;간</td>
             <td class="f-colon">:</td>
-            <td class="f-value" id="certPeriod">2026년 3월 1일 ~ 2026년 6월 30일</td>
+            <td class="f-value" id="certPeriod">—</td>
           </tr>
           <tr>
             <td></td>
             <td></td>
-            <td class="f-info" id="certInfo">(총 40시간)</td>
+            <td class="f-info" id="certInfo"></td>
           </tr>
         </tbody>
       </table>
 
       <!-- 본문 -->
-      <div class="cert-body" id="certBody">
-        위 사람은 사단법인 한국숲해설가협회에서<br>
-        실시한 <strong id="certCourseBold"></strong> 강좌를<br>
-        이수하였으므로 이 증서를 드립니다.
-      </div>
+      <div class="cert-body" id="certBody"></div>
 
       <!-- 하단: 날짜 + 직인 (날짜가 직인 바로 위) -->
       <div class="cert-footer">
@@ -325,49 +321,73 @@
     }
 
     function fill() {
+      const type   = getParam('type') || 'cert';         /* cert | activity */
       const certNo = getParam('certNo') || '2026-001';
-      const name = getParam('name') || '홍길동';
+      const name   = getParam('name')   || '홍길동';
       const course = getParam('course') || '숲해설가 전문가과정';
       const period = getParam('period') || '';
-      const hours = getParam('hours') || '';
-      const date = getParam('date') || '';
+      const hours  = getParam('hours')  || '';
+      const date   = getParam('date')   || '';
 
-      // 증서 번호
+      const isActivity = type === 'activity';
+
+      /* ── 제목·레이블 분기 */
+      const titleEl = document.getElementById('certTitle');
+      if (titleEl) titleEl.textContent = isActivity ? '활 동 확 인 서' : '수 료 증';
+
+      const labelCourse = document.getElementById('labelCourse');
+      if (labelCourse) labelCourse.innerHTML = isActivity
+        ? '활&ensp;동&ensp;명&ensp;&emsp;&emsp;'
+        : '교&ensp;육&ensp;과&ensp;정';
+
+      const labelPeriod = document.getElementById('labelPeriod');
+      if (labelPeriod) labelPeriod.innerHTML = isActivity
+        ? '활&ensp;동&ensp;기&ensp;간'
+        : '교&ensp;육&ensp;기&ensp;간';
+
+      /* ── 증서번호 */
       document.getElementById('certNo').textContent = `제  ${certNo}  호`;
 
-      // 성명 — 두 글자 이상이면 글자 사이 공백 삽입
+      /* ── 성명 (두 글자 이상이면 글자 사이 공백 삽입) */
       const nameSpaced = name.length >= 2 ? name.split('').join('\u00A0\u00A0') : name;
       document.getElementById('certName').innerHTML = nameSpaced;
 
-      // 교육과정
+      /* ── 과정명 / 활동명 */
       document.getElementById('certCourse').textContent = course;
-      document.getElementById('certCourseBold').textContent = course;
 
-      // 교육기간
-      if (period) document.getElementById('certPeriod').textContent = period;
+      /* ── 기간 */
+      if (period) {
+        document.getElementById('certPeriod').textContent = period;
+      } else if (date) {
+        const [y, m, d] = date.split('-');
+        document.getElementById('certPeriod').textContent =
+          `${y}년 ${parseInt(m)}월 ${parseInt(d)}일`;
+      }
 
-      // 이수시간
+      /* ── 시간 */
       if (hours) document.getElementById('certInfo').textContent = `(총 ${hours}시간)`;
 
-      // 발급일 (수료일 기준)
+      /* ── 발급일 */
       if (date) {
         const [y, m, d] = date.split('-');
         document.getElementById('certDate').textContent =
           `${y}년 ${parseInt(m)}월 ${parseInt(d)}일`;
       }
 
-      // 본문 과정명 동적
+      /* ── 본문 */
+      const verbPhrase = isActivity
+        ? `실시한 <strong>${course}</strong> 활동을<br>완료하였으므로 이 확인서를 드립니다.`
+        : `실시한 <strong>${course}</strong> 강좌를<br>이수하였으므로 이 증서를 드립니다.`;
       document.getElementById('certBody').innerHTML =
-        `위 사람은 사단법인 한국숲해설가협회에서<br>` +
-        `실시한 <strong>${course}</strong> 강좌를<br>` +
-        `이수하였으므로 이 증서를 드립니다.`;
+        `위 사람은 사단법인 한국숲해설가협회에서<br>${verbPhrase}`;
 
-      // 워터마크 이미지
-      const wmDiv = document.getElementById('wmDiv');
-      wmDiv.style.backgroundImage = "url('../assets/image/pdf/watermark.png')";
+      /* ── 워터마크 */
+      document.getElementById('wmDiv').style.backgroundImage =
+        "url('../assets/image/pdf/watermark.png')";
 
-      // 페이지 제목 (인쇄 시 파일명)
-      document.title = `수료증_${name}_${course}`;
+      /* ── 페이지 제목 (인쇄 시 파일명) */
+      const docType = isActivity ? '활동확인서' : '수료증';
+      document.title = `${docType}_${name}_${course}`;
     }
 
     fill();
