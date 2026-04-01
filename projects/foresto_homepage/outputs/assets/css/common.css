@@ -90,8 +90,11 @@ body {
 
 /* ── 네비게이션 */
 .main-nav { display: flex; align-items: center; gap: 36px; }
-.nav-item { 
-  position: relative; 
+.nav-item {
+  position: relative;
+}
+.nav-item.has-dropdown {
+  padding-bottom: 4px; /* 드롭다운과의 간격을 hover 영역으로 연결 — margin gap으로 끊기는 현상 방지 */
 }
 .nav-item > a {
   display: flex;
@@ -140,6 +143,7 @@ body {
   opacity: 0;
   transition: opacity 0.2s ease, visibility 0.2s ease;
   visibility: hidden;
+  margin-top: 0;
 }
 
 .nav-item.has-dropdown:hover .dropdown { 

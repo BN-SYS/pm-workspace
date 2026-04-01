@@ -34,19 +34,19 @@
 
     <div class="list-top" style="margin-bottom:16px">
       <span class="list-count">전체 <strong id="galleryCount">0</strong>건</span>
-      <div style="display:flex;align-items:center;gap:10px">
-        <div class="list-search">
-          <input type="text" class="list-search-input" id="galleryKeyword" placeholder="검색어를 입력하세요"
-            onkeydown="if(event.key==='Enter') GalleryCtrl.search()">
-          <button class="list-search-btn" onclick="GalleryCtrl.search()">검색</button>
-        </div>
-        <a id="galleryWriteBtn" href="gallery-write.html" class="btn btn-primary btn-sm" style="display:none;white-space:nowrap">글쓰기</a>
+      <div class="list-search">
+        <input type="text" class="list-search-input" id="galleryKeyword" placeholder="검색어를 입력하세요"
+          onkeydown="if(event.key==='Enter') GalleryCtrl.search()">
+        <button class="list-search-btn" onclick="GalleryCtrl.search()">검색</button>
       </div>
     </div>
 
     <!-- 썸네일 카드 그리드 -->
     <div class="gallery-grid" id="galleryGrid"></div>
     <div class="pagination" id="galleryPagination"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:12px">
+      <a id="galleryWriteBtn" href="gallery-write.html" class="btn btn-primary btn-sm" style="display:none;white-space:nowrap">글쓰기</a>
+    </div>
 
   </div>
     </main>
