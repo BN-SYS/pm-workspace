@@ -4,8 +4,8 @@
 'use strict';
 
 /* ── 관리자 사이드바 네비게이션 데이터 (2단 계층) */
-/* 아이콘 경로: common_assets/icons/ (admin 페이지 기준 상대경로) */
-const _ICO = name => `../../../../common_assets/icons/${name}.png`;
+/* 아이콘 경로: assets/icons/ (admin 페이지 기준 상대경로) */
+const _ICO = name => `../assets/icons/${name}.png`;
 
 const ADMIN_NAV = [
   {
@@ -159,7 +159,7 @@ const AdminTopbar = {
   render() {
     return `
       <button class="adm-mobile-menu-btn" onclick="AdminLayout.toggleSidebar()" aria-label="메뉴 열기">
-        <img src="../../../../common_assets/icons/menu.png" alt="메뉴" onerror="this.style.display='none';this.parentNode.textContent='☰'">
+        <img src="../assets/icons/menu.png" alt="메뉴" onerror="this.style.display='none';this.parentNode.textContent='☰'">
       </button>
       <div class="adm-brand" style="display:flex;align-items:center;gap:10px;text-decoration:none;cursor:default">
         <span class="adm-brand-text">한국숲해설가협회</span>

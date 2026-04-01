@@ -52,7 +52,7 @@
   width: 100%;
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("../../../../../common_assets/icons/chevron-down.png");
+  background-image: url("../icons/chevron-down.png");
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 12px 12px;
@@ -114,7 +114,7 @@
   background: #fff;
   outline: none;
   appearance: none;
-  background-image: url("../../../../../common_assets/icons/chevron-down.png");
+  background-image: url("../icons/chevron-down.png");
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 12px 12px;

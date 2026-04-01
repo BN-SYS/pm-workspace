@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
         :root {
@@ -26,6 +26,12 @@
             scroll-behavior: smooth;
         }
 
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
         body {
             background-color: var(--bg);
             color: var(--text-main);
@@ -35,18 +41,10 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 0 40px 60px 40px;
-            box-sizing: border-box;
         }
 
         /* Typography */
-        h1,
-        h2,
-        h3,
-        h4,
-        p,
-        ul,
-        ol,
-        figure {
+        h1, h2, h3, h4, p, ul, ol, figure {
             margin: 0;
             padding: 0;
         }
@@ -216,24 +214,28 @@
             backdrop-filter: blur(8px);
             border-bottom: 1px solid var(--border);
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-            height: 48px;
+            min-height: 48px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 8px 20px;
             margin: 0 -40px 40px -40px;
             z-index: 100;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .nav-brand {
             font-weight: 700;
             font-size: 13px;
             color: var(--text-heading);
+            white-space: nowrap;
         }
 
         .nav-links {
             display: flex;
-            gap: 16px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .nav-links a {
@@ -241,6 +243,7 @@
             color: var(--text-muted);
             text-decoration: none;
             font-weight: 500;
+            white-space: nowrap;
         }
 
         .nav-links a:hover {
@@ -256,53 +259,29 @@
             font-weight: 600;
             line-height: 1;
             vertical-align: middle;
+            white-space: nowrap;
         }
 
-        .badge-mvp {
-            background: #dcfce7;
-            color: #166534;
+        .badge-mvp { background: #dcfce7; color: #166534; }
+        .badge-discuss { background: #fef3c7; color: #92400e; }
+        .badge-next { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
+        .badge-highest { background: #fef2f2; color: #b91c1c; }
+        .badge-high { background: #fff7ed; color: #c2410c; }
+        .badge-med { background: #fffbeb; color: #b45309; }
+        .badge-open { border: 1px solid #fca5a5; color: #dc2626; background: transparent; }
+        .badge-tech { background: #eff6ff; color: #1d4ed8; }
+        .badge-draft { background: #f1f5f9; color: #64748b; }
+
+        /* Table wrapper for responsive scroll */
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 24px;
         }
 
-        .badge-discuss {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .badge-next {
-            background: #f1f5f9;
-            color: #64748b;
-            border: 1px solid #cbd5e1;
-        }
-
-        .badge-highest {
-            background: #fef2f2;
-            color: #b91c1c;
-        }
-
-        .badge-high {
-            background: #fff7ed;
-            color: #c2410c;
-        }
-
-        .badge-med {
-            background: #fffbeb;
-            color: #b45309;
-        }
-
-        .badge-open {
-            border: 1px solid #fca5a5;
-            color: #dc2626;
-            background: transparent;
-        }
-
-        .badge-tech {
-            background: #eff6ff;
-            color: #1d4ed8;
-        }
-
-        .badge-draft {
-            background: #f1f5f9;
-            color: #64748b;
+        .table-wrap table {
+            margin-bottom: 0;
         }
 
         /* Tables */
@@ -311,10 +290,10 @@
             border-collapse: collapse;
             margin-bottom: 24px;
             font-size: 13.5px;
+            min-width: 480px;
         }
 
-        th,
-        td {
+        th, td {
             border: 1px solid var(--border-light);
             padding: 11px 16px;
             text-align: left;
@@ -355,6 +334,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
         }
 
         /* Screen Blocks */
@@ -387,6 +368,7 @@
             padding: 2px 8px;
             border-radius: 3px;
             font-size: 12px;
+            white-space: nowrap;
         }
 
         /* Boxes */
@@ -471,6 +453,208 @@
             margin-left: -40px;
             margin-right: -40px;
             margin-bottom: -60px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        /* ========================================
+           RESPONSIVE: Tablet (max-width: 768px)
+           ======================================== */
+        @media (max-width: 768px) {
+            body {
+                padding: 0 20px 40px 20px;
+                font-size: 13.5px;
+            }
+
+            #cover {
+                min-height: auto;
+                padding-top: 48px;
+                padding-bottom: 40px;
+            }
+
+            h1.cover-title {
+                font-size: 30px;
+            }
+
+            h1.cover-subtitle {
+                font-size: 17px;
+                margin-bottom: 32px;
+            }
+
+            .meta-grid {
+                grid-template-columns: 120px 1fr;
+                margin-bottom: 32px;
+            }
+
+            .toc {
+                padding: 20px 24px;
+            }
+
+            .role-cards {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+
+            .flow-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+
+            #top-nav {
+                margin: 0 -20px 32px -20px;
+                padding: 8px 16px;
+            }
+
+            .screen-block {
+                padding: 16px 18px;
+            }
+
+            footer {
+                padding: 20px 20px;
+                margin-left: -20px;
+                margin-right: -20px;
+                margin-bottom: -40px;
+            }
+
+            .section-label {
+                margin-top: 40px;
+            }
+        }
+
+        /* ========================================
+           RESPONSIVE: Mobile (max-width: 480px)
+           ======================================== */
+        @media (max-width: 480px) {
+            body {
+                padding: 0 16px 32px 16px;
+                font-size: 13px;
+            }
+
+            #cover {
+                padding-top: 36px;
+                padding-bottom: 32px;
+            }
+
+            h1.cover-title {
+                font-size: 26px;
+                word-break: keep-all;
+            }
+
+            h1.cover-subtitle {
+                font-size: 15px;
+                margin-bottom: 24px;
+            }
+
+            .meta-grid {
+                grid-template-columns: 1fr;
+                margin-bottom: 24px;
+            }
+
+            .meta-grid dt {
+                padding: 8px 14px;
+                font-size: 12px;
+                border-bottom: none;
+            }
+
+            .meta-grid dd {
+                padding: 8px 14px 12px 14px;
+                font-size: 13px;
+            }
+
+            .toc {
+                padding: 16px 18px;
+            }
+
+            .toc ol {
+                margin-left: 16px;
+            }
+
+            .role-cards {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .role-card {
+                padding: 16px 18px;
+            }
+
+            .flow-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            #top-nav {
+                margin: 0 -16px 24px -16px;
+                padding: 8px 12px;
+            }
+
+            .nav-brand {
+                font-size: 12px;
+                width: 100%;
+            }
+
+            .nav-links {
+                width: 100%;
+                gap: 8px;
+            }
+
+            .nav-links a {
+                font-size: 11.5px;
+            }
+
+            .screen-block {
+                padding: 14px 14px;
+            }
+
+            .screen-header {
+                gap: 8px;
+            }
+
+            .screen-header h4 {
+                font-size: 14px;
+            }
+
+            h2 {
+                font-size: 17px;
+                padding-left: 12px;
+            }
+
+            h3 {
+                font-size: 14px;
+                margin-top: 24px;
+            }
+
+            table {
+                font-size: 12.5px;
+            }
+
+            th, td {
+                padding: 8px 10px;
+            }
+
+            .quote-box,
+            .warning-box,
+            .danger-box,
+            .note-box {
+                padding: 12px 14px;
+            }
+
+            footer {
+                padding: 16px 16px;
+                margin-left: -16px;
+                margin-right: -16px;
+                margin-bottom: -32px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .section-label {
+                margin-top: 32px;
+            }
+
+            .cover-footer {
+                margin-top: 36px;
+            }
         }
     </style>
 </head>
@@ -517,9 +701,7 @@
         </div>
 
         <div class="cover-footer"><br></div>
-        <div class="cover-footer">
-            © 2026 BN System
-        </div>
+        <div class="cover-footer">© 2026 BN System</div>
     </section>
 
     <!-- STICKY NAV -->
@@ -545,10 +727,7 @@
     <ul>
         <li><strong>서비스명:</strong> Verihum (Verify + Human)</li>
         <li><strong>분류:</strong> AI 기반 사람 작성 인증 SaaS 플랫폼</li>
-        <li>
-            <strong>핵심 콘셉트:</strong> 결과물이 아닌 작성 과정 데이터를 수집·분석하여 사람이 직접 작성했는지 여부를
-            판별하고 인증
-        </li>
+        <li><strong>핵심 콘셉트:</strong> 결과물이 아닌 작성 과정 데이터를 수집·분석하여 사람이 직접 작성했는지 여부를 판별하고 인증</li>
     </ul>
 
     <h3>1.2 핵심 가치 제안</h3>
@@ -568,8 +747,9 @@
         "Verihum은 AI 사용을 금지하는 서비스가 아닙니다. AI를 <strong>올바르게</strong> 활용하는 능력을 기르는 서비스입니다."
     </div>
     <p>Verihum은 학생이 AI를 활용하는 행위 자체를 부정적으로 보지 않습니다. 오히려 AI에게 좋은 질문을 던지고 다양한 관점의 답변을 얻는 것은 학습 역량을 키우는 긍정적인 행동입니다.</p>
-    <p><strong>문제는 AI가 제시한 답변을 비판적 사고 없이 그대로 수용하는 것입니다.</strong> Verihum은 학생이 AI 제안을 어떻게 검토하고, 수정하고, 자신의 언어로 재해석했는지 — 즉
-        사고의 과정을 측정합니다.</p>
+    <p><strong>문제는 AI가 제시한 답변을 비판적 사고 없이 그대로 수용하는 것입니다.</strong> Verihum은 학생이 AI 제안을 어떻게 검토하고, 수정하고, 자신의 언어로 재해석했는지 — 즉 사고의 과정을 측정합니다.</p>
+
+    <div class="table-wrap">
     <table>
         <thead>
             <tr>
@@ -601,9 +781,10 @@
             </tr>
         </tbody>
     </table>
+    </div>
+
     <div class="note-box">
-        <strong>핵심 평가 기준:</strong> "AI를 썼는가"가 아니라 <strong>"AI를 어떻게 활용했는가"</strong>가 Verihum 인증 리포트의 핵심 판단 기준입니다. AI 제안을
-        받아들인 비율보다, 제안을 얼마나 비판적으로 검토하고 자신의 사고로 전환했는지가 평가에 반영됩니다.
+        <strong>핵심 평가 기준:</strong> "AI를 썼는가"가 아니라 <strong>"AI를 어떻게 활용했는가"</strong>가 Verihum 인증 리포트의 핵심 판단 기준입니다. AI 제안을 받아들인 비율보다, 제안을 얼마나 비판적으로 검토하고 자신의 사고로 전환했는지가 평가에 반영됩니다.
     </div>
 
     <!-- SECTION 2 -->
@@ -615,9 +796,7 @@
             <h3>교사 (Teacher) <span class="badge badge-mvp">MVP포함</span></h3>
             <ul>
                 <li><strong>역할코드:</strong> TEACHER</li>
-                <li>
-                    <strong>주요 행위:</strong> 과제 등록, 학생 초대/관리, 제출 현황 확인, 리포트 열람, 과정 리플레이 확인
-                </li>
+                <li><strong>주요 행위:</strong> 과제 등록, 학생 초대/관리, 제출 현황 확인, 리포트 열람, 과정 리플레이 확인</li>
                 <li><strong>접근 권한:</strong> 자신이 등록한 과제 및 제출물 전체 조회 권한</li>
             </ul>
         </div>
@@ -686,10 +865,7 @@
             <span class="badge badge-mvp">MVP포함</span>
         </div>
         <ul>
-            <li>
-                <strong>표시 정보:</strong> 과제명, 과목, 제출 기간, 제출 현황 (n명 제출 / 전체), 상태 (진행중 / 종료 /
-                임시저장)
-            </li>
+            <li><strong>표시 정보:</strong> 과제명, 과목, 제출 기간, 제출 현황 (n명 제출 / 전체), 상태 (진행중 / 종료 / 임시저장)</li>
             <li><strong>기능:</strong> 과제 등록 버튼, 과제 클릭 시 상세 이동</li>
             <li><strong>정렬:</strong> 최신 등록순 기본</li>
         </ul>
@@ -702,8 +878,7 @@
             <span class="badge badge-mvp">MVP포함</span>
         </div>
         <ul>
-            <li>
-                <strong>입력 필드:</strong>
+            <li><strong>입력 필드:</strong>
                 <ul>
                     <li>과제명 (필수, 최대 100자)</li>
                     <li>과목 (선택형 또는 직접 입력 — OI 협의)</li>
@@ -725,9 +900,7 @@
         </div>
         <ul>
             <li><strong>표시 정보:</strong> 과제 기본 정보, 학생별 제출 상태 테이블</li>
-            <li>
-                <strong>테이블 컬럼:</strong> 학생명 / 제출일시 / AI 분석 상태(분석 중 / 완료) / 인증 결과 / 리포트 열람 버튼
-            </li>
+            <li><strong>테이블 컬럼:</strong> 학생명 / 제출일시 / AI 분석 상태(분석 중 / 완료) / 인증 결과 / 리포트 열람 버튼</li>
             <li><strong>기능:</strong> 리포트 열람 버튼 클릭 → SCR-TCHR-04 이동</li>
         </ul>
     </div>
@@ -739,8 +912,7 @@
             <span class="badge badge-mvp">MVP포함</span>
         </div>
         <ul>
-            <li>
-                <strong>표시 정보:</strong>
+            <li><strong>표시 정보:</strong>
                 <ul>
                     <li>학생명, 과제명, 제출일시</li>
                     <li>인증 결과: 직접 작성 인증 / 주의 필요 / 분석 불가 (3단계 — OI-09 확정 필요)</li>
@@ -751,9 +923,7 @@
             </li>
             <li><strong>정책:</strong> 리포트는 교사만 열람 가능. 학생 공유 여부 협의 (OI-10)</li>
         </ul>
-        <div class="danger-box" style="margin-top: 12px; margin-bottom: 0"><strong>특허 보호:</strong> 기술 세부 수치(타이핑 속도, 키 입력
-            패턴 등) 화면 노출 금지
-        </div>
+        <div class="danger-box" style="margin-top: 12px; margin-bottom: 0"><strong>특허 보호:</strong> 기술 세부 수치(타이핑 속도, 키 입력 패턴 등) 화면 노출 금지</div>
     </div>
 
     <div class="screen-block">
@@ -766,10 +936,7 @@
             <li><strong>기능:</strong> 학생의 과제 작성 과정을 타임라인 형태로 재현</li>
             <li><strong>컨트롤:</strong> 재생/일시정지, 배속 조절(1x / 2x), 타임라인 슬라이더</li>
         </ul>
-        <div class="warning-box" style="margin-top: 12px; margin-bottom: 0"><strong>협의 필요 (OI-11):</strong> 리플레이 구현
-            방식(스냅샷 기반 vs 이벤트 스트리밍)에 따라 공수 차이가
-            크므로 개발팀 협의 우선
-        </div>
+        <div class="warning-box" style="margin-top: 12px; margin-bottom: 0"><strong>협의 필요 (OI-11):</strong> 리플레이 구현 방식(스냅샷 기반 vs 이벤트 스트리밍)에 따라 공수 차이가 크므로 개발팀 협의 우선</div>
     </div>
 
     <h3>3-4. 관리자 화면 (ADMIN)</h3>
@@ -833,8 +1000,7 @@
             <span class="badge badge-mvp">MVP포함</span>
         </div>
         <ul>
-            <li>
-                <strong>기능:</strong>
+            <li><strong>기능:</strong>
                 <ul>
                     <li>텍스트 에디터 (최소 서식 지원: 굵게, 기울임, 줄바꿈)</li>
                     <li>작성 과정 자동 기록 (백그라운드, 사용자에게 비노출)</li>
@@ -844,8 +1010,7 @@
                 </ul>
             </li>
             <li><strong>표시 정보:</strong> 과제명, 안내문, 작성 글자 수, 제출 기간 남은 시간</li>
-            <li>
-                <strong>정책:</strong>
+            <li><strong>정책:</strong>
                 <ul>
                     <li>제출 후 수정 불가 (OI-08 협의 필요)</li>
                     <li>과제 기간 종료 후 에디터 비활성화</li>
@@ -859,16 +1024,10 @@
             <span class="badge badge-discuss">협의필요</span>
             <ul style="margin-top: 8px">
                 <li><strong>기능명:</strong> AI 도움 받기</li>
-                <li><strong>목적:</strong> 학생이 AI를 적극적으로 활용하도록 지원하되, 질문·검토·수정의 전 과정을 기록하여 '비판적 AI 활용도' 지표에 반영함. AI 사용 자체를
-                    억제하는 것이 아니라, 비판적 사고 없이 AI 답변을 그대로 수용하는 행위를 구분하는 것이 목적.</li>
-                <li>
-                    <strong>동작:</strong> 버튼 클릭 → AI 질문 직접 입력 → AI 제안 팝업 → 수락 / 수정 후 반영 / 거부 선택 → 모든 선택이 타임스탬프와 함께 기록됨
-                </li>
-                <li><strong>평가 반영:</strong> AI 제안을 단순 수락한 비율보다, <em>수정·재해석 후 반영한 비율</em>이 리포트의 '비판적 AI 활용도' 지표에 가산점으로
-                    반영됨</li>
-                <li><strong>협의 필요:</strong> AI 어시스턴트 기능 MVP 포함 여부(OI-05), AI 제안 형태(OI-06), AI 공급사 선정,
-                    학생 대상 고지 정책
-                </li>
+                <li><strong>목적:</strong> 학생이 AI를 적극적으로 활용하도록 지원하되, 질문·검토·수정의 전 과정을 기록하여 '비판적 AI 활용도' 지표에 반영함. AI 사용 자체를 억제하는 것이 아니라, 비판적 사고 없이 AI 답변을 그대로 수용하는 행위를 구분하는 것이 목적.</li>
+                <li><strong>동작:</strong> 버튼 클릭 → AI 질문 직접 입력 → AI 제안 팝업 → 수락 / 수정 후 반영 / 거부 선택 → 모든 선택이 타임스탬프와 함께 기록됨</li>
+                <li><strong>평가 반영:</strong> AI 제안을 단순 수락한 비율보다, <em>수정·재해석 후 반영한 비율</em>이 리포트의 '비판적 AI 활용도' 지표에 가산점으로 반영됨</li>
+                <li><strong>협의 필요:</strong> AI 어시스턴트 기능 MVP 포함 여부(OI-05), AI 제안 형태(OI-06), AI 공급사 선정, 학생 대상 고지 정책</li>
             </ul>
         </div>
     </div>
@@ -933,478 +1092,157 @@
     <p class="note-box">핵심 엔티티 기준 초안입니다. 세부 필드 및 타입은 기술팀과 협의 후 확정합니다.</p>
 
     <h4>Users</h4>
+    <div class="table-wrap">
     <table>
         <thead>
-            <tr>
-                <th>필드</th>
-                <th>타입</th>
-                <th>설명</th>
-                <th>비고</th>
-            </tr>
+            <tr><th>필드</th><th>타입</th><th>설명</th><th>비고</th></tr>
         </thead>
         <tbody>
-            <tr>
-                <td>id</td>
-                <td>UUID</td>
-                <td>PK</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>name</td>
-                <td>String</td>
-                <td>이름</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>email</td>
-                <td>String</td>
-                <td>이메일</td>
-                <td>UNIQUE</td>
-            </tr>
-            <tr>
-                <td>password_hash</td>
-                <td>String</td>
-                <td>비밀번호 해시</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>role</td>
-                <td>Enum</td>
-                <td>TEACHER / STUDENT</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>created_at</td>
-                <td>DateTime</td>
-                <td>생성일시</td>
-                <td></td>
-            </tr>
+            <tr><td>id</td><td>UUID</td><td>PK</td><td></td></tr>
+            <tr><td>name</td><td>String</td><td>이름</td><td></td></tr>
+            <tr><td>email</td><td>String</td><td>이메일</td><td>UNIQUE</td></tr>
+            <tr><td>password_hash</td><td>String</td><td>비밀번호 해시</td><td></td></tr>
+            <tr><td>role</td><td>Enum</td><td>TEACHER / STUDENT</td><td></td></tr>
+            <tr><td>created_at</td><td>DateTime</td><td>생성일시</td><td></td></tr>
         </tbody>
     </table>
+    </div>
 
     <h4>Assignments (과제)</h4>
+    <div class="table-wrap">
     <table>
         <thead>
-            <tr>
-                <th>필드</th>
-                <th>타입</th>
-                <th>설명</th>
-                <th>비고</th>
-            </tr>
+            <tr><th>필드</th><th>타입</th><th>설명</th><th>비고</th></tr>
         </thead>
         <tbody>
-            <tr>
-                <td>id</td>
-                <td>UUID</td>
-                <td>PK</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>teacher_id</td>
-                <td>UUID</td>
-                <td>FK → Users</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>title</td>
-                <td>String</td>
-                <td>과제명</td>
-                <td>max 100자</td>
-            </tr>
-            <tr>
-                <td>subject</td>
-                <td>String</td>
-                <td>과목</td>
-                <td>nullable</td>
-            </tr>
-            <tr>
-                <td>description</td>
-                <td>Text</td>
-                <td>과제 안내문</td>
-                <td>nullable</td>
-            </tr>
-            <tr>
-                <td>start_at</td>
-                <td>DateTime</td>
-                <td>제출 시작일시</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>end_at</td>
-                <td>DateTime</td>
-                <td>제출 마감일시</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>share_token</td>
-                <td>String</td>
-                <td>학생 공유용 토큰</td>
-                <td>UNIQUE</td>
-            </tr>
-            <tr>
-                <td>status</td>
-                <td>Enum</td>
-                <td>DRAFT / ACTIVE / CLOSED</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>created_at</td>
-                <td>DateTime</td>
-                <td></td>
-                <td></td>
-            </tr>
+            <tr><td>id</td><td>UUID</td><td>PK</td><td></td></tr>
+            <tr><td>teacher_id</td><td>UUID</td><td>FK → Users</td><td></td></tr>
+            <tr><td>title</td><td>String</td><td>과제명</td><td>max 100자</td></tr>
+            <tr><td>subject</td><td>String</td><td>과목</td><td>nullable</td></tr>
+            <tr><td>description</td><td>Text</td><td>과제 안내문</td><td>nullable</td></tr>
+            <tr><td>start_at</td><td>DateTime</td><td>제출 시작일시</td><td></td></tr>
+            <tr><td>end_at</td><td>DateTime</td><td>제출 마감일시</td><td></td></tr>
+            <tr><td>share_token</td><td>String</td><td>학생 공유용 토큰</td><td>UNIQUE</td></tr>
+            <tr><td>status</td><td>Enum</td><td>DRAFT / ACTIVE / CLOSED</td><td></td></tr>
+            <tr><td>created_at</td><td>DateTime</td><td></td><td></td></tr>
         </tbody>
     </table>
+    </div>
 
     <h4>Submissions (제출물)</h4>
+    <div class="table-wrap">
     <table>
         <thead>
-            <tr>
-                <th>필드</th>
-                <th>타입</th>
-                <th>설명</th>
-                <th>비고</th>
-            </tr>
+            <tr><th>필드</th><th>타입</th><th>설명</th><th>비고</th></tr>
         </thead>
         <tbody>
-            <tr>
-                <td>id</td>
-                <td>UUID</td>
-                <td>PK</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>assignment_id</td>
-                <td>UUID</td>
-                <td>FK → Assignments</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>student_id</td>
-                <td>UUID</td>
-                <td>FK → Users</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>content</td>
-                <td>Text</td>
-                <td>최종 제출 텍스트</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>status</td>
-                <td>Enum</td>
-                <td>DRAFT / SUBMITTED</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>submitted_at</td>
-                <td>DateTime</td>
-                <td>제출 일시</td>
-                <td>nullable</td>
-            </tr>
+            <tr><td>id</td><td>UUID</td><td>PK</td><td></td></tr>
+            <tr><td>assignment_id</td><td>UUID</td><td>FK → Assignments</td><td></td></tr>
+            <tr><td>student_id</td><td>UUID</td><td>FK → Users</td><td></td></tr>
+            <tr><td>content</td><td>Text</td><td>최종 제출 텍스트</td><td></td></tr>
+            <tr><td>status</td><td>Enum</td><td>DRAFT / SUBMITTED</td><td></td></tr>
+            <tr><td>submitted_at</td><td>DateTime</td><td>제출 일시</td><td>nullable</td></tr>
         </tbody>
     </table>
+    </div>
 
     <h4>ProcessLogs (작성 과정 로그)</h4>
+    <div class="table-wrap">
     <table>
         <thead>
-            <tr>
-                <th>필드</th>
-                <th>타입</th>
-                <th>설명</th>
-                <th>비고</th>
-            </tr>
+            <tr><th>필드</th><th>타입</th><th>설명</th><th>비고</th></tr>
         </thead>
         <tbody>
-            <tr>
-                <td>id</td>
-                <td>UUID</td>
-                <td>PK</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>submission_id</td>
-                <td>UUID</td>
-                <td>FK → Submissions</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>event_type</td>
-                <td>Enum</td>
-                <td>이벤트 유형</td>
-                <td>세부 정의 기술팀 협의</td>
-            </tr>
-            <tr>
-                <td>event_data</td>
-                <td>JSON</td>
-                <td>이벤트 상세 데이터</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>recorded_at</td>
-                <td>DateTime</td>
-                <td>기록 일시</td>
-                <td></td>
-            </tr>
+            <tr><td>id</td><td>UUID</td><td>PK</td><td></td></tr>
+            <tr><td>submission_id</td><td>UUID</td><td>FK → Submissions</td><td></td></tr>
+            <tr><td>event_type</td><td>Enum</td><td>이벤트 유형</td><td>세부 정의 기술팀 협의</td></tr>
+            <tr><td>event_data</td><td>JSON</td><td>이벤트 상세 데이터</td><td></td></tr>
+            <tr><td>recorded_at</td><td>DateTime</td><td>기록 일시</td><td></td></tr>
         </tbody>
     </table>
+    </div>
     <div class="danger-box">
-        <strong>특허 보호:</strong> 세부 필드 구조(event_type 정의, event_data 스키마)는 기술팀 협의 후 확정. 외부 노출
-        금지.
+        <strong>특허 보호:</strong> 세부 필드 구조(event_type 정의, event_data 스키마)는 기술팀 협의 후 확정. 외부 노출 금지.
     </div>
 
     <h4>AnalysisReports (분석 리포트)</h4>
+    <div class="table-wrap">
     <table>
         <thead>
-            <tr>
-                <th>필드</th>
-                <th>타입</th>
-                <th>설명</th>
-                <th>비고</th>
-            </tr>
+            <tr><th>필드</th><th>타입</th><th>설명</th><th>비고</th></tr>
         </thead>
         <tbody>
-            <tr>
-                <td>id</td>
-                <td>UUID</td>
-                <td>PK</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>submission_id</td>
-                <td>UUID</td>
-                <td>FK → Submissions</td>
-                <td>UNIQUE</td>
-            </tr>
-            <tr>
-                <td>status</td>
-                <td>Enum</td>
-                <td>PENDING / PROCESSING / DONE / FAILED</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>score</td>
-                <td>Integer</td>
-                <td>과정 점수 (0~100)</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>result_label</td>
-                <td>Enum</td>
-                <td>VERIFIED / WARNING / INCONCLUSIVE</td>
-                <td>OI-09 확정 필요</td>
-            </tr>
-            <tr>
-                <td>analysis_data</td>
-                <td>JSON</td>
-                <td>AI 분석 상세 결과</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>created_at</td>
-                <td>DateTime</td>
-                <td></td>
-                <td></td>
-            </tr>
+            <tr><td>id</td><td>UUID</td><td>PK</td><td></td></tr>
+            <tr><td>submission_id</td><td>UUID</td><td>FK → Submissions</td><td>UNIQUE</td></tr>
+            <tr><td>status</td><td>Enum</td><td>PENDING / PROCESSING / DONE / FAILED</td><td></td></tr>
+            <tr><td>score</td><td>Integer</td><td>과정 점수 (0~100)</td><td></td></tr>
+            <tr><td>result_label</td><td>Enum</td><td>VERIFIED / WARNING / INCONCLUSIVE</td><td>OI-09 확정 필요</td></tr>
+            <tr><td>analysis_data</td><td>JSON</td><td>AI 분석 상세 결과</td><td></td></tr>
+            <tr><td>created_at</td><td>DateTime</td><td></td><td></td></tr>
         </tbody>
     </table>
+    </div>
 
-    <h4 style="display: flex; align-items: center; gap: 8px">
+    <h4 style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
         AIInteractions (AI 어시스턴트 이용 기록)
         <span class="badge badge-discuss">협의필요</span>
     </h4>
+    <div class="table-wrap">
     <table>
         <thead>
-            <tr>
-                <th>필드</th>
-                <th>타입</th>
-                <th>설명</th>
-                <th>비고</th>
-            </tr>
+            <tr><th>필드</th><th>타입</th><th>설명</th><th>비고</th></tr>
         </thead>
         <tbody>
-            <tr>
-                <td>id</td>
-                <td>UUID</td>
-                <td>PK</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>submission_id</td>
-                <td>UUID</td>
-                <td>FK → Submissions</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>prompt_context</td>
-                <td>Text</td>
-                <td>학생 입력 맥락</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>ai_suggestion</td>
-                <td>Text</td>
-                <td>AI 제안 내용</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>action</td>
-                <td>Enum</td>
-                <td>ACCEPTED / MODIFIED / REJECTED</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>timestamp</td>
-                <td>DateTime</td>
-                <td></td>
-                <td></td>
-            </tr>
+            <tr><td>id</td><td>UUID</td><td>PK</td><td></td></tr>
+            <tr><td>submission_id</td><td>UUID</td><td>FK → Submissions</td><td></td></tr>
+            <tr><td>prompt_context</td><td>Text</td><td>학생 입력 맥락</td><td></td></tr>
+            <tr><td>ai_suggestion</td><td>Text</td><td>AI 제안 내용</td><td></td></tr>
+            <tr><td>action</td><td>Enum</td><td>ACCEPTED / MODIFIED / REJECTED</td><td></td></tr>
+            <tr><td>timestamp</td><td>DateTime</td><td></td><td></td></tr>
         </tbody>
     </table>
+    </div>
 
     <!-- SECTION 6 -->
     <span class="section-label">Section 6</span>
     <h2 id="sec-6">MVP 범위 정의</h2>
     <p>기능 범위는 MVP포함 / 협의필요 / 차기 3단계로 구분합니다.</p>
 
+    <div class="table-wrap">
     <table>
         <thead>
-            <tr>
-                <th>기능 영역</th>
-                <th>세부 기능</th>
-                <th>MVP 범위</th>
-                <th>비고</th>
-            </tr>
+            <tr><th>기능 영역</th><th>세부 기능</th><th>MVP 범위</th><th>비고</th></tr>
         </thead>
         <tbody>
-            <tr>
-                <td>인증</td>
-                <td>로그인 / 로그아웃</td>
-                <td><span class="badge badge-mvp">MVP포함</span></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>인증</td>
-                <td>이메일 회원가입</td>
-                <td><span class="badge badge-mvp">MVP포함</span></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>인증</td>
-                <td>소셜 로그인 (Google)</td>
-                <td><span class="badge badge-discuss">협의필요</span></td>
-                <td>구현 공수 vs 사용성 판단 필요</td>
-            </tr>
-            <tr>
-                <td>인증</td>
-                <td>이메일 인증 절차</td>
-                <td><span class="badge badge-next">차기</span></td>
-                <td>MVP에서 생략 가능</td>
-            </tr>
-            <tr>
-                <td>과제</td>
-                <td>과제 등록</td>
-                <td><span class="badge badge-mvp">MVP포함</span></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>과제</td>
-                <td>학생 링크 공유 방식</td>
-                <td><span class="badge badge-mvp">MVP포함</span></td>
-                <td>이메일 초대는 차기</td>
-            </tr>
-            <tr>
-                <td>과제</td>
-                <td>과제 수정 / 삭제</td>
-                <td><span class="badge badge-discuss">협의필요</span></td>
-                <td>제출 후 수정 정책 복잡 (OI-04)</td>
-            </tr>
-            <tr>
-                <td>과제</td>
-                <td>제출 현황 조회</td>
-                <td><span class="badge badge-mvp">MVP포함</span></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>에디터</td>
-                <td>Verihum 기본 에디터</td>
-                <td><span class="badge badge-mvp">MVP포함</span></td>
-                <td>핵심 기능</td>
-            </tr>
-            <tr>
-                <td>에디터</td>
-                <td>작성 로그 수집기 (Client)</td>
-                <td><span class="badge badge-mvp">MVP포함</span></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>에디터</td>
-                <td>AI 어시스턴트 기능</td>
-                <td><span class="badge badge-discuss">협의필요</span></td>
-                <td>구현 복잡도 높음, OI-05 결정 시급</td>
-            </tr>
-            <tr>
-                <td>에디터</td>
-                <td>임시저장</td>
-                <td><span class="badge badge-discuss">협의필요</span></td>
-                <td>자동 vs 수동 저장 (OI-07)</td>
-            </tr>
-            <tr>
-                <td>리포트</td>
-                <td>개별 분석 리포트 열람</td>
-                <td><span class="badge badge-mvp">MVP포함</span></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>리포트</td>
-                <td>작성 과정 리플레이</td>
-                <td><span class="badge badge-discuss">협의필요</span></td>
-                <td>구현 방식 확정 후 공수 산정 필요 (OI-11)</td>
-            </tr>
-            <tr>
-                <td>리포트</td>
-                <td>학생 본인 결과 확인</td>
-                <td><span class="badge badge-next">차기</span></td>
-                <td>MVP는 교사 평가 도구에 집중</td>
-            </tr>
-            <tr>
-                <td>관리자</td>
-                <td>교사 목록 및 등록 (SCR-ADMIN-01)</td>
-                <td><span class="badge badge-mvp">MVP포함</span></td>
-                <td>BN System 내부 운영자 전용</td>
-            </tr>
-            <tr>
-                <td>관리자</td>
-                <td>교사별 현황 조회 (SCR-ADMIN-02)</td>
-                <td><span class="badge badge-mvp">MVP포함</span></td>
-                <td>과제·학생 제출 상태 읽기 전용</td>
-            </tr>
-            <tr>
-                <td>관리자</td>
-                <td>통계 대시보드 / 요금제 관리</td>
-                <td><span class="badge badge-next">차기</span></td>
-                <td>고도화 기능</td>
-            </tr>
-            <tr>
-                <td>시스템</td>
-                <td>외부 API 연동</td>
-                <td><span class="badge badge-next">차기</span></td>
-                <td>LMS 플러그인 등</td>
-            </tr>
-            <tr>
-                <td>시스템</td>
-                <td>요금제 / 결제 모듈</td>
-                <td><span class="badge badge-next">차기</span></td>
-                <td></td>
-            </tr>
+            <tr><td>인증</td><td>로그인 / 로그아웃</td><td><span class="badge badge-mvp">MVP포함</span></td><td></td></tr>
+            <tr><td>인증</td><td>이메일 회원가입</td><td><span class="badge badge-mvp">MVP포함</span></td><td></td></tr>
+            <tr><td>인증</td><td>소셜 로그인 (Google)</td><td><span class="badge badge-discuss">협의필요</span></td><td>구현 공수 vs 사용성 판단 필요</td></tr>
+            <tr><td>인증</td><td>이메일 인증 절차</td><td><span class="badge badge-next">차기</span></td><td>MVP에서 생략 가능</td></tr>
+            <tr><td>과제</td><td>과제 등록</td><td><span class="badge badge-mvp">MVP포함</span></td><td></td></tr>
+            <tr><td>과제</td><td>학생 링크 공유 방식</td><td><span class="badge badge-mvp">MVP포함</span></td><td>이메일 초대는 차기</td></tr>
+            <tr><td>과제</td><td>과제 수정 / 삭제</td><td><span class="badge badge-discuss">협의필요</span></td><td>제출 후 수정 정책 복잡 (OI-04)</td></tr>
+            <tr><td>과제</td><td>제출 현황 조회</td><td><span class="badge badge-mvp">MVP포함</span></td><td></td></tr>
+            <tr><td>에디터</td><td>Verihum 기본 에디터</td><td><span class="badge badge-mvp">MVP포함</span></td><td>핵심 기능</td></tr>
+            <tr><td>에디터</td><td>작성 로그 수집기 (Client)</td><td><span class="badge badge-mvp">MVP포함</span></td><td></td></tr>
+            <tr><td>에디터</td><td>AI 어시스턴트 기능</td><td><span class="badge badge-discuss">협의필요</span></td><td>구현 복잡도 높음, OI-05 결정 시급</td></tr>
+            <tr><td>에디터</td><td>임시저장</td><td><span class="badge badge-discuss">협의필요</span></td><td>자동 vs 수동 저장 (OI-07)</td></tr>
+            <tr><td>리포트</td><td>개별 분석 리포트 열람</td><td><span class="badge badge-mvp">MVP포함</span></td><td></td></tr>
+            <tr><td>리포트</td><td>작성 과정 리플레이</td><td><span class="badge badge-discuss">협의필요</span></td><td>구현 방식 확정 후 공수 산정 필요 (OI-11)</td></tr>
+            <tr><td>리포트</td><td>학생 본인 결과 확인</td><td><span class="badge badge-next">차기</span></td><td>MVP는 교사 평가 도구에 집중</td></tr>
+            <tr><td>관리자</td><td>교사 목록 및 등록 (SCR-ADMIN-01)</td><td><span class="badge badge-mvp">MVP포함</span></td><td>BN System 내부 운영자 전용</td></tr>
+            <tr><td>관리자</td><td>교사별 현황 조회 (SCR-ADMIN-02)</td><td><span class="badge badge-mvp">MVP포함</span></td><td>과제·학생 제출 상태 읽기 전용</td></tr>
+            <tr><td>관리자</td><td>통계 대시보드 / 요금제 관리</td><td><span class="badge badge-next">차기</span></td><td>고도화 기능</td></tr>
+            <tr><td>시스템</td><td>외부 API 연동</td><td><span class="badge badge-next">차기</span></td><td>LMS 플러그인 등</td></tr>
+            <tr><td>시스템</td><td>요금제 / 결제 모듈</td><td><span class="badge badge-next">차기</span></td><td></td></tr>
         </tbody>
     </table>
+    </div>
 
     <!-- SECTION 7 -->
     <span class="section-label">Section 7</span>
     <h2 id="sec-7">오픈 이슈 / 협의 필요 항목</h2>
 
+    <div class="table-wrap">
     <table>
         <thead>
             <tr>
@@ -1416,160 +1254,55 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>OI-01</td>
-                <td>인증</td>
-                <td>이메일 인증(Verification) 절차를 MVP에 포함할 것인지 결정</td>
-                <td><span class="badge badge-med">중</span></td>
-                <td><span class="badge badge-open">미결</span></td>
-            </tr>
-            <tr>
-                <td>OI-02</td>
-                <td>인증</td>
-                <td>학교 현장성을 고려한 Google Workspace 소셜 로그인 MVP 적용 여부</td>
-                <td><span class="badge badge-med">중</span></td>
-                <td><span class="badge badge-open">미결</span></td>
-            </tr>
-            <tr>
-                <td>OI-03</td>
-                <td>과제</td>
-                <td>학생 배정 프로세스: 공유 링크 전달 vs 특정 이메일 지정 초대 방식</td>
-                <td><span class="badge badge-high">상</span></td>
-                <td><span class="badge badge-open">미결</span></td>
-            </tr>
-            <tr>
-                <td>OI-04</td>
-                <td>과제</td>
-                <td>과제 수정 불가 정책 유지 여부 (학생이 1명이라도 작성 시작 시 수정/삭제 락 적용)</td>
-                <td><span class="badge badge-high">상</span></td>
-                <td><span class="badge badge-open">미결</span></td>
-            </tr>
-            <tr>
-                <td>OI-05</td>
-                <td>에디터</td>
-                <td><strong>에디터 내 AI 어시스턴트 기능의 MVP 스펙 포함 여부 최종 결정</strong></td>
-                <td><span class="badge badge-highest">최상</span></td>
-                <td><span class="badge badge-open">미결</span></td>
-            </tr>
-            <tr>
-                <td>OI-06</td>
-                <td>에디터</td>
-                <td>AI 도움 기능 제공 시 백엔드 AI 모델 공급사 선정 (OpenAI GPT, Claude 등)</td>
-                <td><span class="badge badge-high">상</span></td>
-                <td><span class="badge badge-open">미결</span></td>
-            </tr>
-            <tr>
-                <td>OI-07</td>
-                <td>에디터</td>
-                <td>임시저장 방식: 주기적 자동저장 구현 vs 수동 저장 버튼 제공</td>
-                <td><span class="badge badge-med">중</span></td>
-                <td><span class="badge badge-open">미결</span></td>
-            </tr>
-            <tr>
-                <td>OI-08</td>
-                <td>에디터</td>
-                <td>제출 완료 후 재작성/수정 허용 여부 및 이전 로그 처리 정책</td>
-                <td><span class="badge badge-high">상</span></td>
-                <td><span class="badge badge-open">미결</span></td>
-            </tr>
-            <tr>
-                <td>OI-09</td>
-                <td>리포트</td>
-                <td>최종 인증 결과 라벨링 정의 (VERIFIED / WARNING / INCONCLUSIVE 3단계 타당성)</td>
-                <td><span class="badge badge-high">상</span></td>
-                <td><span class="badge badge-open">미결</span></td>
-            </tr>
-            <tr>
-                <td>OI-10</td>
-                <td>리포트</td>
-                <td>인증 결과 및 점수를 학생 본인에게도 화면에 표시할 것인지 여부</td>
-                <td><span class="badge badge-med">중</span></td>
-                <td><span class="badge badge-open">미결</span></td>
-            </tr>
-            <tr>
-                <td>OI-11</td>
-                <td>리플레이</td>
-                <td>리플레이 플레이어 렌더링 방식 확정 (방식에 따라 개발 리소스 큰 차이)</td>
-                <td><span class="badge badge-high">상</span></td>
-                <td><span class="badge badge-open">미결</span></td>
-            </tr>
-            <tr>
-                <td>OI-12</td>
-                <td>기술</td>
-                <td><strong>수집할 작성 로그의 세부 구조 정의 (특허 방어 목적의 외부 노출 방지책 포함)</strong></td>
-                <td><span class="badge badge-highest">최상</span></td>
-                <td><span class="badge badge-tech">기술팀</span></td>
-            </tr>
-            <tr>
-                <td>OI-13</td>
-                <td>인프라</td>
-                <td>고빈도 이벤트 로그(ProcessLogs) 저장을 위한 최적 데이터베이스 선정 (RDB vs NoSQL)</td>
-                <td><span class="badge badge-med">중</span></td>
-                <td><span class="badge badge-tech">기술팀</span></td>
-            </tr>
+            <tr><td>OI-01</td><td>인증</td><td>이메일 인증(Verification) 절차를 MVP에 포함할 것인지 결정</td><td><span class="badge badge-med">중</span></td><td><span class="badge badge-open">미결</span></td></tr>
+            <tr><td>OI-02</td><td>인증</td><td>학교 현장성을 고려한 Google Workspace 소셜 로그인 MVP 적용 여부</td><td><span class="badge badge-med">중</span></td><td><span class="badge badge-open">미결</span></td></tr>
+            <tr><td>OI-03</td><td>과제</td><td>학생 배정 프로세스: 공유 링크 전달 vs 특정 이메일 지정 초대 방식</td><td><span class="badge badge-high">상</span></td><td><span class="badge badge-open">미결</span></td></tr>
+            <tr><td>OI-04</td><td>과제</td><td>과제 수정 불가 정책 유지 여부 (학생이 1명이라도 작성 시작 시 수정/삭제 락 적용)</td><td><span class="badge badge-high">상</span></td><td><span class="badge badge-open">미결</span></td></tr>
+            <tr><td>OI-05</td><td>에디터</td><td><strong>에디터 내 AI 어시스턴트 기능의 MVP 스펙 포함 여부 최종 결정</strong></td><td><span class="badge badge-highest">최상</span></td><td><span class="badge badge-open">미결</span></td></tr>
+            <tr><td>OI-06</td><td>에디터</td><td>AI 도움 기능 제공 시 백엔드 AI 모델 공급사 선정 (OpenAI GPT, Claude 등)</td><td><span class="badge badge-high">상</span></td><td><span class="badge badge-open">미결</span></td></tr>
+            <tr><td>OI-07</td><td>에디터</td><td>임시저장 방식: 주기적 자동저장 구현 vs 수동 저장 버튼 제공</td><td><span class="badge badge-med">중</span></td><td><span class="badge badge-open">미결</span></td></tr>
+            <tr><td>OI-08</td><td>에디터</td><td>제출 완료 후 재작성/수정 허용 여부 및 이전 로그 처리 정책</td><td><span class="badge badge-high">상</span></td><td><span class="badge badge-open">미결</span></td></tr>
+            <tr><td>OI-09</td><td>리포트</td><td>최종 인증 결과 라벨링 정의 (VERIFIED / WARNING / INCONCLUSIVE 3단계 타당성)</td><td><span class="badge badge-high">상</span></td><td><span class="badge badge-open">미결</span></td></tr>
+            <tr><td>OI-10</td><td>리포트</td><td>인증 결과 및 점수를 학생 본인에게도 화면에 표시할 것인지 여부</td><td><span class="badge badge-med">중</span></td><td><span class="badge badge-open">미결</span></td></tr>
+            <tr><td>OI-11</td><td>리플레이</td><td>리플레이 플레이어 렌더링 방식 확정 (방식에 따라 개발 리소스 큰 차이)</td><td><span class="badge badge-high">상</span></td><td><span class="badge badge-open">미결</span></td></tr>
+            <tr><td>OI-12</td><td>기술</td><td><strong>수집할 작성 로그의 세부 구조 정의 (특허 방어 목적의 외부 노출 방지책 포함)</strong></td><td><span class="badge badge-highest">최상</span></td><td><span class="badge badge-tech">기술팀</span></td></tr>
+            <tr><td>OI-13</td><td>인프라</td><td>고빈도 이벤트 로그(ProcessLogs) 저장을 위한 최적 데이터베이스 선정 (RDB vs NoSQL)</td><td><span class="badge badge-med">중</span></td><td><span class="badge badge-tech">기술팀</span></td></tr>
         </tbody>
     </table>
+    </div>
 
     <!-- SECTION 8 -->
     <span class="section-label">Section 8</span>
     <h2 id="sec-8">개발 참고 사항</h2>
 
     <h3>8.1 기술 스택 제안 (초안 — 기술팀 조율 요망)</h3>
+    <div class="table-wrap">
     <table>
         <thead>
-            <tr>
-                <th>분야</th>
-                <th>권장 스택 제안</th>
-                <th>비고</th>
-            </tr>
+            <tr><th>분야</th><th>권장 스택 제안</th><th>비고</th></tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Frontend</td>
-                <td>React.js / Next.js</td>
-                <td>에디터 및 리플레이어 개발 용이성 고려 (SPA 형태 유지)</td>
-            </tr>
-            <tr>
-                <td>Backend</td>
-                <td>Node.js (Express) or Python (FastAPI)</td>
-                <td>AI 모듈 연동 및 대규모 로그 처리 성능 고려</td>
-            </tr>
-            <tr>
-                <td>Database</td>
-                <td>PostgreSQL</td>
-                <td>메인 서비스 RDB</td>
-            </tr>
-            <tr>
-                <td>Log Storage</td>
-                <td>MongoDB or Elasticsearch</td>
-                <td>초당 발생하는 타임스탬프 로깅 데이터 분리 저장</td>
-            </tr>
-            <tr>
-                <td>AI 연동</td>
-                <td>OpenAI API (GPT-4o)</td>
-                <td>분석 코어 및 에디터 내 AI 어시스턴트용 (OI-06 연계)</td>
-            </tr>
-            <tr>
-                <td>Hosting</td>
-                <td>AWS / Vercel + AWS 혼합</td>
-                <td>Vercel(FE) + AWS(BE/DB) 혼합 구성 가능성 고려</td>
-            </tr>
+            <tr><td>Frontend</td><td>React.js / Next.js</td><td>에디터 및 리플레이어 개발 용이성 고려 (SPA 형태 유지)</td></tr>
+            <tr><td>Backend</td><td>Node.js (Express) or Python (FastAPI)</td><td>AI 모듈 연동 및 대규모 로그 처리 성능 고려</td></tr>
+            <tr><td>Database</td><td>PostgreSQL</td><td>메인 서비스 RDB</td></tr>
+            <tr><td>Log Storage</td><td>MongoDB or Elasticsearch</td><td>초당 발생하는 타임스탬프 로깅 데이터 분리 저장</td></tr>
+            <tr><td>AI 연동</td><td>OpenAI API (GPT-4o)</td><td>분석 코어 및 에디터 내 AI 어시스턴트용 (OI-06 연계)</td></tr>
+            <tr><td>Hosting</td><td>AWS / Vercel + AWS 혼합</td><td>Vercel(FE) + AWS(BE/DB) 혼합 구성 가능성 고려</td></tr>
         </tbody>
     </table>
+    </div>
 
     <h3>8.2 특허 보호 관련 개발 주의사항</h3>
     <div class="danger-box">
         <strong>특허 보호 관련 개발 주의사항 (Strict Warning)</strong><br><br>
-        AI 작성 여부를 판별하는 핵심 기준 — 타이핑 속도, 타이핑 리듬, 키 입력 패턴 간격, 수정 흐름, 붙여넣기 패턴 감지
-        방식 등 — 은 당사의 주요 지식재산권으로 현재 특허 출원 진행 단계에 있습니다.<br><br>
-        따라서 프론트엔드 소스 코드 내 로직의 직접적 노출, API 응답(Response) 바디를 통한 원시 수치 데이터 전달, 화면 UI
-        상의 수치 표기를 엄격히 금지합니다. 데이터 암호화 및 제너럴 표현 변환 처리는 서버 사이드에서 완료 후 프론트엔드로
-        전달해야 합니다. 상세 구현 전 반드시 기술총괄팀의 검토를 득하시기 바랍니다.
+        AI 작성 여부를 판별하는 핵심 기준 — 타이핑 속도, 타이핑 리듬, 키 입력 패턴 간격, 수정 흐름, 붙여넣기 패턴 감지 방식 등 — 은 당사의 주요 지식재산권으로 현재 특허 출원 진행 단계에 있습니다.<br><br>
+        따라서 프론트엔드 소스 코드 내 로직의 직접적 노출, API 응답(Response) 바디를 통한 원시 수치 데이터 전달, 화면 UI 상의 수치 표기를 엄격히 금지합니다. 데이터 암호화 및 제너럴 표현 변환 처리는 서버 사이드에서 완료 후 프론트엔드로 전달해야 합니다. 상세 구현 전 반드시 기술총괄팀의 검토를 득하시기 바랍니다.
     </div>
 
     <!-- SECTION 9 -->
     <span class="section-label">Section 9</span>
     <h2 id="sec-9">변경 이력</h2>
+    <div class="table-wrap">
     <table>
         <thead>
             <tr>
@@ -1588,19 +1321,12 @@
             </tr>
         </tbody>
     </table>
+    </div>
 
     <footer>
         <div>© 2026 BN System. All rights reserved.</div>
-        <div><span class="badge badge-draft" style="margin-left: 8px">V0.1 DRAFT</span>
-        </div>
+        <div><span class="badge badge-draft" style="margin-left: 8px">V0.1 DRAFT</span></div>
     </footer>
-
-
-    <script defer
-        src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516"
-        integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg=="
-        data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
-        crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -299,7 +299,7 @@
 .og-card-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .og-card-avatar-ph {
   width: 26px; height: 26px;
-  background: url('../../../../../../common_assets/icons/user-circle.png') no-repeat center / contain;
+  background: url('../../icons/user-circle.png') no-repeat center / contain;
   opacity: 0.25;
 }
 .og-card-info { flex: 1; min-width: 0; }
@@ -363,7 +363,7 @@
 .og-photo-badge {
   display: inline-block;
   width: 14px; height: 14px;
-  background: url('../../../../../../common_assets/icons/photograph.png') no-repeat center / contain;
+  background: url('../../icons/photograph.png') no-repeat center / contain;
   opacity: 0.45;
   vertical-align: middle;
   margin-left: 5px;

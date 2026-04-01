@@ -115,7 +115,7 @@ body {
 .arrow {
   display: inline-block;
   width: 14px; height: 14px;
-  background: url('../../../../../common_assets/icons/chevron-down.png') no-repeat center / 12px 12px;
+  background: url('../icons/chevron-down.png') no-repeat center / 12px 12px;
   opacity: 0.45;
   transition: transform .2s, opacity .2s;
   flex-shrink: 0;

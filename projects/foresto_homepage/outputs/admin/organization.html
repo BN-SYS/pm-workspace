@@ -241,7 +241,7 @@
       <div class="admin-topbar">
         <h1 class="admin-page-title">조직도 / 임원진 관리</h1>
         <div class="admin-topbar-actions">
-          <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../../../../common_assets/icons/refresh.png" alt="새로고침"></button>
+          <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../assets/icons/refresh.png" alt="새로고침"></button>
           <button class="btn btn-primary btn-sm" onclick="OrgAdmin.saveAll()">전체 저장</button>
         </div>
       </div>
@@ -256,7 +256,7 @@
           <label class="org-img-box" id="orgImgBox" onclick="document.getElementById('orgImgFile').click()">
             <img id="orgImgPreview" alt="조직도 미리보기">
             <div class="org-img-placeholder" id="orgImgPlaceholder">
-              <img class="ico" src="../../../../common_assets/icons/photograph.png" alt="">
+              <img class="ico" src="../assets/icons/photograph.png" alt="">
               <p>클릭하여 이미지 선택<br><span style="font-size:11px">JPG · PNG · SVG | 권장: 1200×800px 이상</span></p>
             </div>
             <input type="file" id="orgImgFile" accept="image/*" onchange="OrgAdmin.previewOrgImg(this)">
@@ -310,7 +310,7 @@
             <div class="og-img-preview-wrap" id="ogImgWrap" onclick="document.getElementById('ogImgFile').click()">
               <img class="og-preview-img" id="ogImgPreviewModal" alt="">
               <div class="og-img-preview-ph" id="ogImgPh">
-                <img src="../../../../common_assets/icons/user-circle.png" alt="">
+                <img src="../assets/icons/user-circle.png" alt="">
                 <span>사진 선택</span>
               </div>
             </div>
@@ -517,7 +517,7 @@
           photoHtml = `
             <div class="og-photo-cell">
               <div class="og-thumb-ph">
-                <img src="../../../../common_assets/icons/user.png" alt="">
+                <img src="../assets/icons/user.png" alt="">
               </div>
             </div>`;
         }
