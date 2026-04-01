@@ -29,9 +29,12 @@
   flex-direction: column;
 }
 
-/* fixed 헤더 높이만큼 본문 상단 보정 */
+/* fixed 헤더 높이만큼 본문 상단 보정 + sticky footer */
 body {
   padding-top: var(--header-h);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── row 1: 사이트맵 + 글자크기 (px 단위 고정 → 폰트 크기 변경 시 위치 불변) */

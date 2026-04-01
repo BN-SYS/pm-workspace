@@ -39,17 +39,11 @@
       <!-- 목록 상단 -->
       <div class="list-top">
         <span class="list-count">Total <strong id="archiveCount">0</strong>건</span>
-        <div class="list-top-right">
-          <select class="list-search-type" id="archiveSortSelect"
-                  onchange="ArchiveCtrl.changeSort(this.value)">
-            <option value="latest">최신순</option>
-          </select>
-          <div class="list-search">
+        <div class="list-search">
             <input type="text" class="list-search-input" id="archiveKeyword" placeholder="검색어를 입력하세요"
               onkeydown="if(event.key==='Enter') ArchiveCtrl.search()">
             <button class="list-search-btn" onclick="ArchiveCtrl.search()">검색</button>
           </div>
-        </div>
       </div>
 
       <div class="table-wrap">

@@ -33,6 +33,9 @@
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 40px;
+  flex: 1;          /* body flex-column 환경에서 남은 공간 채워 푸터를 하단 고정 */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ── 탭 네비게이션 바 ──────────────────────────── */

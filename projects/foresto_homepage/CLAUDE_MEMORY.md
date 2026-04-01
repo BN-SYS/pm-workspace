@@ -128,3 +128,6 @@ git push 전 반드시 확인:
 | 2026-03-31 | 교육과정·회원아카데미 접수중 1개 보장 — IIFE에 타입별 hasOpen 체크, 없으면 첫 항목 from/to를 오늘 기준 -7~+14일로 동적 조정 | education.js |
 | 2026-04-01 | 갤러리 회원 작성 기능 추가 — 로그인 회원 글쓰기 버튼 노출, gallery-write.html 신규 (이미지 최대 10장, 첫 장 대표 이미지, 미리보기 그리드) | community/gallery.html, community/gallery-write.html |
 | 2026-04-01 | 강사신청 폼→일정 기반으로 전환 — 사용자: 일정목록(instructor.html)/상세+신청모달(instructor-detail.html 신규), 관리자: 일정관리(instructor-schedule.html 신규)/일정등록수정(instructor-schedule-edit.html 신규)/신청자관리(apply-instructor.html 일정필터+배너 개편), admin.js nav에 강사신청 일정관리 추가, education.js 강사활동 타입(7000+) 추가 | member/instructor.html, member/instructor-detail.html, admin/instructor-schedule.html, admin/instructor-schedule-edit.html, admin/apply-instructor.html, admin.js, education.js |
+| 2026-04-01 | FAQ 실제 콘텐츠 4개 교체, 답변 포매터(formatAnswer) 추가 — ▣/숫자/별표 굵게+크게, ※ 회색소형, - 들여쓰기 | education/faq.html |
+| 2026-04-01 | 갤러리 글쓰기 단순화 — 에디터 내 첫 이미지=썸네일, 별도 이미지 업로드 영역 제거, 이미지 없으면 기본이미지 | community/gallery-write.html |
+| 2026-04-01 | 코드 품질 리팩토링 — reset.css 중복 링크 61개 파일 제거(common.css @import 중복), variables.css 중복 1건, 샘플 데이터 전체 3건으로 축소(education 7타입/community 6종/member 6종) | 전 HTML 61개, education.js, community.js, member.js |
