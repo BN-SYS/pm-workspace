@@ -59,7 +59,8 @@
       "Bash(do rel=\"$f#$BASE/\" if grep -q \"variables.css\" \"$f\")",
       "Bash(BASE=\"c:/Users/BN659/Desktop/배은아/기획PM/projects/foresto_homepage/outputs\" __NEW_LINE_330001f5433e2d36__ echo \"=== reset.css 별도 로드 중복 \\(common.css에 이미 @import됨\\) ===\" find \"$BASE\" -not -path \"*/admin/*\" -name \"*.html\")",
       "Bash(do rel=\"$f#$BASE/\" if grep -q \"reset.css\" \"$f\")",
-      "Bash(done echo:*)"
+      "Bash(done echo:*)",
+      "Bash(grep -h \"src=\" /c/Users/BN659/Desktop/배은아/기획PM/projects/foresto_homepage/outputs/admin/*.html)"
     ]
   }
 }
