@@ -1,696 +1,1725 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>한국숲해설가협회 — SB v1.0</title>
-<style>
-/* ── Reset & Base ───────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --green-dark:  #1b3a24;
-  --green-main:  #2d6a3f;
-  --green-light: #4a9e5c;
-  --green-pale:  #eef5f0;
-  --admin-dark:  #1a2a4a;
-  --admin-main:  #2b4275;
-  --admin-light: #4a6fa5;
-  --admin-pale:  #eef1f8;
-  --gray-dark:   #1e2329;
-  --gray-mid:    #4a5568;
-  --gray-light:  #e2e8f0;
-  --gray-bg:     #f7f8fa;
-  --white:       #ffffff;
-  --text:        #2d3748;
-  --text-sm:     #718096;
-  --radius:      8px;
-  --shadow:      0 2px 12px rgba(0,0,0,.08);
-  --shadow-lg:   0 8px 32px rgba(0,0,0,.16);
-  --sidebar-w:   200px;
-  --header-h:    60px;
-}
-body { font-family: 'Pretendard', 'Noto Sans KR', sans-serif; background: var(--gray-bg); color: var(--text); line-height: 1.6; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>한국숲해설가협회 — SB v1.0</title>
+  <style>
+    /* ── Reset & Base ───────────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-/* ── Layout ─────────────────────────────────────────── */
-#app { display: flex; min-height: 100vh; }
+    :root {
+      --green-dark: #1b3a24;
+      --green-main: #2d6a3f;
+      --green-light: #4a9e5c;
+      --green-pale: #eef5f0;
+      --admin-dark: #1a2a4a;
+      --admin-main: #2b4275;
+      --admin-light: #4a6fa5;
+      --admin-pale: #eef1f8;
+      --doc-dark: #8b6914;
+      --doc-main: #c0975c;
+      --doc-light: #d4b27a;
+      --doc-pale: #fdf6e3;
+      --gray-dark: #1e2329;
+      --gray-mid: #4a5568;
+      --gray-light: #e2e8f0;
+      --gray-bg: #f7f8fa;
+      --white: #ffffff;
+      --text: #2d3748;
+      --text-sm: #718096;
+      --radius: 8px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, .08);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, .16);
+      --sidebar-w: 200px;
+      --sidebar-min-w: 60px;
+      --sidebar-max-w: 200px;
+      --panel-w: 380px;
+      --panel-min-w: 250px;
+      --panel-max-w: 700px;
+      --header-h: 56px;
+    }
 
-/* sidebar */
-#sidebar {
-  width: var(--sidebar-w); flex-shrink: 0;
-  background: var(--gray-dark); color: #c8d0db;
-  display: flex; flex-direction: column;
-  position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto; z-index: 100;
-}
-.sb-header { padding: 24px 20px 16px; border-bottom: 1px solid rgba(255,255,255,.08); }
-.sb-header h1 { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.4; }
-.sb-header p { font-size: 11px; color: #8899aa; margin-top: 4px; }
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+    }
 
-.sb-search { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,.06); }
-.sb-search input {
-  width: 100%; padding: 7px 10px; border-radius: 6px;
-  border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.06);
-  color: #e0e6ed; font-size: 12px; outline: none;
-}
-.sb-search input::placeholder { color: #5a6a7a; }
-.sb-search input:focus { border-color: var(--green-light); background: rgba(255,255,255,.1); }
+    body {
+      font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+      background: var(--gray-bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
 
-.sb-section-title {
-  padding: 14px 16px 6px; font-size: 10px; font-weight: 700;
-  color: #5a6a7a; letter-spacing: .08em; text-transform: uppercase;
-}
-.sb-group { margin-bottom: 4px; }
-.sb-group-label {
-  padding: 6px 16px; font-size: 11px; font-weight: 600; color: #8899aa;
-  cursor: pointer; display: flex; align-items: center; justify-content: space-between;
-  transition: color .15s;
-}
-.sb-group-label:hover { color: #c0ccd8; }
-.sb-group-label .arrow { font-size: 9px; transition: transform .2s; }
-.sb-group-label.open .arrow { transform: rotate(90deg); }
-.sb-group-items { display: none; }
-.sb-group-items.visible { display: block; }
-.sb-item {
-  padding: 5px 16px 5px 28px; font-size: 12px; cursor: pointer;
-  display: flex; align-items: center; gap: 6px; transition: background .1s, color .1s;
-  border-radius: 0;
-}
-.sb-item:hover { background: rgba(255,255,255,.06); color: #fff; }
-.sb-item.active { background: rgba(77,160,100,.15); color: #6dcf8e; }
-.sb-item .num { font-size: 10px; color: #5a6a7a; min-width: 24px; }
-.sb-item.active .num { color: #4a9e5c; }
+    /* ── App Shell ──────────────────────────────────────── */
+    #app {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-.sb-stats { padding: 16px; margin-top: auto; border-top: 1px solid rgba(255,255,255,.06); font-size: 11px; color: #5a6a7a; }
-.sb-stats span { color: #8899aa; }
+    /* ── Sidebar ────────────────────────────────────────── */
+    #sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      min-width: var(--sidebar-min-w);
+      max-width: var(--sidebar-max-w);
+      background: var(--gray-dark);
+      color: #c8d0db;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      z-index: 100;
+      position: relative;
+    }
 
-/* main content */
-#main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .sb-header {
+      padding: 20px 16px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+    }
 
-/* top bar */
-#topbar {
-  height: var(--header-h); background: var(--white);
-  border-bottom: 1px solid var(--gray-light); padding: 0 28px;
-  display: flex; align-items: center; gap: 16px;
-  position: sticky; top: 0; z-index: 50;
-  box-shadow: 0 1px 4px rgba(0,0,0,.06);
-}
-#sectionBadge {
-  font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
-  background: var(--green-pale); color: var(--green-main);
-}
-#sectionBadge.admin { background: var(--admin-pale); color: var(--admin-main); }
-#topbarTitle { font-size: 15px; font-weight: 700; color: var(--text); }
-#topbarSub { font-size: 12px; color: var(--text-sm); }
-.topbar-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
-.btn-filter {
-  padding: 5px 14px; border-radius: 6px; border: 1px solid var(--gray-light);
-  background: var(--white); font-size: 12px; color: var(--text-sm); cursor: pointer; transition: all .15s;
-}
-.btn-filter:hover, .btn-filter.active { background: var(--green-pale); color: var(--green-main); border-color: var(--green-light); }
-.btn-filter.admin.active { background: var(--admin-pale); color: var(--admin-main); border-color: var(--admin-light); }
-#viewToggle { display: flex; border: 1px solid var(--gray-light); border-radius: 6px; overflow: hidden; }
-#viewToggle button { padding: 5px 10px; border: none; background: var(--white); cursor: pointer; font-size: 13px; color: var(--text-sm); }
-#viewToggle button.active { background: var(--green-pale); color: var(--green-main); }
+    .sb-header h1 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.4;
+      word-wrap: break-word;
+      word-break: keep-all;
+    }
 
-/* content area */
-#content { padding: 24px 28px; flex: 1; }
+    .sb-header p {
+      font-size: 12px;
+      color: #8899aa;
+      margin-top: 3px;
+    }
 
-/* group section */
-.group-section { margin-bottom: 40px; }
-.group-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--gray-light); }
-.group-name { font-size: 16px; font-weight: 700; color: var(--text); }
-.group-count { font-size: 12px; color: var(--text-sm); background: var(--gray-light); padding: 2px 8px; border-radius: 10px; }
-.group-section.admin-group .group-header { border-bottom-color: var(--admin-light); }
-.group-section.admin-group .group-name { color: var(--admin-dark); }
+    .sb-section-title {
+      padding: 12px 14px 5px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #5a6a7a;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      word-wrap: break-word;
+      word-break: keep-all;
+    }
 
-/* card grid */
-.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-.card-grid.list-view { grid-template-columns: 1fr; }
+    .sb-group {
+      margin-bottom: 2px;
+    }
 
-/* page card */
-.page-card {
-  background: var(--white); border-radius: var(--radius); overflow: hidden;
-  box-shadow: var(--shadow); border: 1px solid var(--gray-light);
-  cursor: pointer; transition: box-shadow .2s, transform .15s;
-  display: flex; flex-direction: column;
-}
-.page-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
-.card-grid.list-view .page-card { flex-direction: row; }
+    .sb-group-label {
+      padding: 5px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #8899aa;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: color .15s;
+      gap: 4px;
+      word-wrap: break-word;
+      word-break: keep-all;
+    }
 
-.card-thumb {
-  width: 100%; aspect-ratio: 16/9; background: #e8edf2; overflow: hidden;
-  position: relative; flex-shrink: 0;
-}
-.card-grid.list-view .card-thumb { width: 200px; aspect-ratio: unset; height: 120px; }
-.card-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
-.card-thumb .no-img {
-  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: 6px; color: #a0aec0; font-size: 12px;
-}
-.card-thumb .no-img .icon { font-size: 28px; }
+    .sb-group-label:hover {
+      color: #c0ccd8;
+    }
 
-.card-body { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
-.card-num { font-size: 10px; font-weight: 700; color: var(--green-main); font-family: monospace; }
-.admin-group .card-num { color: var(--admin-main); }
-.card-title { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
-.card-path { font-size: 11px; color: var(--text-sm); font-family: monospace; background: var(--gray-bg); padding: 3px 7px; border-radius: 4px; }
-.card-desc { font-size: 12px; color: var(--text-sm); line-height: 1.5; margin-top: 4px; flex: 1; }
-.card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-.tag {
-  font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 600;
-}
-.tag.auth { background: #fff3e0; color: #e65100; }
-.tag.admin-only { background: #e8eaf6; color: #3949ab; }
-.tag.member-only { background: #e8f5e9; color: #2e7d32; }
-.tag.write { background: #fce4ec; color: #c62828; }
-.tag.modal { background: #f3e5f5; color: #6a1b9a; }
-.tag.list { background: #e3f2fd; color: #1565c0; }
-.tag.form { background: #fff8e1; color: #f57f17; }
-.tag.detail { background: #e0f7fa; color: #006064; }
+    .sb-group-label .arrow {
+      font-size: 11px;
+      transition: transform .2s;
+      flex-shrink: 0;
+    }
 
-/* modal */
-#imgModal {
-  display: none; position: fixed; inset: 0; z-index: 9999;
-  background: rgba(0,0,0,.85); align-items: center; justify-content: center;
-  padding: 24px;
-}
-#imgModal.open { display: flex; }
-#imgModal .modal-inner { max-width: 1400px; width: 100%; position: relative; }
-#imgModal img { width: 100%; max-height: 90vh; object-fit: contain; object-position: top; border-radius: 6px; }
-#imgModal .modal-close {
-  position: absolute; top: -16px; right: -16px; width: 36px; height: 36px;
-  background: var(--white); border-radius: 50%; border: none; cursor: pointer;
-  font-size: 18px; display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,.3);
-}
-#imgModal .modal-info { color: #e0e6ed; font-size: 13px; margin-top: 12px; text-align: center; }
+    .sb-group-label.open .arrow {
+      transform: rotate(90deg);
+    }
 
-/* empty */
-.empty-msg { text-align: center; padding: 60px 20px; color: var(--text-sm); }
+    .sb-group-items {
+      display: none;
+    }
 
-/* print */
-@media print {
-  #sidebar, #topbar .topbar-actions { display: none; }
-  #main { margin-left: 0; }
-  .page-card { break-inside: avoid; }
-}
-</style>
+    .sb-group-items.visible {
+      display: block;
+    }
+
+    .sb-item {
+      padding: 5px 14px 5px 26px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+      transition: background .1s, color .1s;
+      word-wrap: break-word;
+      word-break: keep-all;
+    }
+
+    .sb-item:hover {
+      background: rgba(255, 255, 255, .06);
+      color: #fff;
+    }
+
+    .sb-item.active {
+      background: rgba(77, 160, 100, .18);
+      color: #6dcf8e;
+    }
+
+    .sb-item[data-type="doc"].active {
+      background: rgba(192, 151, 92, .18);
+      color: #e0c68a;
+    }
+
+    
+
+    .sb-item.active .num {
+      color: #4a9e5c;
+    }
+
+    .sb-item span:last-child {
+      word-wrap: break-word;
+      word-break: keep-all;
+      line-height: 1.4;
+    }
+
+    .sb-stats {
+      padding: 10px 14px;
+      margin-top: auto;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      font-size: 12px;
+      color: #5a6a7a;
+      word-wrap: break-word;
+    }
+
+    .sb-stats span {
+      color: #8899aa;
+    }
+
+    /* ── Resize Handle (공통) ───────────────────────────── */
+    .resize-handle {
+      position: absolute;
+      top: 0;
+      width: 6px;
+      height: 100%;
+      cursor: col-resize;
+      z-index: 200;
+      background: transparent;
+      transition: background .15s;
+    }
+
+    .resize-handle:hover,
+    .resize-handle.active {
+      background: rgba(74, 158, 92, 0.4);
+    }
+
+    .resize-handle::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 2px;
+      height: 32px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, .2);
+      transition: background .15s;
+    }
+
+    .resize-handle:hover::after,
+    .resize-handle.active::after {
+      background: rgba(255, 255, 255, .5);
+    }
+
+    #sidebar-resize {
+      right: -3px;
+    }
+
+    #panel-resize {
+      left: -3px;
+    }
+
+    #panel-resize:hover,
+    #panel-resize.active {
+      background: rgba(43, 66, 117, 0.4);
+    }
+
+    #panel-resize::after {
+      background: rgba(0, 0, 0, .12);
+    }
+
+    #panel-resize:hover::after,
+    #panel-resize.active::after {
+      background: rgba(0, 0, 0, .3);
+    }
+
+    body.resizing {
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: col-resize !important;
+    }
+
+    body.resizing * {
+      cursor: col-resize !important;
+    }
+
+    body.resizing iframe {
+      pointer-events: none;
+    }
+
+    /* ── Main ───────────────────────────────────────────── */
+    #main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── Topbar ─────────────────────────────────────────── */
+    #topbar {
+      height: var(--header-h);
+      flex-shrink: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-light);
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
+    }
+
+    #tb-list {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #tb-detail {
+      flex: 1;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+
+    body.mode-detail #tb-list {
+      display: none;
+    }
+
+    body.mode-detail #tb-detail {
+      display: flex;
+    }
+
+    .tb-badge {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: var(--green-pale);
+      color: var(--green-main);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .tb-badge.admin {
+      background: var(--admin-pale);
+      color: var(--admin-main);
+    }
+
+    .tb-badge.doc {
+      background: var(--doc-pale);
+      color: var(--doc-main);
+    }
+
+    #topbarTitle {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    #topbarSub {
+      font-size: 13px;
+      color: var(--text-sm);
+      white-space: nowrap;
+    }
+
+    .tb-spacer {
+      flex: 1;
+    }
+
+    .tb-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .tb-search {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .tb-search input {
+      width: 180px;
+      padding: 5px 10px 5px 28px;
+      border-radius: 6px;
+      border: 1px solid var(--gray-light);
+      background: var(--gray-bg);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: border-color .15s, width .2s;
+    }
+
+    .tb-search input::placeholder {
+      color: #a0aec0;
+    }
+
+    .tb-search input:focus {
+      border-color: var(--green-light);
+      background: var(--white);
+      width: 240px;
+    }
+
+    .tb-search .search-icon {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: #a0aec0;
+      pointer-events: none;
+    }
+
+    .btn-filter {
+      padding: 4px 11px;
+      border-radius: 6px;
+      border: 1px solid var(--gray-light);
+      background: var(--white);
+      font-size: 13px;
+      color: var(--text-sm);
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .btn-filter:hover,
+    .btn-filter.active {
+      background: var(--green-pale);
+      color: var(--green-main);
+      border-color: var(--green-light);
+    }
+
+    .btn-filter.admin.active {
+      background: var(--admin-pale);
+      color: var(--admin-main);
+      border-color: var(--admin-light);
+    }
+
+    .btn-filter.doc.active {
+      background: var(--doc-pale);
+      color: var(--doc-main);
+      border-color: var(--doc-light);
+    }
+
+    #viewToggle {
+      display: flex;
+      border: 1px solid var(--gray-light);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    #viewToggle button {
+      padding: 4px 9px;
+      border: none;
+      background: var(--white);
+      cursor: pointer;
+      font-size: 15px;
+      color: var(--text-sm);
+    }
+
+    #viewToggle button.active {
+      background: var(--green-pale);
+      color: var(--green-main);
+    }
+
+    .btn-back {
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--gray-light);
+      background: var(--white);
+      font-size: 14px;
+      color: var(--text-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all .15s;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .btn-back:hover {
+      background: var(--gray-bg);
+      color: var(--text);
+      border-color: var(--gray-mid);
+    }
+
+    #detailNum {
+      font-size: 13px;
+      color: var(--text-sm);
+      font-family: monospace;
+    }
+
+    #detailTitle {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn-nav {
+      padding: 4px 11px;
+      border-radius: 6px;
+      border: 1px solid var(--gray-light);
+      background: var(--white);
+      font-size: 14px;
+      color: var(--text-sm);
+      cursor: pointer;
+      transition: all .15s;
+      white-space: nowrap;
+    }
+
+    .btn-nav:hover:not(:disabled) {
+      background: var(--green-pale);
+      color: var(--green-main);
+      border-color: var(--green-light);
+    }
+
+    .btn-nav:disabled {
+      opacity: .35;
+      cursor: default;
+    }
+
+    /* ── Content Area ───────────────────────────────────── */
+    #content-area {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── List View ──────────────────────────────────────── */
+    #list-view {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+    }
+
+    body.mode-detail #list-view {
+      display: none;
+    }
+
+    .group-section {
+      margin-bottom: 36px;
+    }
+
+    .group-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--gray-light);
+    }
+
+    .group-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .group-count {
+      font-size: 13px;
+      color: var(--text-sm);
+      background: var(--gray-light);
+      padding: 2px 7px;
+      border-radius: 10px;
+    }
+
+    .group-section.admin-group .group-header {
+      border-bottom-color: var(--admin-light);
+    }
+
+    .group-section.admin-group .group-name {
+      color: var(--admin-dark);
+    }
+
+    .group-section.doc-group .group-header {
+      border-bottom-color: var(--doc-light);
+    }
+
+    .group-section.doc-group .group-name {
+      color: var(--doc-dark);
+    }
+
+    .group-section.doc-group .card-num {
+      color: var(--doc-main);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .card-grid.list-view {
+      grid-template-columns: 1fr;
+    }
+
+    .page-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--gray-light);
+      cursor: pointer;
+      transition: box-shadow .2s, transform .15s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .card-grid.list-view .page-card {
+      flex-direction: row;
+    }
+
+    .card-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #e8edf2;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .card-grid.list-view .card-thumb {
+      width: 180px;
+      aspect-ratio: unset;
+      height: 110px;
+    }
+
+    .card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+    }
+
+    .card-thumb .no-img {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 4px;
+      color: #a0aec0;
+      font-size: 13px;
+    }
+
+    .card-thumb .no-img .icon {
+      font-size: 24px;
+    }
+
+    .card-body {
+      padding: 11px 13px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .card-num {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green-main);
+      font-family: monospace;
+    }
+
+    .admin-group .card-num {
+      color: var(--admin-main);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .card-path {
+      font-size: 12px;
+      color: var(--text-sm);
+      font-family: monospace;
+      background: var(--gray-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-sm);
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .tag.auth {
+      background: #fff3e0;
+      color: #e65100;
+    }
+
+    .tag.admin-only {
+      background: #e8eaf6;
+      color: #3949ab;
+    }
+
+    .tag.member-only {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .tag.write {
+      background: #fce4ec;
+      color: #c62828;
+    }
+
+    .tag.modal {
+      background: #f3e5f5;
+      color: #6a1b9a;
+    }
+
+    .tag.list {
+      background: #e3f2fd;
+      color: #1565c0;
+    }
+
+    .tag.form {
+      background: #fff8e1;
+      color: #f57f17;
+    }
+
+    .tag.detail {
+      background: #e0f7fa;
+      color: #006064;
+    }
+
+    .empty-msg {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-sm);
+    }
+
+    /* ── Detail Image View ──────────────────────────────── */
+    #detail-view {
+      flex: 1;
+      min-width: 0;
+      display: none;
+      overflow-y: auto;
+      background: #111315;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    body.mode-detail #detail-view {
+      display: flex;
+    }
+
+    #detail-img-wrap {
+      width: 100%;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #detail-img {
+      width: 98%;
+      max-width: 98%;
+      display: block;
+      border-radius: 6px;
+      box-shadow: 0 8px 48px rgba(0, 0, 0, .6);
+      cursor: zoom-in;
+      height: auto;
+    }
+
+    .detail-no-img {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      gap: 12px;
+      color: #555;
+    }
+
+    .detail-no-img .icon {
+      font-size: 50px;
+    }
+
+    .detail-no-img p {
+      font-size: 16px;
+    }
+
+    .detail-no-img .sub {
+      font-size: 14px;
+      color: #444;
+      font-family: monospace;
+    }
+
+    /* ── Description Panel ──────────────────────────────── */
+    #desc-panel {
+      width: var(--panel-w);
+      flex-shrink: 0;
+      min-width: var(--panel-min-w);
+      max-width: var(--panel-max-w);
+      background: var(--white);
+      border-left: 1px solid var(--gray-light);
+      display: none;
+      flex-direction: column;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    body.mode-detail #desc-panel {
+      display: flex;
+    }
+
+    .dp-sec {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+
+    .dp-sec:last-child {
+      border-bottom: none;
+    }
+
+    .dp-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-sm);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .dp-id {
+      font-size: 22px;
+      font-weight: 900;
+      font-family: monospace;
+      color: var(--green-main);
+    }
+
+    .dp-id.admin {
+      color: var(--admin-main);
+    }
+
+    .dp-id.doc {
+      color: var(--doc-main);
+    }
+
+    .dp-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .dp-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .dp-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .dp-key {
+      color: var(--text-sm);
+      min-width: 40px;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+
+    .dp-val {
+      color: var(--text);
+      font-size: 13px;
+      font-family: monospace;
+      word-break: break-all;
+    }
+
+    .dp-val.t {
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .dp-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .dp-tags-empty {
+      font-size: 13px;
+      color: #a0aec0;
+    }
+
+    .dp-desc {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .dp-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-dp-primary {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: var(--green-main);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: background .15s;
+    }
+
+    .btn-dp-primary:hover {
+      background: var(--green-dark);
+    }
+
+    .btn-dp-primary.admin {
+      background: var(--admin-main);
+    }
+
+    .btn-dp-primary.admin:hover {
+      background: var(--admin-dark);
+    }
+
+    .btn-dp-primary.doc {
+      background: var(--doc-main);
+    }
+
+    .btn-dp-primary.doc:hover {
+      background: var(--doc-dark);
+    }
+
+    .btn-dp-sec {
+      display: block;
+      width: 100%;
+      padding: 8px;
+      background: var(--gray-bg);
+      color: var(--text);
+      border: 1px solid var(--gray-light);
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: all .15s;
+    }
+
+    .btn-dp-sec:hover {
+      background: var(--gray-light);
+    }
+
+    .dp-nav-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dp-nav-row .btn-dp-sec {
+      flex: 1;
+      font-size: 13px;
+      padding: 7px 4px;
+    }
+
+    .dp-nav-row .btn-dp-sec:disabled {
+      opacity: .35;
+      cursor: default;
+      background: var(--gray-bg);
+    }
+
+    .dp-pos {
+      font-size: 13px;
+      color: var(--text-sm);
+      text-align: center;
+      padding: 4px 0 0;
+    }
+
+    /* ── Spec Content ───────────────────────────────────── */
+    .spec-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background: var(--admin-pale);
+      color: var(--admin-main);
+      vertical-align: middle;
+      margin-left: 4px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .spec-content {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .spec-content h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--white);
+      background: var(--gray-dark);
+      padding: 5px 10px;
+      border-radius: 4px;
+      margin: 16px 0 8px;
+    }
+
+    .spec-content h3:first-child {
+      margin-top: 0;
+    }
+
+    .spec-content h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-sm);
+      margin: 12px 0 6px;
+      padding-left: 6px;
+      border-left: 3px solid var(--admin-light);
+    }
+
+    .spec-content p {
+      margin-bottom: 8px;
+    }
+
+    .spec-content p.spec-note {
+      background: var(--gray-bg);
+      padding: 6px 8px;
+      border-radius: 4px;
+      margin: 6px 0;
+      font-size: 12px;
+    }
+
+    .spec-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 6px 0 10px;
+      font-size: 12px;
+    }
+
+    .spec-content th {
+      background: #f0f2f5;
+      color: var(--text-sm);
+      font-weight: 700;
+      text-align: left;
+      padding: 5px 7px;
+      border: 1px solid var(--gray-light);
+      white-space: nowrap;
+    }
+
+    .spec-content td {
+      padding: 5px 7px;
+      border: 1px solid var(--gray-light);
+      vertical-align: top;
+      word-break: keep-all;
+    }
+
+    .spec-content tr:nth-child(even) td {
+      background: #fafbfc;
+    }
+
+    .spec-content .warn {
+      color: #c05000;
+      font-size: 12px;
+    }
+
+    .spec-content code {
+      font-family: monospace;
+      background: var(--gray-bg);
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+
+    .spec-content strong {
+      font-weight: 700;
+    }
+
+    /* ── Image Modal ────────────────────────────────────── */
+    #imgModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0, 0, 0, .9);
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    #imgModal.open {
+      display: flex;
+    }
+
+    #imgModal .modal-inner {
+      max-width: 1400px;
+      width: 100%;
+      position: relative;
+    }
+
+    #imgModal img {
+      width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+      object-position: top;
+      border-radius: 4px;
+    }
+
+    #imgModal .modal-close {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      width: 34px;
+      height: 34px;
+      background: var(--white);
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .4);
+    }
+
+    #imgModal .modal-info {
+      color: #c0ccd8;
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    /* ── Print ──────────────────────────────────────────── */
+    @media print {
+
+      #sidebar,
+      .tb-actions {
+        display: none;
+      }
+
+      body.mode-detail #detail-view {
+        overflow: visible;
+      }
+    }
+  </style>
 </head>
-<body>
-<div id="app">
 
-<!-- 사이드바 -->
-<nav id="sidebar">
-  <div class="sb-header">
-    <h1>한국숲해설가협회 SB</h1>
-    <p>v1.0 &nbsp;|&nbsp; 개발 전달용</p>
-  </div>
-  <div class="sb-search">
-    <input type="text" id="sbSearch" placeholder="페이지 검색..." oninput="filterSearch(this.value)">
-  </div>
-  <div id="sbNav"></div>
-  <div class="sb-stats" id="sbStats"></div>
-</nav>
+<body class="mode-list">
+  <div id="app">
 
-<!-- 메인 -->
-<div id="main">
-  <header id="topbar">
-    <span id="sectionBadge">사용자</span>
-    <span id="topbarTitle">전체 화면 목록</span>
-    <span id="topbarSub" id="topbarSub"></span>
-    <div class="topbar-actions">
-      <button class="btn-filter active" id="btnAll" onclick="setFilter('all')">전체</button>
-      <button class="btn-filter" id="btnUser" onclick="setFilter('user')">사용자</button>
-      <button class="btn-filter admin" id="btnAdmin" onclick="setFilter('admin')">관리자</button>
-      <div id="viewToggle">
-        <button class="active" id="btnGrid" onclick="setView('grid')" title="그리드">⊞</button>
-        <button id="btnList" onclick="setView('list')" title="리스트">≡</button>
+    <!-- ── 사이드바 ─────────────────────────────────── -->
+    <nav id="sidebar">
+      <div class="sb-header">
+        <h1>한국숲해설가협회 SB</h1>
+        <p>v1.0 &nbsp;|&nbsp; 개발 전달용</p>
+      </div>
+      <div id="sbNav"></div>
+      <div class="sb-stats" id="sbStats"></div>
+      <div class="resize-handle" id="sidebar-resize"></div>
+    </nav>
+
+    <!-- ── 메인 ────────────────────────────────────── -->
+    <div id="main">
+
+      <!-- 상단바 -->
+      <header id="topbar">
+        <!-- 목록 모드 -->
+        <div id="tb-list">
+          <span class="tb-badge" id="sectionBadge">전체</span>
+          <span id="topbarTitle">전체 화면 목록</span>
+          <span id="topbarSub"></span>
+          <div class="tb-spacer"></div>
+          <div class="tb-actions">
+            <div class="tb-search">
+              <input type="text" id="sbSearch" placeholder="페이지 검색..." oninput="filterSearch(this.value)">
+            </div>
+            <button class="btn-filter active" id="btnAll" onclick="setFilter('all')">전체</button>
+            <button class="btn-filter doc" id="btnDoc" onclick="setFilter('doc')">문서</button>
+            <button class="btn-filter" id="btnUser" onclick="setFilter('user')">사용자</button>
+            <button class="btn-filter admin" id="btnAdmin" onclick="setFilter('admin')">관리자</button>
+            <div id="viewToggle">
+              <button class="active" id="btnGrid" onclick="setView('grid')" title="그리드">⊞</button>
+              <button id="btnList" onclick="setView('list')" title="리스트">≡</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 상세 모드 -->
+        <div id="tb-detail">
+          <button class="btn-back" onclick="backToList()">← 목록</button>
+          <span class="tb-badge" id="detailBadge">사용자</span>
+          <span id="detailNum"></span>
+          <span id="detailTitle"></span>
+          <div class="tb-spacer"></div>
+          <div class="tb-actions">
+            <button class="btn-nav" id="btnPrev" onclick="navigateDetail(-1)">◀ 이전</button>
+            <button class="btn-nav" id="btnNext" onclick="navigateDetail(1)">다음 ▶</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- 컨텐츠 영역 -->
+      <div id="content-area">
+        <div id="list-view"></div>
+        <div id="detail-view">
+          <div id="detail-img-wrap">
+            <img id="detail-img" src="" alt="" onclick="openModalCurrent()">
+          </div>
+        </div>
+        <div id="desc-panel">
+          <div class="resize-handle" id="panel-resize"></div>
+        </div>
       </div>
     </div>
-  </header>
-  <div id="content"></div>
-</div>
 
-<!-- 이미지 모달 -->
-<div id="imgModal" onclick="closeModal(event)">
-  <div class="modal-inner">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <img id="modalImg" src="" alt="">
-    <div class="modal-info" id="modalInfo"></div>
-  </div>
-</div>
+    <!-- 이미지 모달 -->
+    <div id="imgModal" onclick="closeModal(event)">
+      <div class="modal-inner">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <img id="modalImg" src="" alt="">
+        <div class="modal-info" id="modalInfo"></div>
+      </div>
+    </div>
 
-<script>
-// ── 페이지 데이터 ──────────────────────────────────────────
-const PAGES = [
-  // ===== 사용자 =====
-  // 메인
-  { id:'U01', section:'user', group:'메인', name:'홈 메인', path:'../outputs/index.html', img:'U01_홈_메인.png',
-    tags:[], desc:'사이트 진입점. 메인 슬라이더 배너, 최근 교육 일정, 공지사항 미리보기, 협회 캘린더 미니뷰, 갤러리 섹션으로 구성. 배너 데이터는 관리자 배너관리에서 연동.' },
+  </div><!-- #app -->
 
-  // 소개
-  { id:'U02', section:'user', group:'소개', name:'인사말', path:'../outputs/about/index.html', img:'U02_소개_인사말.png',
-    tags:[], desc:'협회장 인사말 텍스트 페이지. 이미지 + 텍스트 구성. 고정 콘텐츠로 DB 연동 불필요 (또는 관리자 조직도/임원진 관리 연동 가능).' },
-  { id:'U03', section:'user', group:'소개', name:'미션/비전', path:'../outputs/about/vision.html', img:'U03_소개_미션비전.png',
-    tags:[], desc:'협회 미션·비전·핵심가치 소개. 정적 콘텐츠 페이지.' },
-  { id:'U04', section:'user', group:'소개', name:'주요사업', path:'../outputs/about/project.html', img:'U04_소개_주요사업.png',
-    tags:[], desc:'협회 주요사업 목록 및 설명. 카드형 레이아웃. 정적 콘텐츠.' },
-  { id:'U05', section:'user', group:'소개', name:'연혁', path:'../outputs/about/history.html', img:'U05_소개_연혁.png',
-    tags:[], desc:'타임라인형 연혁. 연도별 이미지+내용. 관리자 연혁관리(A27~A28)에서 CRUD 연동.' },
-  { id:'U06', section:'user', group:'소개', name:'조직도/임원진', path:'../outputs/about/members.html', img:'U06_소개_조직도임원진.png',
-    tags:[], desc:'조직도 이미지 + 임원진 카드 그리드(2열). 임원진 프로필 hover 시 상세 portrait 노출. 관리자 조직도 관리(A26) 연동.' },
-  { id:'U07', section:'user', group:'소개', name:'전국지역협회', path:'../outputs/about/regions.html', img:'U07_소개_전국지역협회.png',
-    tags:[], desc:'지역 협회 목록. 지역 필터 탭 + 카드 목록. 카드 클릭 시 지역협회 상세(U08)로 이동.' },
-  { id:'U08', section:'user', group:'소개', name:'지역협회 상세', path:'../outputs/about/region-detail.html', img:'U08_소개_지역협회_상세.png',
-    tags:['detail'], desc:'특정 지역협회 상세 정보. URL 파라미터 ?id=로 특정 협회 조회. 연락처·활동 소개 포함.' },
-  { id:'U09', section:'user', group:'소개', name:'회원규정', path:'../outputs/about/regulation.html', img:'U09_소개_회원규정.png',
-    tags:[], desc:'회원 규정 전문 PDF 뷰어 또는 HTML 본문. 정적 콘텐츠 또는 게시판 타입 연동.' },
-  { id:'U10', section:'user', group:'소개', name:'오시는길', path:'../outputs/about/contact.html', img:'U10_소개_오시는길.png',
-    tags:[], desc:'협회 주소 + 지도(카카오맵 또는 네이버맵 API 삽입). 대중교통·주차 안내 텍스트. 정적 콘텐츠.' },
+  <script src="data/pages.js"></script>
+  <script src="data/specs/A01.js"></script>
 
-  // 교육
-  { id:'U11', section:'user', group:'교육', name:'숲해설가란', path:'../outputs/education/forester.html', img:'U11_교육_숲해설가란.png',
-    tags:[], desc:'숲해설가 직무 소개 페이지. 정적 콘텐츠.' },
-  { id:'U12', section:'user', group:'교육', name:'FAQ', path:'../outputs/education/faq.html', img:'U12_교육_FAQ.png',
-    tags:[], desc:'자주 묻는 질문. 아코디언형 Q&A. 콘텐츠는 하드코딩 또는 게시판 타입 FAQ 연동.' },
-  { id:'U13', section:'user', group:'교육', name:'기초과정 개요', path:'../outputs/education/academy.html', img:'U13_교육_기초과정_개요.png',
-    tags:[], desc:'숲해설가 기초 양성과정 소개. 커리큘럼·일정·신청 방법 안내. 신청 CTA → academy-apply(U14)로 이동.' },
-  { id:'U14', section:'user', group:'교육', name:'기초과정 신청', path:'../outputs/education/academy-apply.html', img:'U14_교육_기초과정_신청.png',
-    tags:['form', 'auth'], desc:'기초과정 수강 신청 폼. 비회원도 접근 가능하나 제출 시 로그인 유도. 신청 데이터 → 강좌신청자(A08) 연동.' },
-  { id:'U15', section:'user', group:'교육', name:'자격취득 과정 소개', path:'../outputs/education/course-intro.html', img:'U15_교육_자격취득_과정소개.png',
-    tags:[], desc:'자격취득 과정 전체 안내. 과정 종류 탭(기초/심화/전문 등). 각 과정 클릭 → course-list(U16)로 이동.' },
-  { id:'U16', section:'user', group:'교육', name:'자격취득 목록', path:'../outputs/education/course-list.html', img:'U16_교육_자격취득_목록.png',
-    tags:['list'], desc:'개설 강좌 목록. 기간·모집상태 필터. 카드형 그리드. 관리자 강좌관리(A05) 데이터 연동. 접수중 상태 표시 필수.' },
-  { id:'U17', section:'user', group:'교육', name:'과정 상세', path:'../outputs/education/course-detail.html', img:'U17_교육_자격취득_상세.png',
-    tags:['detail', 'auth'], desc:'강좌 상세. URL ?id=로 조회. 커리큘럼·강사·일정 정보 표시. 신청하기 버튼 → 로그인 필요. 신청 기간 외에는 버튼 비활성화.' },
-  { id:'U18', section:'user', group:'교육', name:'역량강화 과정', path:'../outputs/education/job-training.html', img:'U18_교육_역량강화_과정.png',
-    tags:[], desc:'역량강화 교육과정 목록 및 소개. 강좌 리스트 형태. 관리자 강좌관리 연동.' },
-  { id:'U19', section:'user', group:'교육', name:'역량강화 신청', path:'../outputs/education/job-training-apply.html', img:'U19_교육_역량강화_신청.png',
-    tags:['form', 'auth'], desc:'역량강화 과정 신청 폼. 로그인 필요. 신청 데이터 → 강좌신청자(A08) 연동.' },
-  { id:'U20', section:'user', group:'교육', name:'수료생 후기 목록', path:'../outputs/education/reviews.html', img:'U20_교육_수료생_후기목록.png',
-    tags:['list'], desc:'수료생 후기 게시판 목록. 카드형. 관리자 게시판관리 board_type=review 연동.' },
-  { id:'U21', section:'user', group:'교육', name:'수료생 후기 상세', path:'../outputs/education/review-detail.html', img:'U21_교육_수료생_후기상세.png',
-    tags:['detail'], desc:'후기 상세 페이지. URL ?id=로 조회. 이전/다음 글 이동 링크 포함.' },
+  <script>
+    // ── 외부 데이터 ───────────────────────────────────────────
+    const PAGES = window.PAGES || [];
+    const TAG_LABELS = window.TAG_LABELS || {};
+    const SPECS = window.SPECS || {};
 
-  // 회원 전용
-  { id:'U22', section:'user', group:'회원 전용', name:'특강 목록', path:'../outputs/member/competency.html', img:'U22_회원_특강_목록.png',
-    tags:['member-only', 'list'], desc:'회원 전용 특강 목록. 비회원 접근 시 로그인 유도. 관리자 강좌관리 타입=특강 연동.' },
-  { id:'U23', section:'user', group:'회원 전용', name:'특강 상세', path:'../outputs/member/competency-detail.html', img:'U23_회원_특강_상세.png',
-    tags:['member-only', 'detail'], desc:'특강 상세. 신청하기 버튼 → 회원만 가능. 신청 데이터 강좌신청자 연동.' },
-  { id:'U24', section:'user', group:'회원 전용', name:'아카데미강좌 목록', path:'../outputs/member/academy-course.html', img:'U24_회원_아카데미강좌_목록.png',
-    tags:['member-only', 'list'], desc:'회원 아카데미 강좌 목록. 관리자 강좌관리 타입=아카데미 연동.' },
-  { id:'U25', section:'user', group:'회원 전용', name:'아카데미강좌 상세', path:'../outputs/member/academy-course-detail.html', img:'U25_회원_아카데미강좌_상세.png',
-    tags:['member-only', 'detail'], desc:'아카데미 강좌 상세. 신청 기능 포함.' },
-  { id:'U26', section:'user', group:'회원 전용', name:'멘토링 목록', path:'../outputs/member/mentoring.html', img:'U26_회원_멘토링_목록.png',
-    tags:['member-only', 'list'], desc:'멘토링 프로그램 목록. 회원 전용. 신청 가능 여부 상태 표시.' },
-  { id:'U27', section:'user', group:'회원 전용', name:'멘토링 상세', path:'../outputs/member/mentoring-detail.html', img:'U27_회원_멘토링_상세.png',
-    tags:['member-only', 'detail'], desc:'멘토링 상세 + 신청 폼.' },
-  { id:'U28', section:'user', group:'회원 전용', name:'사공단 소개', path:'../outputs/member/sagongdan.html', img:'U28_회원_사공단_소개.png',
-    tags:['member-only'], desc:'사공단(사회공헌단) 소개. 사공단 소식·일지 목록 진입 링크 포함.' },
-  { id:'U29', section:'user', group:'회원 전용', name:'사공단 소식', path:'../outputs/member/sagongdan-news.html', img:'U29_회원_사공단_소식목록.png',
-    tags:['member-only', 'list'], desc:'사공단 소식 게시판 목록+상세. 회원만 접근. 관리자 게시판관리 board_type=sagongdan-news 연동.' },
-  { id:'U30', section:'user', group:'회원 전용', name:'사공단 일지', path:'../outputs/member/sagongdan-log.html', img:'U30_회원_사공단_일지목록.png',
-    tags:['member-only', 'list'], desc:'사공단 활동 일지 목록. board_type=sagongdan-log 연동.' },
-  { id:'U31', section:'user', group:'회원 전용', name:'동아리 목록', path:'../outputs/member/club.html', img:'U31_회원_동아리_목록.png',
-    tags:['member-only', 'list'], desc:'동아리 목록. 카드형 그리드. 회원모집중 배지 표시. 동아리 소식·자료 게시판 진입 링크 포함.' },
-  { id:'U32', section:'user', group:'회원 전용', name:'강사신청 일정목록', path:'../outputs/member/instructor.html', img:'U32_회원_강사신청_일정목록.png',
-    tags:['member-only', 'list'], desc:'강사 활동 신청 가능 일정 목록. 비회원 클릭 시 toast 차단. 관리자 강사일정관리(A10~A11)에서 등록한 일정 연동.' },
-  { id:'U33', section:'user', group:'회원 전용', name:'강사신청 일정상세', path:'../outputs/member/instructor-detail.html', img:'U33_회원_강사신청_일정상세.png',
-    tags:['member-only', 'form'], desc:'일정 상세 + 신청 모달. 신청 데이터 → 관리자 강사신청 목록(A14) 연동. 중복 신청 방지 처리 필요.' },
-  { id:'U34', section:'user', group:'회원 전용', name:'숲일터 목록', path:'../outputs/member/forest-work.html', img:'U34_회원_숲일터_목록.png',
-    tags:['member-only', 'list'], desc:'숲일터 일자리 정보 게시판 목록. board_type=forest-work 연동.' },
-  { id:'U35', section:'user', group:'회원 전용', name:'숲일터 상세', path:'../outputs/member/forest-work-detail.html', img:'U35_회원_숲일터_상세.png',
-    tags:['member-only', 'detail'], desc:'숲일터 공고 상세. 첨부파일 다운로드 링크 포함.' },
+    // ── 상태 ──────────────────────────────────────────────────
+    let currentFilter = 'all';
+    let currentView = 'grid';
+    let searchKw = '';
+    let currentDetailId = null;
+    let lastDetailId = null;
 
-  // 커뮤니티
-  { id:'U36', section:'user', group:'커뮤니티', name:'공지사항 목록', path:'../outputs/community/notice-list.html', img:'U36_커뮤니티_공지사항_목록.png',
-    tags:['list'], desc:'공지사항 목록. 상단 고정글 구분 표시. 페이지네이션. 관리자 게시판(board_type=notice) 연동.' },
-  { id:'U37', section:'user', group:'커뮤니티', name:'공지사항 상세', path:'../outputs/community/notice-detail.html', img:'U37_커뮤니티_공지사항_상세.png',
-    tags:['detail'], desc:'공지사항 상세. 첨부파일 다운로드. 이전/다음 글 이동.' },
-  { id:'U38', section:'user', group:'커뮤니티', name:'협회 캘린더', path:'../outputs/community/calendar.html', img:'U38_커뮤니티_협회캘린더.png',
-    tags:[], desc:'월별 일정 달력. 날짜 클릭 시 해당 일정 목록 표시. 일정 클릭 시 상세 페이지 이동. 관리자 일정관리(A20~A22) 연동.' },
-  { id:'U39', section:'user', group:'커뮤니티', name:'협회지 목록', path:'../outputs/community/newsletter.html', img:'U39_커뮤니티_협회지_목록.png',
-    tags:['list'], desc:'협회 소식지(뉴스레터) 목록. 카드형. board_type=newsletter 연동.' },
-  { id:'U40', section:'user', group:'커뮤니티', name:'협회지 상세', path:'../outputs/community/newsletter-detail.html', img:'U40_커뮤니티_협회지_상세.png',
-    tags:['detail'], desc:'협회지 상세. 이미지 뷰어 또는 PDF 뷰어 포함.' },
-  { id:'U41', section:'user', group:'커뮤니티', name:'언론보도 목록', path:'../outputs/community/press.html', img:'U41_커뮤니티_언론보도_목록.png',
-    tags:['list'], desc:'언론보도 목록. 외부 링크 포함. board_type=press 연동.' },
-  { id:'U42', section:'user', group:'커뮤니티', name:'언론보도 상세', path:'../outputs/community/press-detail.html', img:'U42_커뮤니티_언론보도_상세.png',
-    tags:['detail'], desc:'언론보도 상세. 원문 링크 버튼 포함.' },
-  { id:'U43', section:'user', group:'커뮤니티', name:'갤러리 목록', path:'../outputs/community/gallery.html', img:'U43_커뮤니티_갤러리_목록.png',
-    tags:['list'], desc:'사진 갤러리 목록. 썸네일 그리드. 검색 필터. 회원 로그인 시 글쓰기 버튼 노출. board_type=gallery 연동.' },
-  { id:'U44', section:'user', group:'커뮤니티', name:'갤러리 상세', path:'../outputs/community/gallery-detail.html', img:'U44_커뮤니티_갤러리_상세.png',
-    tags:['detail'], desc:'갤러리 상세. 이미지 슬라이더 + 본문. 작성자 본인인 경우 수정/삭제 버튼 표시.' },
-  { id:'U45', section:'user', group:'커뮤니티', name:'갤러리 글쓰기', path:'../outputs/community/gallery-write.html', img:'U45_커뮤니티_갤러리_글쓰기.png',
-    tags:['member-only', 'write', 'form'], desc:'갤러리 글 작성. SmartEditor2 사용. 이미지 첨부(에디터 내 첫 이미지가 썸네일 자동 설정). 회원 전용.' },
-  { id:'U46', section:'user', group:'커뮤니티', name:'자료실 목록', path:'../outputs/community/archive.html', img:'U46_커뮤니티_자료실_목록.png',
-    tags:['list'], desc:'자료 다운로드 게시판 목록. 파일 유형·크기 표시. board_type=archive 연동.' },
-  { id:'U47', section:'user', group:'커뮤니티', name:'자료실 상세', path:'../outputs/community/archive-detail.html', img:'U47_커뮤니티_자료실_상세.png',
-    tags:['detail'], desc:'자료실 상세. 첨부파일 다운로드. 파일 다운로드 수 집계 가능.' },
-
-  // 참여
-  { id:'U48', section:'user', group:'참여', name:'정회원 가입안내', path:'../outputs/participate/membership.html', img:'U48_참여_정회원_가입안내.png',
-    tags:[], desc:'정회원 가입 절차 및 혜택 안내. 정회원 신청 CTA → regular-apply(U49). 후원 CTA → donate(U51).' },
-  { id:'U49', section:'user', group:'참여', name:'정회원 신청', path:'../outputs/participate/regular-apply.html', img:'U49_참여_정회원_신청.png',
-    tags:['form'], desc:'정회원 신청 통합 폼. 개인정보·이력·서약. 첨부파일 업로드(자격증 등). 신청 데이터 → 관리자 정회원신청(A12~A13) 연동.' },
-  { id:'U50', section:'user', group:'참여', name:'후원 안내', path:'../outputs/participate/donate-info.html', img:'U50_참여_후원_안내.png',
-    tags:[], desc:'후원 방법 및 혜택 안내. 후원하기 CTA → donate(U51).' },
-  { id:'U51', section:'user', group:'참여', name:'후원하기', path:'../outputs/participate/donate.html', img:'U51_참여_후원하기.png',
-    tags:['form'], desc:'후원 신청 통합 폼. 후원 유형·금액 선택. 신청 데이터 → 관리자 후원신청(A18~A19) 연동.' },
-  { id:'U52', section:'user', group:'참여', name:'숲해설 신청', path:'../outputs/forest/index.html', img:'U52_참여_숲해설신청.png',
-    tags:['form'], desc:'숲해설 프로그램 신청 폼. 기관/단체 대상. 신청 데이터 → 관리자 숲해설신청(A16~A17) 연동.' },
-
-  // 인증
-  { id:'U53', section:'user', group:'인증', name:'로그인', path:'../outputs/auth/login.html', img:'U53_인증_로그인.png',
-    tags:['auth', 'form'], desc:'아이디/비밀번호 로그인. 자동로그인 체크박스. 아이디찾기/비밀번호찾기 → find(U54). 회원가입 → register(U55). Laravel Auth 세션 연동.' },
-  { id:'U54', section:'user', group:'인증', name:'아이디/비밀번호 찾기', path:'../outputs/auth/find.html', img:'U54_인증_아이디비밀번호찾기.png',
-    tags:['auth', 'form'], desc:'탭 전환: 아이디 찾기 / 비밀번호 찾기. 이름+이메일 인증 방식. 임시비밀번호 발송 또는 SMS 인증 방식 협의 필요.' },
-  { id:'U55', section:'user', group:'인증', name:'회원가입', path:'../outputs/auth/register.html', img:'U55_인증_회원가입.png',
-    tags:['auth', 'form'], desc:'회원가입 폼. 필수: 아이디/비밀번호/이름/이메일/전화번호. 이메일 중복 확인 API 필요. 가입 완료 → 자동 로그인 후 마이페이지 이동.' },
-
-  // 마이페이지
-  { id:'U56', section:'user', group:'마이페이지', name:'마이페이지', path:'../outputs/mypage/index.html', img:'U56_마이페이지_홈.png',
-    tags:['auth', 'member-only'], desc:'탭 구성: 내 정보 수정 / 신청내역(교육+강사활동 통합) / 비밀번호 변경 / 회원탈퇴. 신청내역 상태: 신청/수강중/취소/미선정/완료. 완료 시 수료증 또는 활동확인서 발급 버튼 표시.' },
-  { id:'U57', section:'user', group:'마이페이지', name:'증명서 미리보기', path:'../outputs/mypage/certificate-preview.html', img:'U57_마이페이지_증명서미리보기.png',
-    tags:['auth'], desc:'수료증 또는 활동확인서 미리보기. URL 파라미터: type(cert|activity), certNo, name, course, date, hours. 인쇄 버튼 포함.' },
-
-  // 기타
-  { id:'U58', section:'user', group:'기타', name:'사이트맵', path:'../outputs/sitemap.html', img:'U58_사이트맵.png',
-    tags:[], desc:'전체 메뉴 구조 목록. 정적 페이지.' },
-  { id:'U59', section:'user', group:'기타', name:'이용약관', path:'../outputs/terms.html', img:'U59_이용약관.png',
-    tags:[], desc:'서비스 이용약관 전문. 정적 콘텐츠.' },
-  { id:'U60', section:'user', group:'기타', name:'개인정보처리방침', path:'../outputs/privacy.html', img:'U60_개인정보처리방침.png',
-    tags:[], desc:'개인정보처리방침 전문. 정적 콘텐츠.' },
-  { id:'U61', section:'user', group:'기타', name:'이메일 무단수집거부', path:'../outputs/email.html', img:'U61_이메일무단수집거부.png',
-    tags:[], desc:'이메일 무단수집거부 고지. 정적 콘텐츠.' },
-
-  // ===== 관리자 =====
-  // 회원관리
-  { id:'A01', section:'admin', group:'회원관리', name:'회원 목록', path:'../outputs/admin/members.html', img:'A01_회원_목록.png',
-    tags:['admin-only', 'list'], desc:'전체 회원 목록. 필터: 가입일/등급/상태/검색어. 엑셀 다운로드. No 역순 정렬. 회원 클릭 → 회원상세(A02). API: GET /admin/api/members' },
-  { id:'A02', section:'admin', group:'회원관리', name:'회원 상세', path:'../outputs/admin/member-detail.html', img:'A02_회원_상세.png',
-    tags:['admin-only', 'detail'], desc:'회원 상세 정보 열람. 상태 변경(정상/차단) 버튼. 신청 이력 요약. 수정 → A03. API: GET /admin/api/members/{id}' },
-  { id:'A03', section:'admin', group:'회원관리', name:'회원 등록/수정', path:'../outputs/admin/member-edit.html', img:'A03_회원_등록수정.png',
-    tags:['admin-only', 'form'], desc:'회원 정보 등록·수정 폼. URL ?id= 없으면 등록, 있으면 수정. 우편번호 검색(카카오 API). API: POST/PUT /admin/api/members' },
-  { id:'A04', section:'admin', group:'회원관리', name:'탈퇴회원 목록', path:'../outputs/admin/members-withdrawn.html', img:'A04_탈퇴회원_목록.png',
-    tags:['admin-only', 'list'], desc:'탈퇴 처리된 회원 목록. 탈퇴일 기준 필터. 복구 기능 필요 여부 협의. API: GET /admin/api/members/withdrawn' },
-
-  // 강좌관리
-  { id:'A05', section:'admin', group:'강좌관리', name:'강좌 목록', path:'../outputs/admin/courses.html', img:'A05_강좌_목록.png',
-    tags:['admin-only', 'list'], desc:'강좌 목록 탭(기초/자격/역량/아카데미). 필터: 기간/모집상태/검색. 강좌 등록/수정/삭제. API: GET /admin/api/courses' },
-  { id:'A06', section:'admin', group:'강좌관리', name:'강좌 상세', path:'../outputs/admin/course-detail.html', img:'A06_강좌_상세.png',
-    tags:['admin-only', 'detail'], desc:'강좌 상세 정보. 신청자 현황 요약. 수정 → A07. API: GET /admin/api/courses/{id}' },
-  { id:'A07', section:'admin', group:'강좌관리', name:'강좌 등록/수정', path:'../outputs/admin/course-edit.html', img:'A07_강좌_등록수정.png',
-    tags:['admin-only', 'form'], desc:'강좌 등록·수정 폼. SmartEditor2 에디터, 파일첨부(3슬롯), 썸네일 이미지. multipart/form-data. API: POST/PUT /admin/api/courses' },
-  { id:'A08', section:'admin', group:'강좌관리', name:'강좌 신청자 목록', path:'../outputs/admin/applicants.html', img:'A08_강좌신청자_목록.png',
-    tags:['admin-only', 'list'], desc:'강좌별 신청자 통합 목록. 필터: 날짜/강좌유형/신청상태/검색. 상태 일괄 변경. 수료증 발급 처리. 엑셀. API: GET /admin/api/applicants' },
-  { id:'A09', section:'admin', group:'강좌관리', name:'강좌 신청자 상세', path:'../outputs/admin/applicant-detail.html', img:'A09_강좌신청자_상세.png',
-    tags:['admin-only', 'detail'], desc:'신청자 상세. 상태 변경(선정/미선정/완료). 수료증 발급 버튼. API: PUT /admin/api/applicants/{id}/status' },
-
-  // 강사 일정관리
-  { id:'A10', section:'admin', group:'강사 일정관리', name:'강사 일정 목록', path:'../outputs/admin/instructor-schedule.html', img:'A10_강사일정_목록.png',
-    tags:['admin-only', 'list'], desc:'강사 활동 일정 목록. 필터: 기간/상태/검색. 일정 등록/수정/삭제. 각 일정의 신청자 수 표시. API: GET /admin/api/instructor-schedules' },
-  { id:'A11', section:'admin', group:'강사 일정관리', name:'강사 일정 등록/수정', path:'../outputs/admin/instructor-schedule-edit.html', img:'A11_강사일정_등록수정.png',
-    tags:['admin-only', 'form'], desc:'강사 활동 일정 등록·수정 폼. 활동명/기간/시간/정원/활동확인서 발급여부 등. SmartEditor2, 파일첨부. API: POST/PUT /admin/api/instructor-schedules' },
-
-  // 기타신청관리
-  { id:'A12', section:'admin', group:'기타 신청관리', name:'정회원신청 목록', path:'../outputs/admin/apply-regular.html', img:'A12_정회원신청_목록.png',
-    tags:['admin-only', 'list'], desc:'정회원 신청 목록. 필터: 날짜/상태/지역/검색. 상태: 검토중→승인/반려. 접수번호 APP-YYYY-XXXXX 형식. API: GET /admin/api/apply/regular' },
-  { id:'A13', section:'admin', group:'기타 신청관리', name:'정회원신청 상세', path:'../outputs/admin/apply-regular-detail.html', img:'A13_정회원신청_상세.png',
-    tags:['admin-only', 'detail'], desc:'정회원 신청 상세. 첨부파일 다운로드. 상태 변경 + 메모 저장. 승인 시 회원 자동 생성 여부 협의 필요.' },
-  { id:'A14', section:'admin', group:'기타 신청관리', name:'강사신청 목록', path:'../outputs/admin/apply-instructor.html', img:'A14_강사신청_목록.png',
-    tags:['admin-only', 'list'], desc:'강사 활동 신청 목록. 일정별 필터 포함. 모든 신청자는 기존 회원. API: GET /admin/api/apply/instructor' },
-  { id:'A15', section:'admin', group:'기타 신청관리', name:'강사신청 상세', path:'../outputs/admin/apply-instructor-detail.html', img:'A15_강사신청_상세.png',
-    tags:['admin-only', 'detail'], desc:'강사 신청 상세. 상태 변경(선정/미선정). 활동확인서 발급 처리.' },
-  { id:'A16', section:'admin', group:'기타 신청관리', name:'숲해설신청 목록', path:'../outputs/admin/apply-forest.html', img:'A16_숲해설신청_목록.png',
-    tags:['admin-only', 'list'], desc:'숲해설 프로그램 신청 목록. 기관/단체 신청. 상태: 접수/완료/취소. API: GET /admin/api/apply/forest' },
-  { id:'A17', section:'admin', group:'기타 신청관리', name:'숲해설신청 상세', path:'../outputs/admin/apply-forest-detail.html', img:'A17_숲해설신청_상세.png',
-    tags:['admin-only', 'detail'], desc:'숲해설 신청 상세. 신청 기관 정보, 희망 일시, 참가 인원. 첨부파일 다운로드.' },
-  { id:'A18', section:'admin', group:'기타 신청관리', name:'후원신청 목록', path:'../outputs/admin/apply-sponsor.html', img:'A18_후원신청_목록.png',
-    tags:['admin-only', 'list'], desc:'후원 신청 목록. 후원 유형·금액 정보. API: GET /admin/api/apply/sponsor' },
-  { id:'A19', section:'admin', group:'기타 신청관리', name:'후원신청 상세', path:'../outputs/admin/apply-sponsor-detail.html', img:'A19_후원신청_상세.png',
-    tags:['admin-only', 'detail'], desc:'후원 신청 상세. 후원자 정보, 금액, 납부 방법. 영수증 발급 처리 필요 여부 협의.' },
-
-  // 일정관리
-  { id:'A20', section:'admin', group:'일정관리', name:'일정 목록', path:'../outputs/admin/calendar.html', img:'A20_일정_목록.png',
-    tags:['admin-only', 'list'], desc:'협회 일정 목록. 필터: 연월/카테고리(edu/event/notice)/검색. 사용자 캘린더(U38) 연동. API: GET /admin/api/calendar' },
-  { id:'A21', section:'admin', group:'일정관리', name:'일정 상세', path:'../outputs/admin/calendar-detail.html', img:'A21_일정_상세.png',
-    tags:['admin-only', 'detail'], desc:'일정 상세. 수정/삭제 버튼.' },
-  { id:'A22', section:'admin', group:'일정관리', name:'일정 등록/수정', path:'../outputs/admin/calendar-edit.html', img:'A22_일정_등록수정.png',
-    tags:['admin-only', 'form'], desc:'일정 등록·수정 폼. 날짜/카테고리/제목/링크. API: POST/PUT /admin/api/calendar' },
-
-  // 게시판관리
-  { id:'A23', section:'admin', group:'게시판관리', name:'게시판 목록', path:'../outputs/admin/board.html', img:'A23_게시판_목록.png',
-    tags:['admin-only', 'list'], desc:'게시판 목록. URL ?type= 으로 게시판 유형 전환(notice/newsletter/press/gallery/forest-work/region/club 등). 상단고정 토글. API: GET /admin/api/board' },
-  { id:'A24', section:'admin', group:'게시판관리', name:'게시글 상세', path:'../outputs/admin/board-detail.html', img:'A24_게시판_글상세.png',
-    tags:['admin-only', 'detail'], desc:'게시글 상세. 수정/삭제/고정 처리.' },
-  { id:'A25', section:'admin', group:'게시판관리', name:'게시글 등록/수정', path:'../outputs/admin/board-edit.html', img:'A25_게시판_글등록수정.png',
-    tags:['admin-only', 'form'], desc:'게시글 등록·수정. SmartEditor2 에디터. 파일첨부(3슬롯). 상단고정 체크박스. multipart. API: POST/PUT /admin/api/board' },
-
-  // 콘텐츠관리
-  { id:'A26', section:'admin', group:'콘텐츠관리', name:'조직도/임원진 관리', path:'../outputs/admin/organization.html', img:'A26_조직도임원진_관리.png',
-    tags:['admin-only'], desc:'조직도 이미지 교체 + 임원진 카드 CRUD. 임원진 사진 업로드, 직책/이름/소개 편집. API: /admin/api/organization (별도 설계 필요)' },
-  { id:'A27', section:'admin', group:'콘텐츠관리', name:'연혁 목록', path:'../outputs/admin/history.html', img:'A27_연혁_목록.png',
-    tags:['admin-only', 'list'], desc:'연혁 목록. 연도별 그룹. 등록/수정/삭제. 사용자 연혁 페이지(U05) 연동. API: GET /admin/api/history' },
-  { id:'A28', section:'admin', group:'콘텐츠관리', name:'연혁 등록/수정', path:'../outputs/admin/history-edit.html', img:'A28_연혁_등록수정.png',
-    tags:['admin-only', 'form'], desc:'연혁 등록·수정. 연도/월/내용/원형이미지. multipart. API: POST/PUT /admin/api/history/{id}' },
-  { id:'A29', section:'admin', group:'콘텐츠관리', name:'배너 목록', path:'../outputs/admin/banner.html', img:'A29_배너_목록.png',
-    tags:['admin-only', 'list'], desc:'메인 슬라이더 배너 목록. 순서 변경(위/아래 버튼). 최대 3개. 활성화 토글. API: GET /admin/api/banners' },
-  { id:'A30', section:'admin', group:'콘텐츠관리', name:'배너 등록/수정', path:'../outputs/admin/banner-edit.html', img:'A30_배너_등록수정.png',
-    tags:['admin-only', 'form'], desc:'배너 등록·수정. 이미지 업로드, 상단/메인/하단 텍스트, 링크URL. multipart. API: POST/PUT /admin/api/banners' },
-  { id:'A31', section:'admin', group:'콘텐츠관리', name:'팝업 목록', path:'../outputs/admin/popup.html', img:'A31_팝업_목록.png',
-    tags:['admin-only', 'list'], desc:'팝업 목록. 노출기간/활성화 여부. 현재 팝업 HTML은 주석 처리 상태 — PHP 연동 후 세션쿠키(오늘하루닫기)와 함께 복구 필요. API: GET /admin/api/popups' },
-  { id:'A32', section:'admin', group:'콘텐츠관리', name:'팝업 등록/수정', path:'../outputs/admin/popup-edit.html', img:'A32_팝업_등록수정.png',
-    tags:['admin-only', 'form'], desc:'팝업 등록·수정. 노출기간/크기/PC위치/이미지/SE2에디터/링크. 모바일은 항상 center 고정. API: POST/PUT /admin/api/popups' }
-];
-
-// ── 태그 레이블 ────────────────────────────────────────────
-const TAG_LABELS = {
-  'auth':        '로그인 필요',
-  'member-only': '회원 전용',
-  'admin-only':  '관리자 전용',
-  'write':       '글쓰기',
-  'modal':       '모달',
-  'list':        '목록',
-  'form':        '폼',
-  'detail':      '상세'
-};
-
-// ── 상태 ──────────────────────────────────────────────────
-let currentFilter = 'all';
-let currentView   = 'grid';
-let searchKw      = '';
-
-// ── 사이드바 빌드 ─────────────────────────────────────────
-function buildSidebar() {
-  const nav = document.getElementById('sbNav');
-  const sections = ['user', 'admin'];
-  const sectionLabels = { user: '사용자 페이지', admin: '관리자 페이지' };
-  const sectionColors = { user: '#4a9e5c', admin: '#4a6fa5' };
-
-  sections.forEach(sec => {
-    const groups = [...new Set(PAGES.filter(p => p.section === sec).map(p => p.group))];
-    const title = document.createElement('div');
-    title.className = 'sb-section-title';
-    title.style.color = sectionColors[sec];
-    title.textContent = sectionLabels[sec];
-    nav.appendChild(title);
-
-    groups.forEach(g => {
-      const items = PAGES.filter(p => p.section === sec && p.group === g);
-      const group = document.createElement('div');
-      group.className = 'sb-group';
-      const label = document.createElement('div');
-      label.className = 'sb-group-label';
-      label.innerHTML = `<span>${g} <small style="color:#5a6a7a">(${items.length})</small></span><span class="arrow">▶</span>`;
-      label.onclick = () => {
-        label.classList.toggle('open');
-        itemsEl.classList.toggle('visible');
-      };
-      const itemsEl = document.createElement('div');
-      itemsEl.className = 'sb-group-items';
-      items.forEach(p => {
-        const item = document.createElement('div');
-        item.className = 'sb-item';
-        item.dataset.id = p.id;
-        item.innerHTML = `<span class="num">${p.id}</span><span>${p.name}</span>`;
-        item.onclick = () => scrollToCard(p.id);
-        itemsEl.appendChild(item);
-      });
-      group.appendChild(label);
-      group.appendChild(itemsEl);
-      nav.appendChild(group);
-    });
-  });
-
-  updateStats();
-}
-
-function updateStats() {
-  const total = PAGES.length;
-  const user  = PAGES.filter(p => p.section === 'user').length;
-  const admin = PAGES.filter(p => p.section === 'admin').length;
-  document.getElementById('sbStats').innerHTML =
-    `전체 <span>${total}</span>페이지 &nbsp;|&nbsp; 사용자 <span>${user}</span> / 관리자 <span>${admin}</span>`;
-}
-
-// ── 메인 렌더 ─────────────────────────────────────────────
-function render() {
-  const content = document.getElementById('content');
-  content.innerHTML = '';
-
-  let filtered = PAGES.filter(p => {
-    if (currentFilter !== 'all' && p.section !== currentFilter) return false;
-    if (searchKw) {
-      const kw = searchKw.toLowerCase();
-      return p.name.toLowerCase().includes(kw) || p.id.toLowerCase().includes(kw) ||
-             p.group.toLowerCase().includes(kw) || p.desc.toLowerCase().includes(kw) ||
-             p.path.toLowerCase().includes(kw);
+    // ── 섹션 헬퍼 ────────────────────────────────────────────
+    function getSectionType(p) { return p.section; } // 'doc' | 'user' | 'admin'
+    function getSectionLabel(sec) {
+      return { doc: '프로젝트 문서', user: '사용자', admin: '관리자' }[sec] || sec;
     }
-    return true;
-  });
+    function getSectionBadgeClass(sec) {
+      if (sec === 'admin') return ' admin';
+      if (sec === 'doc') return ' doc';
+      return '';
+    }
+    function getSectionIdClass(sec) {
+      if (sec === 'admin') return 'admin';
+      if (sec === 'doc') return 'doc';
+      return '';
+    }
+    function getSectionGroupClass(sec) {
+      if (sec === 'admin') return ' admin-group';
+      if (sec === 'doc') return ' doc-group';
+      return '';
+    }
 
-  if (!filtered.length) {
-    content.innerHTML = '<div class="empty-msg">검색 결과가 없습니다.</div>';
-    return;
-  }
+    // ── 필터링 ────────────────────────────────────────────────
+    function getFilteredPages() {
+      return PAGES.filter(p => {
+        if (currentFilter !== 'all' && p.section !== currentFilter) return false;
+        if (searchKw) {
+          const kw = searchKw.toLowerCase();
+          return p.name.toLowerCase().includes(kw) || p.id.toLowerCase().includes(kw) ||
+            p.group.toLowerCase().includes(kw) || p.desc.toLowerCase().includes(kw) ||
+            (p.path || '').toLowerCase().includes(kw);
+        }
+        return true;
+      });
+    }
 
-  // 그룹별로 묶기
-  const sections = ['user', 'admin'];
-  const sectionNames = { user: '사용자', admin: '관리자' };
+    // ── 사이드바 빌드 ─────────────────────────────────────────
+    function buildSidebar() {
+      const nav = document.getElementById('sbNav');
+      const sectionOrder = ['doc', 'user', 'admin'];
+      const sectionLabels = { doc: '프로젝트 문서', user: '사용자 페이지', admin: '관리자 페이지' };
+      const sectionColors = { doc: '#c0975c', user: '#4a9e5c', admin: '#4a6fa5' };
 
-  sections.forEach(sec => {
-    const secPages = filtered.filter(p => p.section === sec);
-    if (!secPages.length) return;
+      sectionOrder.forEach((sec, secIdx) => {
+        const secPages = PAGES.filter(p => p.section === sec);
+        if (!secPages.length) return;
 
-    const groups = [...new Set(secPages.map(p => p.group))];
-    groups.forEach(g => {
-      const groupPages = secPages.filter(p => p.group === g);
-      const section = document.createElement('div');
-      section.className = 'group-section' + (sec === 'admin' ? ' admin-group' : '');
+        // doc 뒤 구분선
+        if (secIdx > 0 && sectionOrder[secIdx - 1] === 'doc') {
+          const divider = document.createElement('div');
+          divider.style.cssText = 'height:1px; background:rgba(255,255,255,.08); margin:8px 14px;';
+          nav.appendChild(divider);
+        }
 
-      const header = document.createElement('div');
-      header.className = 'group-header';
-      header.innerHTML = `
-        <span class="group-name">${sectionNames[sec]} — ${g}</span>
-        <span class="group-count">${groupPages.length}개 화면</span>
-      `;
-      section.appendChild(header);
+        const groups = [...new Set(secPages.map(p => p.group))];
 
-      const grid = document.createElement('div');
-      grid.className = 'card-grid' + (currentView === 'list' ? ' list-view' : '');
-      groupPages.forEach(p => grid.appendChild(createCard(p)));
-      section.appendChild(grid);
-      content.appendChild(section);
-    });
-  });
+        const title = document.createElement('div');
+        title.className = 'sb-section-title';
+        title.style.color = sectionColors[sec];
+        title.textContent = sectionLabels[sec];
+        nav.appendChild(title);
 
-  // 상단바 업데이트
-  const badge = document.getElementById('sectionBadge');
-  const title = document.getElementById('topbarTitle');
-  const sub   = document.getElementById('topbarSub');
-  if (currentFilter === 'all') {
-    badge.className = 'sectionBadge'; badge.textContent = '전체';
-    title.textContent = '전체 화면 목록';
-  } else if (currentFilter === 'user') {
-    badge.className = 'sectionBadge'; badge.textContent = '사용자';
-    title.textContent = '사용자 화면 목록';
-  } else {
-    badge.className = 'sectionBadge admin'; badge.textContent = '관리자';
-    title.textContent = '관리자 화면 목록';
-  }
-  sub.textContent = `${filtered.length}개 화면`;
-}
+        groups.forEach(g => {
+          const items = secPages.filter(p => p.group === g);
+          const group = document.createElement('div');
+          group.className = 'sb-group';
 
-function createCard(p) {
-  const card = document.createElement('div');
-  card.className = 'page-card';
-  card.dataset.id = p.id;
+          const isDocSec = sec === 'doc';
+          const label = document.createElement('div');
+          label.className = 'sb-group-label' + (isDocSec ? ' open' : '');
+          label.innerHTML = `<span>${g} <small style="color:#5a6a7a">(${items.length})</small></span><span class="arrow">▶</span>`;
 
-  const imgSrc = `images/${p.img}`;
-  const thumbHtml = `
+          const itemsEl = document.createElement('div');
+          itemsEl.className = 'sb-group-items' + (isDocSec ? ' visible' : '');
+
+          label.onclick = () => {
+            label.classList.toggle('open');
+            itemsEl.classList.toggle('visible');
+          };
+
+          items.forEach(p => {
+            const item = document.createElement('div');
+            item.className = 'sb-item';
+            item.dataset.id = p.id;
+            if (isDocSec) item.dataset.type = 'doc';
+            item.innerHTML = `<span>${p.name}</span>`;
+            item.onclick = () => showDetail(p.id);
+            itemsEl.appendChild(item);
+          });
+
+          group.appendChild(label);
+          group.appendChild(itemsEl);
+          nav.appendChild(group);
+        });
+      });
+
+      updateStats();
+    }
+
+    function updateStats() {
+      const total = PAGES.length;
+      const doc = PAGES.filter(p => p.section === 'doc').length;
+      const user = PAGES.filter(p => p.section === 'user').length;
+      const admin = PAGES.filter(p => p.section === 'admin').length;
+      document.getElementById('sbStats').innerHTML =
+        `전체 <strong><span>${total}</span>개</strong><br>문서 <span>${doc}</span> / 사용자 <span>${user}</span> / 관리자 <span>${admin}</span>`;
+    }
+
+    // ── 목록 렌더 ─────────────────────────────────────────────
+    function render() {
+      const listView = document.getElementById('list-view');
+      listView.innerHTML = '';
+
+      const filtered = getFilteredPages();
+
+      const badge = document.getElementById('sectionBadge');
+      const title = document.getElementById('topbarTitle');
+      const sub = document.getElementById('topbarSub');
+      const labels = { all: '전체', doc: '프로젝트 문서', user: '사용자', admin: '관리자' };
+      badge.textContent = labels[currentFilter];
+      badge.className = 'tb-badge' + getSectionBadgeClass(currentFilter);
+      title.textContent = labels[currentFilter] + ' 화면 목록';
+      sub.textContent = `${filtered.length}개 화면`;
+
+      if (!filtered.length) {
+        listView.innerHTML = '<div class="empty-msg">검색 결과가 없습니다.</div>';
+        return;
+      }
+
+      ['doc', 'user', 'admin'].forEach(sec => {
+        const secPages = filtered.filter(p => p.section === sec);
+        if (!secPages.length) return;
+
+        const groups = [...new Set(secPages.map(p => p.group))];
+        groups.forEach(g => {
+          const groupPages = secPages.filter(p => p.group === g);
+          const section = document.createElement('div');
+          section.className = 'group-section' + getSectionGroupClass(sec);
+
+          const header = document.createElement('div');
+          header.className = 'group-header';
+          header.innerHTML = `
+        <span class="group-name">${getSectionLabel(sec)} — ${g}</span>
+        <span class="group-count">${groupPages.length}개 화면</span>`;
+          section.appendChild(header);
+
+          const grid = document.createElement('div');
+          grid.className = 'card-grid' + (currentView === 'list' ? ' list-view' : '');
+          groupPages.forEach(p => grid.appendChild(createCard(p)));
+          section.appendChild(grid);
+          listView.appendChild(section);
+        });
+      });
+    }
+
+    function createCard(p) {
+      const card = document.createElement('div');
+      card.className = 'page-card';
+      card.dataset.id = p.id;
+      card.onclick = () => showDetail(p.id);
+
+      const noImgIcon = p.section === 'doc' ? '📄' : '🖼';
+      const noImgText = p.section === 'doc' ? '미등록' : '미캡처';
+
+      const thumbHtml = `
     <div class="card-thumb">
-      <img src="${imgSrc}" alt="${p.name}" onerror="this.parentNode.innerHTML='<div class=\\'no-img\\'><span class=\\'icon\\'>🖼</span><span>미캡처</span></div>'">
+      <img src="images/${p.img}" alt="${p.name}"
+        onerror="this.parentNode.innerHTML='<div class=\\'no-img\\'><span class=\\'icon\\'>${noImgIcon}</span><span>${noImgText}</span></div>'">
     </div>`;
+      const tagsHtml = (p.tags || []).map(t => `<span class="tag ${t}">${TAG_LABELS[t] || t}</span>`).join('');
 
-  const tagsHtml = p.tags.map(t => `<span class="tag ${t}">${TAG_LABELS[t]||t}</span>`).join('');
-
-  card.innerHTML = `
+      card.innerHTML = `
     ${thumbHtml}
     <div class="card-body">
       <div class="card-num">${p.id}</div>
       <div class="card-title">${p.name}</div>
-      <div class="card-path">${p.path.replace('../outputs/', '')}</div>
+      ${p.path && p.path !== '#' ? `<div class="card-path">${p.path.replace('../outputs/', '')}</div>` : ''}
       <div class="card-desc">${p.desc}</div>
       ${tagsHtml ? `<div class="card-tags">${tagsHtml}</div>` : ''}
     </div>`;
+      return card;
+    }
 
-  card.querySelector('.card-thumb')?.addEventListener('click', () => openModal(p));
-  return card;
-}
+    // ── 상세 모드 ─────────────────────────────────────────────
+    function showDetail(id) {
+      const p = PAGES.find(pg => pg.id === id);
+      if (!p) return;
 
-// ── 필터 ──────────────────────────────────────────────────
-function setFilter(f) {
-  currentFilter = f;
-  document.getElementById('btnAll').classList.toggle('active', f === 'all');
-  document.getElementById('btnUser').classList.toggle('active', f === 'user');
-  document.getElementById('btnAdmin').classList.toggle('active', f === 'admin');
-  render();
-}
+      lastDetailId = currentDetailId || id;
+      currentDetailId = id;
 
-function setView(v) {
-  currentView = v;
-  document.getElementById('btnGrid').classList.toggle('active', v === 'grid');
-  document.getElementById('btnList').classList.toggle('active', v === 'list');
-  render();
-}
+      document.body.classList.add('mode-detail');
+      document.body.classList.remove('mode-list');
 
-function filterSearch(kw) {
-  searchKw = kw.trim();
-  render();
-}
+      const sec = p.section;
+      const badge = document.getElementById('detailBadge');
+      badge.textContent = getSectionLabel(sec);
+      badge.className = 'tb-badge' + getSectionBadgeClass(sec);
+      document.getElementById('detailNum').textContent = p.id;
+      document.getElementById('detailTitle').textContent = p.name;
+      updateNavButtons();
 
-// ── 사이드바 → 카드 스크롤 ────────────────────────────────
-function scrollToCard(id) {
-  document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
-  const sbItem = document.querySelector(`.sb-item[data-id="${id}"]`);
-  if (sbItem) sbItem.classList.add('active');
+      // 이미지
+      const imgWrap = document.getElementById('detail-img-wrap');
+      imgWrap.innerHTML = '<img id="detail-img" src="" alt="" onclick="openModalCurrent()">';
+      const newImg = document.getElementById('detail-img');
+      newImg.style.cursor = 'zoom-in';
+      newImg.style.width = '98%';
+      newImg.style.maxWidth = '98%';
+      newImg.style.height = 'auto';
+      newImg.alt = p.name;
 
-  // filter 해제 후 해당 카드로 스크롤
-  currentFilter = 'all'; searchKw = '';
-  document.getElementById('sbSearch').value = '';
-  document.getElementById('btnAll').classList.add('active');
-  document.getElementById('btnUser').classList.remove('active');
-  document.getElementById('btnAdmin').classList.remove('active');
-  render();
+      const noImgIcon = sec === 'doc' ? '📄' : '🖼';
+      const noImgText = sec === 'doc' ? '문서 이미지 미등록' : '스크린샷 미캡처';
+      newImg.onerror = function () {
+        imgWrap.innerHTML = `
+      <div class="detail-no-img">
+        <div class="icon">${noImgIcon}</div>
+        <p>${noImgText}</p>
+        <p class="sub">${p.img}</p>
+      </div>`;
+      };
+      newImg.src = `images/${p.img}`;
 
-  setTimeout(() => {
-    const card = document.querySelector(`.page-card[data-id="${id}"]`);
-    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 50);
-}
+      document.getElementById('detail-view').scrollTop = 0;
+      buildDescPanel(p);
+      highlightSidebar(id);
+    }
 
-// ── 모달 ──────────────────────────────────────────────────
-function openModal(p) {
-  const modal = document.getElementById('imgModal');
-  const img   = document.getElementById('modalImg');
-  const info  = document.getElementById('modalInfo');
-  img.src = `images/${p.img}`;
-  info.textContent = `${p.id} — ${p.name}  |  ${p.path.replace('../outputs/','')}`;
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
+    function buildDescPanel(p) {
+      const panel = document.getElementById('desc-panel');
+      const sec = p.section;
+      const list = getFilteredPages();
+      const idx = list.findIndex(pg => pg.id === p.id);
 
-function closeModal(e) {
-  if (e && e.target !== e.currentTarget && !e.target.classList.contains('modal-close')) return;
-  document.getElementById('imgModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
+      const tagsHtml = (p.tags || []).length
+        ? p.tags.map(t => `<span class="tag ${t}">${TAG_LABELS[t] || t}</span>`).join('')
+        : '<span class="dp-tags-empty">태그 없음</span>';
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+      const spec = SPECS[p.id] || null;
+      const descSection = spec
+        ? `<div class="dp-label">화면 스펙 <span class="spec-badge">전체 스펙</span></div><div class="spec-content">${spec}</div>`
+        : `<div class="dp-label">${sec === 'doc' ? '문서 설명' : '화면 설명'}</div><div class="dp-desc">${p.desc}</div>`;
 
-// ── 초기화 ────────────────────────────────────────────────
-buildSidebar();
-render();
-</script>
+      const pathRow = p.path && p.path !== '#'
+        ? `<div class="dp-row"><span class="dp-key">경로</span><span class="dp-val">${p.path.replace('../outputs/', '')}</span></div>` : '';
+
+      const protoBtn = p.path && p.path !== '#'
+        ? `<a href="${p.path}" target="_blank" class="btn-dp-primary ${getSectionIdClass(sec)}">프로토타입 열기 →</a>` : '';
+
+      panel.innerHTML = `
+    <div class="resize-handle" id="panel-resize"></div>
+
+    <div class="dp-sec">
+      <div class="dp-id ${getSectionIdClass(sec)}">${p.id}</div>
+      <div class="dp-title">${p.name}</div>
+    </div>
+
+    <div class="dp-sec">
+      <div class="dp-label">페이지 정보</div>
+      <div class="dp-rows">
+        <div class="dp-row">
+          <span class="dp-key">섹션</span>
+          <span class="dp-val t">${getSectionLabel(sec)} — ${p.group}</span>
+        </div>
+        ${pathRow}
+        <div class="dp-row">
+          <span class="dp-key">순서</span>
+          <span class="dp-val t">${idx >= 0 ? idx + 1 + ' / ' + list.length : '—'}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dp-sec">
+      <div class="dp-label">태그</div>
+      <div class="dp-tags">${tagsHtml}</div>
+    </div>
+
+    <div class="dp-sec">
+      ${descSection}
+    </div>
+
+    <div class="dp-sec">
+      <div class="dp-label">이동</div>
+      <div class="dp-nav-row">
+        <button class="btn-dp-sec" onclick="navigateDetail(-1)" ${idx <= 0 ? 'disabled' : ''}>◀ 이전</button>
+        <button class="btn-dp-sec" onclick="navigateDetail(1)"  ${idx >= list.length - 1 ? 'disabled' : ''}>다음 ▶</button>
+      </div>
+      <div class="dp-pos">${idx >= 0 ? idx + 1 + ' / ' + list.length : ''}</div>
+    </div>`;
+
+      initPanelResize();
+    }
+
+    function updateNavButtons() {
+      const list = getFilteredPages();
+      const idx = list.findIndex(p => p.id === currentDetailId);
+      const btnPrev = document.getElementById('btnPrev');
+      const btnNext = document.getElementById('btnNext');
+      if (btnPrev) btnPrev.disabled = idx <= 0;
+      if (btnNext) btnNext.disabled = idx >= list.length - 1;
+    }
+
+    function navigateDetail(dir) {
+      const list = getFilteredPages();
+      const idx = list.findIndex(p => p.id === currentDetailId);
+      const newIdx = idx + dir;
+      if (newIdx < 0 || newIdx >= list.length) return;
+      showDetail(list[newIdx].id);
+    }
+
+    function backToList() {
+      currentDetailId = null;
+      document.body.classList.remove('mode-detail');
+      document.body.classList.add('mode-list');
+      document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+      render();
+      if (lastDetailId) {
+        setTimeout(() => {
+          const card = document.querySelector(`.page-card[data-id="${lastDetailId}"]`);
+          if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 60);
+      }
+    }
+
+    function highlightSidebar(id) {
+      document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+      const item = document.querySelector(`.sb-item[data-id="${id}"]`);
+      if (!item) return;
+      item.classList.add('active');
+      const groupItems = item.closest('.sb-group-items');
+      if (groupItems && !groupItems.classList.contains('visible')) {
+        groupItems.classList.add('visible');
+        const label = groupItems.previousElementSibling;
+        if (label) label.classList.add('open');
+      }
+      item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // ── 필터·뷰 ───────────────────────────────────────────────
+    function setFilter(f) {
+      currentFilter = f;
+      document.getElementById('btnAll').classList.toggle('active', f === 'all');
+      document.getElementById('btnDoc').classList.toggle('active', f === 'doc');
+      document.getElementById('btnUser').classList.toggle('active', f === 'user');
+      document.getElementById('btnAdmin').classList.toggle('active', f === 'admin');
+      if (document.body.classList.contains('mode-detail')) {
+        updateNavButtons();
+        const p = PAGES.find(pg => pg.id === currentDetailId);
+        if (p) buildDescPanel(p);
+      } else {
+        render();
+      }
+    }
+
+    function setView(v) {
+      currentView = v;
+      document.getElementById('btnGrid').classList.toggle('active', v === 'grid');
+      document.getElementById('btnList').classList.toggle('active', v === 'list');
+      if (!document.body.classList.contains('mode-detail')) render();
+    }
+
+    function filterSearch(kw) {
+      searchKw = kw.trim();
+      if (document.body.classList.contains('mode-detail')) {
+        updateNavButtons();
+      } else {
+        render();
+      }
+    }
+
+    // ── 이미지 모달 ───────────────────────────────────────────
+    function openModalCurrent() {
+      if (!currentDetailId) return;
+      const p = PAGES.find(pg => pg.id === currentDetailId);
+      if (!p) return;
+      const modal = document.getElementById('imgModal');
+      document.getElementById('modalImg').src = `images/${p.img}`;
+      document.getElementById('modalInfo').textContent = `${p.id} — ${p.name}${p.path && p.path !== '#' ? '  |  ' + p.path.replace('../outputs/', '') : ''}`;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(e) {
+      if (e && e.target !== e.currentTarget && !e.target.classList.contains('modal-close')) return;
+      document.getElementById('imgModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if (document.getElementById('imgModal').classList.contains('open')) { closeModal(); return; }
+        if (document.body.classList.contains('mode-detail')) backToList();
+      }
+      if (document.body.classList.contains('mode-detail') && !document.getElementById('imgModal').classList.contains('open')) {
+        if (e.key === 'ArrowLeft') navigateDetail(-1);
+        if (e.key === 'ArrowRight') navigateDetail(1);
+      }
+    });
+
+    // ── 사이드바 리사이즈 ─────────────────────────────────────
+    (function initSidebarResize() {
+      const sidebar = document.getElementById('sidebar');
+      const handle = document.getElementById('sidebar-resize');
+      if (!handle) return;
+      let isResizing = false, startX = 0, startW = 0;
+      handle.addEventListener('mousedown', (e) => {
+        e.preventDefault(); isResizing = true; startX = e.clientX; startW = sidebar.offsetWidth;
+        handle.classList.add('active'); document.body.classList.add('resizing');
+      });
+      document.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+        const delta = e.clientX - startX;
+        const minW = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-min-w')) || 60;
+        const maxW = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-max-w')) || 320;
+        sidebar.style.width = Math.min(maxW, Math.max(minW, startW + delta)) + 'px';
+      });
+      document.addEventListener('mouseup', () => {
+        if (!isResizing) return; isResizing = false;
+        handle.classList.remove('active'); document.body.classList.remove('resizing');
+      });
+    })();
+
+    // ── 패널 리사이즈 ─────────────────────────────────────────
+    function initPanelResize() {
+      const panel = document.getElementById('desc-panel');
+      const handle = document.getElementById('panel-resize');
+      if (!handle || !panel) return;
+      let isResizing = false, startX = 0, startW = 0;
+      handle.addEventListener('mousedown', (e) => {
+        e.preventDefault(); isResizing = true; startX = e.clientX; startW = panel.offsetWidth;
+        handle.classList.add('active'); document.body.classList.add('resizing');
+      });
+      const onMove = (e) => {
+        if (!isResizing) return;
+        const delta = startX - e.clientX;
+        const minW = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--panel-min-w')) || 250;
+        const maxW = Math.min(
+          parseInt(getComputedStyle(document.documentElement).getPropertyValue('--panel-max-w')) || 700,
+          window.innerWidth * 0.5
+        );
+        panel.style.width = Math.min(maxW, Math.max(minW, startW + delta)) + 'px';
+      };
+      const onUp = () => {
+        if (!isResizing) return; isResizing = false;
+        handle.classList.remove('active'); document.body.classList.remove('resizing');
+      };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    }
+    initPanelResize();
+
+    // ── 초기화 ────────────────────────────────────────────────
+    buildSidebar();
+    render();
+  </script>
 </body>
+
 </html>
