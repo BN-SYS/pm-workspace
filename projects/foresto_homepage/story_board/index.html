@@ -182,8 +182,6 @@
       color: #e0c68a;
     }
 
-    
-
     .sb-item.active .num {
       color: #4a9e5c;
     }
@@ -372,6 +370,16 @@
       flex-shrink: 0;
     }
 
+    .tb-search .search-icon {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: #a0aec0;
+      pointer-events: none;
+    }
+
     .tb-search input {
       width: 180px;
       padding: 5px 10px 5px 28px;
@@ -392,16 +400,6 @@
       border-color: var(--green-light);
       background: var(--white);
       width: 240px;
-    }
-
-    .tb-search .search-icon {
-      position: absolute;
-      left: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 14px;
-      color: #a0aec0;
-      pointer-events: none;
     }
 
     .btn-filter {
@@ -915,12 +913,6 @@
       line-height: 1.7;
     }
 
-    .dp-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
     .btn-dp-primary {
       display: block;
       width: 100%;
@@ -1155,16 +1147,399 @@
       text-align: center;
     }
 
-    /* ── Print ──────────────────────────────────────────── */
+    /* ── Print / PDF 출력 ──────────────────────────────── */
+    #print-overlay {
+      display: none;
+    }
+
+    #print-overlay.active {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: var(--white);
+      overflow-y: auto;
+      padding: 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .print-close-bar {
+      position: sticky;
+      top: 0;
+      z-index: 10001;
+      background: var(--gray-dark);
+      color: #fff;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+    }
+
+    .print-close-bar button {
+      padding: 6px 16px;
+      border-radius: 6px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .print-close-bar .btn-print {
+      background: var(--green-main);
+      color: #fff;
+    }
+
+    .print-close-bar .btn-cancel {
+      background: rgba(255, 255, 255, .15);
+      color: #fff;
+    }
+
+    .print-close-bar .print-info {
+      font-size: 13px;
+      color: #8899aa;
+      margin-left: auto;
+    }
+
+    .print-page {
+      padding: 28px 36px;
+      max-width: 1400px;
+      margin: 0 auto;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .print-page:last-child {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    .print-section-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      padding: 12px 0 8px;
+      margin-bottom: 16px;
+      border-bottom: 3px solid var(--gray-dark);
+    }
+
+    .print-section-title.doc {
+      border-bottom-color: var(--doc-main);
+      color: var(--doc-dark);
+    }
+
+    .print-section-title.user {
+      border-bottom-color: var(--green-main);
+      color: var(--green-dark);
+    }
+
+    .print-section-title.admin {
+      border-bottom-color: var(--admin-main);
+      color: var(--admin-dark);
+    }
+
+    .print-page-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .print-page-id {
+      font-size: 18px;
+      font-weight: 900;
+      font-family: monospace;
+      color: var(--green-main);
+    }
+
+    .print-page-id.doc {
+      color: var(--doc-main);
+    }
+
+    .print-page-id.admin {
+      color: var(--admin-main);
+    }
+
+    .print-page-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .print-page-desc {
+      font-size: 13px;
+      color: var(--text-sm);
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    /* ★ 핵심: 이미지 + 디스크립션 2컬럼 레이아웃 */
+    .print-content-row {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .print-content-left {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .print-content-right {
+      width: 240px !important;
+      max-height: none !important;
+      overflow: visible !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+
+
+
+    .print-content-right .print-desc-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-sm);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+
+    .print-content-right .print-desc-body {
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .print-content-right .print-desc-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      margin-top: 8px;
+    }
+
+    .print-content-right .print-desc-info {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid var(--gray-light);
+    }
+
+    .print-content-right .print-desc-info div {
+      display: flex;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-sm);
+      margin-bottom: 2px;
+    }
+
+    .print-content-right .print-desc-info strong {
+      min-width: 32px;
+      color: var(--text);
+    }
+
+    .print-page-img {
+      width: 100%;
+      max-width: 100%;
+      border: 1px solid var(--gray-light);
+      border-radius: 4px;
+      display: block;
+    }
+
+    .print-page-noimg {
+      width: 100%;
+      height: 200px;
+      background: var(--gray-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-sm);
+      font-size: 14px;
+      border-radius: 4px;
+      border: 1px solid var(--gray-light);
+    }
+
+    .print-spec {
+      margin-top: 12px;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .print-divider-page {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-height: 100vh;
+      padding: 0 !important;
+    }
+
+    .print-divider-inner {
+      text-align: center;
+    }
+
+    .print-divider-title {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--doc-dark);
+      letter-spacing: 0.05em;
+    }
+
+    .print-divider-title.admin {
+      color: var(--admin-dark);
+    }
+
+    .print-divider-title.doc {
+      color: var(--doc-dark);
+    }
+
+    /* user는 기본 green */
+    .print-divider-title:not(.admin):not(.doc) {
+      color: var(--green-dark);
+    }
+
+
     @media print {
 
-      #sidebar,
-      .tb-actions {
-        display: none;
+      /* 앱 영역 완전 제거 */
+      body>#app {
+        display: none !important;
       }
 
-      body.mode-detail #detail-view {
-        overflow: visible;
+      /* html, body 스크롤 제한 해제 */
+      html,
+      body {
+        height: auto !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      /* overlay를 일반 문서 흐름으로 */
+      #print-overlay {
+        display: block !important;
+        position: static !important;
+        overflow: visible !important;
+        height: auto !important;
+        inset: auto !important;
+        z-index: auto !important;
+      }
+
+      /* 컨트롤 바 숨김 */
+      #print-overlay .print-close-bar {
+        display: none !important;
+      }
+
+      /* 페이지 나누기 보장 */
+      .print-page {
+        page-break-after: always !important;
+        break-after: page !important;
+        overflow: visible !important;
+        padding: 12px 8px !important;
+      }
+
+      .print-page:last-child {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+
+      /* 디스크립션 전체 노출 */
+      .print-content-row {
+        display: flex !important;
+      }
+
+      .print-content-right {
+        width: 280px !important;
+        max-height: none !important;
+        overflow: visible !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      .print-page-img {
+        max-height: 80vh;
+        object-fit: contain;
+        object-position: top;
+      }
+
+      /* 목차 다단 인쇄 지원 */
+      .print-page [style*="columns"] {
+        columns: 3 !important;
+        column-gap: 20px !important;
+      }
+
+      /* 목차 페이지 분리 방지 */
+      .print-page:has(.print-section-title:first-child:last-of-type) {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+
+      /* 목차 한 페이지 강제 */
+      .print-toc-page {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        page-break-after: always !important;
+        break-after: page !important;
+      }
+
+      .print-toc-page .print-section-title {
+        font-size: 18px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .print-divider-page {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-height: 100vh !important;
+        height: 100vh !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+
+      .print-divider-title {
+        font-size: 36px !important;
+      }
+
+
+      /* 페이지 헤더 + 설명 + 콘텐츠가 분리되지 않도록 */
+      .print-page-header,
+      .print-page-desc {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+
+      .print-content-row {
+        display: flex !important;
+        page-break-before: avoid !important;
+        break-before: avoid !important;
+        page-break-inside: auto !important;
+        break-inside: auto !important;
+      }
+
+      /* 우측 디스크립션이 길 경우 자연스럽게 다음 페이지로 이어짐 */
+      .print-content-right {
+        width: 240px !important;
+        max-height: none !important;
+        overflow: visible !important;
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+      }
+
+      /* 각 print-page 자체는 내부 분할 허용 (긴 콘텐츠 수용) */
+      .print-page {
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: auto !important;
+        break-inside: auto !important;
+        overflow: visible !important;
+        padding: 12px 8px !important;
+      }
+
+
+      @page {
+        size: A4 landscape;
+        margin: 10mm;
       }
     }
   </style>
@@ -1177,7 +1552,7 @@
     <nav id="sidebar">
       <div class="sb-header">
         <h1>한국숲해설가협회 SB</h1>
-        <p>v1.0 &nbsp;|&nbsp; 개발 전달용</p>
+        <p>v1.0 &nbsp;|&nbsp; 개발 전달용&nbsp;|&nbsp; 배은아</p>
       </div>
       <div id="sbNav"></div>
       <div class="sb-stats" id="sbStats"></div>
@@ -1189,13 +1564,15 @@
 
       <!-- 상단바 -->
       <header id="topbar">
-        <!-- 목록 모드 -->
+
+        <!-- ★ 목록 모드 헤더 ★ -->
         <div id="tb-list">
           <span class="tb-badge" id="sectionBadge">전체</span>
           <span id="topbarTitle">전체 화면 목록</span>
           <span id="topbarSub"></span>
           <div class="tb-spacer"></div>
           <div class="tb-actions">
+            <button class="btn-filter" id="btnPdf" onclick="exportAllPDF()" title="전체 PDF 다운로드">PDF</button>
             <div class="tb-search">
               <input type="text" id="sbSearch" placeholder="페이지 검색..." oninput="filterSearch(this.value)">
             </div>
@@ -1210,7 +1587,7 @@
           </div>
         </div>
 
-        <!-- 상세 모드 -->
+        <!-- ★ 상세 모드 헤더 ★ -->
         <div id="tb-detail">
           <button class="btn-back" onclick="backToList()">← 목록</button>
           <span class="tb-badge" id="detailBadge">사용자</span>
@@ -1222,6 +1599,7 @@
             <button class="btn-nav" id="btnNext" onclick="navigateDetail(1)">다음 ▶</button>
           </div>
         </div>
+
       </header>
 
       <!-- 컨텐츠 영역 -->
@@ -1249,8 +1627,25 @@
 
   </div><!-- #app -->
 
+  <!-- ★ PDF 인쇄용 오버레이 ★ -->
+  <div id="print-overlay"></div>
+
   <script src="data/pages.js"></script>
-  <script src="data/specs/A01.js"></script>
+  <script>
+    // ── 스펙 파일 자동 로드 ───────────────────────────────────
+    // PAGES 배열의 ID에서 하이픈 제거 → data/specs/{ID}.js 로드
+    // 예: DOC-05 → DOC05.js, A01 → A01.js
+    (function autoLoadSpecs() {
+      const pages = window.PAGES || [];
+      const loaded = new Set();
+      pages.forEach(p => {
+        const fileName = p.id.replace(/-/g, '');
+        if (loaded.has(fileName)) return;
+        loaded.add(fileName);
+        document.write('<script src="data/specs/' + fileName + '.js"><\/script>');
+      });
+    })();
+  </script>
 
   <script>
     // ── 외부 데이터 ───────────────────────────────────────────
@@ -1266,7 +1661,7 @@
     let lastDetailId = null;
 
     // ── 섹션 헬퍼 ────────────────────────────────────────────
-    function getSectionType(p) { return p.section; } // 'doc' | 'user' | 'admin'
+    function getSectionType(p) { return p.section; }
     function getSectionLabel(sec) {
       return { doc: '프로젝트 문서', user: '사용자', admin: '관리자' }[sec] || sec;
     }
@@ -1300,6 +1695,228 @@
       });
     }
 
+    // ── 상세 모드 네비게이션용 리스트 ─────────────────────────
+    function getDetailNavList() {
+      if (!currentDetailId) return getFilteredPages();
+      const currentPage = PAGES.find(p => p.id === currentDetailId);
+      if (!currentPage) return getFilteredPages();
+      const currentSection = currentPage.section;
+      if (currentFilter === 'all') {
+        return PAGES.filter(p => {
+          if (p.section !== currentSection) return false;
+          if (searchKw) {
+            const kw = searchKw.toLowerCase();
+            return p.name.toLowerCase().includes(kw) || p.id.toLowerCase().includes(kw) ||
+              p.group.toLowerCase().includes(kw) || p.desc.toLowerCase().includes(kw) ||
+              (p.path || '').toLowerCase().includes(kw);
+          }
+          return true;
+        });
+      }
+      return getFilteredPages();
+    }
+    // ══════════════════════════════════════════════════════════
+    // 전체 PDF 다운로드 (인쇄 방식)
+    // ══════════════════════════════════════════════════════════
+    function exportAllPDF() {
+      const overlay = document.getElementById('print-overlay');
+      const sectionOrder = ['doc', 'user', 'admin'];
+      const sectionLabels = { doc: '프로젝트 문서', user: '사용자 페이지', admin: '관리자 페이지' };
+
+      let html = '';
+
+      // ── 상단 컨트롤 바 ──
+      html += `
+    <div class="print-close-bar">
+      <button class="btn-print" onclick="doPrint()">🖨 인쇄 / PDF 저장</button>
+      <button class="btn-cancel" onclick="closePrintOverlay()">✕ 닫기</button>
+      <span class="print-info">총 ${PAGES.length}개 화면 &nbsp;|&nbsp; 인쇄 시 A4 가로 권장 &nbsp;|&nbsp; "PDF로 저장" 선택</span>
+    </div>`;
+
+      // ── 표지 ──
+      html += `
+    <div class="print-page print-divider-page">
+      <div class="print-divider-inner">
+        <div style="font-size:36px; font-weight:900; color:var(--green-dark); margin-bottom:8px;">한국숲해설가협회</div>
+        <div style="font-size:24px; font-weight:700; color:var(--text); margin-bottom:24px;">스토리보드 v1.0</div>
+        <div style="font-size:14px; color:var(--text-sm);">
+          전체 ${PAGES.length}개 화면 &nbsp;|&nbsp;
+          문서 ${PAGES.filter(p => p.section === 'doc').length} /
+          사용자 ${PAGES.filter(p => p.section === 'user').length} /
+          관리자 ${PAGES.filter(p => p.section === 'admin').length}
+        </div>
+        <div style="font-size:13px; color:var(--text-sm); margin-top:8px;">
+          생성일: ${new Date().toLocaleDateString('ko-KR')}
+        </div>
+      </div>
+    </div>`;
+
+      // ── 목차 (한 페이지 · 섹션 이어지기) ──
+      const totalPages = PAGES.length;
+      let tocCols = 3, tocFontSize = 11, tocLineHeight = 1.7;
+      if (totalPages > 80) { tocCols = 4; tocFontSize = 9; tocLineHeight = 1.5; }
+      else if (totalPages > 60) { tocCols = 3; tocFontSize = 10; tocLineHeight = 1.55; }
+      else if (totalPages > 40) { tocCols = 3; tocFontSize = 11; tocLineHeight = 1.6; }
+
+      html += `<div class="print-page print-toc-page">`;
+      html += `<div class="print-section-title" style="margin-bottom:10px; padding-bottom:6px;">목차</div>`;
+      html += `<div style="columns:${tocCols}; column-gap:16px; font-size:${tocFontSize}px; line-height:${tocLineHeight}; column-fill:balance;">`;
+
+      sectionOrder.forEach(sec => {
+        const secPages = PAGES.filter(p => p.section === sec);
+        if (!secPages.length) return;
+        const borderColor = sec === 'admin' ? 'var(--admin-light)' : sec === 'doc' ? 'var(--doc-light)' : 'var(--green-light)';
+
+        html += `<div style="font-size:${tocFontSize + 2}px; font-weight:700; color:var(--text); margin:8px 0 3px; padding-bottom:2px; border-bottom:2px solid ${borderColor};">${sectionLabels[sec]} (${secPages.length})</div>`;
+
+        const groups = [...new Set(secPages.map(p => p.group))];
+        groups.forEach(g => {
+          const items = secPages.filter(p => p.group === g);
+          html += `<div style="break-inside:avoid-column; margin-bottom:4px;">`;
+          html += `<div style="font-size:${tocFontSize}px; font-weight:700; color:var(--text-sm); margin:2px 0 1px;">${g}</div>`;
+          items.forEach(p => {
+            html += `<div style="padding-left:6px; font-size:${tocFontSize - 1}px; color:var(--gray-mid); line-height:${tocLineHeight};">${p.id} ${p.name}</div>`;
+          });
+          html += `</div>`;
+        });
+      });
+
+      html += `</div></div>`;
+
+      // ── 각 화면 페이지 (이미지 + 디스크립션 2컬럼) ──
+      let lastSec = '';
+      PAGES.forEach(p => {
+        const sec = p.section;
+        const secClass = getSectionIdClass(sec);
+
+        // 섹션 구분 페이지 — 정중앙 배치
+        if (sec !== lastSec) {
+          html += `
+        <div class="print-page print-divider-page">
+          <div class="print-divider-inner">
+            <div class="print-divider-title ${secClass}">${sectionLabels[sec]}</div>
+          </div>
+        </div>`;
+          lastSec = sec;
+        }
+
+        // 스펙/설명 콘텐츠 구성
+        const spec = SPECS[p.id] || '';
+        const tagsHtml = (p.tags || [])
+          .map(t => `<span class="tag ${t}" style="font-size:11px; padding:1px 5px;">${TAG_LABELS[t] || t}</span>`)
+          .join('');
+
+        // 우측 디스크립션 패널 내용
+        let rightHtml = '';
+
+        // 기본 정보
+        rightHtml += `
+        <div class="print-desc-info">
+          <div><strong>ID</strong><span>${p.id}</span></div>
+          <div><strong>섹션</strong><span>${getSectionLabel(sec)} — ${p.group}</span></div>
+          ${p.path && p.path !== '#' ? `<div><strong>경로</strong><span style="word-break:break-all; font-family:monospace; font-size:10px;">${p.path.replace('../outputs/', '')}</span></div>` : ''}
+        </div>`;
+
+        // 태그
+        if (tagsHtml) {
+          rightHtml += `
+          <div style="margin-top:8px;">
+            <div class="print-desc-label">태그</div>
+            <div class="print-desc-tags">${tagsHtml}</div>
+          </div>`;
+        }
+
+        // 스펙이 있으면 스펙, 없으면 설명
+        if (spec) {
+          rightHtml += `
+          <div style="margin-top:10px;">
+            <div class="print-desc-label">화면 스펙</div>
+            <div class="print-desc-body spec-content">${spec}</div>
+          </div>`;
+        } else {
+          rightHtml += `
+          <div style="margin-top:10px;">
+            <div class="print-desc-label">${sec === 'doc' ? '문서 설명' : '화면 설명'}</div>
+            <div class="print-desc-body">${p.desc}</div>
+          </div>`;
+        }
+
+        // 이미지 오류 대체 텍스트
+        const noImgMsg = sec === 'doc' ? '📄 문서 이미지 미등록' : '🖼 스크린샷 미캡처';
+
+        html += `
+      <div class="print-page">
+        <div class="print-page-header">
+          <span class="print-page-id ${secClass}">${p.id}</span>
+          <span class="print-page-name">${p.name}</span>
+        </div>
+        <div class="print-page-desc">${p.desc}</div>
+        <div class="print-content-row">
+          <div class="print-content-left">
+            <img class="print-page-img" src="images/${p.img}" alt="${p.name}"
+              onerror="this.outerHTML='<div class=\\'print-page-noimg\\'>${noImgMsg}</div>'">
+          </div>
+          <div class="print-content-right">
+            ${rightHtml}
+          </div>
+        </div>
+      </div>`;
+      });
+
+      overlay.innerHTML = html;
+      overlay.classList.add('active');
+      overlay.scrollTop = 0;
+    }
+
+
+    function doPrint() {
+      const overlay = document.getElementById('print-overlay');
+      const app = document.getElementById('app');
+      const modal = document.getElementById('imgModal');
+
+      // 1) 앱 숨기기
+      app.style.display = 'none';
+      if (modal) modal.style.display = 'none';
+
+      // 2) overlay를 fixed → static 일반 flow로 전환
+      overlay.style.position = 'static';
+      overlay.style.overflow = 'visible';
+      overlay.style.height = 'auto';
+      overlay.style.inset = 'auto';
+      overlay.style.zIndex = 'auto';
+
+      // 3) body 스크롤 허용
+      document.body.style.overflow = 'visible';
+      document.body.style.height = 'auto';
+      document.documentElement.style.overflow = 'visible';
+      document.documentElement.style.height = 'auto';
+
+      // 4) 인쇄 실행 (약간의 딜레이로 렌더링 보장)
+      setTimeout(() => {
+        window.print();
+
+        // 5) 인쇄 후 원래 상태 복원
+        app.style.display = '';
+        if (modal) modal.style.display = '';
+        overlay.style.position = '';
+        overlay.style.overflow = '';
+        overlay.style.height = '';
+        overlay.style.inset = '';
+        overlay.style.zIndex = '';
+        document.body.style.overflow = '';
+        document.body.style.height = '';
+        document.documentElement.style.overflow = '';
+        document.documentElement.style.height = '';
+      }, 100);
+    }
+
+
+    function closePrintOverlay() {
+      const overlay = document.getElementById('print-overlay');
+      overlay.classList.remove('active');
+      overlay.innerHTML = '';
+    }
+
     // ── 사이드바 빌드 ─────────────────────────────────────────
     function buildSidebar() {
       const nav = document.getElementById('sbNav');
@@ -1311,7 +1928,6 @@
         const secPages = PAGES.filter(p => p.section === sec);
         if (!secPages.length) return;
 
-        // doc 뒤 구분선
         if (secIdx > 0 && sectionOrder[secIdx - 1] === 'doc') {
           const divider = document.createElement('div');
           divider.style.cssText = 'height:1px; background:rgba(255,255,255,.08); margin:8px 14px;';
@@ -1466,7 +2082,6 @@
       document.getElementById('detailTitle').textContent = p.name;
       updateNavButtons();
 
-      // 이미지
       const imgWrap = document.getElementById('detail-img-wrap');
       imgWrap.innerHTML = '<img id="detail-img" src="" alt="" onclick="openModalCurrent()">';
       const newImg = document.getElementById('detail-img');
@@ -1496,7 +2111,7 @@
     function buildDescPanel(p) {
       const panel = document.getElementById('desc-panel');
       const sec = p.section;
-      const list = getFilteredPages();
+      const list = getDetailNavList();
       const idx = list.findIndex(pg => pg.id === p.id);
 
       const tagsHtml = (p.tags || []).length
@@ -1513,6 +2128,9 @@
 
       const protoBtn = p.path && p.path !== '#'
         ? `<a href="${p.path}" target="_blank" class="btn-dp-primary ${getSectionIdClass(sec)}">프로토타입 열기 →</a>` : '';
+
+      const sectionLabel = getSectionLabel(sec);
+      const navPosText = idx >= 0 ? `${sectionLabel} ${idx + 1} / ${list.length}` : '';
 
       panel.innerHTML = `
     <div class="resize-handle" id="panel-resize"></div>
@@ -1546,20 +2164,22 @@
       ${descSection}
     </div>
 
+    ${protoBtn ? `<div class="dp-sec">${protoBtn}</div>` : ''}
+
     <div class="dp-sec">
       <div class="dp-label">이동</div>
       <div class="dp-nav-row">
         <button class="btn-dp-sec" onclick="navigateDetail(-1)" ${idx <= 0 ? 'disabled' : ''}>◀ 이전</button>
         <button class="btn-dp-sec" onclick="navigateDetail(1)"  ${idx >= list.length - 1 ? 'disabled' : ''}>다음 ▶</button>
       </div>
-      <div class="dp-pos">${idx >= 0 ? idx + 1 + ' / ' + list.length : ''}</div>
+      <div class="dp-pos">${navPosText}</div>
     </div>`;
 
       initPanelResize();
     }
 
     function updateNavButtons() {
-      const list = getFilteredPages();
+      const list = getDetailNavList();
       const idx = list.findIndex(p => p.id === currentDetailId);
       const btnPrev = document.getElementById('btnPrev');
       const btnNext = document.getElementById('btnNext');
@@ -1568,7 +2188,7 @@
     }
 
     function navigateDetail(dir) {
-      const list = getFilteredPages();
+      const list = getDetailNavList();
       const idx = list.findIndex(p => p.id === currentDetailId);
       const newIdx = idx + dir;
       if (newIdx < 0 || newIdx >= list.length) return;
@@ -1720,6 +2340,7 @@
     buildSidebar();
     render();
   </script>
+
 </body>
 
 </html>

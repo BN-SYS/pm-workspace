@@ -33,7 +33,7 @@ window.PAGES = [
   },
   {
     id: 'DOC-05', section: 'doc', group: 'Documents', name: '공통 레이아웃',
-    path: '#', img: 'common-layout.png', tags: [],
+    path: '#', img: 'DOC05_공통레이아웃.png', tags: [],
     desc: 'Header, Footer, GNB 등 공통 레이아웃 구성 및 규칙'
   },
 

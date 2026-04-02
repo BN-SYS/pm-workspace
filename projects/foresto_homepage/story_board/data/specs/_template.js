@@ -8,9 +8,8 @@
  * 1. 이 파일을 복사 → {ID}.js 로 저장  (예: A02.js)
  * 2. 위 주석 헤더 수정
  * 3. window.SPECS['{ID}'] 의 키를 실제 ID로 변경
- * 4. ①~⑦ 내용 채우기
- * 5. index.html 에 아래 한 줄 추가:
- *    <script src="data/specs/{ID}.js"></script>
+ * 4. 내용 채우기
+ * 5. data/specs/ 폴더에 저장하면 자동 연결
  * ──────────────────────────────────────────────
  *
  * [작성 규칙 요약]
@@ -19,29 +18,24 @@
  * - 버튼 표기: [버튼명] + 유형(Primary/Secondary/Danger/Outline/Gray)
  * - 날짜 형식: YYYY-MM-DD 기본
  * - 개인정보 컬럼: 마스킹 여부 반드시 ⚠️ 표기
+ * - h3 타이틀: 번호 없이 텍스트만
+ * - h4 영역: 구조 테이블의 원형 숫자(①②③…)와 매칭
+ * - 구조 + 영역별 상세는 "구조 및 상세" 하나로 통합
+ *   → h4 아래 <p>로 한 줄 요약 + <table>로 상세
  */
 
 window.SPECS = window.SPECS || {};
 window.SPECS['{ID}'] = `
 
-<h3>① 목적</h3>
-<p>
-  이 화면이 존재하는 이유와 사용자 목표를 3~5줄로 서술한다.
-</p>
+<!-- ── 목적 ──────────────────────────────────────── -->
+<h3>목적</h3>
+<p>이 화면이 존재하는 이유와 사용자 목표를 서술한다.</p>
 
-<h3>② 화면 구성</h3>
-<table>
-  <thead><tr><th>#</th><th>영역</th><th>설명</th></tr></thead>
-  <tbody>
-    <tr><td>①</td><td>영역명</td><td>설명</td></tr>
-    <tr><td>②</td><td>영역명</td><td>설명</td></tr>
-    <tr><td>③</td><td>영역명</td><td>설명</td></tr>
-  </tbody>
-</table>
-
-<h3>③ 영역별 상세</h3>
+<!-- ── 구조 및 상세 ──────────────────────────────── -->
+<h3>구조 및 상세</h3>
 
 <h4>① 영역명</h4>
+<p>이 영역의 역할을 한 줄로 요약.</p>
 <table>
   <thead><tr><th>항목</th><th>유형</th><th>설명</th></tr></thead>
   <tbody>
@@ -49,7 +43,27 @@ window.SPECS['{ID}'] = `
   </tbody>
 </table>
 
-<h4>② 테이블 컬럼 (목록 화면인 경우)</h4>
+<h4>② 영역명</h4>
+<p>이 영역의 역할을 한 줄로 요약.</p>
+<table>
+  <thead><tr><th>항목</th><th>유형</th><th>설명</th></tr></thead>
+  <tbody>
+    <tr><td>항목명</td><td>유형</td><td>설명</td></tr>
+  </tbody>
+</table>
+
+<h4>③ 영역명 (목록 테이블인 경우)</h4>
+<p>이 영역의 역할을 한 줄로 요약.</p>
+<table>
+  <thead><tr><th>항목</th><th>유형</th><th>설명</th></tr></thead>
+  <tbody>
+    <tr><td>항목명</td><td>유형</td><td>설명</td></tr>
+  </tbody>
+</table>
+
+<!-- ── 테이블 컬럼 (목록 화면인 경우) ────────────── -->
+<h3>테이블 컬럼</h3>
+<p class="spec-note">⚠️ 목록형이 아닌 경우 이 섹션 삭제</p>
 <table>
   <thead><tr><th>#</th><th>컬럼</th><th>정렬</th><th>비고</th></tr></thead>
   <tbody>
@@ -60,7 +74,8 @@ window.SPECS['{ID}'] = `
 <p class="spec-note"><strong>행 동작:</strong> 클릭 → {다음 화면 ID} (<code>?id={파라미터}</code> 전달)</p>
 <p class="spec-note"><strong>0건 처리:</strong> "조회된 데이터가 없습니다." 표시</p>
 
-<h3>④ Alert 메시지</h3>
+<!-- ── Alert 메시지 ──────────────────────────────── -->
+<h3>Alert 메시지</h3>
 <table>
   <thead><tr><th>#</th><th>상황</th><th>메시지</th><th>유형</th></tr></thead>
   <tbody>
@@ -68,7 +83,9 @@ window.SPECS['{ID}'] = `
   </tbody>
 </table>
 
-<h3>⑤ Validation 규칙</h3>
+<!-- ── Validation ────────────────────────────────── -->
+<h3>Validation</h3>
+<p class="spec-note">⚠️ 입력 필드가 없는 경우 "해당 없음" 기재 후 테이블 삭제</p>
 <table>
   <thead><tr><th>필드</th><th>조건</th><th>메시지</th></tr></thead>
   <tbody>
@@ -76,16 +93,21 @@ window.SPECS['{ID}'] = `
   </tbody>
 </table>
 
-<h3>⑥ 반응형 규칙</h3>
+<!-- ── 반응형 ────────────────────────────────────── -->
+<h3>반응형</h3>
+<p class="spec-note"><strong>Breakpoint:</strong> PC ≥ 1201px / Tablet 768 ~ 1200px / Mobile ≤ 767px</p>
 <table>
-  <thead><tr><th>구분</th><th>기준</th><th>적용 규칙</th></tr></thead>
+  <thead><tr><th>구간</th><th>Breakpoint</th><th>변경 사항</th></tr></thead>
   <tbody>
-    <tr><td>PC</td><td>1101px+</td><td>기본 레이아웃</td></tr>
-    <tr><td>Mobile</td><td>~1100px</td><td><span class="warn">⚠️ 정보 필요</span></td></tr>
+    <tr><td>PC</td><td>≥ 1201px</td><td>기본 레이아웃</td></tr>
+    <tr><td>Tablet</td><td>768 ~ 1200px</td><td><span class="warn">⚠️ 정보 필요</span></td></tr>
+    <tr><td>Mobile</td><td>≤ 767px</td><td><span class="warn">⚠️ 정보 필요</span></td></tr>
   </tbody>
 </table>
+<p class="spec-note">공통 : 터치 영역 최소 44×44 px · 이미지/슬라이드 width 100%</p>
 
-<h3>⑦ 연관 화면</h3>
+<!-- ── 연관 화면 ─────────────────────────────────── -->
+<h3>연관 화면</h3>
 <table>
   <thead><tr><th>관계</th><th>ID</th><th>화면명</th></tr></thead>
   <tbody>
