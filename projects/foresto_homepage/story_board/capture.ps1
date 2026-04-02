@@ -1,13 +1,13 @@
-﻿# ============================================================
-# foresto_homepage 스토리보드 전체 캡처
+# ============================================================
+# 스토리보드 전체 캡처
 # 출력: story_board/images/*.png
-# 사용자 페이지(U__) + 관리자 페이지(A__) 구분 네이밍
+# 실행: PowerShell에서 .\capture.ps1
 # ============================================================
 
 $chrome    = "C:\Program Files\Google\Chrome\Application\chrome.exe"
 $debugPort = 9222
-$baseDir   = "C:\Users\BN659\Desktop\배은아\기획PM\projects\foresto_homepage\outputs"
-$outDir    = "C:\Users\BN659\Desktop\배은아\기획PM\projects\foresto_homepage\story_board\images"
+$baseDir   = (Resolve-Path "$PSScriptRoot\..\outputs").Path   # story_board/../outputs
+$outDir    = "$PSScriptRoot\images"
 
 New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 
@@ -130,18 +130,54 @@ $adminPages = @(
 
 $pages = $userPages + $adminPages
 
-# ── fixed 헤더 → relative 변환 JS ─────────────────────────
-$fixHeaderJS = @"
+# ──────────────────────────────────────────────────────────
+# 페이지 준비 JS
+# 역할 1) fixed 헤더 → relative (캡처 시 가려짐 방지)
+# 역할 2) 큰 min-height 제거 (레이아웃 컨테이너의 min-height:100vh 등이 하단 공백 원인)
+# 역할 3) 스크롤바 숨김
+# ──────────────────────────────────────────────────────────
+$prepareJS = @"
 (function(){
+  // 헤더 fixed 해제
   var hdr = document.querySelector('.site-header');
   if(hdr){ hdr.style.position='relative'; hdr.style.top='0'; hdr.style.left='0'; hdr.style.right='0'; hdr.style.zIndex='1'; }
   document.body.style.paddingTop = '0';
+
+  // 모바일 메뉴 숨김
+  var nav = document.getElementById('mobileNav');
+  if(nav) nav.style.display='none';
+
+  // 스크롤바 숨김
   var st = document.createElement('style');
   st.textContent = '::-webkit-scrollbar{width:0!important;height:0!important}html,body{scrollbar-width:none!important;overflow-y:visible!important}';
   document.head.appendChild(st);
-  var nav = document.getElementById('mobileNav');
-  if(nav) nav.style.display='none';
+
+  // min-height 제거 — 300px 초과 값만 (레이아웃 컨테이너의 min-height:100vh 등)
+  // 이 값이 body.scrollHeight를 늘려서 하단에 공백이 생기는 원인
+  document.querySelectorAll('*').forEach(function(el){
+    var mh = parseInt(window.getComputedStyle(el).minHeight);
+    if(mh > 300) el.style.minHeight = 'unset';
+  });
 })();
+"@
+
+# ──────────────────────────────────────────────────────────
+# 실제 콘텐츠 높이 측정 JS
+# body.scrollHeight 대신 모든 가시 요소의 BoundingClientRect.bottom 최댓값 사용
+# → min-height 제거 후에도 정확한 콘텐츠 끝을 반환
+# ──────────────────────────────────────────────────────────
+$measureJS = @"
+(function(){
+  var maxBottom = 0;
+  document.querySelectorAll('body *').forEach(function(el){
+    var s = window.getComputedStyle(el);
+    if(s.display === 'none' || s.visibility === 'hidden' || s.opacity === '0') return;
+    var r = el.getBoundingClientRect();
+    var bottom = r.bottom + window.pageYOffset;
+    if(bottom > maxBottom) maxBottom = bottom;
+  });
+  return { w: Math.max(document.body.scrollWidth, 1920), h: Math.max(Math.ceil(maxBottom), 600) };
+})()
 "@
 
 # ── CDP 헬퍼 ──────────────────────────────────────────────
@@ -152,6 +188,7 @@ function Send-CDP {
   $seg   = [System.ArraySegment[byte]]::new($bytes)
   $ws.SendAsync($seg, [System.Net.WebSockets.WebSocketMessageType]::Text, $true, [System.Threading.CancellationToken]::None).Wait()
 }
+
 function Recv-CDP {
   param($ws, [int]$timeoutMs = 8000)
   $chunk = [byte[]]::new(65536)
@@ -166,6 +203,7 @@ function Recv-CDP {
     return [System.Text.Encoding]::UTF8.GetString($acc.ToArray()) | ConvertFrom-Json
   } catch { return $null }
 }
+
 function Wait-CDP {
   param($ws, [int]$id, [int]$timeoutMs = 15000)
   $deadline = [DateTime]::Now.AddMilliseconds($timeoutMs)
@@ -174,6 +212,20 @@ function Wait-CDP {
     if ($msg -and $msg.id -eq $id) { return $msg }
   }
   return $null
+}
+
+# readyState === 'complete' 될 때까지 폴링 (최대 $maxMs)
+# 네비게이션 직후 → JS 실행·렌더링 완료를 보장하기 위해 사용
+function Wait-Ready {
+  param($ws, [ref]$msgId, [int]$maxMs = 10000)
+  $deadline = [DateTime]::Now.AddMilliseconds($maxMs)
+  while ([DateTime]::Now -lt $deadline) {
+    Send-CDP $ws $msgId.Value "Runtime.evaluate" @{expression="document.readyState"; returnByValue=$true}
+    $r = Wait-CDP $ws $msgId.Value 2000
+    $msgId.Value++
+    if ($r -and $r.result.result.value -eq 'complete') { return }
+    Start-Sleep -Milliseconds 300
+  }
 }
 
 # ── Chrome 시작 ───────────────────────────────────────────
@@ -210,40 +262,43 @@ foreach ($page in $pages) {
   Write-Host "[$($ok+$fail+1)/$total] $($page.name)" -NoNewline
 
   try {
-    # 페이지 이동
+    # 1) 페이지 이동
     Send-CDP $ws $msgId "Page.navigate" @{url=$fileUrl}
     $null = Wait-CDP $ws $msgId 12000; $msgId++
-    Start-Sleep -Milliseconds 1200
 
-    # fixed 헤더 처리
-    Send-CDP $ws $msgId "Runtime.evaluate" @{expression=$fixHeaderJS; returnByValue=$true}
+    # 2) readyState === 'complete' 대기 (JS 렌더링 포함)
+    $ref = [ref]$msgId
+    Wait-Ready $ws $ref 10000
+    $msgId = $ref.Value
+
+    # 3) JS 데이터 로드 추가 대기 (상세 페이지 AJAX·setTimeout 커버)
+    Start-Sleep -Milliseconds 2000
+
+    # 4) 헤더 처리 + min-height 제거
+    Send-CDP $ws $msgId "Runtime.evaluate" @{expression=$prepareJS; returnByValue=$true}
     $null = Wait-CDP $ws $msgId 3000; $msgId++
     Start-Sleep -Milliseconds 300
 
-    # 전체 페이지 크기 측정
-    Send-CDP $ws $msgId "Runtime.evaluate" @{
-      expression    = "({w: Math.max(document.body.scrollWidth,1920), h: document.body.scrollHeight})"
-      returnByValue = $true
-    }
+    # 5) 실제 콘텐츠 높이 측정 (BoundingClientRect 기반)
+    Send-CDP $ws $msgId "Runtime.evaluate" @{expression=$measureJS; returnByValue=$true}
     $sizeRes = Wait-CDP $ws $msgId 5000; $msgId++
     $pw = [int]$sizeRes.result.result.value.w
     $ph = [int]$sizeRes.result.result.value.h
-    if ($ph -lt 600) { $ph = 900 }
 
-    # 뷰포트 설정 (1920px 고정 폭)
+    # 6) 뷰포트 설정
     Send-CDP $ws $msgId "Emulation.setDeviceMetricsOverride" @{
       width=1920; height=$ph; deviceScaleFactor=1; mobile=$false
     }
     $null = Wait-CDP $ws $msgId 3000; $msgId++
     Start-Sleep -Milliseconds 200
 
-    # 스크린샷
+    # 7) 스크린샷
     Send-CDP $ws $msgId "Page.captureScreenshot" @{format="png"; captureBeyondViewport=$true}
     $ssRes = Wait-CDP $ws $msgId 30000; $msgId++
 
     if ($ssRes -and $ssRes.result.data) {
       [IO.File]::WriteAllBytes($outFile, [Convert]::FromBase64String($ssRes.result.data))
-      Write-Host "  OK" -ForegroundColor Green; $ok++
+      Write-Host "  OK  (${pw}x${ph})" -ForegroundColor Green; $ok++
     } else {
       Write-Host "  SKIP (no data)" -ForegroundColor Yellow; $fail++
     }
