@@ -51,7 +51,7 @@ window.PAGES = [
   // ── 소개 ──────────────────────────────────
   {
     id: 'U02', section: 'user', group: '소개', name: '인사말', path: '../outputs/about/index.html', img: 'U02_소개_인사말.png',
-    tags: [], desc: '협회장 인사말 텍스트 페이지.<br>이미지 + 텍스트 구성.<br>고정 콘텐츠로 DB 연동 불필요 (또는 관리자 조직도/임원진 관리 연동 가능).'
+    tags: [], desc: '협회장 인사말 텍스트 페이지.<br>이미지 + 텍스트 구성.<br>고정 콘텐츠로 DB 연동 불필요.'
   },
   {
     id: 'U03', section: 'user', group: '소개', name: '미션/비전', path: '../outputs/about/vision.html', img: 'U03_소개_미션비전.png',
