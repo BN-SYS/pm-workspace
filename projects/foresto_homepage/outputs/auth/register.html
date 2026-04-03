@@ -171,69 +171,20 @@
             <div style="font-size:13px">본인인증 완료 후 이름·생년월일·성별·휴대폰이 자동으로 입력되었습니다.</div>
           </div>
 
-          <!-- 이름 -->
+          <!-- ★ [신설] 아이디 + 중복확인 — 최상단 배치 -->
           <div style="margin-bottom:16px">
-            <label class="auth-label">이름 <span class="req">*</span></label>
-            <input type="text" class="auth-input" style="padding:0 14px" id="regName" value="김숲해설" disabled>
-          </div>
-
-          <!-- 생년월일 (년/월/일 드롭다운 + 음력 체크박스, 본인인증으로 disabled) -->
-          <div style="margin-bottom:16px">
-            <label class="auth-label">생년월일 <span class="req">*</span></label>
-            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-              <select class="auth-input" id="regBirthY"
-                style="padding:0 8px;width:96px;flex-shrink:0" disabled>
-                <option value="">년</option>
-                <option value="1990" selected>1990년</option>
-              </select>
-              <select class="auth-input" id="regBirthM"
-                style="padding:0 8px;width:76px;flex-shrink:0" disabled>
-                <option value="">월</option>
-                <option value="1" selected>1월</option>
-              </select>
-              <select class="auth-input" id="regBirthD"
-                style="padding:0 8px;width:76px;flex-shrink:0" disabled>
-                <option value="">일</option>
-                <option value="1" selected>1일</option>
-              </select>
-              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:14px;margin-left:6px">
-                <input type="checkbox" id="regLunar"> 음력
-              </label>
-            </div>
-            <div style="font-size:12px;color:var(--gray-mid);margin-top:4px">본인인증으로 확인된 정보입니다.</div>
-          </div>
-
-          <!-- 성별 (본인인증에서 확인, disabled) -->
-          <div style="margin-bottom:16px">
-            <label class="auth-label">성별 <span class="req">*</span></label>
-            <div style="display:flex;gap:24px;margin-top:6px">
-              <label style="display:flex;align-items:center;gap:6px;cursor:default;font-size:14px">
-                <input type="radio" name="regGender" value="m" id="regGenderM" checked disabled> 남성
-              </label>
-              <label style="display:flex;align-items:center;gap:6px;cursor:default;font-size:14px">
-                <input type="radio" name="regGender" value="f" id="regGenderF" disabled> 여성
-              </label>
-            </div>
-            <div style="font-size:12px;color:var(--gray-mid);margin-top:4px">본인인증으로 확인된 정보입니다.</div>
-          </div>
-
-          <!-- 이메일(아이디) + 중복확인 + 뉴스레터 수신 동의 -->
-          <div style="margin-bottom:16px">
-            <label class="auth-label">이메일 (아이디) <span class="req">*</span></label>
+            <label class="auth-label">아이디 <span class="req">*</span></label>
             <div class="form-row-btn">
-              <input type="email" class="auth-input" style="padding:0 14px" id="regEmail"
-                placeholder="example@email.com">
+              <input type="text" class="auth-input" style="padding:0 14px" id="regUserId"
+                placeholder="영문 소문자·숫자 조합, 4~20자" maxlength="20" oninput="RegCtrl.onUserIdInput()">
               <button class="btn btn-outline btn-sm" style="height:46px;white-space:nowrap"
-                onclick="RegCtrl.checkEmail()">중복확인</button>
+                onclick="RegCtrl.checkUserId()">중복확인</button>
             </div>
-            <div class="auth-error-msg" id="regEmailErr">올바른 이메일을 입력해 주세요.</div>
-            <div class="auth-success-msg" id="regEmailOk">사용 가능한 이메일입니다.</div>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;margin-top:8px">
-              <input type="checkbox" id="regEmailNews"> 뉴스레터 / 공지 수신 동의
-            </label>
+            <div class="auth-error-msg" id="regUserIdErr">영문 소문자·숫자 조합 4~20자로 입력해 주세요.</div>
+            <div class="auth-success-msg" id="regUserIdOk">사용 가능한 아이디입니다.</div>
           </div>
 
-          <!-- 비밀번호 -->
+          <!-- ★ [위치 이동] 비밀번호 — 아이디 바로 아래 -->
           <div style="margin-bottom:16px">
             <label class="auth-label">비밀번호 <span class="req">*</span></label>
             <div style="position:relative">
@@ -252,7 +203,7 @@
             <div class="auth-error-msg" id="regPwErr">8자 이상 영문·숫자·특수문자를 포함해 주세요.</div>
           </div>
 
-          <!-- 비밀번호 확인 -->
+          <!-- ★ [위치 이동] 비밀번호 확인 -->
           <div style="margin-bottom:16px">
             <label class="auth-label">비밀번호 확인 <span class="req">*</span></label>
             <input type="password" class="auth-input" style="padding:0 14px" id="regPwConfirm"
@@ -261,32 +212,79 @@
             <div class="auth-success-msg" id="regPwConfirmOk">비밀번호가 일치합니다.</div>
           </div>
 
-          <!-- 휴대폰 + 알림문자 수신 동의 -->
+          <!-- 이름 (본인인증 자동입력) -->
+          <div style="margin-bottom:16px">
+            <label class="auth-label">이름 <span class="req">*</span></label>
+            <input type="text" class="auth-input" style="padding:0 14px" id="regName" value="김숲해설" disabled>
+          </div>
+
+          <!-- 생년월일 (본인인증 자동입력) -->
+          <div style="margin-bottom:16px">
+            <label class="auth-label">생년월일 <span class="req">*</span></label>
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+              <select class="auth-input" id="regBirthY" style="padding:0 8px;width:96px;flex-shrink:0" disabled>
+                <option value="">년</option>
+                <option value="1990" selected>1990년</option>
+              </select>
+              <select class="auth-input" id="regBirthM" style="padding:0 8px;width:76px;flex-shrink:0" disabled>
+                <option value="">월</option>
+                <option value="1" selected>1월</option>
+              </select>
+              <select class="auth-input" id="regBirthD" style="padding:0 8px;width:76px;flex-shrink:0" disabled>
+                <option value="">일</option>
+                <option value="1" selected>1일</option>
+              </select>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:14px;margin-left:6px">
+                <input type="checkbox" id="regLunar"> 음력
+              </label>
+            </div>
+            <div style="font-size:12px;color:var(--gray-mid);margin-top:4px">본인인증으로 확인된 정보입니다.</div>
+          </div>
+
+          <!-- 성별 (본인인증 자동입력) -->
+          <div style="margin-bottom:16px">
+            <label class="auth-label">성별 <span class="req">*</span></label>
+            <div style="display:flex;gap:24px;margin-top:6px">
+              <label style="display:flex;align-items:center;gap:6px;cursor:default;font-size:14px">
+                <input type="radio" name="regGender" value="m" id="regGenderM" checked disabled> 남성
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:default;font-size:14px">
+                <input type="radio" name="regGender" value="f" id="regGenderF" disabled> 여성
+              </label>
+            </div>
+            <div style="font-size:12px;color:var(--gray-mid);margin-top:4px">본인인증으로 확인된 정보입니다.</div>
+          </div>
+
+          <!-- ★ [변경] 이메일 — 아이디 겸용 해제, 중복확인 버튼 제거, 단순 입력 필드 -->
+          <div style="margin-bottom:16px">
+            <label class="auth-label">이메일 <span class="req">*</span></label>
+            <input type="email" class="auth-input" style="padding:0 14px" id="regEmail" placeholder="example@email.com">
+            <div class="auth-error-msg" id="regEmailErr">올바른 이메일을 입력해 주세요.</div>
+            <!-- ★ [삭제] 뉴스레터 / 공지 수신 동의 체크박스 제거 -->
+          </div>
+
+          <!-- 휴대폰 (본인인증 자동입력) -->
           <div style="margin-bottom:16px">
             <label class="auth-label">휴대폰 번호 <span class="req">*</span></label>
             <input type="tel" class="auth-input" style="padding:0 14px" id="regPhone" value="010-1234-5678" disabled>
             <div style="font-size:12px;color:var(--gray-mid);margin-top:4px">본인인증으로 확인된 번호입니다.</div>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;margin-top:8px">
-              <input type="checkbox" id="regSmsAlarm"> 알림문자 수신 동의
-            </label>
+            <!-- ★ [삭제] 알림문자 수신 동의 체크박스 제거 -->
           </div>
 
-          <!-- 주소 (우편번호 + 기본주소 + 상세주소 + 해외거주) -->
+          <!-- 주소 -->
           <div style="margin-bottom:16px">
             <label class="auth-label">주소</label>
             <div style="display:flex;gap:8px;align-items:center">
-              <input type="text" class="auth-input" id="regZip"
-                placeholder="우편번호" style="padding:0 14px;width:110px;flex-shrink:0">
-              <button type="button" class="btn btn-outline btn-sm" id="regAddrSearchBtn"
-                onclick="RegCtrl.searchAddr()" style="height:46px;white-space:nowrap;flex-shrink:0">
+              <input type="text" class="auth-input" id="regZip" placeholder="우편번호"
+                style="padding:0 14px;width:110px;flex-shrink:0">
+              <button type="button" class="btn btn-outline btn-sm" id="regAddrSearchBtn" onclick="RegCtrl.searchAddr()"
+                style="height:46px;white-space:nowrap;flex-shrink:0">
                 우편번호 찾기
               </button>
             </div>
-            <input type="text" class="auth-input" id="regAddr1"
-              placeholder="기본 주소 (우편번호 검색 후 자동 입력)"
+            <input type="text" class="auth-input" id="regAddr1" placeholder="기본 주소 (우편번호 검색 후 자동 입력)"
               style="margin-top:8px;padding:0 14px;background:var(--gray-light);color:var(--gray-mid)" disabled>
-            <input type="text" class="auth-input" id="regAddr2"
-              placeholder="상세 주소 (동·호수 등 직접 입력)"
+            <input type="text" class="auth-input" id="regAddr2" placeholder="상세 주소 (동·호수 등 직접 입력)"
               style="margin-top:8px;padding:0 14px">
             <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;margin-top:8px">
               <input type="checkbox" id="regOverseas" onchange="RegCtrl.toggleOverseas(this.checked)"> 해외 거주
@@ -332,6 +330,7 @@
             </button>
           </div>
         </div>
+
 
         <!-- ══ STEP 4: 가입 완료 ══ -->
         <div class="reg-panel" id="regPanel4">
@@ -441,6 +440,42 @@
         this._goStep(2);
       },
 
+      /* ★ [신설] 아이디 입력 시 중복확인 플래그 초기화 */
+      onUserIdInput() {
+        this._userIdChecked = false;
+        document.getElementById('regUserIdOk')?.classList.remove('show');
+        document.getElementById('regUserIdErr')?.classList.remove('show');
+      },
+
+      /* ★ [신설] 아이디 중복확인 — 기존 checkEmail 대체 */
+      checkUserId() {
+        const uid = document.getElementById('regUserId')?.value.trim() || '';
+        const errEl = document.getElementById('regUserIdErr');
+        const okEl = document.getElementById('regUserIdOk');
+        const valid = /^[a-z0-9]{4,20}$/.test(uid);
+
+        if (!valid) {
+          if (errEl) { errEl.textContent = '영문 소문자·숫자 조합 4~20자로 입력해 주세요.'; errEl.classList.add('show'); }
+          if (okEl) okEl.classList.remove('show');
+          this._userIdChecked = false;
+          return;
+        }
+
+        App.toast('아이디 확인 중...');
+        setTimeout(() => {
+          // 데모용: 'taken' 이라는 아이디만 사용 불가 처리
+          if (uid === 'taken') {
+            if (errEl) { errEl.textContent = '이미 사용 중인 아이디입니다.'; errEl.classList.add('show'); }
+            if (okEl) okEl.classList.remove('show');
+            this._userIdChecked = false;
+          } else {
+            if (errEl) errEl.classList.remove('show');
+            if (okEl) okEl.classList.add('show');
+            this._userIdChecked = true;
+          }
+        }, 600);
+      },
+
       doVerify() {
         const btn = document.querySelector('#regPanel2 .auth-btn-primary');
         if (btn) { btn.textContent = '인증 처리 중...'; btn.disabled = true; }
@@ -448,12 +483,12 @@
           this._verified = true;
 
           /* 본인인증 결과 → STEP 3 필드 반영 (실제 구현 시 API 응답값 사용) */
-          const verifiedName   = '김숲해설';
+          const verifiedName = '김숲해설';
           const verifiedBirthY = '1990';
           const verifiedBirthM = '1';
           const verifiedBirthD = '1';
           const verifiedGender = 'm';
-          const verifiedPhone  = '010-1234-5678';
+          const verifiedPhone = '010-1234-5678';
 
           const nameEl = document.getElementById('regName');
           if (nameEl) nameEl.value = verifiedName;
@@ -491,8 +526,8 @@
           const phoneEl = document.getElementById('regPhone');
           if (phoneEl) phoneEl.value = verifiedPhone;
 
-          const doneBx  = document.getElementById('verifyDone');
-          const infoEl  = document.getElementById('verifyInfo');
+          const doneBx = document.getElementById('verifyDone');
+          const infoEl = document.getElementById('verifyInfo');
           const nextBtn = document.getElementById('verifyNextBtn');
           if (doneBx) doneBx.classList.add('show');
           if (infoEl) infoEl.textContent = `${verifiedName} · ${verifiedBirthY}-0${verifiedBirthM}-0${verifiedBirthD} · ${verifiedPhone}`;
@@ -510,7 +545,7 @@
       checkEmail() {
         const email = document.getElementById('regEmail')?.value.trim() || '';
         const errEl = document.getElementById('regEmailErr');
-        const okEl  = document.getElementById('regEmailOk');
+        const okEl = document.getElementById('regEmailOk');
         const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         if (!valid) {
           if (errEl) { errEl.textContent = '올바른 이메일을 입력해 주세요.'; errEl.classList.add('show'); }
@@ -533,7 +568,7 @@
       },
 
       checkPwStrength(pw) {
-        const fill  = document.getElementById('pwStrengthFill');
+        const fill = document.getElementById('pwStrengthFill');
         const label = document.getElementById('pwStrengthLabel');
         if (!fill || !label) return;
         let score = 0;
@@ -542,24 +577,24 @@
         if (/[0-9]/.test(pw)) score++;
         if (/[^A-Za-z0-9]/.test(pw)) score++;
         const levels = [
-          { w: '0%',   bg: 'transparent',         text: '' },
-          { w: '25%',  bg: 'var(--danger)',        text: '취약한 비밀번호' },
-          { w: '50%',  bg: 'var(--accent)',        text: '보통 비밀번호' },
-          { w: '75%',  bg: 'var(--green-light)',   text: '강한 비밀번호' },
-          { w: '100%', bg: 'var(--green-dark)',    text: '매우 강한 비밀번호' },
+          { w: '0%', bg: 'transparent', text: '' },
+          { w: '25%', bg: 'var(--danger)', text: '취약한 비밀번호' },
+          { w: '50%', bg: 'var(--accent)', text: '보통 비밀번호' },
+          { w: '75%', bg: 'var(--green-light)', text: '강한 비밀번호' },
+          { w: '100%', bg: 'var(--green-dark)', text: '매우 강한 비밀번호' },
         ];
         const lv = levels[Math.min(score, 4)];
-        fill.style.width      = lv.w;
+        fill.style.width = lv.w;
         fill.style.background = lv.bg;
-        label.textContent     = lv.text;
-        label.style.color     = lv.bg;
+        label.textContent = lv.text;
+        label.style.color = lv.bg;
       },
 
       checkPwMatch() {
-        const pw    = document.getElementById('regPw')?.value || '';
-        const pw2   = document.getElementById('regPwConfirm')?.value || '';
+        const pw = document.getElementById('regPw')?.value || '';
+        const pw2 = document.getElementById('regPwConfirm')?.value || '';
         const errEl = document.getElementById('regPwConfirmErr');
-        const okEl  = document.getElementById('regPwConfirmOk');
+        const okEl = document.getElementById('regPwConfirmOk');
         if (!pw2) { errEl?.classList.remove('show'); okEl?.classList.remove('show'); return; }
         const match = pw === pw2;
         errEl?.classList.toggle('show', !match);
@@ -569,8 +604,8 @@
       togglePw(inputId, iconEl) {
         const input = document.getElementById(inputId);
         if (!input) return;
-        if (input.type === 'password') { input.type = 'text';     iconEl.textContent = '🙈'; }
-        else                           { input.type = 'password'; iconEl.textContent = '👁'; }
+        if (input.type === 'password') { input.type = 'text'; iconEl.textContent = '🙈'; }
+        else { input.type = 'password'; iconEl.textContent = '👁'; }
       },
 
       searchAddr() {
@@ -578,35 +613,36 @@
       },
 
       toggleOverseas(checked) {
-        const zipEl    = document.getElementById('regZip');
-        const addr1El  = document.getElementById('regAddr1');
-        const addr2El  = document.getElementById('regAddr2');
+        const zipEl = document.getElementById('regZip');
+        const addr1El = document.getElementById('regAddr1');
+        const addr2El = document.getElementById('regAddr2');
         const searchBtn = document.getElementById('regAddrSearchBtn');
-        if (zipEl)    zipEl.disabled    = checked;
+        if (zipEl) zipEl.disabled = checked;
         if (searchBtn) searchBtn.disabled = checked;
-        if (addr1El)  addr1El.style.opacity = checked ? '0.4' : '1';
-        if (addr2El)  addr2El.disabled  = checked;
+        if (addr1El) addr1El.style.opacity = checked ? '0.4' : '1';
+        if (addr2El) addr2El.disabled = checked;
         if (checked) {
-          if (zipEl)   zipEl.value  = '';
+          if (zipEl) zipEl.value = '';
           if (addr1El) addr1El.value = '';
           if (addr2El) addr2El.value = '';
         }
       },
 
+      /* ★ [변경] submitRegister — 아이디 검증 추가, 이메일 중복확인 제거 */
       submitRegister() {
         const get = id => document.getElementById(id)?.value?.trim() || '';
 
-        /* 이메일 */
-        const email = get('regEmail');
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          App.toast('이메일을 올바르게 입력해 주세요.', 'warning'); return;
+        /* 아이디 */
+        const uid = get('regUserId');
+        if (!/^[a-z0-9]{4,20}$/.test(uid)) {
+          App.toast('아이디를 올바르게 입력해 주세요.', 'warning'); return;
         }
-        if (!this._emailChecked) {
-          App.toast('이메일 중복 확인을 해주세요.', 'warning'); return;
+        if (!this._userIdChecked) {
+          App.toast('아이디 중복 확인을 해주세요.', 'warning'); return;
         }
 
         /* 비밀번호 */
-        const pw     = get('regPw');
+        const pw = get('regPw');
         const pwConf = get('regPwConfirm');
         const pwValid = pw.length >= 8 && /[0-9]/.test(pw) && /[^A-Za-z0-9]/.test(pw);
         if (!pwValid) {
@@ -616,7 +652,13 @@
           App.toast('비밀번호가 일치하지 않습니다.', 'warning'); return;
         }
 
-        /* 주소 (해외거주 체크 시 생략 가능) */
+        /* 이메일 (형식만 체크, 중복확인 없음) */
+        const email = get('regEmail');
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          App.toast('이메일을 올바르게 입력해 주세요.', 'warning'); return;
+        }
+
+        /* 주소 */
         const overseas = document.getElementById('regOverseas')?.checked;
         if (!overseas) {
           if (!get('regZip') || !get('regAddr1')) {
@@ -625,7 +667,7 @@
         }
 
         /* 가입 완료 */
-        const name   = get('regName') || '회원';
+        const name = get('regName') || '회원';
         const doneEl = document.getElementById('regDoneName');
         if (doneEl) doneEl.textContent = name;
         this._goStep(4);
