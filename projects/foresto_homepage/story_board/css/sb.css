@@ -695,6 +695,7 @@ body.mode-detail #list-view {
 .tag.list        { background: #e3f2fd; color: #1565c0; }
 .tag.form        { background: #fff8e1; color: #f57f17; }
 .tag.detail      { background: #e0f7fa; color: #006064; }
+.tag.static     { background: #eeeeee; color: #424242; }
 
 .empty-msg {
   text-align: center;

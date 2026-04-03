@@ -51,15 +51,15 @@ window.PAGES = [
   // ── 소개 ──────────────────────────────────
   {
     id: 'U02', section: 'user', group: '소개', name: '인사말', path: '../outputs/about/index.html', img: 'U02_소개_인사말.png',
-    tags: [], desc: '정적 콘텐츠 페이지.<br>협회장 인사말 텍스트 페이지.<br>이미지 + 텍스트 구성.'
+    tags: [ 'static' ], desc: '협회장 인사말 이미지 + 텍스트 구성.'
   },
   {
     id: 'U03', section: 'user', group: '소개', name: '미션/비전', path: '../outputs/about/vision.html', img: 'U03_소개_미션비전.png',
-    tags: [], desc: '정적 콘텐츠 페이지.<br>협회 미션·비전·핵심가치 소개.'
+    tags: ['static'], desc: '협회 미션·비전·핵심가치 소개.'
   },
   {
     id: 'U04', section: 'user', group: '소개', name: '주요사업', path: '../outputs/about/project.html', img: 'U04_소개_주요사업.png',
-    tags: [], desc: '정적 콘텐츠 페이지.<br>협회 주요사업 목록 및 설명.<br>카드형 레이아웃.'
+    tags: ['static'], desc: '협회 주요사업 목록 및 설명.<br>카드형 레이아웃.'
   },
   {
     id: 'U05', section: 'user', group: '소개', name: '연혁', path: '../outputs/about/history.html', img: 'U05_소개_연혁.png',
@@ -79,25 +79,25 @@ window.PAGES = [
   },
   {
     id: 'U09', section: 'user', group: '소개', name: '회원규정', path: '../outputs/about/regulation.html', img: 'U09_소개_회원규정.png',
-    tags: [], desc: '정적 콘텐츠 페이지.<br>회원 규정 전문.'
+    tags: ['static'], desc: '회원 규정 전문.'
   },
   {
     id: 'U10', section: 'user', group: '소개', name: '오시는길', path: '../outputs/about/contact.html', img: 'U10_소개_오시는길.png',
-    tags: [], desc: '정적 콘텐츠 페이지.<br>협회 주소 + 지도(카카오맵 API 삽입).'
+    tags: ['static'], desc: '협회 주소 + 지도(카카오맵 API 삽입).'
   },
 
   // ── 교육 ──────────────────────────────────
   {
     id: 'U11', section: 'user', group: '교육', name: '숲해설가란', path: '../outputs/education/forester.html', img: 'U11_교육_숲해설가란.png',
-    tags: [], desc: '정적 콘텐츠 페이지.<br>숲해설가 직무 소개 페이지.'
+    tags: ['static'], desc: '숲해설가 직무 소개 페이지.'
   },
   {
     id: 'U12', section: 'user', group: '교육', name: 'FAQ', path: '../outputs/education/faq.html', img: 'U12_교육_FAQ.png',
-    tags: [], desc: '자주 묻는 질문.<br>아코디언형 Q&A.<br>콘텐츠 하드코딩.'
+    tags: ['static'], desc: '자주 묻는 질문.<br>아코디언형 Q&A.<br>콘텐츠 하드코딩.'
   },
   {
     id: 'U13', section: 'user', group: '교육', name: '기초과정 개요', path: '../outputs/education/academy.html', img: 'U13_교육_기초과정_개요.png',
-    tags: [], desc: '숲해설가 기초 양성과정 소개.<br>커리큘럼·일정·신청 방법 안내.<br>신청 CTA → academy-apply(U14)로 이동.'
+    tags: ['static'], desc: '숲해설가 기초 양성과정 소개.<br>커리큘럼·일정·신청 방법 안내.<br>신청 CTA → academy-apply(U14)로 이동.'
   },
   {
     id: 'U14', section: 'user', group: '교육', name: '기초과정 신청', path: '../outputs/education/academy-apply.html', img: 'U14_교육_기초과정_신청.png',
@@ -105,7 +105,7 @@ window.PAGES = [
   },
   {
     id: 'U15', section: 'user', group: '교육', name: '자격취득 과정 소개', path: '../outputs/education/course-intro.html', img: 'U15_교육_자격취득_과정소개.png',
-    tags: [], desc: '자격취득 과정 전체 안내.<br>과정 종류 탭(기초/심화/전문 등).<br>각 과정 클릭 → course-list(U16)로 이동.'
+    tags: ['static'], desc: '자격취득 과정 전체 안내.<br>과정 종류 탭(기초/심화/전문 등).<br>각 과정 클릭 → course-list(U16)로 이동.'
   },
   {
     id: 'U16', section: 'user', group: '교육', name: '자격취득 목록', path: '../outputs/education/course-list.html', img: 'U16_교육_자격취득_목록.png',
@@ -117,7 +117,7 @@ window.PAGES = [
   },
   {
     id: 'U18', section: 'user', group: '교육', name: '역량강화 과정', path: '../outputs/education/job-training.html', img: 'U18_교육_역량강화_과정.png',
-    tags: [], desc: '역량강화 교육과정 목록 및 소개. 강좌 리스트 형태. 관리자 강좌관리 연동.'
+    tags: ['list'], desc: '역량강화 교육과정 목록 및 소개. 강좌 리스트 형태. 관리자 강좌관리 연동.'
   },
   {
     id: 'U19', section: 'user', group: '교육', name: '역량강화 신청', path: '../outputs/education/job-training-apply.html', img: 'U19_교육_역량강화_신청.png',
@@ -461,5 +461,6 @@ window.TAG_LABELS = {
   'modal': '모달',
   'list': '목록',
   'form': '폼',
-  'detail': '상세'
+  'detail': '상세',
+  'static': '정적 페이지'
 };
