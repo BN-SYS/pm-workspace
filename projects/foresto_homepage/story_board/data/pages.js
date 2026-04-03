@@ -51,15 +51,15 @@ window.PAGES = [
   // ── 소개 ──────────────────────────────────
   {
     id: 'U02', section: 'user', group: '소개', name: '인사말', path: '../outputs/about/index.html', img: 'U02_소개_인사말.png',
-    tags: [], desc: '협회장 인사말 텍스트 페이지. 이미지 + 텍스트 구성. 고정 콘텐츠로 DB 연동 불필요 (또는 관리자 조직도/임원진 관리 연동 가능).'
+    tags: [], desc: '협회장 인사말 텍스트 페이지.<br>이미지 + 텍스트 구성.<br>고정 콘텐츠로 DB 연동 불필요 (또는 관리자 조직도/임원진 관리 연동 가능).'
   },
   {
     id: 'U03', section: 'user', group: '소개', name: '미션/비전', path: '../outputs/about/vision.html', img: 'U03_소개_미션비전.png',
-    tags: [], desc: '협회 미션·비전·핵심가치 소개. 정적 콘텐츠 페이지.'
+    tags: [], desc: '정적 콘텐츠 페이지.<br>협회 미션·비전·핵심가치 소개.'
   },
   {
     id: 'U04', section: 'user', group: '소개', name: '주요사업', path: '../outputs/about/project.html', img: 'U04_소개_주요사업.png',
-    tags: [], desc: '협회 주요사업 목록 및 설명. 카드형 레이아웃. 정적 콘텐츠.'
+    tags: [], desc: '정적 콘텐츠 페이지.<br>협회 주요사업 목록 및 설명.<br>카드형 레이아웃.'
   },
   {
     id: 'U05', section: 'user', group: '소개', name: '연혁', path: '../outputs/about/history.html', img: 'U05_소개_연혁.png',
@@ -79,25 +79,25 @@ window.PAGES = [
   },
   {
     id: 'U09', section: 'user', group: '소개', name: '회원규정', path: '../outputs/about/regulation.html', img: 'U09_소개_회원규정.png',
-    tags: [], desc: '회원 규정 전문 PDF 뷰어 또는 HTML 본문. 정적 콘텐츠 또는 게시판 타입 연동.'
+    tags: [], desc: '정적 콘텐츠 페이지.<br>회원 규정 전문.'
   },
   {
     id: 'U10', section: 'user', group: '소개', name: '오시는길', path: '../outputs/about/contact.html', img: 'U10_소개_오시는길.png',
-    tags: [], desc: '협회 주소 + 지도(카카오맵 또는 네이버맵 API 삽입). 대중교통·주차 안내 텍스트. 정적 콘텐츠.'
+    tags: [], desc: '정적 콘텐츠 페이지.<br>협회 주소 + 지도(카카오맵 API 삽입).'
   },
 
   // ── 교육 ──────────────────────────────────
   {
     id: 'U11', section: 'user', group: '교육', name: '숲해설가란', path: '../outputs/education/forester.html', img: 'U11_교육_숲해설가란.png',
-    tags: [], desc: '숲해설가 직무 소개 페이지. 정적 콘텐츠.'
+    tags: [], desc: '정적 콘텐츠 페이지.<br>숲해설가 직무 소개 페이지.'
   },
   {
     id: 'U12', section: 'user', group: '교육', name: 'FAQ', path: '../outputs/education/faq.html', img: 'U12_교육_FAQ.png',
-    tags: [], desc: '자주 묻는 질문. 아코디언형 Q&A. 콘텐츠는 하드코딩 또는 게시판 타입 FAQ 연동.'
+    tags: [], desc: '자주 묻는 질문.<br>아코디언형 Q&A.<br>콘텐츠 하드코딩.'
   },
   {
     id: 'U13', section: 'user', group: '교육', name: '기초과정 개요', path: '../outputs/education/academy.html', img: 'U13_교육_기초과정_개요.png',
-    tags: [], desc: '숲해설가 기초 양성과정 소개. 커리큘럼·일정·신청 방법 안내. 신청 CTA → academy-apply(U14)로 이동.'
+    tags: [], desc: '숲해설가 기초 양성과정 소개.<br>커리큘럼·일정·신청 방법 안내.<br>신청 CTA → academy-apply(U14)로 이동.'
   },
   {
     id: 'U14', section: 'user', group: '교육', name: '기초과정 신청', path: '../outputs/education/academy-apply.html', img: 'U14_교육_기초과정_신청.png',
@@ -105,7 +105,7 @@ window.PAGES = [
   },
   {
     id: 'U15', section: 'user', group: '교육', name: '자격취득 과정 소개', path: '../outputs/education/course-intro.html', img: 'U15_교육_자격취득_과정소개.png',
-    tags: [], desc: '자격취득 과정 전체 안내. 과정 종류 탭(기초/심화/전문 등). 각 과정 클릭 → course-list(U16)로 이동.'
+    tags: [], desc: '자격취득 과정 전체 안내.<br>과정 종류 탭(기초/심화/전문 등).<br>각 과정 클릭 → course-list(U16)로 이동.'
   },
   {
     id: 'U16', section: 'user', group: '교육', name: '자격취득 목록', path: '../outputs/education/course-list.html', img: 'U16_교육_자격취득_목록.png',
@@ -243,7 +243,7 @@ window.PAGES = [
   // ── 참여 ──────────────────────────────────
   {
     id: 'U48', section: 'user', group: '참여', name: '정회원 가입안내', path: '../outputs/participate/membership.html', img: 'U48_참여_정회원_가입안내.png',
-    tags: [], desc: '정회원 가입 절차 및 혜택 안내. 정회원 신청 CTA → regular-apply(U49). 후원 CTA → donate(U51).'
+    tags: [], desc: '정회원 가입 절차 및 혜택 안내.<br>정회원 신청 CTA → regular-apply(U49).<br>후원 CTA → donate(U51).'
   },
   {
     id: 'U49', section: 'user', group: '참여', name: '정회원 신청', path: '../outputs/participate/regular-apply.html', img: 'U49_참여_정회원_신청.png',
@@ -251,7 +251,7 @@ window.PAGES = [
   },
   {
     id: 'U50', section: 'user', group: '참여', name: '후원 안내', path: '../outputs/participate/donate-info.html', img: 'U50_참여_후원_안내.png',
-    tags: [], desc: '후원 방법 및 혜택 안내. 후원하기 CTA → donate(U51).'
+    tags: [], desc: '후원 방법 및 혜택 안내.<br>후원하기 CTA → donate(U51).'
   },
   {
     id: 'U51', section: 'user', group: '참여', name: '후원하기', path: '../outputs/participate/donate.html', img: 'U51_참여_후원하기.png',
@@ -289,19 +289,19 @@ window.PAGES = [
   // ── 기타 ──────────────────────────────────
   {
     id: 'U58', section: 'user', group: '기타', name: '사이트맵', path: '../outputs/sitemap.html', img: 'U58_사이트맵.png',
-    tags: [], desc: '전체 메뉴 구조 목록. 정적 페이지.'
+    tags: [], desc: '정적 페이지.<br>전체 메뉴 구조 목록.<br>① 우측 최상단 사이트맵 아이콘 클릭시 페이지 진입 가능.<br>②각 메뉴 클릭시 페이지 이동.'
   },
   {
     id: 'U59', section: 'user', group: '기타', name: '이용약관', path: '../outputs/terms.html', img: 'U59_이용약관.png',
-    tags: [], desc: '서비스 이용약관 전문. 정적 콘텐츠.'
+    tags: [], desc: '정적 페이지.<br>서비스 이용약관 전문.<br>푸터에서 링크 클릭시 페이지 진입 가능.<br>U60 개인정보처리방침 + U61 이메일 무단수집거부와 동일한 레이아웃.'
   },
   {
     id: 'U60', section: 'user', group: '기타', name: '개인정보처리방침', path: '../outputs/privacy.html', img: 'U60_개인정보처리방침.png',
-    tags: [], desc: '개인정보처리방침 전문. 정적 콘텐츠.'
+    tags: [], desc: '정적 페이지.<br>U59 이용약관과 동일.<br>개인정보처리방침 전문.'
   },
   {
     id: 'U61', section: 'user', group: '기타', name: '이메일 무단수집거부', path: '../outputs/email.html', img: 'U61_이메일무단수집거부.png',
-    tags: [], desc: '이메일 무단수집거부 고지. 정적 콘텐츠.'
+    tags: [], desc: '정적 페이지.<br>U59 이용약관과 동일.<br>이메일 무단수집거부 고지. 정적 콘텐츠.'
   },
 
   // ══════════════════════════════════════════
