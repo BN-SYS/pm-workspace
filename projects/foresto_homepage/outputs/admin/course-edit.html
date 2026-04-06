@@ -356,12 +356,20 @@
         <div class="form-card">
           <div class="form-card-head">기본 정보</div>
 
-          <!-- 과정명 -->
+          <!-- 과정명 / 기수 -->
           <div class="form-row">
             <div class="form-label required">과정명</div>
-            <div class="form-content">
+            <div class="form-content" style="border-right:1px solid #f0f4ee; flex:2">
               <input type="text" id="fCourseName" class="form-input full"
                      placeholder="과정명을 입력해주세요" maxlength="100">
+            </div>
+            <div class="form-label">기수 <span style="font-size:11px;color:var(--gray-mid);font-weight:400">(선택)</span></div>
+            <div class="form-content" style="flex:1">
+              <div class="input-suffix">
+                <input type="number" id="fCohort" class="form-input w80"
+                       min="1" placeholder="—">
+                <span>기</span>
+              </div>
             </div>
           </div>
 
@@ -410,10 +418,13 @@
             </div>
             <div class="form-label">총 교육시간</div>
             <div class="form-content" style="flex:1">
-              <div class="input-suffix">
+              <div style="display:flex;align-items:center;gap:8px">
                 <input type="number" id="fEduHours" class="form-input w80"
-                       min="0" step="0.5" placeholder="0">
-                <span>시간</span>
+                       min="0" placeholder="0">
+                <span style="font-size:13px;color:var(--gray-dark)">시간</span>
+                <input type="number" id="fEduMinutes" class="form-input w80"
+                       min="0" max="59" placeholder="0">
+                <span style="font-size:13px;color:var(--gray-dark)">분</span>
               </div>
             </div>
           </div>
@@ -722,6 +733,7 @@
       const dummy = {
         id,
         name: '숲해설가 기초과정 2025-1기',
+        cohort: 55,
         eduStart: '2025-04-01',
         eduEnd:   '2025-04-30',
         applyStart: '2025-03-01T09:00',
@@ -734,6 +746,7 @@
         content: '본 과정은 숲해설가 자격 취득을 위한 기초 이론 과정입니다.\n\n■ 교육 목표\n- 숲의 생태 기초 이해\n- 숲해설 기법 습득\n\n■ 주요 내용\n- 식물 생태학 기초\n- 동물 생태학 기초\n- 숲 체험 활동 기법',
       };
 
+      if (dummy.cohort) document.getElementById('fCohort').value = dummy.cohort;
       document.getElementById('fCourseName').value    = dummy.name;
       document.getElementById('fEduStart').value      = dummy.eduStart;
       document.getElementById('fEduEnd').value        = dummy.eduEnd;

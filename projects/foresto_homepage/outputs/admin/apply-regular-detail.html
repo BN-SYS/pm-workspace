@@ -20,19 +20,18 @@
     .form-half + .form-half { border-left:1px solid #f0f4ee; }
     .detail-val { font-size:14px; color:#111; line-height:1.6; }
     .detail-val.mono { font-variant-numeric:tabular-nums; }
-    .detail-val.long { line-height:1.8; }
-    .detail-bottom-bar { display:flex; align-items:center; justify-content:space-between; padding:4px 0 8px; }
+    .detail-val.long { line-height:1.8; white-space:pre-line; }
+    .detail-val.muted { color:#9aaa94; }
+    .detail-bottom-bar { display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--gray-light); padding:16px 0 24px; margin-top:4px; }
     .btn-group-right { display:flex; gap:8px; }
-    .file-list { display:flex; flex-direction:column; gap:6px; flex:1; min-width:0; }
-    .file-item { display:flex; align-items:center; gap:10px; padding:7px 12px; background:#f8faf6; border:1px solid #e3eadd; border-radius:6px; }
-    .file-name-link { font-size:13px; color:#05803e; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
-    .file-name-link:hover { color:#20281A; }
-    .file-size { font-size:11px; color:#9aaa94; white-space:nowrap; }
     /* 관리자 메모 */
-    .memo-textarea { width:100%; min-height:120px; padding:12px 14px; border:1px solid #d5e0ce; border-radius:8px; font-size:14px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; resize:vertical; box-sizing:border-box; line-height:1.7; }
+    .memo-textarea { width:100%; min-height:100px; padding:12px 14px; border:1px solid #d5e0ce; border-radius:8px; font-size:14px; font-family:'Noto Sans KR',sans-serif; color:#2a3a26; background:#fafcf9; outline:none; resize:vertical; box-sizing:border-box; line-height:1.7; }
     .memo-textarea:focus { border-color:#508829; background:#fff; box-shadow:0 0 0 3px rgba(80,136,41,.08); }
     .memo-textarea::placeholder { color:#aabba4; }
     .memo-footer { display:flex; justify-content:flex-end; padding:12px 16px 14px; border-top:1px solid #f0f4ee; gap:8px; }
+    /* 계좌 마스킹 */
+    .account-masked { letter-spacing:1px; color:#555; }
+    .account-toggle { font-size:12px; color:var(--green-main); cursor:pointer; text-decoration:underline; margin-left:8px; }
   </style>
 </head>
 <body class="admin-body">
@@ -48,8 +47,8 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <h1 class="admin-page-title">정회원신청 상세</h1>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-gray btn-sm" onclick="history.back()">목록</button>
+        <div class="admin-topbar-actions">
+          <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../assets/icons/refresh.png" alt="새로고침"></button>
         </div>
       </div>
 
@@ -66,66 +65,109 @@
   'use strict';
   AdminSidebar.mount('apply-regular');
 
-  /* ─ 목록과 동일한 더미 데이터 */
-  const NAMES_R   = ['김숲해설','이초록','박자연','최나무','정바람','윤하늘','강숲속','조생태','신나뭇잎','한자연',
-                     '문청산','류이슬','백솔밭','안햇살','송나비','임물결','권하늘','오구름','황봄비','노꽃길'];
-  const REGIONS_R = ['서울','경기','인천','부산','대구','서울','경기','서울','인천','기타'];
-  const CAREERS   = [
-    '숲해설가 활동 3년 (도봉구 초등학교 연계 프로그램)',
-    '환경부 자연환경해설사 2년',
-    '국립공원 자원봉사 해설 5년',
-    '유아숲지도사로 어린이집 연계 활동 2년',
-    '숲체험지도사 자격 취득 후 주민센터 강의 1년',
+  /* ── 더미 데이터 (사용자 폼 필드 기준) */
+  const NAMES_R     = ['김숲해설','이초록','박자연','최나무','정바람','윤하늘','강숲속','조생태','신나뭇잎','한자연',
+                       '문청산','류이슬','백솔밭','안햇살','송나비','임물결','권하늘','오구름','황봄비','노꽃길'];
+  const ADDRESSES_R = [
+    { zip:'01234', addr1:'서울특별시 도봉구 방학로 123', addr2:'101동 405호' },
+    { zip:'13561', addr1:'경기도 성남시 분당구 정자일로 456', addr2:'' },
+    { zip:'03921', addr1:'서울특별시 마포구 상암동 890', addr2:'302호' },
+    { zip:'21565', addr1:'인천광역시 남동구 구월동 234-56', addr2:'' },
+    { zip:'10351', addr1:'경기도 고양시 일산동구 마두동 78-9', addr2:'빌라 2층' },
+    { zip:'48058', addr1:'부산광역시 해운대구 해운대해변로 264', addr2:'' },
+    { zip:'06234', addr1:'서울특별시 강남구 역삼동 567-8', addr2:'203호' },
+    { zip:'42182', addr1:'대구광역시 수성구 범어동 321', addr2:'' },
+    { zip:'16489', addr1:'경기도 수원시 영통구 매탄동 98-1', addr2:'가동 301호' },
+    { zip:'05505', addr1:'서울특별시 송파구 잠실동 204-3', addr2:'' },
   ];
-  const CERTS_R   = ['숲해설가 자격증 (한국산림복지진흥원)','자연환경해설사 (환경부)','유아숲지도사 2급','숲체험지도사 1급','산림치유지도사 2급'];
-  const FILE_SETS_R = [
-    [{name:'재직증명서.pdf',size:'142 KB',ext:'pdf'},{name:'신분증사본.jpg',size:'87 KB',ext:'img'},{name:'자격증사본.pdf',size:'215 KB',ext:'pdf'}],
-    [{name:'활동확인서.pdf',size:'198 KB',ext:'pdf'},{name:'신분증사본.jpg',size:'65 KB',ext:'img'}],
-    [{name:'자격증사본.pdf',size:'310 KB',ext:'pdf'},{name:'재직증명서.pdf',size:'124 KB',ext:'pdf'}],
-    [{name:'신분증사본.jpg',size:'72 KB',ext:'img'},{name:'경력기술서.docx',size:'45 KB',ext:'doc'}],
+  const ACT_STATUSES_R = ['활동 중','활동 예정','미활동','활동 중','활동 중','활동 예정','미활동','활동 중','활동 예정','활동 중'];
+  const ORGS_R         = ['도봉구청 환경과','','분당자연학교','','일산숲사랑모임','','국립수목원 교육팀','','','수원시 환경재단'];
+  const JOIN_PATHS_R   = [
+    ['홈페이지'],
+    ['지인 추천'],
+    ['교육 과정'],
+    ['기타'],
+    ['홈페이지','지인 추천'],
+    ['교육 과정','홈페이지'],
+    ['홈페이지'],
+    ['지인 추천','교육 과정'],
+    ['홈페이지'],
+    ['기타'],
   ];
-  const MOTIVES   = [
+  const JOIN_PATH_ETC  = ['', '', '', '유튜브 영상', '', '', '', '', '', '블로그 검색'];
+  const BANKS_R        = ['국민은행','신한은행','우리은행','하나은행','농협은행','기업은행','카카오뱅크','토스뱅크','국민은행','신한은행'];
+  const MOTIVES_R      = [
     '협회 활동을 통해 더 많은 분들과 숲의 소중함을 나누고 싶어 정회원에 지원합니다.',
     '지역 숲해설 네트워크를 넓히고 전문성을 강화하고자 정회원 전환을 신청합니다.',
     '환경교육 분야에서 오랫동안 활동해왔으며, 협회와 함께 성장하고 싶습니다.',
     '숲 생태 교육에 대한 열정으로 준회원 활동을 해왔고, 이제 더 깊이 참여하고 싶습니다.',
   ];
+
   const ALL_DATA_R = Array.from({ length: 24 }, (_, i) => {
-    const mm = String(((i % 3) + 1)).padStart(2, '0');
-    const dd = String(((i % 20) + 1)).padStart(2, '0');
-    const hh = String(((i * 3) % 12) + 9).padStart(2, '0');
-    const min= String((i * 7) % 60).padStart(2, '0');
-    const ss = String((i * 13) % 60).padStart(2, '0');
+    const mm  = String(((i % 3) + 1)).padStart(2, '0');
+    const dd  = String(((i % 20) + 1)).padStart(2, '0');
+    const hh  = String(((i * 3) % 12) + 9).padStart(2, '0');
+    const min = String((i * 7) % 60).padStart(2, '0');
+    const ss  = String((i * 13) % 60).padStart(2, '0');
+    const name        = NAMES_R[i % NAMES_R.length];
+    const paths       = JOIN_PATHS_R[i % JOIN_PATHS_R.length];
+    const pathEtc     = paths.includes('기타') ? JOIN_PATH_ETC[i % JOIN_PATH_ETC.length] : '';
+    const isMember    = i % 3 !== 0;
     return {
-      id: 3000 + i,
-      applyNo:    `REG-2026-${String(i + 1).padStart(5, '0')}`,
-      name:       NAMES_R[i % NAMES_R.length],
-      email:      `user${3000 + i}@example.com`,
-      phone:      `010-${String(1000 + i).padStart(4, '0')}-${String(2000 + i).padStart(4, '0')}`,
-      region:     REGIONS_R[i % REGIONS_R.length],
-      birth:      `${1975 + (i % 20)}-${mm}-${dd}`,
-      applyDatetime: `2026-${mm}-${dd} ${hh}:${min}:${ss}`,
-      career:     CAREERS[i % CAREERS.length],
-      cert:       CERTS_R[i % CERTS_R.length],
-      files:      FILE_SETS_R[i % FILE_SETS_R.length],
-      motivation: MOTIVES[i % MOTIVES.length],
+      id:             3000 + i,
+      applyNo:        `REG-2026-${String(i + 1).padStart(5, '0')}`,
+      name,
+      isMember,
+      userId:         isMember ? `reg${3001 + i}` : null,
+      birth:          `${1975 + (i % 20)}-${mm}-${dd}`,
+      phone:          `010-${String(1000 + i).padStart(4, '0')}-${String(2000 + i).padStart(4, '0')}`,
+      email:          `user${3000 + i}@example.com`,
+      address:        ADDRESSES_R[i % ADDRESSES_R.length],
+      bank:           BANKS_R[i % BANKS_R.length],
+      accountHolder:  name,
+      accountNo:      `${String(100 + i).padStart(3, '0')}${String(456 + i).padStart(3, '0')}-${String(78 + i).padStart(2, '0')}-${String(901234 + i).padStart(6, '0')}`,
+      actStatus:      ACT_STATUSES_R[i % ACT_STATUSES_R.length],
+      org:            ORGS_R[i % ORGS_R.length],
+      joinPath:       paths,
+      joinPathEtc:    pathEtc,
+      motivation:     MOTIVES_R[i % MOTIVES_R.length],
+      agreePrivacy:   true,
+      applyDatetime:  `2026-${mm}-${dd} ${hh}:${min}:${ss}`,
+      adminMemo:      ['','','추가 서류 요청 필요','','전화 확인 완료','','','담당자 재연락 예정','','검토 중','',''][i % 12],
     };
   });
 
-  function _fileListHtml(files) {
-    if (!files || !files.length) return '<span class="detail-val muted">첨부된 파일 없음</span>';
-    return '<div class="file-list">' + files.map(f =>
-      `<div class="file-item">
-        <span class="file-name-link" onclick="downloadFile('${f.name}')">${f.name}</span>
-        <span class="file-size">${f.size}</span>
-      </div>`).join('') + '</div>';
+  /* ── 계좌번호 마스킹 토글 */
+  let _acctVisible = false;
+  function toggleAccount(fullNo) {
+    _acctVisible = !_acctVisible;
+    const el  = document.getElementById('accountNoVal');
+    const btn = document.getElementById('accountToggleBtn');
+    if (!el || !btn) return;
+    if (_acctVisible) {
+      el.textContent  = fullNo;
+      btn.textContent = '숨기기';
+    } else {
+      el.textContent  = maskAccount(fullNo);
+      btn.textContent = '확인';
+    }
   }
-  function downloadFile(name) {
-    /* TODO: AJAX — fetch(ADMIN_API.base + '/files/download?name=' + encodeURIComponent(name)) */
-    App.toast('PHP 연동 후 파일을 다운로드할 수 있습니다.', 'info');
+  function maskAccount(no) {
+    if (!no) return '—';
+    return no.replace(/\d(?=\d{4})/g, '*');
   }
 
   function renderDetail(d) {
+    _acctVisible = false;
+    const memberLabel = d.isMember
+      ? `<span class="badge badge-green" style="font-size:12px">회원</span><span style="font-size:13px;color:#5a7a5a;margin-left:6px">(${d.userId})</span>`
+      : `<span class="badge badge-gray" style="font-size:12px">비회원</span>`;
+    const addrStr = d.address.addr2
+      ? `[${d.address.zip}] ${d.address.addr1}, ${d.address.addr2}`
+      : `[${d.address.zip}] ${d.address.addr1}`;
+    const joinPathStr = d.joinPath.map(p =>
+      (p === '기타' && d.joinPathEtc) ? `기타(${d.joinPathEtc})` : p
+    ).join(', ');
 
     document.getElementById('detailContent').innerHTML = `
 
@@ -134,9 +176,11 @@
         <div class="form-card-head">기본 정보</div>
         <div class="form-row">
           <div class="form-label">접수번호</div>
-          <div class="form-content">
+          <div class="form-half">
             <span class="detail-val mono" style="font-weight:700;color:#2e5c2e">${d.applyNo}</span>
           </div>
+          <div class="form-label">회원구분</div>
+          <div class="form-half">${memberLabel}</div>
         </div>
         <div class="form-row">
           <div class="form-label">이름</div>
@@ -155,64 +199,93 @@
           </div>
           <div class="form-label">이메일</div>
           <div class="form-half">
-            <span class="detail-val">${d.email}</span>
+            <span class="detail-val">${d.email || '—'}</span>
           </div>
         </div>
         <div class="form-row">
-          <div class="form-label">거주지역</div>
-          <div class="form-half">
-            <span class="detail-val">${d.region}</span>
+          <div class="form-label">주소</div>
+          <div class="form-content">
+            <span class="detail-val">${addrStr}</span>
           </div>
+        </div>
+        <div class="form-row">
           <div class="form-label">신청일시</div>
-          <div class="form-half">
+          <div class="form-content">
             <span class="detail-val mono">${d.applyDatetime}</span>
           </div>
         </div>
       </div>
 
-      <!-- 카드2: 신청 내용 -->
+      <!-- 카드2: 자동이체 계좌 정보 -->
       <div class="form-card">
-        <div class="form-card-head">신청 내용</div>
+        <div class="form-card-head">월 회비 자동이체 계좌 정보</div>
         <div class="form-row">
-          <div class="form-label">활동 경력</div>
-          <div class="form-content">
-            <span class="detail-val long">${d.career}</span>
+          <div class="form-label">은행명</div>
+          <div class="form-half">
+            <span class="detail-val">${d.bank}</span>
+          </div>
+          <div class="form-label">예금주</div>
+          <div class="form-half">
+            <span class="detail-val">${d.accountHolder}</span>
           </div>
         </div>
         <div class="form-row">
-          <div class="form-label">자격 사항</div>
+          <div class="form-label">계좌번호</div>
           <div class="form-content">
-            <span class="detail-val">${d.cert}</span>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-label">지원 동기</div>
-          <div class="form-content">
-            <span class="detail-val long">${d.motivation}</span>
+            <span class="detail-val mono account-masked" id="accountNoVal">${maskAccount(d.accountNo)}</span>
+            <span class="account-toggle" id="accountToggleBtn"
+              onclick="toggleAccount('${d.accountNo}')">확인</span>
           </div>
         </div>
       </div>
 
-      <!-- 카드3: 제출 서류 -->
+      <!-- 카드3: 활동 정보 -->
       <div class="form-card">
-        <div class="form-card-head">제출 서류</div>
+        <div class="form-card-head">활동 정보</div>
+        <div class="form-row">
+          <div class="form-label">현재 활동 여부</div>
+          <div class="form-content">
+            <span class="detail-val">${d.actStatus}</span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">소속 기관</div>
+          <div class="form-content">
+            <span class="detail-val ${d.org ? '' : 'muted'}">${d.org || '—'}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 카드4: 가입 정보 -->
+      <div class="form-card">
+        <div class="form-card-head">가입 정보</div>
+        <div class="form-row">
+          <div class="form-label">가입 경로</div>
+          <div class="form-content">
+            <span class="detail-val">${joinPathStr || '—'}</span>
+          </div>
+        </div>
         <div class="form-row" style="align-items:flex-start">
-          <div class="form-label" style="padding-top:14px">첨부 서류</div>
-          <div class="form-content" style="align-items:flex-start;padding-top:12px;padding-bottom:12px">${_fileListHtml(d.files)}</div>
+          <div class="form-label" style="padding-top:14px">가입 동기</div>
+          <div class="form-content" style="align-items:flex-start;padding-top:14px;padding-bottom:14px">
+            <span class="detail-val long">${d.motivation || '—'}</span>
+          </div>
         </div>
         <div class="form-row">
           <div class="form-label">개인정보 동의</div>
           <div class="form-content">
-            <span class="detail-val">동의함</span>
+            <span class="badge badge-green" style="font-size:12px">동의함</span>
+            <span style="font-size:12px;color:var(--gray-mid);margin-left:4px">수집·이용 동의 완료</span>
           </div>
         </div>
       </div>
 
-      <!-- 카드4: 관리자 메모 -->
+      <!-- 카드5: 관리자 메모 -->
       <div class="form-card">
         <div class="form-card-head">관리자 메모</div>
         <div style="padding:16px">
-          <textarea class="memo-textarea" id="adminMemo" placeholder="관리자 메모를 입력하세요. (신청자에게 표시되지 않습니다)"></textarea>
+          <textarea class="memo-textarea" id="adminMemo"
+            placeholder="관리자 메모를 입력하세요. (신청자에게 표시되지 않습니다)">${d.adminMemo || ''}</textarea>
         </div>
         <div class="memo-footer">
           <button class="btn btn-gray btn-sm" onclick="clearMemo()">초기화</button>
@@ -229,8 +302,7 @@
   }
 
   function saveMemo(id) {
-    const memo = document.getElementById('adminMemo')?.value || '';
-    /* TODO: AJAX — fetch(ADMIN_API.applyStatusSave, { method: 'POST', body: JSON.stringify({ id, status, memo }) }) */
+    /* TODO: AJAX — fetch(ADMIN_API.applyStatusSave, { method:'POST', body:JSON.stringify({ id, memo }) }) */
     App.toast('관리자 메모가 저장되었습니다.', 'success');
   }
   function clearMemo() {

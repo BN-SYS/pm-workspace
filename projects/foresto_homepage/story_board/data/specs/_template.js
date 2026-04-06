@@ -1,6 +1,6 @@
 /**
  * {ID} — {화면명}
- * 그룹: {그룹명} / 섹션: user | admin | doc
+ * 그룹: {그룹명}/섹션: user | admin | doc
  * 작성일: YYYY-MM-DD
  *
  * 사용법: 복사 → {ID}.js 저장 → 키·내용 채우기 → data/specs/ 저장 시 자동 연결
@@ -8,7 +8,7 @@
  * 작성 규칙
  * - 미확정: <span class="warn">⚠️ 협의 필요</span>
  * - 정보 없음: <span class="warn">⚠️ 정보 필요</span>
- * - 버튼: [버튼명] + 유형(Primary / Secondary / Danger / Outline / Gray)
+ * - 버튼: [버튼명] + 유형(Primary/Secondary/Danger/Outline/Gray)
  * - 날짜: YYYY-MM-DD
  * - 개인정보 컬럼: 마스킹 규칙 ⚠️ 반드시 명시
  * - h3: 섹션 제목 (번호 없음)
@@ -60,7 +60,7 @@ window.SPECS['{ID}'] = `
   <thead><tr><th>#</th><th>컬럼</th><th>정렬</th><th>비고</th></tr></thead>
   <tbody>
     <tr><td>1</td><td>번호(No)</td><td>중앙</td><td>역순 — total - offset - i</td></tr>
-    <tr><td>2</td><td>컬럼명</td><td>좌측 / 중앙</td><td>비고</td></tr>
+    <tr><td>2</td><td>컬럼명</td><td>좌측/중앙</td><td>비고</td></tr>
   </tbody>
 </table>
 <p class="spec-note"><strong>행 동작:</strong> 클릭 → {다음 화면 ID} (<code>?id={파라미터}</code> 전달)</p>
@@ -71,7 +71,7 @@ window.SPECS['{ID}'] = `
 <table>
   <thead><tr><th>#</th><th>상황</th><th>메시지</th><th>유형</th></tr></thead>
   <tbody>
-    <tr><td>1</td><td>상황</td><td>메시지 내용</td><td>인라인 / Alert 팝업 / Confirm / Toast</td></tr>
+    <tr><td>1</td><td>상황</td><td>메시지 내용</td><td>인라인/Alert 팝업/Confirm/Toast</td></tr>
   </tbody>
 </table>
 
@@ -87,7 +87,7 @@ window.SPECS['{ID}'] = `
 
 <!-- ── 반응형 ────────────────────────────────────── -->
 <h3>반응형</h3>
-<p class="spec-note"><strong>Breakpoint:</strong> PC ≥ 1201px / Tablet 768 ~ 1200px / Mobile ≤ 767px</p>
+<p class="spec-note"><strong>Breakpoint:</strong> PC ≥ 1201px/Tablet 768 ~ 1200px/Mobile ≤ 767px</p>
 <table>
   <thead><tr><th>구간</th><th>Breakpoint</th><th>변경 사항</th></tr></thead>
   <tbody>

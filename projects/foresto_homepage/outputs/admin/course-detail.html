@@ -273,9 +273,8 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <h1 class="admin-page-title">강좌 상세</h1>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-gray btn-sm" onclick="CourseDetail.goList()">목록</button>
-          <button class="btn btn-primary btn-sm" onclick="CourseDetail.goEdit()">수정</button>
+        <div class="admin-topbar-actions">
+          <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../assets/icons/refresh.png" alt="새로고침"></button>
         </div>
       </div>
 
@@ -439,7 +438,7 @@
     capacity:   30,
     applicants: 17,
     lessonCount: 16,
-    eduHours: 40,
+    eduHours: 40, eduMinutes: 30,
     fileRequired: true,
     certIssue: true,
     regDate: '2026-02-14',
@@ -482,7 +481,7 @@
     document.getElementById('dApplyStart').textContent  = d.applyStart;
     document.getElementById('dApplyEnd').textContent    = d.applyEnd;
     document.getElementById('dLessonCount').textContent = `${d.lessonCount}강`;
-    document.getElementById('dEduHours').textContent    = `${d.eduHours}시간`;
+    document.getElementById('dEduHours').textContent    = `${d.eduHours}시간 ${String(d.eduMinutes ?? 0).padStart(2,'0')}분`;
     document.getElementById('dRegDate').textContent     = d.regDate;
 
     document.getElementById('dFileRequired').innerHTML = d.fileRequired

@@ -32,9 +32,14 @@ window.PAGES = [
     desc: '사용자 주요 태스크별 화면 흐름도'
   },
   {
-    id: 'DOC-05', section: 'doc', group: 'Documents', name: '공통 레이아웃',
-    path: '#', img: 'DOC05_공통레이아웃.png', tags: [],
+    id: 'DOC-05', section: 'doc', group: 'Documents', name: '공통 레이아웃_사용자',
+    path: '#', img: 'DOC05_사용자_공통레이아웃.png', tags: [],
     desc: 'Header, Footer, GNB 등 공통 레이아웃 구성 및 규칙'
+  },
+{
+    id: 'DOC-06', section: 'doc', group: 'Documents', name: '공통 레이아웃_관리자',
+    path: '#', img: 'DOC06_관리자_공통레이아웃.png', tags: [],
+    desc: 'Header, Footer, GNB 등 관리자 공통 레이아웃 구성 및 규칙'
   },
 
 
@@ -318,6 +323,10 @@ window.PAGES = [
     tags: ['admin-only', 'detail'], desc: '회원 상세 정보 열람. 상태 변경(정상/차단) 버튼. 신청 이력 요약. 수정 → A03. API: GET /admin/api/members/{id}'
   },
   {
+    id: 'A02-1', section: 'admin', group: '회원관리', name: '회원 상세—탈퇴 처리', path: '../outputs/admin/member-detail.html', img: 'A02_회원_상세_탈퇴.png',
+    tags: ['admin-only', 'modal'], desc: 'A02에서 [탈퇴 처리] 클릭 시 노출되는 확인 모달. 탈퇴 사유 직접 입력(필수). [탈퇴 처리] 확인 → 처리 완료 후 회원 목록(A01) 이동.'
+  },
+  {
     id: 'A03', section: 'admin', group: '회원관리', name: '회원 등록/수정', path: '../outputs/admin/member-edit.html', img: 'A03_회원_등록수정.png',
     tags: ['admin-only', 'form'], desc: '회원 정보 등록·수정 폼. URL ?id= 없으면 등록, 있으면 수정. 우편번호 검색(카카오 API). API: POST/PUT /admin/api/members'
   },
@@ -344,109 +353,113 @@ window.PAGES = [
     tags: ['admin-only', 'list'], desc: '강좌별 신청자 통합 목록. 필터: 날짜/강좌유형/신청상태/검색. 상태 일괄 변경. 수료증 발급 처리. 엑셀. API: GET /admin/api/applicants'
   },
   {
-    id: 'A09', section: 'admin', group: '강좌관리', name: '강좌 신청자 상세', path: '../outputs/admin/applicant-detail.html', img: 'A09_강좌신청자_상세.png',
+    id: 'A09', section: 'admin', group: '강좌관리', name: '강좌 신청 등록', path: '../outputs/admin/apply-register.html', img: 'A09_강좌신청_등록.png',
+    tags: ['admin-only', 'form'], desc: '관리자가 회원 검색 후 강좌를 선택하여 수동으로 강좌 신청을 등록하는 화면. 회원 검색(이름/아이디/휴대폰), 과정유형→강좌명→일정 순 연계 선택, 신청 상태 지정, 관리자 메모 입력. API: POST /admin/api/applicants'
+  },
+  {
+    id: 'A10', section: 'admin', group: '강좌관리', name: '강좌 신청자 상세', path: '../outputs/admin/applicant-detail.html', img: 'A10_강좌신청자_상세.png',
     tags: ['admin-only', 'detail'], desc: '신청자 상세. 상태 변경(선정/미선정/완료). 수료증 발급 버튼. API: PUT /admin/api/applicants/{id}/status'
   },
 
   // ── 강사 일정관리 ─────────────────────────
   {
-    id: 'A10', section: 'admin', group: '강사 일정관리', name: '강사 일정 목록', path: '../outputs/admin/instructor-schedule.html', img: 'A10_강사일정_목록.png',
+    id: 'A11', section: 'admin', group: '강사 일정관리', name: '강사 일정 목록', path: '../outputs/admin/instructor-schedule.html', img: 'A11_강사일정_목록.png',
     tags: ['admin-only', 'list'], desc: '강사 활동 일정 목록. 필터: 기간/상태/검색. 일정 등록/수정/삭제. 각 일정의 신청자 수 표시. API: GET /admin/api/instructor-schedules'
   },
   {
-    id: 'A11', section: 'admin', group: '강사 일정관리', name: '강사 일정 등록/수정', path: '../outputs/admin/instructor-schedule-edit.html', img: 'A11_강사일정_등록수정.png',
+    id: 'A12', section: 'admin', group: '강사 일정관리', name: '강사 일정 등록/수정', path: '../outputs/admin/instructor-schedule-edit.html', img: 'A12_강사일정_등록수정.png',
     tags: ['admin-only', 'form'], desc: '강사 활동 일정 등록·수정 폼. 활동명/기간/시간/정원/활동확인서 발급여부 등. SmartEditor2, 파일첨부. API: POST/PUT /admin/api/instructor-schedules'
   },
 
   // ── 기타 신청관리 ─────────────────────────
   {
-    id: 'A12', section: 'admin', group: '기타 신청관리', name: '정회원신청 목록', path: '../outputs/admin/apply-regular.html', img: 'A12_정회원신청_목록.png',
+    id: 'A13', section: 'admin', group: '기타 신청관리', name: '정회원신청 목록', path: '../outputs/admin/apply-regular.html', img: 'A13_정회원신청_목록.png',
     tags: ['admin-only', 'list'], desc: '정회원 신청 목록. 필터: 날짜/상태/지역/검색. 상태: 검토중→승인/반려. 접수번호 APP-YYYY-XXXXX 형식. API: GET /admin/api/apply/regular'
   },
   {
-    id: 'A13', section: 'admin', group: '기타 신청관리', name: '정회원신청 상세', path: '../outputs/admin/apply-regular-detail.html', img: 'A13_정회원신청_상세.png',
+    id: 'A14', section: 'admin', group: '기타 신청관리', name: '정회원신청 상세', path: '../outputs/admin/apply-regular-detail.html', img: 'A14_정회원신청_상세.png',
     tags: ['admin-only', 'detail'], desc: '정회원 신청 상세. 첨부파일 다운로드. 상태 변경 + 메모 저장. 승인 시 회원 자동 생성 여부 협의 필요.'
   },
   {
-    id: 'A14', section: 'admin', group: '기타 신청관리', name: '강사신청 목록', path: '../outputs/admin/apply-instructor.html', img: 'A14_강사신청_목록.png',
+    id: 'A15', section: 'admin', group: '기타 신청관리', name: '강사신청 목록', path: '../outputs/admin/apply-instructor.html', img: 'A15_강사신청_목록.png',
     tags: ['admin-only', 'list'], desc: '강사 활동 신청 목록. 일정별 필터 포함. 모든 신청자는 기존 회원. API: GET /admin/api/apply/instructor'
   },
   {
-    id: 'A15', section: 'admin', group: '기타 신청관리', name: '강사신청 상세', path: '../outputs/admin/apply-instructor-detail.html', img: 'A15_강사신청_상세.png',
+    id: 'A16', section: 'admin', group: '기타 신청관리', name: '강사신청 상세', path: '../outputs/admin/apply-instructor-detail.html', img: 'A16_강사신청_상세.png',
     tags: ['admin-only', 'detail'], desc: '강사 신청 상세. 상태 변경(선정/미선정). 활동확인서 발급 처리.'
   },
   {
-    id: 'A16', section: 'admin', group: '기타 신청관리', name: '숲해설신청 목록', path: '../outputs/admin/apply-forest.html', img: 'A16_숲해설신청_목록.png',
+    id: 'A17', section: 'admin', group: '기타 신청관리', name: '숲해설신청 목록', path: '../outputs/admin/apply-forest.html', img: 'A17_숲해설신청_목록.png',
     tags: ['admin-only', 'list'], desc: '숲해설 프로그램 신청 목록. 기관/단체 신청. 상태: 접수/완료/취소. API: GET /admin/api/apply/forest'
   },
   {
-    id: 'A17', section: 'admin', group: '기타 신청관리', name: '숲해설신청 상세', path: '../outputs/admin/apply-forest-detail.html', img: 'A17_숲해설신청_상세.png',
+    id: 'A18', section: 'admin', group: '기타 신청관리', name: '숲해설신청 상세', path: '../outputs/admin/apply-forest-detail.html', img: 'A18_숲해설신청_상세.png',
     tags: ['admin-only', 'detail'], desc: '숲해설 신청 상세. 신청 기관 정보, 희망 일시, 참가 인원. 첨부파일 다운로드.'
   },
   {
-    id: 'A18', section: 'admin', group: '기타 신청관리', name: '후원신청 목록', path: '../outputs/admin/apply-sponsor.html', img: 'A18_후원신청_목록.png',
+    id: 'A19', section: 'admin', group: '기타 신청관리', name: '후원신청 목록', path: '../outputs/admin/apply-sponsor.html', img: 'A19_후원신청_목록.png',
     tags: ['admin-only', 'list'], desc: '후원 신청 목록. 후원 유형·금액 정보. API: GET /admin/api/apply/sponsor'
   },
   {
-    id: 'A19', section: 'admin', group: '기타 신청관리', name: '후원신청 상세', path: '../outputs/admin/apply-sponsor-detail.html', img: 'A19_후원신청_상세.png',
+    id: 'A20', section: 'admin', group: '기타 신청관리', name: '후원신청 상세', path: '../outputs/admin/apply-sponsor-detail.html', img: 'A20_후원신청_상세.png',
     tags: ['admin-only', 'detail'], desc: '후원 신청 상세. 후원자 정보, 금액, 납부 방법. 영수증 발급 처리 필요 여부 협의.'
   },
 
   // ── 일정관리 ──────────────────────────────
   {
-    id: 'A20', section: 'admin', group: '일정관리', name: '일정 목록', path: '../outputs/admin/calendar.html', img: 'A20_일정_목록.png',
+    id: 'A21', section: 'admin', group: '일정관리', name: '일정 목록', path: '../outputs/admin/calendar.html', img: 'A21_일정_목록.png',
     tags: ['admin-only', 'list'], desc: '협회 일정 목록. 필터: 연월/카테고리(edu/event/notice)/검색. 사용자 캘린더(U38) 연동. API: GET /admin/api/calendar'
   },
   {
-    id: 'A21', section: 'admin', group: '일정관리', name: '일정 상세', path: '../outputs/admin/calendar-detail.html', img: 'A21_일정_상세.png',
+    id: 'A22', section: 'admin', group: '일정관리', name: '일정 상세', path: '../outputs/admin/calendar-detail.html', img: 'A22_일정_상세.png',
     tags: ['admin-only', 'detail'], desc: '일정 상세. 수정/삭제 버튼.'
   },
   {
-    id: 'A22', section: 'admin', group: '일정관리', name: '일정 등록/수정', path: '../outputs/admin/calendar-edit.html', img: 'A22_일정_등록수정.png',
+    id: 'A23', section: 'admin', group: '일정관리', name: '일정 등록/수정', path: '../outputs/admin/calendar-edit.html', img: 'A23_일정_등록수정.png',
     tags: ['admin-only', 'form'], desc: '일정 등록·수정 폼. 날짜/카테고리/제목/링크. API: POST/PUT /admin/api/calendar'
   },
 
   // ── 게시판관리 ────────────────────────────
   {
-    id: 'A23', section: 'admin', group: '게시판관리', name: '게시판 목록', path: '../outputs/admin/board.html', img: 'A23_게시판_목록.png',
+    id: 'A24', section: 'admin', group: '게시판관리', name: '게시판 목록', path: '../outputs/admin/board.html', img: 'A24_게시판_목록.png',
     tags: ['admin-only', 'list'], desc: '게시판 목록. URL ?type= 으로 게시판 유형 전환(notice/newsletter/press/gallery/forest-work/region/club 등). 상단고정 토글. API: GET /admin/api/board'
   },
   {
-    id: 'A24', section: 'admin', group: '게시판관리', name: '게시글 상세', path: '../outputs/admin/board-detail.html', img: 'A24_게시판_글상세.png',
+    id: 'A25', section: 'admin', group: '게시판관리', name: '게시글 상세', path: '../outputs/admin/board-detail.html', img: 'A25_게시판_글상세.png',
     tags: ['admin-only', 'detail'], desc: '게시글 상세. 수정/삭제/고정 처리.'
   },
   {
-    id: 'A25', section: 'admin', group: '게시판관리', name: '게시글 등록/수정', path: '../outputs/admin/board-edit.html', img: 'A25_게시판_글등록수정.png',
+    id: 'A26', section: 'admin', group: '게시판관리', name: '게시글 등록/수정', path: '../outputs/admin/board-edit.html', img: 'A26_게시판_글등록수정.png',
     tags: ['admin-only', 'form'], desc: '게시글 등록·수정. SmartEditor2 에디터. 파일첨부(3슬롯). 상단고정 체크박스. multipart. API: POST/PUT /admin/api/board'
   },
 
   // ── 콘텐츠관리 ───────────────────────────
   {
-    id: 'A26', section: 'admin', group: '콘텐츠관리', name: '조직도/임원진 관리', path: '../outputs/admin/organization.html', img: 'A26_조직도임원진_관리.png',
+    id: 'A27', section: 'admin', group: '콘텐츠관리', name: '조직도/임원진 관리', path: '../outputs/admin/organization.html', img: 'A27_조직도임원진_관리.png',
     tags: ['admin-only'], desc: '조직도 이미지 교체 + 임원진 카드 CRUD. 임원진 사진 업로드, 직책/이름/소개 편집. API: /admin/api/organization (별도 설계 필요)'
   },
   {
-    id: 'A27', section: 'admin', group: '콘텐츠관리', name: '연혁 목록', path: '../outputs/admin/history.html', img: 'A27_연혁_목록.png',
+    id: 'A28', section: 'admin', group: '콘텐츠관리', name: '연혁 목록', path: '../outputs/admin/history.html', img: 'A28_연혁_목록.png',
     tags: ['admin-only', 'list'], desc: '연혁 목록. 연도별 그룹. 등록/수정/삭제. 사용자 연혁 페이지(U05) 연동. API: GET /admin/api/history'
   },
   {
-    id: 'A28', section: 'admin', group: '콘텐츠관리', name: '연혁 등록/수정', path: '../outputs/admin/history-edit.html', img: 'A28_연혁_등록수정.png',
+    id: 'A29', section: 'admin', group: '콘텐츠관리', name: '연혁 등록/수정', path: '../outputs/admin/history-edit.html', img: 'A29_연혁_등록수정.png',
     tags: ['admin-only', 'form'], desc: '연혁 등록·수정. 연도/월/내용/원형이미지. multipart. API: POST/PUT /admin/api/history/{id}'
   },
   {
-    id: 'A29', section: 'admin', group: '콘텐츠관리', name: '배너 목록', path: '../outputs/admin/banner.html', img: 'A29_배너_목록.png',
+    id: 'A30', section: 'admin', group: '콘텐츠관리', name: '배너 목록', path: '../outputs/admin/banner.html', img: 'A30_배너_목록.png',
     tags: ['admin-only', 'list'], desc: '메인 슬라이더 배너 목록. 순서 변경(위/아래 버튼). 최대 3개. 활성화 토글. API: GET /admin/api/banners'
   },
   {
-    id: 'A30', section: 'admin', group: '콘텐츠관리', name: '배너 등록/수정', path: '../outputs/admin/banner-edit.html', img: 'A30_배너_등록수정.png',
+    id: 'A31', section: 'admin', group: '콘텐츠관리', name: '배너 등록/수정', path: '../outputs/admin/banner-edit.html', img: 'A31_배너_등록수정.png',
     tags: ['admin-only', 'form'], desc: '배너 등록·수정. 이미지 업로드, 상단/메인/하단 텍스트, 링크URL. multipart. API: POST/PUT /admin/api/banners'
   },
   {
-    id: 'A31', section: 'admin', group: '콘텐츠관리', name: '팝업 목록', path: '../outputs/admin/popup.html', img: 'A31_팝업_목록.png',
+    id: 'A32', section: 'admin', group: '콘텐츠관리', name: '팝업 목록', path: '../outputs/admin/popup.html', img: 'A32_팝업_목록.png',
     tags: ['admin-only', 'list'], desc: '팝업 목록. 노출기간/활성화 여부. 현재 팝업 HTML은 주석 처리 상태 — PHP 연동 후 세션쿠키(오늘하루닫기)와 함께 복구 필요. API: GET /admin/api/popups'
   },
   {
-    id: 'A32', section: 'admin', group: '콘텐츠관리', name: '팝업 등록/수정', path: '../outputs/admin/popup-edit.html', img: 'A32_팝업_등록수정.png',
+    id: 'A33', section: 'admin', group: '콘텐츠관리', name: '팝업 등록/수정', path: '../outputs/admin/popup-edit.html', img: 'A33_팝업_등록수정.png',
     tags: ['admin-only', 'form'], desc: '팝업 등록·수정. 노출기간/크기/PC위치/이미지/SE2에디터/링크. 모바일은 항상 center 고정. API: POST/PUT /admin/api/popups'
   }
 

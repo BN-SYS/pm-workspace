@@ -117,7 +117,7 @@ function loadDetailResult() {
     const scoreRankElem = document.getElementById('scoreRank');
 
     if (totalScoreElem) {
-        totalScoreElem.textContent = scoreResult.finalScore || '0';
+        totalScoreElem.textContent = scoreResult.finalScore + '%' || '0';
     }
 
     if (scoreRankElem) {
@@ -238,7 +238,7 @@ function calculateComprehensiveScore(stage1, stage2, stage3, birthYear, testSett
         totalTimeSeconds,
         totalQuestions,
         avgTimePerQuestion: `${avgTimePerQuestion}초`,
-        speedScore: `${speedScore}점`
+        speedScore: `${speedScore}%`
     });
 
     // ========================================
@@ -468,7 +468,7 @@ function displayFiveScores(scoreResult) {
             <div class="stage-item">
                 <h5>${s.title}</h5>
                 ${s.detail ? `<div class="stage-detail">${s.detail}</div>` : ''}
-                <div class="stage-score">${s.score || 0}점</div>
+                <div class="stage-score">${s.score || 0}%</div>
             </div>
         `).join('');
     }
@@ -555,7 +555,7 @@ function createCompactChart(canvasId, userScore, mean = 75, stdDev = 24, isTotal
                 tooltip: {
                     enabled: true,
                     callbacks: {
-                        label: (context) => `점수: ${userScore}점`
+                        label: (context) => `점수: ${userScore}%`
                     }
                 }
             },
@@ -568,7 +568,7 @@ function createCompactChart(canvasId, userScore, mean = 75, stdDev = 24, isTotal
                     ticks: {
                         stepSize: 20,
                         callback: function (value) {
-                            return value + '점';
+                            return value + '%';
                         },
                         font: { size: 9 },
                         color: '#666',
@@ -663,7 +663,7 @@ function addPercentileLabels(scoreResult) {
             if (!existingLabel) {
                 const percentileLabel = document.createElement('p');
                 percentileLabel.className = 'chart-percentile';
-                percentileLabel.textContent = `${label.score}점`;
+                percentileLabel.textContent = `${label.score}%`;
                 chartBox.appendChild(percentileLabel);
             }
         }
@@ -699,11 +699,11 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
         content = `
             ${isAllSame ? `
                 <p style="margin-bottom: 15px; color: #333; line-height: 1.7; font-size: 11px; font-weight: 700;">
-                    모든 영역에서 고르게 뛰어난 능력을 보이고 있습니다 (각 ${maxScore}점). 이제는 깊이 있는 전문성 개발 단계입니다.
+                    모든 영역에서 고르게 뛰어난 능력을 보이고 있습니다 (각 ${maxScore}%). 이제는 깊이 있는 전문성 개발 단계입니다.
                 </p>
             ` : `
                 <p style="margin-bottom: 15px; color: #333; line-height: 1.7; font-size: 11px; font-weight: 700;">
-                    ${topNames} 영역에서 특히 뛰어난 능력(${maxScore}점)을 보이고 있습니다. 이를 활용한 심화 학습을 추천합니다.
+                    ${topNames} 영역에서 특히 뛰어난 능력(${maxScore}%)을 보이고 있습니다. 이를 활용한 심화 학습을 추천합니다.
                 </p>
             `}
             <ul style="list-style: none; padding: 0; margin: 0;">
@@ -713,11 +713,11 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
                 </li>
                 <li style="margin-bottom: 14px; padding-left: 22px; position: relative; line-height: 1.7; color: #444; font-size: 11px;">
                     <span style="position: absolute; left: 0; top: 7px; width: 6px; height: 6px; background: #d4af37; border-radius: 50%;"></span>
-                    <strong style="color: #1a1a2e;">속도와 정확도의 균형:</strong> 현재 작업 속도 ${scoreResult.speedScore}점을 고려할 때, ${scoreResult.speedScore >= 90 ? '빠른 판단력을 유지하면서 실수를 최소화하는 연습' : '시간 압박 하에서도 정확도를 유지하는 훈련'}이 필요합니다.
+                    <strong style="color: #1a1a2e;">속도와 정확도의 균형:</strong> 현재 작업 속도 ${scoreResult.speedScore}%를 고려할 때, ${scoreResult.speedScore >= 90 ? '빠른 판단력을 유지하면서 실수를 최소화하는 연습' : '시간 압박 하에서도 정확도를 유지하는 훈련'}이 필요합니다.
                 </li>
                 <li style="margin-bottom: 14px; padding-left: 22px; position: relative; line-height: 1.7; color: #444; font-size: 11px;">
                     <span style="position: absolute; left: 0; top: 7px; width: 6px; height: 6px; background: #d4af37; border-radius: 50%;"></span>
-                    <strong style="color: #1a1a2e;">메타인지 정교화:</strong> 자기 평가 점수 ${scoreResult.metacognitionScore}점 ${scoreResult.metacognitionScore >= 90 ? '으로 자신의 능력을 정확히 파악하고 있습니다. 이를 활용해 학습 전략을 스스로 최적화하세요.' : '을 개선하기 위해, 문제별 난이도와 소요 시간을 예측하고 기록하는 습관을 들이세요.'}
+                    <strong style="color: #1a1a2e;">메타인지 정교화:</strong> 자기 평가 점수 ${scoreResult.metacognitionScore}% ${scoreResult.metacognitionScore >= 90 ? '으로 자신의 능력을 정확히 파악하고 있습니다. 이를 활용해 학습 전략을 스스로 최적화하세요.' : '을 개선하기 위해, 문제별 난이도와 소요 시간을 예측하고 기록하는 습관을 들이세요.'}
                 </li>
                 <li style="margin-bottom: 0; padding-left: 22px; position: relative; line-height: 1.7; color: #444; font-size: 11px;">
                     <span style="position: absolute; left: 0; top: 7px; width: 6px; height: 6px; background: #d4af37; border-radius: 50%;"></span>
@@ -727,11 +727,11 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
         `;
     } else if (scoreResult.finalScore >= 80) {
         const topNames = topStages.map(s => s.name).join(', ');
-        const weakNames = weakStages.map(s => `${s.name}(${s.score}점)`).join(', ');
+        const weakNames = weakStages.map(s => `${s.name}(${s.score}%)`).join(', ');
 
         content = `
             <p style="margin-bottom: 15px; color: #333; line-height: 1.7; font-size: 11px; font-weight: 700;">
-                ${topNames} 영역(${maxScore}점)이 강점입니다. ${weakStages.length > 0 && maxScore !== minScore ? `${weakNames} 영역을 집중 보완하면 90점대 진입이 가능합니다.` : '모든 영역이 균형잡혀 있어 심화 학습으로 도약할 수 있습니다.'}
+                ${topNames} 영역(${maxScore}%)이 강점입니다. ${weakStages.length > 0 && maxScore !== minScore ? `${weakNames} 영역을 집중 보완하면 90점대 진입이 가능합니다.` : '모든 영역이 균형잡혀 있어 심화 학습으로 도약할 수 있습니다.'}
             </p>
             <ul style="list-style: none; padding: 0; margin: 0;">
                 <li style="margin-bottom: 14px; padding-left: 22px; position: relative; line-height: 1.7; color: #444; font-size: 11px;">
@@ -751,8 +751,8 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
                 <li style="margin-bottom: 14px; padding-left: 22px; position: relative; line-height: 1.7; color: #444; font-size: 11px;">
                     <span style="position: absolute; left: 0; top: 7px; width: 6px; height: 6px; background: #d4af37; border-radius: 50%;"></span>
                     <strong style="color: #1a1a2e;">시간 관리 최적화:</strong> ${scoreResult.speedScore < 80 ?
-                `작업 속도 ${scoreResult.speedScore}점을 향상시키기 위해, 단계별 시간 제한을 설정하고(1단계 1분 30초, 2단계 1분, 3단계 1분 20초) 반복 연습하세요.` :
-                `현재 속도(${scoreResult.speedScore}점)를 유지하면서 정확도를 높이는 데 집중하세요.`
+                `작업 속도 ${scoreResult.speedScore}%를 향상시키기 위해, 단계별 시간 제한을 설정하고(1단계 1분 30초, 2단계 1분, 3단계 1분 20초) 반복 연습하세요.` :
+                `현재 속도(${scoreResult.speedScore}%)를 유지하면서 정확도를 높이는 데 집중하세요.`
             }
                 </li>
                 <li style="margin-bottom: 0; padding-left: 22px; position: relative; line-height: 1.7; color: #444; font-size: 11px;">
@@ -763,11 +763,11 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
         `;
     } else if (scoreResult.finalScore >= 70) {
         const topNames = topStages.map(s => s.name).join(', ');
-        const weakNames = weakStages.map(s => `${s.name}(${s.score}점)`).join(', ');
+        const weakNames = weakStages.map(s => `${s.name}(${s.score}%)`).join(', ');
 
         content = `
             <p style="margin-bottom: 15px; color: #333; line-height: 1.7; font-size: 11px; font-weight: 700;">
-                ${topNames} 영역(${maxScore}점)을 중심으로 실력을 확장하고, ${weakStages.length > 0 && maxScore !== minScore ? `${weakNames} 영역을 체계적으로 보강하면` : '모든 영역을 균형있게 발전시키면'} 80점대 돌파가 가능합니다.
+                ${topNames} 영역(${maxScore}%)을 중심으로 실력을 확장하고, ${weakStages.length > 0 && maxScore !== minScore ? `${weakNames} 영역을 체계적으로 보강하면` : '모든 영역을 균형있게 발전시키면'} 80%대 돌파가 가능합니다.
             </p>
             <ul style="list-style: none; padding: 0; margin: 0;">
                 <li style="margin-bottom: 14px; padding-left: 22px; position: relative; line-height: 1.7; color: #444; font-size: 11px;">
@@ -784,7 +784,7 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
                     <span style="position: absolute; left: 0; top: 7px; width: 6px; height: 6px; background: #d4af37; border-radius: 50%;"></span>
                     <strong style="color: #1a1a2e;">영역별 맞춤 훈련:</strong>
                     <ul style="list-style: disc; margin: 8px 0 0 20px; padding: 0;">
-                        ${stages.map(s => `<li style="margin-bottom: 6px; color: #555; font-size: 10px; line-height: 1.6;">${s.name}: ${s.score}점 → ${s.name === '시각 추론' ? '도형 규칙 찾기, 거울상/회전 문제 집중' :
+                        ${stages.map(s => `<li style="margin-bottom: 6px; color: #555; font-size: 10px; line-height: 1.6;">${s.name}: ${s.score}% → ${s.name === '시각 추론' ? '도형 규칙 찾기, 거울상/회전 문제 집중' :
             s.name === '논리 사고' ? '조건 추론, 명제 논리, 벤다이어그램 연습' :
                 '복합 정보 처리, 다중 규칙 적용 문제'
             }</li>`).join('')}
@@ -802,11 +802,11 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
         `;
     } else {
         const topNames = topStages.map(s => s.name).join(', ');
-        const weakNames = weakStages.map(s => `${s.name}(${s.score}점)`).join(', ');
+        const weakNames = weakStages.map(s => `${s.name}(${s.score}%)`).join(', ');
 
         content = `
             <p style="margin-bottom: 15px; color: #333; line-height: 1.7; font-size: 11px; font-weight: 700;">
-                ${topStages.length > 0 ? `${topNames} 영역(${maxScore}점)에서 긍정적인 신호를 보이고 있습니다. 이를 발판으로 ` : ''}
+                ${topStages.length > 0 ? `${topNames} 영역(${maxScore}%)에서 긍정적인 신호를 보이고 있습니다. 이를 발판으로 ` : ''}
                 ${weakStages.length > 0 && maxScore !== minScore ? `${weakNames} 영역부터 차근차근 개선해 나가면` : '모든 영역을 균형있게 발전시키면'} 단기간에 큰 성장이 가능합니다.
             </p>
             <ul style="list-style: none; padding: 0; margin: 0;">
@@ -848,7 +848,7 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
             <div style="margin-top: 16px; padding: 14px; background: linear-gradient(135deg, rgba(255,200,100,0.08) 0%, rgba(255,200,100,0.15) 100%); border-left: 4px solid #d4af37; border-radius: 8px;">
                 <strong style="color: #1a1a2e; font-size: 11px; display: block; margin-bottom: 8px;">작업 속도 개선 실전 팁</strong>
                 <p style="margin: 0 0 10px 0; color: #555; font-size: 11px; line-height: 1.6;">
-                    현재 작업 속도 <strong>${scoreResult.speedScore}점</strong>입니다. 속도 향상을 위한 3단계 전략:
+                    현재 작업 속도 <strong>${scoreResult.speedScore}%</strong>입니다. 속도 향상을 위한 3단계 전략:
                 </p>
                 <ol style="margin: 0; padding-left: 20px; color: #555; font-size: 10px; line-height: 1.7;">
                     <li style="margin-bottom: 6px;"><strong>시간 감각 훈련:</strong> 스톱워치 없이 30초, 1분을 체감으로 측정하는 연습</li>
@@ -865,7 +865,7 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
             <div style="margin-top: 16px; padding: 14px; background: linear-gradient(135deg, rgba(100,150,255,0.08) 0%, rgba(100,150,255,0.15) 100%); border-left: 4px solid #5a7fc4; border-radius: 8px;">
                 <strong style="color: #1a1a2e; font-size: 11px; display: block; margin-bottom: 8px;">자기 평가 정확도 향상 실전 팁</strong>
                 <p style="margin: 0 0 10px 0; color: #555; font-size: 11px; line-height: 1.6;">
-                    현재 자기 평가 점수 <strong>${scoreResult.metacognitionScore}점</strong>입니다. 메타인지 능력 향상 방법:
+                    현재 자기 평가 점수 <strong>${scoreResult.metacognitionScore}%</strong>입니다. 메타인지 능력 향상 방법:
                 </p>
                 <ol style="margin: 0; padding-left: 20px; color: #555; font-size: 10px; line-height: 1.7;">
                     <li style="margin-bottom: 6px;"><strong>자신감 캘리브레이션:</strong> 문제마다 확신도(0-100%)를 기록하고 실제 정답률과 비교</li>
@@ -1060,9 +1060,9 @@ function shareResult() {
         return;
     }
 
-    const score = totalScoreElem.textContent.replace('점', '').trim();
+    const score = totalScoreElem.textContent.replace('%', '').trim();
     const rank = scoreRankElem.textContent;
-    const text = `나의 멘사코리아 브레인 챌린지 점수는 ${score}점 (${rank})! 멘사코리아 온라인 테스트로 확인하세요!`;
+    const text = `나의 멘사코리아 브레인 챌린지 점수는  (${rank})! 멘사코리아 온라인 테스트로 확인하세요!`;
 
     if (navigator.share) {
         navigator.share({

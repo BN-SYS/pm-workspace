@@ -375,25 +375,25 @@ function displayInterpretation(scoreResult) {
 
     if (score >= 95) {
         level = '최상위 수준';
-        description = `귀하의 종합 점수는 <strong>${score}점</strong>으로 <strong>${rank}</strong>에 해당합니다. 멘사 회원 수준의 뛰어난 지능을 보유하고 계십니다. 공식 멘사 입회 테스트 합격 가능성이 매우 높습니다.`;
+        description = `귀하의 종합 점수는 <strong>${score}%</strong>로 <strong>${rank}</strong>에 해당합니다. 멘사 회원 수준의 뛰어난 지능을 보유하고 계십니다. 공식 멘사 입회 테스트 합격 가능성이 매우 높습니다.`;
     } else if (score >= 90) {
         level = '매우 우수';
-        description = `귀하의 종합 점수는 <strong>${score}점</strong>으로 <strong>${rank}</strong>에 해당합니다. 우수한 인지 능력을 가지고 계십니다. 멘사 공식 테스트에 도전해보시길 권장드립니다.`;
+        description = `귀하의 종합 점수는 <strong>${score}%</strong>로 <strong>${rank}</strong>에 해당합니다. 우수한 인지 능력을 가지고 계십니다. 멘사 공식 테스트에 도전해보시길 권장드립니다.`;
     } else if (score >= 85) {
         level = '우수';
-        description = `귀하의 종합 점수는 <strong>${score}점</strong>으로 <strong>${rank}</strong>에 해당합니다. 평균보다 훨씬 높은 인지 능력을 보유하고 있으며, 논리적 사고와 문제 해결 능력이 뛰어납니다.`;
+        description = `귀하의 종합 점수는 <strong>${score}%</strong>로 <strong>${rank}</strong>에 해당합니다. 평균보다 훨씬 높은 인지 능력을 보유하고 있으며, 논리적 사고와 문제 해결 능력이 뛰어납니다.`;
     } else if (score >= 75) {
         level = '평균 상위';
-        description = `귀하의 종합 점수는 <strong>${score}점</strong>으로 <strong>${rank}</strong>에 해당합니다. 평균 이상의 능력을 보유하고 계십니다. 추가 학습과 훈련을 통해 더욱 발전할 수 있습니다.`;
+        description = `귀하의 종합 점수는 <strong>${score}%</strong>로 <strong>${rank}</strong>에 해당합니다. 평균 이상의 능력을 보유하고 계십니다. 추가 학습과 훈련을 통해 더욱 발전할 수 있습니다.`;
     } else if (score >= 65) {
         level = '평균 중상';
-        description = `귀하의 종합 점수는 <strong>${score}점</strong>으로 <strong>${rank}</strong>에 해당합니다. 평균 수준의 인지 능력을 가지고 계십니다. 꾸준한 노력으로 향상 가능합니다.`;
+        description = `귀하의 종합 점수는 <strong>${score}%</strong>로 <strong>${rank}</strong>에 해당합니다. 평균 수준의 인지 능력을 가지고 계십니다. 꾸준한 노력으로 향상 가능합니다.`;
     } else if (score >= 55) {
         level = '평균';
-        description = `귀하의 종합 점수는 <strong>${score}점</strong>으로 <strong>${rank}</strong>에 해당합니다. 일반적인 인지 능력을 가지고 있으며, 충분한 휴식 후 재응시하시면 더 좋은 결과를 얻으실 수 있습니다.`;
+        description = `귀하의 종합 점수는 <strong>${score}%</strong>로 <strong>${rank}</strong>에 해당합니다. 일반적인 인지 능력을 가지고 있으며, 충분한 휴식 후 재응시하시면 더 좋은 결과를 얻으실 수 있습니다.`;
     } else {
         level = '발전 가능';
-        description = `귀하의 종합 점수는 <strong>${score}점</strong>으로 <strong>${rank}</strong>에 해당합니다. 아직 발전 가능성이 많습니다. 충분한 휴식 후 재도전을 권장합니다.`;
+        description = `귀하의 종합 점수는 <strong>${score}%</strong>로 <strong>${rank}</strong>에 해당합니다. 아직 발전 가능성이 많습니다. 충분한 휴식 후 재도전을 권장합니다.`;
     }
 
     container.innerHTML = `
@@ -493,9 +493,9 @@ function shareResult() {
         return;
     }
 
-    const score = totalScoreElem.textContent.replace('점', '').trim();
+    const score = totalScoreElem.textContent.replace('%', '').trim();
     const rank = percentileElem.textContent;
-    const text = `나의 멘사 브레인 챌린지 점수는 ${score}점 (${rank})! 멘사코리아 온라인 테스트로 확인하세요!`;
+    const text = `나의 멘사 브레인 챌린지 점수는 ${score}% (${rank})! 멘사코리아 온라인 테스트로 확인하세요!`;
 
     if (navigator.share) {
         navigator.share({

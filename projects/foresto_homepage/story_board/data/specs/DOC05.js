@@ -21,7 +21,7 @@ window.SPECS['DOC-05'] = `
   <thead><tr><th>항목</th><th>유형</th><th>설명</th></tr></thead>
   <tbody>
     <tr><td>사이트맵</td><td>텍스트 링크</td><td>클릭 시 전체 사이트맵 페이지로 이동</td></tr>
-    <tr><td>글자 크기 조절</td><td>버튼 3개 (소 / 중 / 대)</td><td>기본값 '중'. 선택 시 본문 font-size 변경. 세션 유지 여부 ⚠️ 협의 필요</td></tr>
+    <tr><td>글자 크기 조절</td><td>버튼 3개 (소/중/대)</td><td>기본값 '중'. 선택 시 본문 font-size 변경. 세션 유지 여부 ⚠️ 협의 필요</td></tr>
   </tbody>
 </table>
 
@@ -77,7 +77,7 @@ window.SPECS['DOC-05'] = `
   <tbody>
     <tr><td>최대 너비</td><td>레이아웃</td><td>max-width: 1200px, 중앙 정렬</td></tr>
     <tr><td>최소 높이</td><td>레이아웃</td><td>min-height: calc(100vh - header - footer)</td></tr>
-    <tr><td>좌우 패딩</td><td>레이아웃</td><td>PC 40px / Tablet 24px / Mobile 16px</td></tr>
+    <tr><td>좌우 패딩</td><td>레이아웃</td><td>PC 40px/Tablet 24px/Mobile 16px</td></tr>
   </tbody>
 </table>
 
@@ -89,7 +89,7 @@ window.SPECS['DOC-05'] = `
     <tr><td>기관 로고</td><td>이미지 링크</td><td>클릭 → 해당 기관 홈페이지 새 탭(_blank) 이동</td></tr>
     <tr><td>노출 기관</td><td>이미지</td><td>국립수목원 · 산림복지진흥원 · 숲해설가 자격 · 녹색연합 · 산림청 등 ⚠️ 전체 목록·순서·URL 확인 필요</td></tr>
     <tr><td>자동 롤링</td><td>인터랙션</td><td>일정 간격 자동 좌측 이동 ⚠️ 롤링 간격(초) 협의 필요</td></tr>
-    <tr><td>수동 이동</td><td>인터랙션</td><td>좌우 화살표 클릭 시 1칸 이동 ⚠️ 무한 루프 / 끝 비활성 방식 협의 필요</td></tr>
+    <tr><td>수동 이동</td><td>인터랙션</td><td>좌우 화살표 클릭 시 1칸 이동 ⚠️ 무한 루프/끝 비활성 방식 협의 필요</td></tr>
     <tr><td>hover 시</td><td>인터랙션</td><td>자동 롤링 일시 정지, mouse leave 시 재개</td></tr>
   </tbody>
 </table>

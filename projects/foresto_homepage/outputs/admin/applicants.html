@@ -64,6 +64,7 @@
         <h1 class="admin-page-title">신청자 통합 관리</h1>
         <div class="admin-topbar-actions">
           <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../assets/icons/refresh.png" alt="새로고침"></button>
+          <a href="apply-register.html" class="btn btn-primary btn-sm">신청등록</a>
         </div>
       </div>
 
@@ -117,7 +118,17 @@
             </div>
           </div>
 
-          <!-- 행 3: 신청상태 | 수료상태 (50/50) -->
+          <!-- 행 3: 기수 -->
+          <div class="filter-row">
+            <span class="filter-label">기수</span>
+            <div class="filter-content">
+              <select id="filterCohort" class="form-control" style="width:130px;height:34px;font-size:13px">
+                <option value="">전체</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 행 4: 신청상태 | 수료상태 (50/50) -->
           <div class="filter-row">
             <div class="filter-half">
               <span class="filter-label">신청상태</span>
@@ -187,6 +198,7 @@
             <col style="width:38px">    <!-- No -->
             <col style="width:9%">      <!-- 접수번호 -->
             <col style="width:7%">      <!-- 과정유형 -->
+            <col style="width:5%">      <!-- 기수 -->
             <col>                       <!-- 과정명 (auto) -->
             <col style="width:10%">     <!-- 신청자(ID) -->
             <col style="width:3%">      <!-- 성별 -->
@@ -205,6 +217,7 @@
               <th>No</th>
               <th>접수번호</th>
               <th>과정유형</th>
+              <th class="center">기수</th>
               <th style="text-align:center">과정명</th>
               <th>신청자</th>
               <th>성별</th>
@@ -297,21 +310,21 @@
 
   /* ── 더미 데이터 */
   const COURSE_NAMES_POOL = [
-    { type: 'basic',   academyTab: null,      name: '봄 숲 이야기 — 시민아카데미' },
-    { type: 'basic',   academyTab: null,      name: '학교 숲 생태교육 기초과정' },
-    { type: 'basic',   academyTab: null,      name: '도심 속 숲 치유 프로그램' },
-    { type: 'qualify', academyTab: null,      name: '제55기 숲해설가 전문가과정' },
-    { type: 'qualify', academyTab: null,      name: '제10기 준전문가 양성과정' },
-    { type: 'qualify', academyTab: null,      name: '제54기 숲해설가 전문가과정' },
-    { type: 'enhance', academyTab: null,      name: '숲해설 심화 — 생태 스토리텔링' },
-    { type: 'enhance', academyTab: null,      name: '탄소중립 숲 교육 심화과정' },
-    { type: 'enhance', academyTab: null,      name: '숲 치유 프로그램 개발 직무교육' },
-    { type: 'academy', academyTab: 'lecture', name: '식물 생태 특강 — 봄 야생화' },
-    { type: 'academy', academyTab: 'lecture', name: '기후위기와 숲 생태 특강' },
-    { type: 'academy', academyTab: 'course',  name: '숲 생태 강좌 — 수목 감별' },
-    { type: 'academy', academyTab: 'course',  name: '야생화 이야기 강좌' },
-    { type: 'academy', academyTab: 'mentor',  name: '멘토링숲학교 — 봄학기' },
-    { type: 'academy', academyTab: 'mentor',  name: '멘토링숲학교 — 여름학기' },
+    { type: 'basic',   academyTab: null,      cohort: null, name: '봄 숲 이야기 — 시민아카데미' },
+    { type: 'basic',   academyTab: null,      cohort: null, name: '학교 숲 생태교육 기초과정' },
+    { type: 'basic',   academyTab: null,      cohort: null, name: '도심 속 숲 치유 프로그램' },
+    { type: 'qualify', academyTab: null,      cohort: 55,   name: '제55기 숲해설가 전문가과정' },
+    { type: 'qualify', academyTab: null,      cohort: 10,   name: '제10기 준전문가 양성과정' },
+    { type: 'qualify', academyTab: null,      cohort: 54,   name: '제54기 숲해설가 전문가과정' },
+    { type: 'enhance', academyTab: null,      cohort: null, name: '숲해설 심화 — 생태 스토리텔링' },
+    { type: 'enhance', academyTab: null,      cohort: null, name: '탄소중립 숲 교육 심화과정' },
+    { type: 'enhance', academyTab: null,      cohort: null, name: '숲 치유 프로그램 개발 직무교육' },
+    { type: 'academy', academyTab: 'lecture', cohort: null, name: '식물 생태 특강 — 봄 야생화' },
+    { type: 'academy', academyTab: 'lecture', cohort: null, name: '기후위기와 숲 생태 특강' },
+    { type: 'academy', academyTab: 'course',  cohort: null, name: '숲 생태 강좌 — 수목 감별' },
+    { type: 'academy', academyTab: 'course',  cohort: null, name: '야생화 이야기 강좌' },
+    { type: 'academy', academyTab: 'mentor',  cohort: null, name: '멘토링숲학교 — 봄학기' },
+    { type: 'academy', academyTab: 'mentor',  cohort: null, name: '멘토링숲학교 — 여름학기' },
   ];
 
   const NAMES = [
@@ -365,6 +378,7 @@
       memberId:         `M${String(2000 + i).padStart(5, '0')}`,
       courseType:       course.type,
       academyTab:       course.academyTab,
+      cohort:           course.cohort,
       courseName:       course.name,
       name:             NAMES[i % NAMES.length],
       gender:           GENDERS[i % GENDERS.length],
@@ -404,6 +418,7 @@
       const academyTab = document.querySelector('input[name="filterAcademyTab"]:checked')?.value || '';
       const applyS     = document.querySelector('input[name="filterApply"]:checked')?.value      || '';
       const completion = document.querySelector('input[name="filterCompletion"]:checked')?.value || '';
+      const cohort     = document.getElementById('filterCohort').value;
       const kw         = document.getElementById('filterKeyword').value.trim().toLowerCase();
       const kwType     = document.getElementById('filterSearchType').value;
 
@@ -412,6 +427,7 @@
         if (type && a.courseType !== type) return false;
         /* 아카데미 하위 탭 — type=academy 이면서 탭 선택된 경우만 적용 */
         if (type === 'academy' && academyTab && a.academyTab !== academyTab) return false;
+        if (cohort && String(a.cohort || '') !== cohort) return false;
         if (applyS && a.applyStatus !== applyS) return false;
         if (completion && a.completionStatus !== completion) return false;
         if (kw) {
@@ -444,6 +460,7 @@
       document.querySelector('input[name="filterCompletion"][value=""]').checked = true;
       document.querySelector('input[name="filterAcademyTab"][value=""]').checked = true;
       document.getElementById('academySubRow').style.display = 'none';
+      document.getElementById('filterCohort').value     = '';
       document.getElementById('filterKeyword').value    = '';
       document.getElementById('filterSearchType').value = 'all';
       this.filtered    = [...ALL_APPLICANTS];
@@ -553,6 +570,7 @@
               <td>${total - start - i}</td>
               <td class="cell-mono">${a.applyNo}</td>
               <td><span class="badge-type ${typeMeta.cls}">${typeMeta.label}${tabSuffix}</span></td>
+              <td class="center" style="font-size:13px">${a.cohort ? a.cohort + '기' : '—'}</td>
               <td style="font-weight:500;text-align:center">${a.courseName}</td>
               <td><span style="font-weight:600">${a.name}</span> <span style="font-weight:400;color:#888;font-size:12px">(${a.memberId})</span></td>
               <td>${a.gender}</td>
@@ -567,13 +585,22 @@
               }</td>
             </tr>`;
           }).join('')
-        : `<tr><td colspan="14" style="padding:40px;text-align:center;color:#5a6e54">검색 결과가 없습니다.</td></tr>`;
+        : `<tr><td colspan="15" style="padding:40px;text-align:center;color:#5a6e54">검색 결과가 없습니다.</td></tr>`;
 
       App.renderPagination('applicantPagination', this.currentPage,
         Math.ceil(total / this.pageSize) || 1,
         p => { this.currentPage = p; this.render(); });
     },
   };
+
+  /* 기수 드롭다운 옵션 — 데이터 기반 오름차순 */
+  const cohortVals = [...new Set(ALL_APPLICANTS.map(a => a.cohort).filter(Boolean))].sort((a, b) => a - b);
+  const cohortSel  = document.getElementById('filterCohort');
+  cohortVals.forEach(v => {
+    const o = document.createElement('option');
+    o.value = String(v); o.textContent = v + '기';
+    cohortSel.appendChild(o);
+  });
 
   /* 초기 렌더 */
   ApplicantAdmin.render();

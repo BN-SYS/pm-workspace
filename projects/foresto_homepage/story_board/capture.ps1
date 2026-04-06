@@ -1,4 +1,4 @@
-# ============================================================
+﻿# ============================================================
 # 스토리보드 전체 캡처
 # 출력: story_board/images/*.png
 # 실행: PowerShell에서 .\capture.ps1
@@ -97,35 +97,36 @@ $adminPages = @(
   @{name="A06_강좌_상세";                      path="admin/course-detail.html"},
   @{name="A07_강좌_등록수정";                  path="admin/course-edit.html"},
   @{name="A08_강좌신청자_목록";               path="admin/applicants.html"},
-  @{name="A09_강좌신청자_상세";               path="admin/applicant-detail.html"},
+  @{name="A09_강좌신청_등록";                  path="admin/apply-register.html"},
+  @{name="A10_강좌신청자_상세";               path="admin/applicant-detail.html"},
   # 강사 일정관리
-  @{name="A10_강사일정_목록";                  path="admin/instructor-schedule.html"},
-  @{name="A11_강사일정_등록수정";              path="admin/instructor-schedule-edit.html"},
+  @{name="A11_강사일정_목록";                  path="admin/instructor-schedule.html"},
+  @{name="A12_강사일정_등록수정";              path="admin/instructor-schedule-edit.html"},
   # 기타신청관리
-  @{name="A12_정회원신청_목록";               path="admin/apply-regular.html"},
-  @{name="A13_정회원신청_상세";               path="admin/apply-regular-detail.html"},
-  @{name="A14_강사신청_목록";                  path="admin/apply-instructor.html"},
-  @{name="A15_강사신청_상세";                  path="admin/apply-instructor-detail.html"},
-  @{name="A16_숲해설신청_목록";               path="admin/apply-forest.html"},
-  @{name="A17_숲해설신청_상세";               path="admin/apply-forest-detail.html"},
-  @{name="A18_후원신청_목록";                  path="admin/apply-sponsor.html"},
-  @{name="A19_후원신청_상세";                  path="admin/apply-sponsor-detail.html"},
+  @{name="A13_정회원신청_목록";               path="admin/apply-regular.html"},
+  @{name="A14_정회원신청_상세";               path="admin/apply-regular-detail.html"},
+  @{name="A15_강사신청_목록";                  path="admin/apply-instructor.html"},
+  @{name="A16_강사신청_상세";                  path="admin/apply-instructor-detail.html"},
+  @{name="A17_숲해설신청_목록";               path="admin/apply-forest.html"},
+  @{name="A18_숲해설신청_상세";               path="admin/apply-forest-detail.html"},
+  @{name="A19_후원신청_목록";                  path="admin/apply-sponsor.html"},
+  @{name="A20_후원신청_상세";                  path="admin/apply-sponsor-detail.html"},
   # 일정관리
-  @{name="A20_일정_목록";                      path="admin/calendar.html"},
-  @{name="A21_일정_상세";                      path="admin/calendar-detail.html"},
-  @{name="A22_일정_등록수정";                  path="admin/calendar-edit.html"},
+  @{name="A21_일정_목록";                      path="admin/calendar.html"},
+  @{name="A22_일정_상세";                      path="admin/calendar-detail.html"},
+  @{name="A23_일정_등록수정";                  path="admin/calendar-edit.html"},
   # 게시판관리
-  @{name="A23_게시판_목록";                    path="admin/board.html"},
-  @{name="A24_게시판_글상세";                  path="admin/board-detail.html"},
-  @{name="A25_게시판_글등록수정";              path="admin/board-edit.html"},
+  @{name="A24_게시판_목록";                    path="admin/board.html"},
+  @{name="A25_게시판_글상세";                  path="admin/board-detail.html"},
+  @{name="A26_게시판_글등록수정";              path="admin/board-edit.html"},
   # 콘텐츠관리
-  @{name="A26_조직도임원진_관리";              path="admin/organization.html"},
-  @{name="A27_연혁_목록";                      path="admin/history.html"},
-  @{name="A28_연혁_등록수정";                  path="admin/history-edit.html"},
-  @{name="A29_배너_목록";                      path="admin/banner.html"},
-  @{name="A30_배너_등록수정";                  path="admin/banner-edit.html"},
-  @{name="A31_팝업_목록";                      path="admin/popup.html"},
-  @{name="A32_팝업_등록수정";                  path="admin/popup-edit.html"}
+  @{name="A27_조직도임원진_관리";              path="admin/organization.html"},
+  @{name="A28_연혁_목록";                      path="admin/history.html"},
+  @{name="A29_연혁_등록수정";                  path="admin/history-edit.html"},
+  @{name="A30_배너_목록";                      path="admin/banner.html"},
+  @{name="A31_배너_등록수정";                  path="admin/banner-edit.html"},
+  @{name="A32_팝업_목록";                      path="admin/popup.html"},
+  @{name="A33_팝업_등록수정";                  path="admin/popup-edit.html"}
 )
 
 $pages = $userPages + $adminPages

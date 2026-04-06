@@ -105,7 +105,17 @@
             </div>
           </div>
 
-          <!-- 행 3: 과정명 검색 -->
+          <!-- 행 3: 기수 -->
+          <div class="filter-row">
+            <span class="filter-label">기수</span>
+            <div class="filter-content">
+              <select id="filterCohort" class="form-control" style="width:130px;height:34px;font-size:13px">
+                <option value="">전체</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 행 4: 과정명 검색 -->
           <div class="filter-row">
             <span class="filter-label">과정명</span>
             <div class="filter-content">
@@ -147,6 +157,7 @@
                 <input type="checkbox" id="chkAll" onchange="CourseAdmin.toggleAll(this.checked)">
               </th>
               <th style="width:4%">No</th>
+              <th style="width:7%" class="center">기수</th>
               <th style="text-align:center">과정명</th>
               <th style="width:9%">시작일</th>
               <th style="width:20%">접수기간</th>
@@ -277,6 +288,10 @@
     /* type=academy면 탭별 데이터 키 사용 */
     const dataKey = (type === 'academy') ? `academy-${activeTab}` : type;
 
+    /* 기수 유무 패턴: qualify·enhance는 기수 있는 경우 많음, 나머지는 적음 */
+    const COHORT_BASE = { basic: 0, qualify: 53, enhance: 0, academy: 0 };
+    const cohortBase  = COHORT_BASE[type] || 0;
+
     const ALL_COURSES = Array.from({ length: 28 }, (_, i) => {
       const names = COURSE_NAMES[dataKey] || COURSE_NAMES.basic;
       const mm    = String((i % 9) + 1).padStart(2, '0');
@@ -290,10 +305,15 @@
       const recStartMm = String(((i + 2) % 9) + 1).padStart(2, '0');
       const recStartDd = String(((i * 2 + 1) % 20) + 1).padStart(2, '0');
       const recEndDd   = String(((i * 3 + 5) % 20) + 1).padStart(2, '0');
+      /* cohortBase > 0이면 순번 기반 기수 부여, 0이면 일부만 (3개 중 1개) */
+      const cohort = cohortBase > 0
+        ? cohortBase + i
+        : (i % 3 === 0 ? (i + 1) : null);
 
       return {
         id:      1000 + i,
         name:    names[i % names.length],
+        cohort,
         startDate,
         recFrom: `2026-${recStartMm}-${recStartDd} 09:00`,
         recTo:   `2026-${mm}-${recEndDd} 18:00`,
@@ -319,11 +339,13 @@
         const from   = document.getElementById('filterDateFrom').value;
         const to     = document.getElementById('filterDateTo').value;
         const status = document.querySelector('input[name="filterStatus"]:checked')?.value || '';
+        const cohort = document.getElementById('filterCohort').value;
         const kw     = document.getElementById('filterKeyword').value.trim().toLowerCase();
 
         this.filtered = ALL_COURSES.filter(c => {
           if (!this._dateInRange(c.startDate, from, to)) return false;
           if (status && c.status !== status) return false;
+          if (cohort && String(c.cohort || '') !== cohort) return false;
           if (kw && !c.name.toLowerCase().includes(kw)) return false;
           return true;
         });
@@ -344,6 +366,7 @@
         document.getElementById('filterDateFrom').value = '';
         document.getElementById('filterDateTo').value   = '';
         document.querySelector('input[name="filterStatus"][value=""]').checked = true;
+        document.getElementById('filterCohort').value   = '';
         document.getElementById('filterKeyword').value  = '';
         this.filtered    = [...ALL_COURSES];
         this.currentPage = 1;
@@ -422,6 +445,7 @@
                     onchange="CourseAdmin._syncDeleteBtn()">
                 </td>
                 <td class="td-muted">${total - start - i}</td>
+                <td class="center" style="font-size:13px">${c.cohort ? c.cohort + '기' : '—'}</td>
                 <td style="font-weight:500;text-align:center">${c.name}</td>
                 <td class="cell-datetime">${c.startDate}</td>
                 <td class="period-cell">${c.recFrom} ~ ${c.recTo}</td>
@@ -429,13 +453,22 @@
                 <td class="td-muted cell-datetime">${c.regDate}</td>
               </tr>`;
             }).join('')
-          : `<tr><td colspan="7" style="padding:40px;text-align:center;color:#aabba4">검색 결과가 없습니다.</td></tr>`;
+          : `<tr><td colspan="8" style="padding:40px;text-align:center;color:#aabba4">검색 결과가 없습니다.</td></tr>`;
 
         App.renderPagination('coursePagination', this.currentPage,
           Math.ceil(total / this.pageSize) || 1,
           p => { this.currentPage = p; this.render(); });
       },
     };
+
+    /* 기수 드롭다운 옵션 — 데이터에 있는 기수값만 오름차순으로 */
+    const cohortValues = [...new Set(ALL_COURSES.map(c => c.cohort).filter(Boolean))].sort((a, b) => a - b);
+    const cohortSel = document.getElementById('filterCohort');
+    cohortValues.forEach(v => {
+      const o = document.createElement('option');
+      o.value = String(v); o.textContent = v + '기';
+      cohortSel.appendChild(o);
+    });
 
     CourseAdmin.render();
   </script>

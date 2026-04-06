@@ -230,21 +230,21 @@
   const EMAILS    = ['kim@example.com','lee@example.com','park@example.com','choi@example.com','jung@example.com','kang@example.com','yoon@example.com','lim@example.com','oh@example.com','han@example.com'];
 
   const COURSE_NAMES_POOL = [
-    { type: 'basic',   academyTab: null,      name: '봄 숲 이야기 — 시민아카데미' },
-    { type: 'basic',   academyTab: null,      name: '학교 숲 생태교육 기초과정' },
-    { type: 'basic',   academyTab: null,      name: '도심 속 숲 치유 프로그램' },
-    { type: 'qualify', academyTab: null,      name: '제55기 숲해설가 전문가과정' },
-    { type: 'qualify', academyTab: null,      name: '제10기 준전문가 양성과정' },
-    { type: 'qualify', academyTab: null,      name: '제54기 숲해설가 전문가과정' },
-    { type: 'enhance', academyTab: null,      name: '숲해설 심화 — 생태 스토리텔링' },
-    { type: 'enhance', academyTab: null,      name: '탄소중립 숲 교육 심화과정' },
-    { type: 'enhance', academyTab: null,      name: '숲 치유 프로그램 개발 직무교육' },
-    { type: 'academy', academyTab: 'lecture', name: '식물 생태 특강 — 봄 야생화' },
-    { type: 'academy', academyTab: 'lecture', name: '기후위기와 숲 생태 특강' },
-    { type: 'academy', academyTab: 'course',  name: '숲 생태 강좌 — 수목 감별' },
-    { type: 'academy', academyTab: 'course',  name: '야생화 이야기 강좌' },
-    { type: 'academy', academyTab: 'mentor',  name: '멘토링숲학교 — 봄학기' },
-    { type: 'academy', academyTab: 'mentor',  name: '멘토링숲학교 — 여름학기' },
+    { type: 'basic',   academyTab: null,      cohort: null, name: '봄 숲 이야기 — 시민아카데미' },
+    { type: 'basic',   academyTab: null,      cohort: null, name: '학교 숲 생태교육 기초과정' },
+    { type: 'basic',   academyTab: null,      cohort: null, name: '도심 속 숲 치유 프로그램' },
+    { type: 'qualify', academyTab: null,      cohort: 55,   name: '제55기 숲해설가 전문가과정' },
+    { type: 'qualify', academyTab: null,      cohort: 10,   name: '제10기 준전문가 양성과정' },
+    { type: 'qualify', academyTab: null,      cohort: 54,   name: '제54기 숲해설가 전문가과정' },
+    { type: 'enhance', academyTab: null,      cohort: null, name: '숲해설 심화 — 생태 스토리텔링' },
+    { type: 'enhance', academyTab: null,      cohort: null, name: '탄소중립 숲 교육 심화과정' },
+    { type: 'enhance', academyTab: null,      cohort: null, name: '숲 치유 프로그램 개발 직무교육' },
+    { type: 'academy', academyTab: 'lecture', cohort: null, name: '식물 생태 특강 — 봄 야생화' },
+    { type: 'academy', academyTab: 'lecture', cohort: null, name: '기후위기와 숲 생태 특강' },
+    { type: 'academy', academyTab: 'course',  cohort: null, name: '숲 생태 강좌 — 수목 감별' },
+    { type: 'academy', academyTab: 'course',  cohort: null, name: '야생화 이야기 강좌' },
+    { type: 'academy', academyTab: 'mentor',  cohort: null, name: '멘토링숲학교 — 봄학기' },
+    { type: 'academy', academyTab: 'mentor',  cohort: null, name: '멘토링숲학교 — 여름학기' },
   ];
 
   const COURSE_TYPE_LABEL = {
@@ -294,6 +294,7 @@
       memberId:         `M${String(2000 + i).padStart(5, '0')}`,
       courseType:       course.type,
       academyTab:       course.academyTab,
+      cohort:           course.cohort,
       courseName:       course.name,
       name:             NAMES[i % NAMES.length],
       gender:           GENDERS[i % GENDERS.length],
@@ -397,6 +398,12 @@
           <div class="form-label">과정유형</div>
           <div class="form-content">
             <span class="detail-val">${courseTypeLabel}${academyTabLabel}</span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">기수</div>
+          <div class="form-content">
+            <span class="detail-val">${a.cohort ? a.cohort + '기' : '—'}</span>
           </div>
         </div>
         <div class="form-row">
