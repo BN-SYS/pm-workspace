@@ -82,11 +82,11 @@
                 <input type="date" id="filterDateTo">
               </div>
               <div class="date-preset-group">
-                <button class="date-preset-btn" onclick="ApplicantAdmin.setDatePreset('today')">오늘</button>
-                <button class="date-preset-btn" onclick="ApplicantAdmin.setDatePreset(7)">7일</button>
-                <button class="date-preset-btn" onclick="ApplicantAdmin.setDatePreset(30)">30일</button>
-                <button class="date-preset-btn" onclick="ApplicantAdmin.setDatePreset(90)">3개월</button>
-                <button class="date-preset-btn" onclick="ApplicantAdmin.setDatePreset(180)">6개월</button>
+                <button class="date-preset-btn" onclick="setDatePreset('today')">오늘</button>
+                <button class="date-preset-btn" onclick="setDatePreset(7)">7일</button>
+                <button class="date-preset-btn" onclick="setDatePreset(30)">30일</button>
+                <button class="date-preset-btn" onclick="setDatePreset(90)">3개월</button>
+                <button class="date-preset-btn" onclick="setDatePreset(180)">6개월</button>
               </div>
             </div>
           </div>
@@ -124,6 +124,9 @@
             <div class="filter-content">
               <select id="filterCohort" class="form-control" style="width:130px;height:34px;font-size:13px">
                 <option value="">전체</option>
+                <option value="55">55기</option>
+                <option value="54">54기</option>
+                <option value="10">10기</option>
               </select>
             </div>
           </div>
@@ -172,18 +175,16 @@
 
         </div>
         <div class="filter-footer">
-          <button class="btn btn-outline btn-sm" onclick="ApplicantAdmin.exportExcel()">엑셀 다운로드</button>
-          <button class="btn btn-gray btn-sm" onclick="ApplicantAdmin.resetFilter()">초기화</button>
-          <button class="btn btn-primary btn-sm" onclick="ApplicantAdmin.search()">검색</button>
+          <button class="btn btn-outline btn-sm" onclick="App.toast('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info')">엑셀 다운로드</button>
+          <button class="btn btn-gray btn-sm">초기화</button>
+          <button class="btn btn-primary btn-sm">검색</button>
         </div>
       </div>
 
       <!-- ② 목록 상단 -->
       <div class="list-top">
-        <div class="list-count">총 <strong id="applicantCount">0</strong>건</div>
-        <select class="form-control" id="pageSizeSelect"
-          onchange="ApplicantAdmin.changePageSize(+this.value)"
-          style="width:130px;height:36px;font-size:13px">
+        <div class="list-count">총 <strong>3</strong>건</div>
+        <select class="form-control" id="pageSizeSelect" style="width:130px;height:36px;font-size:13px">
           <option value="10">10개씩 보기</option>
           <option value="30">30개씩 보기</option>
           <option value="50">50개씩 보기</option>
@@ -212,7 +213,7 @@
           <thead>
             <tr>
               <th class="col-chk">
-                <input type="checkbox" id="chkAll" onchange="ApplicantAdmin.toggleAll(this.checked)">
+                <input type="checkbox" id="chkAll" onchange="toggleAll(this.checked)">
               </th>
               <th>No</th>
               <th>접수번호</th>
@@ -229,7 +230,63 @@
               <th>수료상태</th>
             </tr>
           </thead>
-          <tbody id="applicantTableBody"></tbody>
+          <tbody>
+            <tr class="applicant-row" onclick="location.href='applicant-detail.html?id=2001'">
+              <td class="col-chk" onclick="event.stopPropagation()">
+                <input type="checkbox" class="row-chk" data-id="2001" onchange="syncBulkBtns()">
+              </td>
+              <td>3</td>
+              <td class="cell-mono">APP-2026-02001</td>
+              <td><span class="badge-type basic">기초과정</span></td>
+              <td class="center" style="font-size:13px">—</td>
+              <td style="font-weight:500;text-align:center">봄 숲 이야기 — 시민아카데미</td>
+              <td><span style="font-weight:600">김민준</span> <span style="font-weight:400;color:#888;font-size:12px">(M02001)</span></td>
+              <td>남</td>
+              <td class="cell-mono">1985-03-15</td>
+              <td class="cell-mono">010-1234-5678</td>
+              <td class="cell-mono">2026-03-01 09:07</td>
+              <td class="cell-mono">—</td>
+              <td><span class="badge badge-green">신청완료</span></td>
+              <td><span class="badge badge-orange">미수료</span></td>
+            </tr>
+            <tr class="applicant-row" onclick="location.href='applicant-detail.html?id=2002'">
+              <td class="col-chk" onclick="event.stopPropagation()">
+                <input type="checkbox" class="row-chk" data-id="2002" onchange="syncBulkBtns()">
+              </td>
+              <td>2</td>
+              <td class="cell-mono">APP-2026-02002</td>
+              <td><span class="badge-type qualify">자격취득과정</span></td>
+              <td class="center" style="font-size:13px">55기</td>
+              <td style="font-weight:500;text-align:center">제55기 숲해설가 전문가과정</td>
+              <td><span style="font-weight:600">이서연</span> <span style="font-weight:400;color:#888;font-size:12px">(M02002)</span></td>
+              <td>여</td>
+              <td class="cell-mono">1990-07-22</td>
+              <td class="cell-mono">010-2345-6789</td>
+              <td class="cell-mono">2026-03-05 14:23</td>
+              <td class="cell-mono">—</td>
+              <td><span class="badge badge-green">신청완료</span></td>
+              <td><span class="badge badge-green">수료</span></td>
+            </tr>
+            <tr class="applicant-row" onclick="location.href='applicant-detail.html?id=2003'">
+              <td class="col-chk" onclick="event.stopPropagation()">
+                <input type="checkbox" class="row-chk" data-id="2003" onchange="syncBulkBtns()">
+              </td>
+              <td>1</td>
+              <td class="cell-mono">APP-2026-02003</td>
+              <td><span class="badge-type enhance">역량강화</span></td>
+              <td class="center" style="font-size:13px">—</td>
+              <td style="font-weight:500;text-align:center">숲해설 심화 — 생태 스토리텔링</td>
+              <td><span style="font-weight:600">박지훈</span> <span style="font-weight:400;color:#888;font-size:12px">(M02003)</span></td>
+              <td>남</td>
+              <td class="cell-mono">1978-11-08</td>
+              <td class="cell-mono">010-3456-7890</td>
+              <td class="cell-mono">2026-03-10 11:15</td>
+              <td class="cell-mono">2026-03-13 09:30</td>
+              <td><span class="badge badge-orange">취소</span></td>
+              <td><span style="color:#bbb;font-size:13px">—</span></td>
+            </tr>
+            <!-- 데이터 없을 때: <tr><td colspan="14" class="td-empty">검색 결과가 없습니다.</td></tr> -->
+          </tbody>
         </table>
       </div>
 
@@ -240,15 +297,15 @@
       <div class="table-bottom-bar">
         <div class="bulk-btn-group">
           <button class="btn btn-danger btn-danger-filled btn-sm" id="btnBulkDelete"
-            onclick="ApplicantAdmin.bulkDelete()" disabled>선택 삭제</button>
+            onclick="bulkDelete()" disabled>선택 삭제</button>
         </div>
         <div class="bulk-btn-group">
           <button class="btn btn-danger btn-sm" id="btnBulkCancel"
-            onclick="ApplicantAdmin.bulkChangeApply('취소')" disabled>선택 취소처리</button>
+            onclick="bulkChangeApply('취소')" disabled>선택 취소처리</button>
           <button class="btn btn-outline btn-sm" id="btnBulkComplete"
-            onclick="ApplicantAdmin.bulkChangeCompletion('수료')" disabled>선택 수료처리</button>
+            onclick="bulkChangeCompletion('수료')" disabled>선택 수료처리</button>
           <button class="btn btn-gray btn-sm" id="btnBulkIncomplete"
-            onclick="ApplicantAdmin.bulkChangeCompletion('미수료')" disabled>선택 미수료처리</button>
+            onclick="bulkChangeCompletion('미수료')" disabled>선택 미수료처리</button>
         </div>
       </div>
 
@@ -265,12 +322,6 @@
 
   AdminSidebar.mount('course-applicants');
 
-  /* ── 라디오 초기값 */
-  document.querySelector('input[name="filterType"][value=""]').checked       = true;
-  document.querySelector('input[name="filterApply"][value=""]').checked      = true;
-  document.querySelector('input[name="filterCompletion"][value=""]').checked = true;
-  document.querySelector('input[name="filterAcademyTab"][value=""]').checked = true;
-
   /* ── 과정유형 칩 변경 → 아카데미 하위 행 토글 */
   document.querySelectorAll('input[name="filterType"]').forEach(radio => {
     radio.addEventListener('change', function () {
@@ -279,331 +330,56 @@
         subRow.style.display = '';
       } else {
         subRow.style.display = 'none';
-        document.querySelector('input[name="filterAcademyTab"][value=""]').checked = true;
+        const allTab = document.querySelector('input[name="filterAcademyTab"][value=""]');
+        if (allTab) allTab.checked = true;
       }
     });
   });
 
-  /* ── 상태 정의 */
-  const APPLY_STATUS = {
-    '신청완료': { cls: 'badge-green',  label: '신청완료' },
-    '취소':     { cls: 'badge-orange', label: '취소' },
-  };
+  /* ── 날짜 프리셋 */
+  function setDatePreset(range) {
+    const to = new Date(), from = new Date();
+    if (range !== 'today') from.setDate(from.getDate() - range);
+    const fmt = d => d.toISOString().split('T')[0];
+    document.getElementById('filterDateFrom').value = fmt(from);
+    document.getElementById('filterDateTo').value   = fmt(to);
+  }
 
-  const COMPLETION_STATUS = {
-    '수료':   { cls: 'badge-green',  label: '수료' },
-    '미수료': { cls: 'badge-orange', label: '미수료' },
-  };
+  /* ── 전체 선택 / 일괄 버튼 동기화 */
+  function toggleAll(checked) {
+    document.querySelectorAll('.row-chk').forEach(cb => cb.checked = checked);
+    syncBulkBtns();
+  }
 
-  const COURSE_TYPE_META = {
-    basic:   { label: '기초과정',     cls: 'basic' },
-    qualify: { label: '자격취득과정', cls: 'qualify' },
-    enhance: { label: '역량강화',     cls: 'enhance' },
-    academy: { label: '아카데미', cls: 'academy' },
-  };
+  function syncBulkBtns() {
+    const any = document.querySelectorAll('.row-chk:checked').length > 0;
+    document.getElementById('btnBulkDelete').disabled     = !any;
+    document.getElementById('btnBulkCancel').disabled     = !any;
+    document.getElementById('btnBulkComplete').disabled   = !any;
+    document.getElementById('btnBulkIncomplete').disabled = !any;
+  }
 
-  const ACADEMY_TAB_LABEL = {
-    lecture: '특강',
-    course:  '강좌',
-    mentor:  '멘토링',
-  };
+  /* ── 일괄 처리 */
+  function bulkDelete() {
+    const count = document.querySelectorAll('.row-chk:checked').length;
+    if (!count) return;
+    if (!confirm(`선택한 ${count}명의 신청 데이터를 삭제하시겠습니까?`)) return;
+    App.toast(`${count}명의 신청 데이터가 삭제되었습니다.`, 'success');
+  }
 
-  /* ── 더미 데이터 */
-  const COURSE_NAMES_POOL = [
-    { type: 'basic',   academyTab: null,      cohort: null, name: '봄 숲 이야기 — 시민아카데미' },
-    { type: 'basic',   academyTab: null,      cohort: null, name: '학교 숲 생태교육 기초과정' },
-    { type: 'basic',   academyTab: null,      cohort: null, name: '도심 속 숲 치유 프로그램' },
-    { type: 'qualify', academyTab: null,      cohort: 55,   name: '제55기 숲해설가 전문가과정' },
-    { type: 'qualify', academyTab: null,      cohort: 10,   name: '제10기 준전문가 양성과정' },
-    { type: 'qualify', academyTab: null,      cohort: 54,   name: '제54기 숲해설가 전문가과정' },
-    { type: 'enhance', academyTab: null,      cohort: null, name: '숲해설 심화 — 생태 스토리텔링' },
-    { type: 'enhance', academyTab: null,      cohort: null, name: '탄소중립 숲 교육 심화과정' },
-    { type: 'enhance', academyTab: null,      cohort: null, name: '숲 치유 프로그램 개발 직무교육' },
-    { type: 'academy', academyTab: 'lecture', cohort: null, name: '식물 생태 특강 — 봄 야생화' },
-    { type: 'academy', academyTab: 'lecture', cohort: null, name: '기후위기와 숲 생태 특강' },
-    { type: 'academy', academyTab: 'course',  cohort: null, name: '숲 생태 강좌 — 수목 감별' },
-    { type: 'academy', academyTab: 'course',  cohort: null, name: '야생화 이야기 강좌' },
-    { type: 'academy', academyTab: 'mentor',  cohort: null, name: '멘토링숲학교 — 봄학기' },
-    { type: 'academy', academyTab: 'mentor',  cohort: null, name: '멘토링숲학교 — 여름학기' },
-  ];
+  function bulkChangeApply(status) {
+    const count = document.querySelectorAll('.row-chk:checked').length;
+    if (!count) return;
+    if (!confirm(`선택한 ${count}명을 [${status}] 처리하시겠습니까?`)) return;
+    App.toast(`${count}명이 [${status}] 처리되었습니다.`, 'success');
+  }
 
-  const NAMES = [
-    '김민준', '이서연', '박지훈', '최수아', '정도윤',
-    '강하은', '윤시우', '임나연', '오준혁', '한소율',
-    '신지아', '권태양', '문서진', '배하린', '홍유찬',
-    '유채원', '구민서', '안재원', '남지현', '조은결',
-  ];
-
-  const GENDERS   = ['남', '여'];
-  const PHONES    = ['010-1234-5678', '010-2345-6789', '010-3456-7890', '010-4567-8901', '010-5678-9012', '010-6789-0123', '010-7890-1234'];
-  const BIRTHDATES= ['1985-03-15', '1990-07-22', '1978-11-08', '1995-04-30', '1982-09-17', '1988-12-03', '1972-06-25'];
-
-  const APPLY_POOL      = ['신청완료', '신청완료', '신청완료', '신청완료', '취소'];
-  const COMPLETION_POOL = ['미수료', '수료', '미수료'];
-
-  /* 과정 설정: fileRequired / certIssue 는 과정마다 다름 (인덱스 기준 순환) */
-  const COURSE_SETTINGS = [
-    { fileRequired: true,  certIssue: true  },
-    { fileRequired: false, certIssue: true  },
-    { fileRequired: true,  certIssue: false },
-    { fileRequired: false, certIssue: false },
-    { fileRequired: true,  certIssue: true  },
-  ];
-  const DUMMY_FILE_NAMES = [
-    '개인정보_동의서_서명본.pdf',
-    '신청서_제출용.hwp',
-    '재직증명서.pdf',
-    '경력기술서.docx',
-    '학력증명서.pdf',
-  ];
-
-  const ALL_APPLICANTS = Array.from({ length: 52 }, (_, i) => {
-    const course   = COURSE_NAMES_POOL[i % COURSE_NAMES_POOL.length];
-    const setting  = COURSE_SETTINGS[i % COURSE_SETTINGS.length];
-    const mm       = String((i % 11) + 1).padStart(2, '0');
-    const dd       = String((i % 28) + 1).padStart(2, '0');
-    const hh       = String((i % 10) + 9).padStart(2, '0');
-    const min      = String((i * 7) % 60).padStart(2, '0');
-    const ss       = String((i * 13) % 60).padStart(2, '0');
-    const applyStatus = APPLY_POOL[i % APPLY_POOL.length];
-    const completionStatus = COMPLETION_POOL[i % COMPLETION_POOL.length];
-
-    /* 취소일시: 신청일 + 며칠 뒤 */
-    const cancelDd  = String(Math.min(parseInt(dd) + 3, 28)).padStart(2, '0');
-    const cancelHh  = String((i % 8) + 10).padStart(2, '0');
-
-    return {
-      id:               2000 + i,
-      applyNo:          `APP-2026-${String(2000 + i).padStart(5, '0')}`,
-      memberId:         `M${String(2000 + i).padStart(5, '0')}`,
-      courseType:       course.type,
-      academyTab:       course.academyTab,
-      cohort:           course.cohort,
-      courseName:       course.name,
-      name:             NAMES[i % NAMES.length],
-      gender:           GENDERS[i % GENDERS.length],
-      phone:            PHONES[i % PHONES.length],
-      birthdate:        BIRTHDATES[i % BIRTHDATES.length],
-      applyDate:        `2026-${mm}-${dd} ${hh}:${min}:${ss}`,
-      applyStatus,
-      completionStatus,
-      cancelDate:       applyStatus === '취소' ? `2026-${mm}-${cancelDd} ${cancelHh}:${min}:${ss}` : null,
-      fileRequired:     setting.fileRequired,
-      certIssue:        setting.certIssue,
-      /* 파일첨부 있는 경우 더미 파일 */
-      submittedFile:    setting.fileRequired ? { name: DUMMY_FILE_NAMES[i % DUMMY_FILE_NAMES.length], size: `${(i % 5 + 1) * 120}KB` } : null,
-    };
-  });
-
-  /* ══════════════════════════════════════
-     ApplicantAdmin
-     ══════════════════════════════════════ */
-  const ApplicantAdmin = {
-    filtered:    [...ALL_APPLICANTS],
-    currentPage: 1,
-    pageSize:    10,
-
-    _dateInRange(dateStr, from, to) {
-      if (!from && !to) return true;
-      const d = new Date(dateStr);
-      if (from && !to) return d >= new Date(from);
-      if (!from && to) return d <= new Date(to);
-      return d >= new Date(from) && d <= new Date(to);
-    },
-
-    search() {
-      const from       = document.getElementById('filterDateFrom').value;
-      const to         = document.getElementById('filterDateTo').value;
-      const type       = document.querySelector('input[name="filterType"]:checked')?.value       || '';
-      const academyTab = document.querySelector('input[name="filterAcademyTab"]:checked')?.value || '';
-      const applyS     = document.querySelector('input[name="filterApply"]:checked')?.value      || '';
-      const completion = document.querySelector('input[name="filterCompletion"]:checked')?.value || '';
-      const cohort     = document.getElementById('filterCohort').value;
-      const kw         = document.getElementById('filterKeyword').value.trim().toLowerCase();
-      const kwType     = document.getElementById('filterSearchType').value;
-
-      this.filtered = ALL_APPLICANTS.filter(a => {
-        if (!this._dateInRange(a.applyDate, from, to)) return false;
-        if (type && a.courseType !== type) return false;
-        /* 아카데미 하위 탭 — type=academy 이면서 탭 선택된 경우만 적용 */
-        if (type === 'academy' && academyTab && a.academyTab !== academyTab) return false;
-        if (cohort && String(a.cohort || '') !== cohort) return false;
-        if (applyS && a.applyStatus !== applyS) return false;
-        if (completion && a.completionStatus !== completion) return false;
-        if (kw) {
-          const inCourse = a.courseName.toLowerCase().includes(kw);
-          const inName   = a.name.toLowerCase().includes(kw);
-          if (kwType === 'course' && !inCourse) return false;
-          if (kwType === 'name'   && !inName)   return false;
-          if (kwType === 'all'    && !inCourse && !inName) return false;
-        }
-        return true;
-      });
-      this.currentPage = 1;
-      this.render();
-    },
-
-    setDatePreset(range) {
-      const to = new Date(), from = new Date();
-      if (range !== 'today') from.setDate(from.getDate() - range);
-      const fmt = d => d.toISOString().split('T')[0];
-      document.getElementById('filterDateFrom').value = fmt(from);
-      document.getElementById('filterDateTo').value = fmt(to);
-      this.search();
-    },
-
-    resetFilter() {
-      document.getElementById('filterDateFrom').value  = '';
-      document.getElementById('filterDateTo').value    = '';
-      document.querySelector('input[name="filterType"][value=""]').checked       = true;
-      document.querySelector('input[name="filterApply"][value=""]').checked      = true;
-      document.querySelector('input[name="filterCompletion"][value=""]').checked = true;
-      document.querySelector('input[name="filterAcademyTab"][value=""]').checked = true;
-      document.getElementById('academySubRow').style.display = 'none';
-      document.getElementById('filterCohort').value     = '';
-      document.getElementById('filterKeyword').value    = '';
-      document.getElementById('filterSearchType').value = 'all';
-      this.filtered    = [...ALL_APPLICANTS];
-      this.currentPage = 1;
-      this.render();
-    },
-
-    changePageSize(size) { this.pageSize = size; this.currentPage = 1; this.render(); },
-
-    toggleAll(checked) {
-      document.querySelectorAll('.row-chk').forEach(cb => cb.checked = checked);
-      this._syncBulkBtns();
-    },
-
-    _syncBulkBtns() {
-      const count = document.querySelectorAll('.row-chk:checked').length;
-      const any   = count > 0;
-      document.getElementById('btnBulkDelete').disabled     = !any;
-      document.getElementById('btnBulkCancel').disabled     = !any;
-      document.getElementById('btnBulkComplete').disabled   = !any;
-      document.getElementById('btnBulkIncomplete').disabled = !any;
-    },
-
-    _selectedIds() {
-      return [...document.querySelectorAll('.row-chk:checked')].map(cb => Number(cb.dataset.id));
-    },
-
-    bulkDelete() {
-      const ids = this._selectedIds();
-      if (!ids.length) return;
-      if (!confirm(`선택한 ${ids.length}명의 신청 데이터를 삭제하시겠습니까?\n삭제 후 복구가 불가능합니다.`)) return;
-      ids.forEach(id => {
-        const idx = ALL_APPLICANTS.findIndex(a => a.id === id);
-        if (idx > -1) ALL_APPLICANTS.splice(idx, 1);
-      });
-      this.search();
-      App.toast(`${ids.length}명의 신청 데이터가 삭제되었습니다.`, 'error');
-    },
-
-    bulkChangeApply(status) {
-      const ids = this._selectedIds();
-      if (!ids.length) return;
-      if (!confirm(`선택한 ${ids.length}명을 [${status}] 처리하시겠습니까?`)) return;
-      ids.forEach(id => {
-        const a = ALL_APPLICANTS.find(a => a.id === id);
-        if (a) a.applyStatus = status;
-      });
-      this.search();
-      App.toast(`${ids.length}명이 [${status}] 처리되었습니다.`, 'success');
-    },
-
-    bulkChangeCompletion(status) {
-      const ids = this._selectedIds();
-      if (!ids.length) return;
-      if (!confirm(`선택한 ${ids.length}명을 [${status}] 처리하시겠습니까?`)) return;
-      ids.forEach(id => {
-        const a = ALL_APPLICANTS.find(a => a.id === id);
-        if (a) a.completionStatus = status;
-      });
-      this.search();
-      App.toast(`${ids.length}명이 [${status}] 처리되었습니다.`, 'success');
-    },
-
-    goDetail(e, id) {
-      /* 상태 버튼 클릭은 이미 stopPropagation 처리됨 */
-      location.href = `applicant-detail.html?id=${id}`;
-    },
-
-    // TODO: AJAX — window.location.href = ADMIN_API.applicants + '/export?' + new URLSearchParams(currentFilter);
-    exportExcel() {
-      App.toast('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info');
-    },
-
-    render() {
-      const total = this.filtered.length;
-      const start = (this.currentPage - 1) * this.pageSize;
-      const slice = this.filtered.slice(start, start + this.pageSize);
-
-      document.getElementById('applicantCount').textContent = total.toLocaleString();
-      document.getElementById('chkAll').checked = false;
-      ['btnBulkDelete','btnBulkCancel','btnBulkComplete','btnBulkIncomplete'].forEach(id => {
-        document.getElementById(id).disabled = true;
-      });
-
-      document.getElementById('applicantTableBody').innerHTML = slice.length
-        ? slice.map((a, i) => {
-            const typeMeta = COURSE_TYPE_META[a.courseType] || { label: a.courseType, cls: 'basic' };
-            const as = APPLY_STATUS[a.applyStatus]           || { cls: 'badge-gray', label: a.applyStatus };
-            const cs = COMPLETION_STATUS[a.completionStatus] || { cls: 'badge-gray', label: a.completionStatus };
-            const tabSuffix = (a.courseType === 'academy' && a.academyTab)
-              ? ` · ${ACADEMY_TAB_LABEL[a.academyTab] || ''}`
-              : '';
-
-            /* 날짜시간 단일 라인 — "2026-01-15 09:07" */
-            const fmtDt = dtStr => {
-              if (!dtStr) return '—';
-              const parts = dtStr.split(' ');
-              return parts[0] + (parts[1] ? ' ' + parts[1].slice(0, 5) : '');
-            };
-
-            return `
-            <tr class="applicant-row" onclick="ApplicantAdmin.goDetail(event,${a.id})">
-              <td class="col-chk" onclick="event.stopPropagation()">
-                <input type="checkbox" class="row-chk" data-id="${a.id}"
-                  onchange="ApplicantAdmin._syncBulkBtns()">
-              </td>
-              <td>${total - start - i}</td>
-              <td class="cell-mono">${a.applyNo}</td>
-              <td><span class="badge-type ${typeMeta.cls}">${typeMeta.label}${tabSuffix}</span></td>
-              <td class="center" style="font-size:13px">${a.cohort ? a.cohort + '기' : '—'}</td>
-              <td style="font-weight:500;text-align:center">${a.courseName}</td>
-              <td><span style="font-weight:600">${a.name}</span> <span style="font-weight:400;color:#888;font-size:12px">(${a.memberId})</span></td>
-              <td>${a.gender}</td>
-              <td class="cell-mono">${a.birthdate}</td>
-              <td class="cell-mono">${a.phone}</td>
-              <td class="cell-mono">${fmtDt(a.applyDate)}</td>
-              <td class="cell-mono">${fmtDt(a.cancelDate)}</td>
-              <td><span class="badge ${as.cls}">${as.label}</span></td>
-              <td>${a.applyStatus === '취소'
-                ? `<span style="color:#bbb;font-size:13px">—</span>`
-                : `<span class="badge ${cs.cls}">${cs.label}</span>`
-              }</td>
-            </tr>`;
-          }).join('')
-        : `<tr><td colspan="15" style="padding:40px;text-align:center;color:#5a6e54">검색 결과가 없습니다.</td></tr>`;
-
-      App.renderPagination('applicantPagination', this.currentPage,
-        Math.ceil(total / this.pageSize) || 1,
-        p => { this.currentPage = p; this.render(); });
-    },
-  };
-
-  /* 기수 드롭다운 옵션 — 데이터 기반 오름차순 */
-  const cohortVals = [...new Set(ALL_APPLICANTS.map(a => a.cohort).filter(Boolean))].sort((a, b) => a - b);
-  const cohortSel  = document.getElementById('filterCohort');
-  cohortVals.forEach(v => {
-    const o = document.createElement('option');
-    o.value = String(v); o.textContent = v + '기';
-    cohortSel.appendChild(o);
-  });
-
-  /* 초기 렌더 */
-  ApplicantAdmin.render();
+  function bulkChangeCompletion(status) {
+    const count = document.querySelectorAll('.row-chk:checked').length;
+    if (!count) return;
+    if (!confirm(`선택한 ${count}명을 [${status}] 처리하시겠습니까?`)) return;
+    App.toast(`${count}명이 [${status}] 처리되었습니다.`, 'success');
+  }
   </script>
 </body>
 </html>

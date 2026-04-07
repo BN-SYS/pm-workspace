@@ -10,15 +10,10 @@
   <link rel="stylesheet" href="../assets/css/responsive.css">
   <link rel="stylesheet" href="../assets/css/pages/admin.css">
   <style>
-    .edit-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px 24px;
-    }
+    .edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; }
     .edit-grid.col3 { grid-template-columns: 1fr 1fr 1fr; }
     .edit-grid.col4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
     .edit-grid .span2 { grid-column: span 2; }
-    .edit-grid .span3 { grid-column: span 3; }
     .form-group { margin: 0; display: flex; flex-direction: column; gap: 5px; }
     .form-label { font-size: 12px; font-weight: 600; color: var(--gray-dark); }
     .form-label .req { color: var(--danger); margin-left: 2px; }
@@ -26,56 +21,24 @@
     .card-header { display: flex; align-items: center; gap: 8px; padding: 14px 20px; border-bottom: 1px solid var(--gray-light); }
     .card-title { font-size: 14px; font-weight: 700; color: var(--green-dark); }
     .card-body { padding: 20px; }
-    .badge-admin-only {
-      display: inline-block; font-size: 11px;
-      background: #fff3e0; color: #e65100;
-      border-radius: 3px; padding: 1px 6px;
-      font-weight: 500;
-    }
-    .badge-new-only {
-      display: inline-block; font-size: 11px;
-      background: #e3f2fd; color: #1565c0;
-      border-radius: 3px; padding: 1px 6px;
-      font-weight: 500;
-    }
+    .badge-admin-only { display: inline-block; font-size: 11px; background: #fff3e0; color: #e65100; border-radius: 3px; padding: 1px 6px; font-weight: 500; }
+    .badge-new-only { display: inline-block; font-size: 11px; background: #e3f2fd; color: #1565c0; border-radius: 3px; padding: 1px 6px; font-weight: 500; }
     .radio-inline { display: flex; gap: 16px; margin-top: 4px; }
     .radio-inline label { display: flex; align-items: center; gap: 5px; font-size: 13px; cursor: pointer; }
     .radio-inline input[type="radio"] { accent-color: var(--green-dark); }
-    /* 소속 추가 테이블 */
     .affil-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-    .affil-table th {
-      font-size: 12px; font-weight: 600; color: var(--gray-dark);
-      padding: 8px 10px; background: #f8faf7;
-      border: 1px solid var(--gray-light); text-align: center;
-    }
-    .affil-table td {
-      padding: 6px 8px; border: 1px solid var(--gray-light);
-    }
-    .affil-table td select,
-    .affil-table td input { height: 32px; font-size: 12px; }
-    /* 아이디 중복 확인 */
+    .affil-table th { font-size: 12px; font-weight: 600; color: var(--gray-dark); padding: 8px 10px; background: #f8faf7; border: 1px solid var(--gray-light); text-align: center; }
+    .affil-table td { padding: 6px 8px; border: 1px solid var(--gray-light); }
+    .affil-table td select, .affil-table td input { height: 32px; font-size: 12px; }
     .userid-wrap { display: flex; gap: 8px; align-items: center; }
-    .check-ok  { color: #16a34a; font-size: 12px; font-weight: 600; }
-    .check-ng  { color: var(--danger); font-size: 12px; font-weight: 600; }
-    /* 비밀번호 보기 토글 */
+    .check-ok { color: #16a34a; font-size: 12px; font-weight: 600; }
+    .check-ng { color: var(--danger); font-size: 12px; font-weight: 600; }
     .pw-wrap { position: relative; }
-    .pw-toggle {
-      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-      background: none; border: none; cursor: pointer; padding: 0;
-      display: flex; align-items: center;
-    }
+    .pw-toggle { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; }
     .pw-toggle img { width: 16px; opacity: .5; }
     .pw-toggle:hover img { opacity: .9; }
     .pw-wrap input { padding-right: 34px; }
-    /* 하단 버튼 */
-    .form-footer {
-      display: flex; justify-content: flex-end; gap: 10px;
-      padding: 20px 0; border-top: 1px solid var(--gray-light);
-      margin-top: 8px;
-    }
-    /* 메모 */
-    .memo-note { font-size: 11px; color: var(--gray-mid); margin-top: 4px; }
-    /* select 내 한글 텍스트 잘림 방지 — height 고정 시 padding을 줄여 여유 확보 */
+    .form-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 20px 0; border-top: 1px solid var(--gray-light); margin-top: 8px; }
     select.form-control { padding-top: 7px; padding-bottom: 7px; }
     .affil-table select.form-control { padding-top: 5px; padding-bottom: 5px; }
   </style>
@@ -92,10 +55,10 @@
 
     <main class="admin-main">
       <div class="admin-topbar">
-        <h1 class="admin-page-title" id="pageTitle">회원 등록</h1>
+        <h1 class="admin-page-title" id="pageTitle">회원 수정 — 김숲해</h1>
       </div>
 
-      <!-- ① 관리 설정 -->
+      <!-- 관리 설정 -->
       <div class="card">
         <div class="card-header">
           <span class="card-title">관리 설정</span>
@@ -106,8 +69,8 @@
             <div class="form-group">
               <label class="form-label">회원 구분 <span class="req">*</span></label>
               <select class="form-control" id="fGrade" style="height:36px">
-                <option value="member" selected>일반회원</option>
-                <option value="fullMember">정회원</option>
+                <option value="member">일반회원</option>
+                <option value="fullMember" selected>정회원</option>
                 <option value="admin">관리자</option>
               </select>
               <div style="font-size:11px;color:var(--gray-mid);margin-top:3px">기본값: 일반회원</div>
@@ -124,76 +87,58 @@
         </div>
       </div>
 
-      <!-- ② 아이디 / 비밀번호 (등록 전용) -->
-      <div class="card" id="cardUserId">
+      <!-- 아이디/비밀번호 (등록 시에만 노출 — 수정 모드에서는 숨김) -->
+      <!-- 등록 모드: id="cardUserId" 표시, 수정 모드: display:none -->
+      <div class="card" id="cardUserId" style="display:none">
         <div class="card-header">
           <span class="card-title">아이디 / 비밀번호 설정</span>
           <span class="badge-new-only">등록 시에만 설정</span>
         </div>
         <div class="card-body">
           <div class="edit-grid col2">
-
-            <!-- 아이디 -->
             <div class="form-group">
               <label class="form-label">아이디 <span class="req">*</span></label>
               <div class="userid-wrap">
-                <input type="text" class="form-control" id="fUserId"
-                  placeholder="영문 소문자, 숫자 4~20자" style="height:36px;flex:1"
-                  oninput="MemberEdit.resetIdCheck()">
-                <button class="btn btn-outline btn-sm" onclick="MemberEdit.checkUserId()">중복 확인</button>
+                <input type="text" class="form-control" id="fUserId" placeholder="영문 소문자, 숫자 4~20자" style="height:36px;flex:1" oninput="resetIdCheck()">
+                <button class="btn btn-outline btn-sm" onclick="checkUserId()">중복 확인</button>
               </div>
               <div id="userIdMsg" style="margin-top:4px;font-size:12px"></div>
-              <div style="font-size:11px;color:var(--gray-mid);margin-top:3px">
-                아이디는 등록 후 변경 불가합니다. 신중하게 입력하세요.
-              </div>
+              <div style="font-size:11px;color:var(--gray-mid);margin-top:3px">아이디는 등록 후 변경 불가합니다.</div>
             </div>
-
-            <!-- 비밀번호 -->
             <div class="form-group">
               <label class="form-label">비밀번호 <span class="req">*</span></label>
               <div class="pw-wrap">
-                <input type="password" class="form-control" id="fPw"
-                  placeholder="영문 + 숫자 + 특수문자 8자 이상" style="height:36px"
-                  oninput="MemberEdit.checkPwMatch()">
-                <button type="button" class="pw-toggle" onclick="MemberEdit.togglePw('fPw',this)" title="비밀번호 보기">
-                  <img id="fPwEyeIco" src="../assets/icons/eye.png" alt="보기">
-                </button>
+                <input type="password" class="form-control" id="fPw" placeholder="영문 + 숫자 + 특수문자 8자 이상" style="height:36px" oninput="checkPwMatch()">
+                <button type="button" class="pw-toggle" onclick="togglePw('fPw',this)"><img src="../assets/icons/eye.png" alt="보기"></button>
               </div>
               <label class="form-label" style="margin-top:10px">비밀번호 확인 <span class="req">*</span></label>
               <div class="pw-wrap">
-                <input type="password" class="form-control" id="fPwConfirm"
-                  placeholder="비밀번호 재입력" style="height:36px"
-                  oninput="MemberEdit.checkPwMatch()">
-                <button type="button" class="pw-toggle" onclick="MemberEdit.togglePw('fPwConfirm',this)" title="비밀번호 보기">
-                  <img id="fPwConfirmEyeIco" src="../assets/icons/eye.png" alt="보기">
-                </button>
+                <input type="password" class="form-control" id="fPwConfirm" placeholder="비밀번호 재입력" style="height:36px" oninput="checkPwMatch()">
+                <button type="button" class="pw-toggle" onclick="togglePw('fPwConfirm',this)"><img src="../assets/icons/eye.png" alt="보기"></button>
               </div>
               <div id="pwMsg" style="margin-top:5px;font-size:12px"></div>
             </div>
-
           </div>
         </div>
       </div>
 
-      <!-- ③ 본인인증 기반 정보 (관리자 등록 시 직접 입력) -->
+      <!-- 기본 정보 -->
       <div class="card">
         <div class="card-header">
           <span class="card-title">기본 정보</span>
-          <span style="font-size:12px;color:var(--gray-mid);margin-left:4px">
-            관리자 등록 시 직접 입력 (본인인증 없이 생성)
-          </span>
+          <span style="font-size:12px;color:var(--gray-mid);margin-left:4px">관리자 등록 시 직접 입력</span>
         </div>
         <div class="card-body">
           <div class="edit-grid col4">
             <div class="form-group">
               <label class="form-label">이름 <span class="req">*</span></label>
-              <input type="text" class="form-control" id="fName" placeholder="실명 입력" style="height:36px">
+              <input type="text" class="form-control" id="fName" value="김숲해" style="height:36px">
             </div>
             <div class="form-group">
               <label class="form-label">성별</label>
               <div class="radio-inline" style="margin-top:8px">
-                <label><input type="radio" name="fGender" value="m" checked> 남성</label>
-                <label><input type="radio" name="fGender" value="f"> 여성</label>
+                <label><input type="radio" name="fGender" value="m"> 남성</label>
+                <label><input type="radio" name="fGender" value="f" checked> 여성</label>
               </div>
             </div>
             <div class="form-group span2">
@@ -206,55 +151,40 @@
             </div>
             <div class="form-group span2">
               <label class="form-label">휴대폰 번호</label>
-              <input type="tel" class="form-control" id="fPhone"
-                placeholder="010-0000-0000" style="height:36px;max-width:220px">
+              <input type="tel" class="form-control" id="fPhone" value="010-1234-5678" style="height:36px;max-width:220px">
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ④ 계정·연락처 정보 -->
+      <!-- 연락처·기타 정보 -->
       <div class="card">
-        <div class="card-header">
-          <span class="card-title">연락처 · 기타 정보</span>
-        </div>
+        <div class="card-header"><span class="card-title">연락처 · 기타 정보</span></div>
         <div class="card-body" style="display:flex;flex-direction:column;gap:18px">
-
-          <!-- 이메일 -->
           <div class="form-group" style="max-width:360px">
             <label class="form-label">이메일 <span class="req">*</span></label>
-            <input type="email" class="form-control" id="fEmail" placeholder="example@email.com" style="height:36px">
+            <input type="email" class="form-control" id="fEmail" value="forest001@foresto.or.kr" style="height:36px">
             <div style="font-size:11px;color:var(--gray-mid);margin-top:3px">임시 비밀번호 발송에 사용됩니다.</div>
           </div>
-
-          <!-- 주소 -->
           <div class="form-group">
             <label class="form-label">주소</label>
             <div style="display:flex;gap:8px;align-items:center">
-              <input type="text" class="form-control" id="fZip"
-                placeholder="우편번호" style="width:110px;height:36px;font-size:13px;flex-shrink:0">
-              <button type="button" class="btn btn-outline btn-sm" id="addrSearchBtn"
-                onclick="MemberEdit.searchAddr()">우편번호 찾기</button>
+              <input type="text" class="form-control" id="fZip" value="03152" placeholder="우편번호" style="width:110px;height:36px;font-size:13px;flex-shrink:0">
+              <button type="button" class="btn btn-outline btn-sm" onclick="App.toast('우편번호 검색 — 실제 구현 시 Kakao 주소 API 연동 예정', 'info')">우편번호 찾기</button>
               <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;white-space:nowrap">
-                <input type="checkbox" id="fOverseas"
-                  onchange="MemberEdit.toggleOverseas(this.checked)"> 해외 거주
+                <input type="checkbox" id="fOverseas" onchange="toggleOverseas(this.checked)"> 해외 거주
               </label>
             </div>
-            <input type="text" class="form-control" id="fAddr1"
-              placeholder="기본 주소 (우편번호 검색 후 자동 입력)"
-              style="margin-top:6px;max-width:480px;background:var(--gray-light)" disabled>
-            <input type="text" class="form-control" id="fAddr2"
-              placeholder="상세 주소" style="margin-top:6px;max-width:480px;height:36px">
+            <input type="text" class="form-control" id="fAddr1" value="서울특별시 종로구 삼청로 00" style="margin-top:6px;max-width:480px;background:var(--gray-light)" disabled>
+            <input type="text" class="form-control" id="fAddr2" value="101호" placeholder="상세 주소" style="margin-top:6px;max-width:480px;height:36px">
           </div>
-
-          <!-- 직업 -->
           <div class="form-group">
             <label class="form-label">직업</label>
             <select class="form-control" id="fJob" style="max-width:200px;height:36px;font-size:13px">
               <option value="">선택 안 함</option>
               <option>직장인</option>
               <option>자영업자</option>
-              <option>공무원·교원</option>
+              <option selected>공무원·교원</option>
               <option>전문직</option>
               <option>학생</option>
               <option>주부</option>
@@ -262,52 +192,74 @@
               <option>기타</option>
             </select>
           </div>
-
-          <!-- 선택약관 동의 -->
           <div class="form-group">
             <label class="form-label">마케팅 수신 동의</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;margin-top:4px">
-              <input type="checkbox" id="fMarketing"> 동의함
+              <input type="checkbox" id="fMarketing" checked> 동의함
             </label>
           </div>
         </div>
       </div>
 
-      <!-- ⑤ 활동 정보 (소속) -->
+      <!-- 활동 정보 (소속) -->
       <div class="card">
-        <div class="card-header">
-          <span class="card-title">활동 정보 (소속)</span>
-        </div>
+        <div class="card-header"><span class="card-title">활동 정보 (소속)</span></div>
         <div class="card-body">
-          <div id="affilList"></div>
-          <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="MemberEdit.addAffil()">
-            + 소속 추가
-          </button>
+          <div id="affilList">
+            <!-- PHP 연동 시 서버에서 소속 목록 렌더링 -->
+            <table class="affil-table">
+              <thead>
+                <tr>
+                  <th style="width:160px">소속 유형</th>
+                  <th>소속명</th>
+                  <th style="width:150px">가입일</th>
+                  <th style="width:48px">관리</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr id="affil-row-1">
+                  <td>
+                    <select class="form-control" id="affilType-1" onchange="onAffilTypeChange(1)" style="width:100%;height:32px;font-size:12px">
+                      <option selected>동아리</option>
+                      <option>사회공헌사업단</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select class="form-control" id="affilName-1" style="width:100%;height:32px;font-size:12px">
+                      <option selected>초록숲 동아리</option>
+                      <option>봄내음 동아리</option>
+                      <option>산들바람 동아리</option>
+                    </select>
+                  </td>
+                  <td><input type="date" class="form-control" id="affilDate-1" value="2023-06-01" style="height:32px;font-size:12px"></td>
+                  <td style="text-align:center"><button type="button" style="background:none;border:none;cursor:pointer;font-size:16px;color:var(--danger)" onclick="removeAffil(1)">✕</button></td>
+                </tr>
+                <!-- PHP: foreach affiliations as affil -->
+              </tbody>
+            </table>
+          </div>
+          <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="addAffil()">+ 소속 추가</button>
           <div style="font-size:11px;color:var(--gray-mid);margin-top:6px">
             * 동아리: 콘텐츠관리 &gt; 동아리소개 게시판 목록 연동 | 사회공헌사업단: 사공단소개 게시판 목록 연동
           </div>
         </div>
       </div>
 
-      <!-- ⑥ 관리자 메모 -->
+      <!-- 관리자 메모 -->
       <div class="card">
         <div class="card-header">
           <span class="card-title">관리자 메모</span>
           <span class="badge-admin-only">회원 미노출</span>
         </div>
         <div class="card-body">
-          <textarea class="form-control" id="fMemo" rows="4"
-            placeholder="내부 메모 (회원에게 노출되지 않습니다)"
-            style="font-size:13px;resize:vertical"></textarea>
+          <textarea class="form-control" id="fMemo" rows="4" placeholder="내부 메모 (회원에게 노출되지 않습니다)" style="font-size:13px;resize:vertical">정회원 전환 요청 확인 완료</textarea>
         </div>
       </div>
 
-      <!-- 하단 저장 버튼 -->
       <div class="form-footer">
         <button class="btn btn-gray" onclick="history.back()">취소</button>
-        <button class="btn btn-primary" onclick="MemberEdit.save()">저장</button>
+        <button class="btn btn-primary" onclick="save()">저장</button>
       </div>
-
     </main>
   </div>
 
@@ -316,323 +268,117 @@
   <script src="../assets/js/pages/admin.js"></script>
   <script>
     AdminSidebar.mount('members');
-    /* ── 소속 드롭다운 데이터 (실제 구현 시 콘텐츠관리 게시판 API 연동) */
+
+    /* 등록/수정 모드 판단 */
+    const isEdit = !!App.getParam('id');
+    if (!isEdit) {
+      document.getElementById('pageTitle').textContent = '회원 등록';
+      const cardUid = document.getElementById('cardUserId');
+      if (cardUid) cardUid.style.display = '';
+    }
+
+    /* 소속 유형별 목록 — 실제 구현 시 콘텐츠관리 게시판 API 연동 */
     const AFFIL_DATA = {
-      '동아리':         ['초록숲 동아리','봄내음 동아리','산들바람 동아리','생태탐험대'],
-      '사회공헌사업단':  ['서울 사공단','경기 사공단','부산 사공단'],
+      '동아리':        ['초록숲 동아리','봄내음 동아리','산들바람 동아리','생태탐험대'],
+      '사회공헌사업단': ['서울 사공단','경기 사공단','부산 사공단'],
     };
-    const AFFIL_TYPES = ['동아리','사회공헌사업단'];
 
-    /* ── 기존 회원 샘플 (수정 모드용) */
-    const JOBS = ['직장인','자영업자','공무원·교원','전문직','학생','주부','은퇴·퇴직','기타'];
-    const GRADES = [
-      { key:'fullMember', label:'정회원' },
-      { key:'member',     label:'일반회원' },
-      { key:'member',     label:'일반회원' },
-      { key:'fullMember', label:'정회원' },
-      { key:'member',     label:'일반회원' },
-    ];
-    const ALL_MEMBERS = Array.from({ length: 50 }, (_, i) => {
-      const g   = GRADES[i % 5];
-      const mm  = String((i % 9) + 1).padStart(2,'0');
-      const dd  = String((i % 20) + 1).padStart(2,'0');
-      const affilCount = i % 3;
-      const affils = Array.from({ length: affilCount }, (_, j) => ({
-        type:     j % 2 === 0 ? '동아리' : '사회공헌사업단',
-        name:     j % 2 === 0 ? AFFIL_DATA['동아리'][j % 4] : AFFIL_DATA['사회공헌사업단'][j % 3],
-        joinDate: `2025-${String((j % 9) + 1).padStart(2,'0')}-${String((j * 5 + 1) % 28 + 1).padStart(2,'0')}`,
-      }));
-      return {
-        id:       50 - i,
-        userId:   `forest${String(50 - i).padStart(3,'0')}`,
-        name:     ['김숲해','이정회','박초록','최나무','정바람','한생태','윤들판','임해설','조산림','강자연'][i % 10],
-        gender:   i % 2 === 0 ? 'm' : 'f',
-        birthY:   String(1970 + (i % 30)),
-        birthM:   String((i % 12) + 1).padStart(2,'0'),
-        birthD:   String((i % 28) + 1).padStart(2,'0'),
-        phone:    `010-${String(1000 + i).padStart(4,'0')}-${String(5000 + i).padStart(4,'0')}`,
-        email:    `user${50 - i}@example.com`,
-        zip:      '', addr1: '', addr2: '',
-        overseas: false,
-        job:      JOBS[i % 8],
-        grade:    g.key,
-        status:   i % 7 === 0 ? 'blocked' : 'active',
-        marketing: i % 3 === 0,
-        memo:     i % 4 === 0 ? '정회원 전환 요청 확인 완료' : '',
-        affils,
-      };
-    });
+    let affilSeq = 1;
 
-    const MemberEdit = {
-      _isEdit:     false,
-      _m:          null,
-      _affilRows:  [],   /* { id, type, name, joinDate } */
-      _idChecked:  false,
-      _affilSeq:   0,
+    function addAffil() {
+      affilSeq++;
+      const tbody = document.querySelector('#affilList tbody');
+      if (!tbody) return;
+      const tr = document.createElement('tr');
+      tr.id = `affil-row-${affilSeq}`;
+      tr.innerHTML = `
+        <td><select class="form-control" id="affilType-${affilSeq}" onchange="onAffilTypeChange(${affilSeq})" style="width:100%;height:32px;font-size:12px">
+          <option>동아리</option><option>사회공헌사업단</option>
+        </select></td>
+        <td><select class="form-control" id="affilName-${affilSeq}" style="width:100%;height:32px;font-size:12px">
+          ${AFFIL_DATA['동아리'].map(n => `<option>${n}</option>`).join('')}
+        </select></td>
+        <td><input type="date" class="form-control" id="affilDate-${affilSeq}" style="height:32px;font-size:12px"></td>
+        <td style="text-align:center"><button type="button" style="background:none;border:none;cursor:pointer;font-size:16px;color:var(--danger)" onclick="removeAffil(${affilSeq})">✕</button></td>`;
+      tbody.appendChild(tr);
+    }
 
-      init() {
-        const id = App.getParam('id');
-        if (id) {
-          /* ── 수정 모드 */
-          this._isEdit = true;
-          const m = ALL_MEMBERS.find(x => x.id === Number(id));
-          if (!m) { App.toast('회원을 찾을 수 없습니다.', 'error'); return; }
-          this._m = m;
-          document.getElementById('pageTitle').textContent = `회원 수정 — ${m.name}`;
+    function removeAffil(id) {
+      const row = document.getElementById(`affil-row-${id}`);
+      if (row) row.remove();
+    }
 
-          /* 아이디 카드 숨김 (수정 불가) */
-          const cardUid = document.getElementById('cardUserId');
-          if (cardUid) cardUid.style.display = 'none';
+    function onAffilTypeChange(id) {
+      const typeEl = document.getElementById(`affilType-${id}`);
+      const nameEl = document.getElementById(`affilName-${id}`);
+      if (!typeEl || !nameEl) return;
+      const names = AFFIL_DATA[typeEl.value] || [];
+      nameEl.innerHTML = names.map(n => `<option>${n}</option>`).join('');
+    }
 
-          /* 폼 채우기 */
-          this._fillForm(m);
-        } else {
-          /* ── 등록 모드: 기본 초기화 */
-          document.getElementById('pageTitle').textContent = '회원 등록';
-          this._idChecked = false;
-        }
-      },
+    function togglePw(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      const ico = btn.querySelector('img');
+      if (ico) ico.style.opacity = isHidden ? '1' : '.5';
+    }
 
-      _fillForm(m) {
-        const val = (id, v) => { const el=document.getElementById(id); if(el) el.value=v; };
-        const chk = (id, v) => { const el=document.getElementById(id); if(el) el.checked=v; };
-        const rad = (name, v) => {
-          const el=document.querySelector(`input[name="${name}"][value="${v}"]`);
-          if(el) el.checked=true;
-        };
-        val('fName', m.name);
-        val('fPhone', m.phone);
-        val('fEmail', m.email);
-        val('fBirthY', m.birthY);
-        val('fBirthM', m.birthM);
-        val('fBirthD', m.birthD);
-        val('fZip',   m.zip);
-        val('fAddr1', m.addr1);
-        val('fAddr2', m.addr2);
-        val('fJob',   m.job);
-        val('fMemo',  m.memo);
-        val('fGrade', m.grade);
-        rad('fGender', m.gender);
-        rad('fStatus', m.status);
-        chk('fOverseas',  m.overseas);
-        chk('fMarketing', m.marketing);
-        if (m.overseas) this.toggleOverseas(true);
+    function checkPwMatch() {
+      const pw  = document.getElementById('fPw')?.value || '';
+      const pw2 = document.getElementById('fPwConfirm')?.value || '';
+      const msg = document.getElementById('pwMsg');
+      if (!msg || !pw2) return;
+      msg.textContent = pw === pw2 ? '비밀번호가 일치합니다.' : '비밀번호가 일치하지 않습니다.';
+      msg.style.color = pw === pw2 ? '#16a34a' : 'var(--danger)';
+    }
 
-        /* 소속 초기화 */
-        this._affilRows = m.affils.map((a, i) => ({ id: ++this._affilSeq, ...a }));
-        this._renderAffilRows();
-      },
+    let idChecked = false;
+    function resetIdCheck() { idChecked = false; const msg = document.getElementById('userIdMsg'); if (msg) msg.textContent = ''; }
+    function checkUserId() {
+      const userId = document.getElementById('fUserId')?.value.trim() || '';
+      const msg = document.getElementById('userIdMsg');
+      if (!userId) { App.toast('아이디를 입력해주세요.', 'warning'); return; }
+      /* TODO: 서버 중복 확인 API 연동 */
+      idChecked = true;
+      if (msg) { msg.textContent = '사용 가능한 아이디입니다.'; msg.className = 'check-ok'; }
+    }
 
-      /* ── 비밀번호 보기 토글 */
-      togglePw(inputId, btn) {
-        const input = document.getElementById(inputId);
-        const ico   = btn.querySelector('img');
-        if (!input) return;
-        const isHidden = input.type === 'password';
-        input.type = isHidden ? 'text' : 'password';
-        if (ico) ico.style.opacity = isHidden ? '1' : '.5';
-      },
+    function toggleOverseas(checked) {
+      ['fZip','fAddr2'].forEach(id => { const el = document.getElementById(id); if (el) el.disabled = checked; });
+      const a1 = document.getElementById('fAddr1');
+      if (a1) a1.style.opacity = checked ? '0.4' : '1';
+    }
 
-      /* ── 비밀번호 일치 확인 */
-      checkPwMatch() {
-        const pw  = document.getElementById('fPw')?.value       || '';
+    function save() {
+      const name  = document.getElementById('fName')?.value.trim();
+      const email = document.getElementById('fEmail')?.value.trim();
+      if (!name)  { App.toast('이름을 입력해주세요.', 'warning'); return; }
+      if (!email) { App.toast('이메일을 입력해주세요.', 'warning'); return; }
+      if (!isEdit) {
+        const userId = document.getElementById('fUserId')?.value.trim();
+        if (!userId)      { App.toast('아이디를 입력해주세요.', 'warning'); return; }
+        if (!idChecked)   { App.toast('아이디 중복 확인을 해주세요.', 'warning'); return; }
+        const pw  = document.getElementById('fPw')?.value || '';
         const pw2 = document.getElementById('fPwConfirm')?.value || '';
-        const msg = document.getElementById('pwMsg');
-        if (!msg) return;
-        if (!pw2) { msg.textContent = ''; return; }
-        if (pw === pw2) {
-          msg.textContent = '비밀번호가 일치합니다.';
-          msg.style.color = '#16a34a';
-        } else {
-          msg.textContent = '비밀번호가 일치하지 않습니다.';
-          msg.style.color = 'var(--danger)';
-        }
-      },
+        if (!pw || pw.length < 8) { App.toast('비밀번호는 8자 이상 입력해주세요.', 'warning'); return; }
+        if (pw !== pw2)  { App.toast('비밀번호가 일치하지 않습니다.', 'warning'); return; }
+      }
+      /* TODO: POST /admin/api/members (등록) | PUT /admin/api/members/{id} (수정) */
+      App.toast(isEdit ? `${name}님의 정보가 수정되었습니다.` : `${name}님이 등록되었습니다.`, 'success');
+      setTimeout(() => location.href = 'members.html', 1500);
+    }
 
-      /* ── 아이디 중복 확인 */
-      resetIdCheck() {
-        this._idChecked = false;
-        const msg = document.getElementById('userIdMsg');
-        if (msg) { msg.textContent = ''; msg.className = ''; }
-      },
-
-      checkUserId() {
-        const userId = document.getElementById('fUserId')?.value.trim() || '';
-        const msg    = document.getElementById('userIdMsg');
-        if (!userId) { App.toast('아이디를 입력해주세요.', 'warning'); return; }
-        if (!/^[a-z0-9]{4,20}$/.test(userId)) {
-          if (msg) { msg.textContent = '영문 소문자와 숫자 조합 4~20자로 입력하세요.'; msg.className = 'check-ng'; }
-          return;
-        }
-        /* 더미 중복 체크 (실제 API 연동 시 교체) */
-        const isDup = ALL_MEMBERS.some(m => m.userId === userId);
-        this._idChecked = !isDup;
-        if (msg) {
-          msg.textContent = isDup ? '이미 사용 중인 아이디입니다.' : '사용 가능한 아이디입니다.';
-          msg.className   = isDup ? 'check-ng' : 'check-ok';
-        }
-      },
-
-      /* ── 소속 행 렌더 */
-      _renderAffilRows() {
-        const container = document.getElementById('affilList');
-        if (!container) return;
-        if (!this._affilRows.length) { container.innerHTML = ''; return; }
-
-        const rows = this._affilRows;
-        container.innerHTML = `
-          <table class="affil-table">
-            <thead>
-              <tr>
-                <th style="width:160px">소속 유형</th>
-                <th>소속명</th>
-                <th style="width:150px">가입일</th>
-                <th style="width:48px">관리</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rows.map(row => `
-                <tr id="affil-row-${row.id}">
-                  <td>
-                    <select class="form-control" id="affilType-${row.id}"
-                      onchange="MemberEdit.onAffilTypeChange(${row.id})"
-                      style="width:100%;height:32px;font-size:12px">
-                      ${AFFIL_TYPES.map(t => `<option${t===row.type?' selected':''}>${t}</option>`).join('')}
-                    </select>
-                  </td>
-                  <td>
-                    <select class="form-control" id="affilName-${row.id}" style="width:100%;height:32px;font-size:12px">
-                      ${(AFFIL_DATA[row.type] || []).map(n =>
-                        `<option${n===row.name?' selected':''}>${n}</option>`).join('')}
-                    </select>
-                  </td>
-                  <td>
-                    <input type="date" class="form-control" id="affilDate-${row.id}"
-                      value="${row.joinDate || ''}" style="height:32px;font-size:12px">
-                  </td>
-                  <td style="text-align:center">
-                    <button type="button"
-                      style="background:none;border:none;cursor:pointer;font-size:16px;color:var(--danger);line-height:1"
-                      onclick="MemberEdit.removeAffil(${row.id})" title="삭제">✕</button>
-                  </td>
-                </tr>`).join('')}
-            </tbody>
-          </table>`;
-      },
-
-      addAffil() {
-        const id = ++this._affilSeq;
-        this._affilRows.push({ id, type:'동아리', name: AFFIL_DATA['동아리'][0], joinDate:'' });
-        this._renderAffilRows();
-      },
-
-      removeAffil(rowId) {
-        this._affilRows = this._affilRows.filter(r => r.id !== rowId);
-        this._renderAffilRows();
-      },
-
-      onAffilTypeChange(rowId) {
-        const typeEl = document.getElementById(`affilType-${rowId}`);
-        const nameEl = document.getElementById(`affilName-${rowId}`);
-        if (!typeEl || !nameEl) return;
-        const type  = typeEl.value;
-        const names = AFFIL_DATA[type] || [];
-        nameEl.innerHTML = names.map(n => `<option>${n}</option>`).join('');
-        const row = this._affilRows.find(r => r.id === rowId);
-        if (row) { row.type = type; row.name = names[0] || ''; }
-      },
-
-      /* ── 주소 */
-      searchAddr() {
-        App.toast('우편번호 검색 — 실제 구현 시 Kakao 주소 API 연동 예정', 'info');
-      },
-
-      toggleOverseas(checked) {
-        ['fZip','fAddr2','addrSearchBtn'].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.disabled = checked;
-        });
-        const a1 = document.getElementById('fAddr1');
-        if (a1) a1.style.opacity = checked ? '0.4' : '1';
-      },
-
-      /* ── 소속 현재 값 수집 */
-      _collectAffils() {
-        return this._affilRows.map(row => ({
-          type:     document.getElementById(`affilType-${row.id}`)?.value || row.type,
-          name:     document.getElementById(`affilName-${row.id}`)?.value || row.name,
-          joinDate: document.getElementById(`affilDate-${row.id}`)?.value || '',
-        }));
-      },
-
-      /* ── 저장 */
-      save() {
-        /* 유효성 검사 */
-        const name    = document.getElementById('fName')?.value.trim();
-        const email   = document.getElementById('fEmail')?.value.trim();
-
-        if (!name)  { App.toast('이름을 입력해주세요.', 'warning'); return; }
-        if (!email) { App.toast('이메일을 입력해주세요.', 'warning'); return; }
-
-        if (!this._isEdit) {
-          const userId = document.getElementById('fUserId')?.value.trim();
-          if (!userId) { App.toast('아이디를 입력해주세요.', 'warning'); return; }
-          if (!this._idChecked) { App.toast('아이디 중복 확인을 해주세요.', 'warning'); return; }
-          const pw  = document.getElementById('fPw')?.value || '';
-          const pw2 = document.getElementById('fPwConfirm')?.value || '';
-          if (!pw)  { App.toast('비밀번호를 입력해주세요.', 'warning'); return; }
-          if (pw.length < 8) { App.toast('비밀번호는 8자 이상 입력해주세요.', 'warning'); return; }
-          if (pw !== pw2) { App.toast('비밀번호가 일치하지 않습니다.', 'warning'); return; }
-        }
-
-        const affils = this._collectAffils();
-        const grade  = document.getElementById('fGrade')?.value;
-        const status = document.querySelector('input[name="fStatus"]:checked')?.value;
-
-        /* TODO: AJAX
-         * const payload = { id, name, email, phone, grade, status, ... };
-         * fetch(ADMIN_API.memberSave, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken }, body: JSON.stringify(payload) })
-         *   .then(r => r.json()).then(data => { App.toast(successMsg, 'success'); setTimeout(() => location.href = 'members.html', 1500); });
-         */
-        if (this._isEdit) {
-          App.toast(`${name}님의 정보가 수정되었습니다.`, 'success');
-        } else {
-          App.toast(`${name}님이 등록되었습니다. 임시 비밀번호가 이메일로 발송됩니다.`, 'success');
-        }
-
-        setTimeout(() => location.href = 'members.html', 1500);
-      },
-    };
-
-    /* 생년월일 옵션 동적 생성 + 초기값 설정 */
+    /* 생년월일 옵션 생성 */
     (function initBirth() {
       const yEl = document.getElementById('fBirthY');
       const mEl = document.getElementById('fBirthM');
       const dEl = document.getElementById('fBirthD');
-      if (yEl) {
-        yEl.innerHTML = '<option value="">년</option>';
-        for (let y = 2015; y >= 1930; y--) {
-          yEl.innerHTML += `<option value="${y}">${y}년</option>`;
-        }
-        yEl.value = '1990';
-      }
-      if (mEl) {
-        mEl.innerHTML = '<option value="">월</option>';
-        for (let mo = 1; mo <= 12; mo++) {
-          mEl.innerHTML += `<option value="${mo}">${mo}월</option>`;
-        }
-        mEl.value = '1';
-      }
-      if (dEl) {
-        dEl.innerHTML = '<option value="">일</option>';
-        for (let d = 1; d <= 31; d++) {
-          dEl.innerHTML += `<option value="${d}">${d}일</option>`;
-        }
-        dEl.value = '1';
-      }
+      if (yEl) { yEl.innerHTML = '<option value="">년</option>'; for (let y = 2015; y >= 1930; y--) yEl.innerHTML += `<option value="${y}"${y===1985?' selected':''}>${y}년</option>`; }
+      if (mEl) { mEl.innerHTML = '<option value="">월</option>'; for (let m = 1; m <= 12; m++) mEl.innerHTML += `<option value="${m}"${m===4?' selected':''}>${m}월</option>`; }
+      if (dEl) { dEl.innerHTML = '<option value="">일</option>'; for (let d = 1; d <= 31; d++) dEl.innerHTML += `<option value="${d}"${d===12?' selected':''}>${d}일</option>`; }
     })();
-
-    MemberEdit.init();
   </script>
 </body>
 </html>

@@ -11,36 +11,16 @@
   <link rel="stylesheet" href="../assets/css/list-common.css">
   <link rel="stylesheet" href="../assets/css/pages/admin.css">
   <style>
-    /* ── 강좌 유형 탭 (상단 탭바) */
-    .admin-topbar-left {
-      display: flex; align-items: stretch; flex: 1; min-width: 0;
-    }
-    .topbar-tab-divider {
-      width: 1px; background: #e3eadd; margin: 10px 16px; flex-shrink: 0;
-    }
-    .admin-topbar.has-tabs {
-      border-bottom: 2px solid #e3eadd; margin-bottom: 16px;
-      align-items: stretch; padding-bottom: 0;
-    }
+    .admin-topbar-left { display: flex; align-items: stretch; flex: 1; min-width: 0; }
+    .topbar-tab-divider { width: 1px; background: #e3eadd; margin: 10px 16px; flex-shrink: 0; }
+    .admin-topbar.has-tabs { border-bottom: 2px solid #e3eadd; margin-bottom: 16px; align-items: stretch; padding-bottom: 0; }
     .admin-topbar.has-tabs .admin-topbar-actions { display: flex; align-items: center; }
     .admin-topbar.has-tabs .admin-page-title { display: flex; align-items: center; padding-bottom: 2px; }
     .academy-tab-bar { display: flex; gap: 0; align-items: stretch; }
-    .academy-tab {
-      min-width: 96px; padding: 0 8px;
-      font-size: 14px; font-weight: 500; color: #7a8e74;
-      cursor: pointer; border: none; background: none;
-      border-bottom: 2px solid transparent; margin-bottom: -2px;
-      transition: color .15s, border-color .15s;
-      font-family: 'Noto Sans KR', sans-serif;
-      white-space: nowrap; display: flex; align-items: center; justify-content: center;
-    }
+    .academy-tab { min-width: 96px; padding: 0 8px; font-size: 14px; font-weight: 500; color: #7a8e74; cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color .15s, border-color .15s; font-family: 'Noto Sans KR', sans-serif; white-space: nowrap; display: flex; align-items: center; justify-content: center; }
     .academy-tab:hover { color: #4a7c59; }
     .academy-tab.active { color: #2e5c2e; font-weight: 700; border-bottom-color: #2e5c2e; }
-
-    /* 기간 표시용 힌트 */
-    .date-hint { font-size: 11px; color: #aabba4; margin-left: 10px; }
-    .period-cell { font-variant-numeric: tabular-nums; color: #111111; white-space: nowrap; }
-
+    .period-cell { font-variant-numeric: tabular-nums; color: #111; white-space: nowrap; }
     .admin-table tbody tr { cursor: pointer; }
   </style>
 </head>
@@ -65,15 +45,12 @@
         </div>
         <div class="admin-topbar-actions">
           <button class="btn-refresh" onclick="location.reload()" title="새로고침"><img src="../assets/icons/refresh.png" alt="새로고침"></button>
-          <button class="btn btn-primary btn-sm" onclick="CourseAdmin.goCreate()">+ 강좌 등록</button>
+          <button class="btn btn-primary btn-sm" onclick="goCreate()">+ 강좌 등록</button>
         </div>
       </div>
 
-      <!-- ② 검색 필터 -->
       <div class="filter-card">
         <div class="filter-body">
-
-          <!-- 행 1: 교육시작일 -->
           <div class="filter-row">
             <span class="filter-label">교육시작일</span>
             <div class="filter-content">
@@ -83,79 +60,68 @@
                 <input type="date" id="filterDateTo">
               </div>
               <div class="date-preset-group">
-                <button class="date-preset-btn" onclick="CourseAdmin.setDatePreset('today')">오늘</button>
-                <button class="date-preset-btn" onclick="CourseAdmin.setDatePreset(7)">7일</button>
-                <button class="date-preset-btn" onclick="CourseAdmin.setDatePreset(30)">30일</button>
-                <button class="date-preset-btn" onclick="CourseAdmin.setDatePreset(90)">3개월</button>
-                <button class="date-preset-btn" onclick="CourseAdmin.setDatePreset(180)">6개월</button>
+                <button class="date-preset-btn">오늘</button>
+                <button class="date-preset-btn">7일</button>
+                <button class="date-preset-btn">30일</button>
+                <button class="date-preset-btn">3개월</button>
+                <button class="date-preset-btn">6개월</button>
               </div>
             </div>
           </div>
-
-          <!-- 행 2: 상태 -->
           <div class="filter-row">
             <span class="filter-label">상태</span>
             <div class="filter-content">
-              <div class="chip-group" id="statusChips">
-                <label class="chip"><input type="radio" name="filterStatus" value=""><span>전체</span></label>
+              <div class="chip-group">
+                <label class="chip"><input type="radio" name="filterStatus" value="" checked><span>전체</span></label>
                 <label class="chip"><input type="radio" name="filterStatus" value="준비중"><span>준비중</span></label>
                 <label class="chip"><input type="radio" name="filterStatus" value="접수중"><span>접수중</span></label>
                 <label class="chip"><input type="radio" name="filterStatus" value="접수마감"><span>접수마감</span></label>
               </div>
             </div>
           </div>
-
-          <!-- 행 3: 기수 -->
           <div class="filter-row">
             <span class="filter-label">기수</span>
             <div class="filter-content">
               <select id="filterCohort" class="form-control" style="width:130px;height:34px;font-size:13px">
                 <option value="">전체</option>
+                <option>53기</option>
+                <option>54기</option>
+                <option>55기</option>
               </select>
             </div>
           </div>
-
-          <!-- 행 4: 과정명 검색 -->
           <div class="filter-row">
             <span class="filter-label">과정명</span>
             <div class="filter-content">
               <div class="kw-wrap">
                 <div class="kw-input-wrap">
-                  <input type="text" id="filterKeyword" placeholder="과정명을 입력하세요"
-                    onkeydown="if(event.key==='Enter') CourseAdmin.search()">
+                  <input type="text" id="filterKeyword" placeholder="과정명을 입력하세요">
                 </div>
               </div>
             </div>
           </div>
-
         </div>
         <div class="filter-footer">
-          <button class="btn btn-outline btn-sm" onclick="CourseAdmin.exportExcel()">엑셀 다운로드</button>
-          <button class="btn btn-gray btn-sm" onclick="CourseAdmin.resetFilter()">초기화</button>
-          <button class="btn btn-primary btn-sm" onclick="CourseAdmin.search()">검색</button>
+          <button class="btn btn-outline btn-sm" onclick="App.toast('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info')">엑셀 다운로드</button>
+          <button class="btn btn-gray btn-sm">초기화</button>
+          <button class="btn btn-primary btn-sm">검색</button>
         </div>
       </div>
 
-      <!-- ② 목록 상단 -->
       <div class="list-top">
-        <div class="list-count">총 <strong id="courseCount">0</strong>건</div>
-        <select class="form-control" id="pageSizeSelect"
-          onchange="CourseAdmin.changePageSize(+this.value)"
-          style="width:130px;height:36px;font-size:13px">
-          <option value="10">10개씩 보기</option>
-          <option value="30">30개씩 보기</option>
-          <option value="50">50개씩 보기</option>
+        <div class="list-count">총 <strong>3</strong>건</div>
+        <select class="form-control" style="width:130px;height:36px;font-size:13px">
+          <option>10개씩 보기</option>
+          <option>30개씩 보기</option>
+          <option>50개씩 보기</option>
         </select>
       </div>
 
-      <!-- ③ 테이블 -->
       <div class="table-wrap">
         <table class="admin-table">
           <thead>
             <tr>
-              <th style="width:3%" class="col-chk">
-                <input type="checkbox" id="chkAll" onchange="CourseAdmin.toggleAll(this.checked)">
-              </th>
+              <th style="width:3%" class="col-chk"><input type="checkbox" id="chkAll" onchange="toggleAll(this.checked)"></th>
               <th style="width:4%">No</th>
               <th style="width:7%" class="center">기수</th>
               <th style="text-align:center">과정명</th>
@@ -165,19 +131,47 @@
               <th style="width:9%">등록일</th>
             </tr>
           </thead>
-          <tbody id="courseTableBody"></tbody>
+          <tbody>
+            <tr onclick="location.href='course-detail.html?id=1001'">
+              <td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="1001" onchange="syncDeleteBtn()"></td>
+              <td class="td-muted">3</td>
+              <td class="center" style="font-size:13px">55기</td>
+              <td style="font-weight:500;text-align:center">제55기 숲해설가 전문가과정</td>
+              <td class="cell-datetime">2026-04-01</td>
+              <td class="period-cell">2026-03-01 09:00 ~ 2026-03-25 18:00</td>
+              <td><span class="badge badge-green">접수중</span></td>
+              <td class="td-muted cell-datetime">2026-02-10 14:23:05</td>
+            </tr>
+            <tr onclick="location.href='course-detail.html?id=1002'">
+              <td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="1002" onchange="syncDeleteBtn()"></td>
+              <td class="td-muted">2</td>
+              <td class="center" style="font-size:13px">—</td>
+              <td style="font-weight:500;text-align:center">봄 숲 이야기 — 시민아카데미</td>
+              <td class="cell-datetime">2026-04-15</td>
+              <td class="period-cell">2026-03-10 09:00 ~ 2026-04-10 18:00</td>
+              <td><span class="badge badge-green">접수중</span></td>
+              <td class="td-muted cell-datetime">2026-02-20 09:41:18</td>
+            </tr>
+            <tr onclick="location.href='course-detail.html?id=1003'">
+              <td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="1003" onchange="syncDeleteBtn()"></td>
+              <td class="td-muted">1</td>
+              <td class="center" style="font-size:13px">—</td>
+              <td style="font-weight:500;text-align:center">숲해설 심화 — 생태 스토리텔링</td>
+              <td class="cell-datetime">2026-05-10</td>
+              <td class="period-cell">2026-04-01 09:00 ~ 2026-04-30 18:00</td>
+              <td><span class="badge badge-gray">준비중</span></td>
+              <td class="td-muted cell-datetime">2026-03-05 11:00:44</td>
+            </tr>
+            <!-- 데이터 없을 때: <tr><td colspan="8" class="td-empty">등록된 강좌가 없습니다.</td></tr> -->
+          </tbody>
         </table>
       </div>
 
-      <!-- ④ 페이지네이션 -->
-      <div class="pagination" id="coursePagination"></div>
+      <div class="pagination"></div>
 
-      <!-- ⑤ 하단 버튼 -->
       <div class="table-bottom-bar">
-        <button class="btn btn-danger btn-danger-filled btn-sm" id="btnDeleteSelected"
-          onclick="CourseAdmin.deleteSelected()" disabled>선택 삭제</button>
+        <button class="btn btn-danger btn-danger-filled btn-sm" id="btnDeleteSelected" disabled onclick="deleteSelected()">선택 삭제</button>
       </div>
-
     </main>
   </div>
 
@@ -185,15 +179,13 @@
   <script src="../assets/js/components/header.js"></script>
   <script src="../assets/js/pages/admin.js"></script>
   <script>
-    /* ── 타입별 설정 */
+    /* URL 파라미터 기반 타입/탭 처리 */
     const COURSE_CONFIG = {
-      basic:   { key: 'course-basic',   label: '기초과정 관리',    subs: ['시민아카데미', '학교숲해설', '기관방문'] },
-      qualify: { key: 'course-qualify', label: '자격취득과정 관리', subs: ['전문가과정', '준전문가과정'] },
-      enhance: { key: 'course-enhance', label: '역량강화 관리',    subs: ['심화과정', '직무교육'] },
-      academy: { key: 'course-academy', label: '회원아카데미 관리', subs: [] },
+      basic:   { key: 'course-basic',   label: '기초과정 관리' },
+      qualify: { key: 'course-qualify', label: '자격취득과정 관리' },
+      enhance: { key: 'course-enhance', label: '역량강화 관리' },
+      academy: { key: 'course-academy', label: '회원아카데미 관리' },
     };
-
-    /* ── 회원아카데미 탭 설정 */
     const ACADEMY_TABS = [
       { key: 'lecture', label: '특강' },
       { key: 'course',  label: '강좌' },
@@ -203,274 +195,43 @@
     const params = new URLSearchParams(location.search);
     const type   = params.get('type') || 'basic';
     const config = COURSE_CONFIG[type] || COURSE_CONFIG.basic;
+    const activeTab = type === 'academy' ? (params.get('tab') || 'lecture') : null;
 
-    /* 현재 아카데미 탭 (type=academy일 때만 사용) */
-    const activeTab = (type === 'academy') ? (params.get('tab') || 'lecture') : null;
-
-    /* 페이지 타이틀·사이드바 활성화 */
     document.title = config.label + ' | 관리자 | 한국숲해설가협회';
     document.getElementById('pageTitle').textContent = config.label;
     AdminSidebar.mount(config.key);
 
-    /* 라디오 초기값 */
-    document.querySelector('input[name="filterStatus"][value=""]').checked = true;
-
-    /* ── 회원아카데미 탭 렌더링 */
     if (type === 'academy') {
       const tabBar = document.getElementById('academyTabBar');
       tabBar.style.display = 'flex';
       document.getElementById('adminTopbarCourses').classList.add('has-tabs');
-      document.getElementById('academyTabs').innerHTML = ACADEMY_TABS.map(t => `
-        <button class="academy-tab ${t.key === activeTab ? 'active' : ''}"
-                onclick="location.href='courses.html?type=academy&tab=${t.key}'">
-          ${t.label}
-        </button>`).join('');
+      document.getElementById('academyTabs').innerHTML = ACADEMY_TABS.map(t =>
+        `<button class="academy-tab ${t.key === activeTab ? 'active' : ''}"
+          onclick="location.href='courses.html?type=academy&tab=${t.key}'">${t.label}</button>`
+      ).join('');
     }
 
-    /* ── 상태 뱃지 */
-    const STATUS_BADGE = {
-      '준비중':  { cls: 'badge-gray',   label: '준비중' },
-      '접수중':  { cls: 'badge-green',  label: '접수중' },
-      '접수마감': { cls: 'badge-orange', label: '접수마감' },
-    };
+    function goCreate() {
+      const q = new URLSearchParams(location.search);
+      const qs = q.toString();
+      location.href = `course-edit.html${qs ? '?' + qs : ''}`;
+    }
 
-    /* ── 샘플 데이터 */
-    const COURSE_NAMES = {
-      basic: [
-        '봄 숲 이야기 — 시민아카데미',
-        '학교 숲 생태교육 기초과정',
-        '기관 방문 숲 해설 체험',
-        '여름 숲 탐험 시민아카데미',
-        '가을 단풍 숲 해설 기초',
-        '겨울 숲 생태 관찰 입문',
-        '도심 속 숲 치유 프로그램',
-        '생태 감수성 키우기 입문',
-      ],
-      qualify: [
-        '제55기 숲해설가 전문가과정',
-        '제54기 숲해설가 전문가과정',
-        '제10기 준전문가 양성과정',
-        '제11기 준전문가 양성과정',
-        '제56기 숲해설가 전문가과정',
-      ],
-      enhance: [
-        '숲해설 심화 — 생태 스토리텔링',
-        '숲 치유 프로그램 개발 직무교육',
-        '탄소중립 숲 교육 심화과정',
-        '국가숲길 해설 전문 심화',
-        '숲 교육 콘텐츠 제작 직무',
-      ],
-      /* 탭별 더미 데이터 */
-      'academy-lecture': [
-        '식물 생태 특강 — 봄 야생화',
-        '조류 탐조 특강 — 겨울 철새',
-        '버섯 생태 특강',
-        '기후위기와 숲 생태 특강',
-        '한국 자생식물 특강',
-      ],
-      'academy-course': [
-        '숲 생태 강좌 — 수목 감별',
-        '곤충 생태 강좌',
-        '야생화 이야기 강좌',
-        '숲 치유 이론 강좌',
-        '생태 스토리텔링 강좌',
-      ],
-      'academy-mentor': [
-        '멘토링숲학교 — 봄학기',
-        '멘토링숲학교 — 여름학기',
-        '멘토링숲학교 — 가을학기',
-        '멘토링숲학교 — 특별과정',
-      ],
-    };
+    function toggleAll(checked) {
+      document.querySelectorAll('.row-chk').forEach(cb => cb.checked = checked);
+      syncDeleteBtn();
+    }
 
-    const STATUSES = ['준비중', '접수중', '접수중', '접수마감'];
+    function syncDeleteBtn() {
+      const btn = document.getElementById('btnDeleteSelected');
+      if (btn) btn.disabled = document.querySelectorAll('.row-chk:checked').length === 0;
+    }
 
-    /* type=academy면 탭별 데이터 키 사용 */
-    const dataKey = (type === 'academy') ? `academy-${activeTab}` : type;
-
-    /* 기수 유무 패턴: qualify·enhance는 기수 있는 경우 많음, 나머지는 적음 */
-    const COHORT_BASE = { basic: 0, qualify: 53, enhance: 0, academy: 0 };
-    const cohortBase  = COHORT_BASE[type] || 0;
-
-    const ALL_COURSES = Array.from({ length: 28 }, (_, i) => {
-      const names = COURSE_NAMES[dataKey] || COURSE_NAMES.basic;
-      const mm    = String((i % 9) + 1).padStart(2, '0');
-      const dd    = String((i % 20) + 1).padStart(2, '0');
-      const recMm = String(((i + 1) % 9) + 1).padStart(2, '0');
-      const recDd = String((i % 20) + 1).padStart(2, '0');
-      const rHH   = String((i % 10) + 9).padStart(2, '0');
-      const rMM   = String((i * 7) % 60).padStart(2, '0');
-      const rSS   = String((i * 13) % 60).padStart(2, '0');
-      const startDate  = `2026-${mm}-${dd}`;
-      const recStartMm = String(((i + 2) % 9) + 1).padStart(2, '0');
-      const recStartDd = String(((i * 2 + 1) % 20) + 1).padStart(2, '0');
-      const recEndDd   = String(((i * 3 + 5) % 20) + 1).padStart(2, '0');
-      /* cohortBase > 0이면 순번 기반 기수 부여, 0이면 일부만 (3개 중 1개) */
-      const cohort = cohortBase > 0
-        ? cohortBase + i
-        : (i % 3 === 0 ? (i + 1) : null);
-
-      return {
-        id:      1000 + i,
-        name:    names[i % names.length],
-        cohort,
-        startDate,
-        recFrom: `2026-${recStartMm}-${recStartDd} 09:00`,
-        recTo:   `2026-${mm}-${recEndDd} 18:00`,
-        status:  STATUSES[i % 4],
-        regDate: `2026-${recMm}-${recDd} ${rHH}:${rMM}:${rSS}`,
-      };
-    });
-
-    const CourseAdmin = {
-      filtered:    [...ALL_COURSES],
-      currentPage: 1,
-      pageSize:    10,
-
-      _dateInRange(dateStr, from, to) {
-        if (!from && !to) return true;
-        const d = new Date(dateStr);
-        if (from && !to) return d >= new Date(from);
-        if (!from && to) return d <= new Date(to);
-        return d >= new Date(from) && d <= new Date(to);
-      },
-
-      search() {
-        const from   = document.getElementById('filterDateFrom').value;
-        const to     = document.getElementById('filterDateTo').value;
-        const status = document.querySelector('input[name="filterStatus"]:checked')?.value || '';
-        const cohort = document.getElementById('filterCohort').value;
-        const kw     = document.getElementById('filterKeyword').value.trim().toLowerCase();
-
-        this.filtered = ALL_COURSES.filter(c => {
-          if (!this._dateInRange(c.startDate, from, to)) return false;
-          if (status && c.status !== status) return false;
-          if (cohort && String(c.cohort || '') !== cohort) return false;
-          if (kw && !c.name.toLowerCase().includes(kw)) return false;
-          return true;
-        });
-        this.currentPage = 1;
-        this.render();
-      },
-
-      setDatePreset(range) {
-        const to = new Date(), from = new Date();
-        if (range !== 'today') from.setDate(from.getDate() - range);
-        const fmt = d => d.toISOString().split('T')[0];
-        document.getElementById('filterDateFrom').value = fmt(from);
-        document.getElementById('filterDateTo').value = fmt(to);
-        this.search();
-      },
-
-      resetFilter() {
-        document.getElementById('filterDateFrom').value = '';
-        document.getElementById('filterDateTo').value   = '';
-        document.querySelector('input[name="filterStatus"][value=""]').checked = true;
-        document.getElementById('filterCohort').value   = '';
-        document.getElementById('filterKeyword').value  = '';
-        this.filtered    = [...ALL_COURSES];
-        this.currentPage = 1;
-        this.render();
-      },
-
-      changePageSize(size) { this.pageSize = size; this.currentPage = 1; this.render(); },
-
-      toggleAll(checked) {
-        document.querySelectorAll('.row-chk').forEach(cb => cb.checked = checked);
-        this._syncDeleteBtn();
-      },
-
-      _syncDeleteBtn() {
-        const any = document.querySelectorAll('.row-chk:checked').length > 0;
-        document.getElementById('btnDeleteSelected').disabled = !any;
-        document.getElementById('chkAll').indeterminate = false;
-      },
-
-      deleteSelected() {
-        const ids = [...document.querySelectorAll('.row-chk:checked')].map(cb => Number(cb.dataset.id));
-        if (!ids.length) return;
-        if (!confirm(`선택한 ${ids.length}건을 삭제하시겠습니까?`)) return;
-        ids.forEach(id => {
-          const idx = ALL_COURSES.findIndex(c => c.id === id);
-          if (idx > -1) ALL_COURSES.splice(idx, 1);
-        });
-        this.filtered = this.filtered.filter(c => !ids.includes(c.id));
-        this.render();
-        App.toast(`${ids.length}건이 삭제되었습니다.`, 'success');
-      },
-
-      goCreate() {
-        const p = new URLSearchParams(location.search);
-        const t = p.get('type') || 'basic';
-        const tab = p.get('tab');
-        const q = new URLSearchParams();
-        if (t !== 'basic') q.set('type', t);
-        if (tab) q.set('tab', tab);
-        const qs = q.toString();
-        location.href = `course-edit.html${qs ? '?' + qs : ''}`;
-      },
-
-      goEdit(id) {
-        const p = new URLSearchParams(location.search);
-        const t = p.get('type') || 'basic';
-        const tab = p.get('tab');
-        const q = new URLSearchParams();
-        if (t !== 'basic') q.set('type', t);
-        if (tab) q.set('tab', tab);
-        q.set('id', id);
-        location.href = `course-edit.html?${q.toString()}`;
-      },
-
-      // TODO: AJAX — window.location.href = ADMIN_API.courses + '/export?' + new URLSearchParams(currentFilter);
-      exportExcel() {
-        App.toast('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info');
-      },
-
-      render() {
-        const total = this.filtered.length;
-        const start = (this.currentPage - 1) * this.pageSize;
-        const slice = this.filtered.slice(start, start + this.pageSize);
-
-        document.getElementById('courseCount').textContent = total.toLocaleString();
-        document.getElementById('chkAll').checked = false;
-        document.getElementById('btnDeleteSelected').disabled = true;
-
-        document.getElementById('courseTableBody').innerHTML = slice.length
-          ? slice.map((c, i) => {
-              const st = STATUS_BADGE[c.status] || { cls: 'badge-gray', label: c.status };
-              return `
-              <tr onclick="location.href='course-detail.html?id=${c.id}&type=${type}'" style="cursor:pointer">
-                <td class="col-chk" onclick="event.stopPropagation()">
-                  <input type="checkbox" class="row-chk" data-id="${c.id}"
-                    onchange="CourseAdmin._syncDeleteBtn()">
-                </td>
-                <td class="td-muted">${total - start - i}</td>
-                <td class="center" style="font-size:13px">${c.cohort ? c.cohort + '기' : '—'}</td>
-                <td style="font-weight:500;text-align:center">${c.name}</td>
-                <td class="cell-datetime">${c.startDate}</td>
-                <td class="period-cell">${c.recFrom} ~ ${c.recTo}</td>
-                <td><span class="badge ${st.cls}">${st.label}</span></td>
-                <td class="td-muted cell-datetime">${c.regDate}</td>
-              </tr>`;
-            }).join('')
-          : `<tr><td colspan="8" style="padding:40px;text-align:center;color:#aabba4">검색 결과가 없습니다.</td></tr>`;
-
-        App.renderPagination('coursePagination', this.currentPage,
-          Math.ceil(total / this.pageSize) || 1,
-          p => { this.currentPage = p; this.render(); });
-      },
-    };
-
-    /* 기수 드롭다운 옵션 — 데이터에 있는 기수값만 오름차순으로 */
-    const cohortValues = [...new Set(ALL_COURSES.map(c => c.cohort).filter(Boolean))].sort((a, b) => a - b);
-    const cohortSel = document.getElementById('filterCohort');
-    cohortValues.forEach(v => {
-      const o = document.createElement('option');
-      o.value = String(v); o.textContent = v + '기';
-      cohortSel.appendChild(o);
-    });
-
-    CourseAdmin.render();
+    function deleteSelected() {
+      const count = document.querySelectorAll('.row-chk:checked').length;
+      if (!count) return;
+      App.toast(`${count}건이 삭제되었습니다.`, 'success');
+    }
   </script>
 </body>
 </html>

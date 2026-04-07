@@ -116,7 +116,41 @@
       </div>
 
       <div class="detail-card" id="detailCard">
-        <!-- JS로 채워짐 -->
+        <div class="detail-header">
+          <h2 class="detail-title">2026년 상반기 협회 공지사항</h2>
+          <div class="detail-meta">
+            <span>작성자: <strong>관리자A</strong></span>
+            <span>등록일: <strong>2026-03-15</strong></span>
+            <span>조회수: <strong>142</strong></span>
+          </div>
+        </div>
+        <div class="detail-body">
+          <p>안녕하세요, 한국숲해설가협회입니다.</p>
+          <p>이번 게시글은 <strong>관리자가 등록한 내용</strong>입니다. 실제 서비스에서는 스마트에디터2를 통해 작성된 HTML 본문이 표시됩니다.</p>
+          <p>본문에는 이미지, 표, 링크 등 다양한 콘텐츠가 포함될 수 있습니다.</p>
+          <p>회원 여러분의 많은 관심과 참여를 부탁드립니다. 감사합니다.</p>
+        </div>
+        <div class="attach-area">
+          <div class="attach-label">첨부파일 (2)</div>
+          <div class="file-list">
+            <a class="file-item" href="#" onclick="App.toast('파일 다운로드 — 실제 구현 시 연동됩니다.','info');return false;">
+              첨부파일_안내문.pdf <span class="file-size">340KB</span>
+            </a>
+            <a class="file-item" href="#" onclick="App.toast('파일 다운로드 — 실제 구현 시 연동됩니다.','info');return false;">
+              동의서_양식.hwp <span class="file-size">128KB</span>
+            </a>
+          </div>
+        </div>
+        <div class="detail-footer">
+          <button class="btn btn-danger btn-sm"
+            onclick="deletePost()">삭제</button>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-gray btn-sm"
+              onclick="location.href='board.html?type='+BTYPE">목록</button>
+            <button class="btn btn-primary btn-sm"
+              onclick="location.href='board-edit.html?type='+BTYPE+'&id=5001'">수정</button>
+          </div>
+        </div>
       </div>
 
     </main>
@@ -127,126 +161,31 @@
   <script src="../assets/js/pages/admin.js"></script>
   <script>
   const BOARD_CONFIG = {
-    notice:          { title: '공지사항', navKey: 'board-notice',       hasThumb: false },
-    newsletter:      { title: '협회지',   navKey: 'board-newsletter',   hasThumb: false },
-    press:           { title: '언론보도', navKey: 'board-press',        hasThumb: false },
-    gallery:         { title: '갤러리',   navKey: 'board-gallery',      hasThumb: true  },
-    'forest-work':   { title: '숲일터',   navKey: 'board-forest-work',  hasThumb: false },
-    region:  { title: '전국지역협회', navKey: 'board-region',   hasThumb: true  },
-    intro:   { title: '사공단소개',   navKey: 'board-intro',    hasThumb: true  },
-    club:    { title: '동아리소개',   navKey: 'board-club',     hasThumb: true  },
+    notice:        { title: '공지사항', navKey: 'board-notice'       },
+    newsletter:    { title: '협회지',   navKey: 'board-newsletter'   },
+    press:         { title: '언론보도', navKey: 'board-press'        },
+    gallery:       { title: '갤러리',   navKey: 'board-gallery'      },
+    'forest-work': { title: '숲일터',   navKey: 'board-forest-work'  },
+    region:        { title: '전국지역협회', navKey: 'board-region'   },
+    intro:         { title: '사공단소개',   navKey: 'board-intro'    },
+    club:          { title: '동아리소개',   navKey: 'board-club'     },
   };
 
-  const params  = new URLSearchParams(location.search);
-  const BTYPE   = params.get('type') || 'notice';
-  const POST_ID = Number(params.get('id')) || 0;
+  const BTYPE   = new URLSearchParams(location.search).get('type') || 'notice';
   const BCONFIG = BOARD_CONFIG[BTYPE] || BOARD_CONFIG.notice;
 
-  /* ── 더미 콘텐츠 풀 */
-  const DUMMY_CONTENT_PLAIN = `
-    <p>안녕하세요, 한국숲해설가협회입니다.</p>
-    <p>이번 게시글은 <strong>관리자가 등록한 내용</strong>입니다. 실제 서비스에서는 스마트에디터2를 통해 작성된 HTML 본문이 표시됩니다.</p>
-    <p>본문에는 이미지, 표, 링크 등 다양한 콘텐츠가 포함될 수 있습니다.</p>
-    <p>회원 여러분의 많은 관심과 참여를 부탁드립니다. 감사합니다.</p>
-  `;
-  const DUMMY_CONTENT_WITH_IMG = `
-    <p>안녕하세요, 한국숲해설가협회입니다.</p>
-    <img src="https://picsum.photos/seed/${POST_ID}/700/300" alt="썸네일 이미지" style="width:100%;border-radius:6px;margin:12px 0">
-    <p>위 이미지가 <strong>첫 번째 이미지</strong>로 자동으로 썸네일에 저장됩니다.</p>
-    <p>사용자 화면(갤러리형 목록)에서 카드 상단 이미지로 노출됩니다.</p>
-    <p>본문에 이미지가 없으면 기본 썸네일로 표시됩니다.</p>
-  `;
+  /* 페이지 타이틀 설정 */
+  const pageTitle = document.getElementById('pageTitle');
+  if (pageTitle) pageTitle.textContent = BCONFIG.title + ' 상세';
+  document.title = BCONFIG.title + ' 상세 | 관리자 | 한국숲해설가협회';
 
-  /* ── 더미 게시글 데이터 (board.html과 동일 구조 + content/files 추가) */
-  const AUTHORS = ['관리자A', '관리자B'];
-  const TITLES_MAP = {
-    notice: ['2026년 상반기 협회 공지사항','회원증 갱신 안내','사무국 이전 안내','개인정보처리방침 개정 안내','홈페이지 점검 안내','2026 정기총회 결과 공지','회비 납부 안내','교육과정 일정 변경 안내','협회 채용 공고','기타 안내사항'],
-    region: ['서울특별시 지역협회','경기도 지역협회','인천광역시 지역협회','강원도 지역협회','충청북도 지역협회','충청남도 지역협회','전라북도 지역협회','전라남도 지역협회','경상북도 지역협회','경상남도 지역협회'],
-    intro:  ['사공단 활동 소개 — 1분기','사공단 봉사 현장 리포트','2026 사공단 교육 운영 현황','사공단 신규 멤버 모집','사공단 지역 활동 사례','사공단 협력기관 소개','사공단 성과 보고서','사공단 연간 목표 발표','사공단 우수 사례 공유','사공단 하반기 계획'],
-    club:   ['숲나들이 동아리 소개','생태탐구반 활동 소개','나무이야기 동아리','새소리 탐조 동아리','버섯 연구 소모임','약초 동아리 소개','도시숲 가꾸기 모임','꽃 이야기 동아리','숲 사진 동아리','걷기 명상 동아리'],
-  };
-  const FILES_POOL = [
-    [{ name: '첨부파일_안내문.pdf', size: '340KB' }, { name: '동의서_양식.hwp', size: '128KB' }],
-    [{ name: '관련자료.pdf', size: '512KB' }],
-    [],
-  ];
-
-  let idCounter = 5000;
-  const ALL_POSTS = Object.keys(BOARD_CONFIG).flatMap(type =>
-    (TITLES_MAP[type] || []).map((title, i) => ({
-      id:      idCounter++,
-      type,
-      title,
-      content: BOARD_CONFIG[type].hasThumb ? DUMMY_CONTENT_WITH_IMG : DUMMY_CONTENT_PLAIN,
-      author:  AUTHORS[i % AUTHORS.length],
-      regDate: `2026-${String((i%11)+1).padStart(2,'0')}-${String((i%25)+1).padStart(2,'0')}`,
-      views:   (i + 1) * 17 + 10,
-      files:   FILES_POOL[i % FILES_POOL.length],
-      hasThumb: BOARD_CONFIG[type].hasThumb,
-    }))
-  );
-
-  const post = ALL_POSTS.find(p => p.id === POST_ID) || ALL_POSTS.find(p => p.type === BTYPE);
+  AdminSidebar.mount(BCONFIG.navKey);
 
   function deletePost() {
     if (!confirm('이 게시글을 삭제하시겠습니까?')) return;
-    App.toast('게시글이 삭제되었습니다.', 'error');
-    setTimeout(() => { location.href = `board.html?type=${BTYPE}`; }, 800);
+    App.toast('게시글이 삭제되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', 'error');
+    setTimeout(() => { location.href = 'board.html?type=' + BTYPE; }, 800);
   }
-
-function renderDetail(p) {
-    const thumbSection = p.hasThumb ? `
-      <div class="thumb-notice">
-        <span> 첫 번째 이미지가 자동으로 썸네일로 저장됩니다.</span>
-        <img class="thumb-preview" src="https://picsum.photos/seed/${p.id}/160/112" alt="썸네일 미리보기">
-      </div>` : '';
-
-    const fileSection = p.files && p.files.length ? `
-      <div class="attach-area">
-        <div class="attach-label">첨부파일 (${p.files.length})</div>
-        <div class="file-list">
-          ${p.files.map(f => `
-            <a class="file-item" href="#" onclick="App.toast('파일 다운로드 — 실제 구현 시 연동됩니다.','info');return false;">
-              📎 ${f.name} <span class="file-size">${f.size}</span>
-            </a>`).join('')}
-        </div>
-      </div>` : '';
-
-    document.getElementById('detailCard').innerHTML = `
-      <div class="detail-header">
-        <h2 class="detail-title">${p.title}</h2>
-        <div class="detail-meta">
-          <span>작성자: <strong>${p.author}</strong></span>
-          <span>등록일: <strong>${p.regDate}</strong></span>
-          <span>조회수: <strong>${p.views.toLocaleString()}</strong></span>
-          ${p.pinned ? '<span style="color:#b45309;background:#fef3c7;border:1px solid #fcd34d;border-radius:4px;padding:1px 8px;font-weight:700">상단 고정 중</span>' : ''}
-        </div>
-      </div>
-      ${thumbSection}
-      <div class="detail-body">${p.content}</div>
-      ${fileSection}
-      <div class="detail-footer">
-        <button class="btn btn-danger btn-sm"
-          onclick="deletePost()">삭제</button>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-gray btn-sm"
-            onclick="location.href='board.html?type=${BTYPE}'">목록</button>
-          <button class="btn btn-primary btn-sm"
-            onclick="location.href='board-edit.html?type=${BTYPE}&id=${p.id}'">수정</button>
-        </div>
-      </div>`;
-  }
-
-  if (post) {
-    renderDetail(post);
-    document.getElementById('pageTitle').textContent = BCONFIG.title + ' 상세';
-    document.title = BCONFIG.title + ' 상세 | 관리자 | 한국숲해설가협회';
-  } else {
-    document.getElementById('detailCard').innerHTML =
-      `<div style="padding:60px;text-align:center;color:#aabba4">게시글을 찾을 수 없습니다.</div>`;
-  }
-
-  AdminSidebar.mount(BCONFIG.navKey);
   </script>
 </body>
 </html>

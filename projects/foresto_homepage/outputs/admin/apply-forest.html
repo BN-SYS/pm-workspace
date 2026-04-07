@@ -44,10 +44,10 @@
                   <input type="date" id="filterDateTo">
                 </div>
                 <div class="date-preset-group">
-                  <button class="date-preset-btn" onclick="ForestApply.setDatePreset('today')">오늘</button>
-                  <button class="date-preset-btn" onclick="ForestApply.setDatePreset(7)">7일</button>
-                  <button class="date-preset-btn" onclick="ForestApply.setDatePreset(30)">30일</button>
-                  <button class="date-preset-btn" onclick="ForestApply.setDatePreset(90)">3개월</button>
+                  <button class="date-preset-btn" onclick="">오늘</button>
+                  <button class="date-preset-btn" onclick=""7)">7일</button>
+                  <button class="date-preset-btn" onclick=""30)">30일</button>
+                  <button class="date-preset-btn" onclick=""90)">3개월</button>
                 </div>
               </div>
             </div>
@@ -76,7 +76,7 @@
                 </select>
                 <div class="kw-input-wrap">
                   <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요"
-                    onkeydown="if(event.key==='Enter') ForestApply.search()">
+                    onkeydown="">
                 </div>
               </div>
             </div>
@@ -84,17 +84,16 @@
 
         </div>
         <div class="filter-footer">
-          <button class="btn btn-outline btn-sm" onclick="ForestApply.exportExcel()">엑셀 다운로드</button>
-          <button class="btn btn-gray btn-sm" onclick="ForestApply.reset()">초기화</button>
-          <button class="btn btn-primary btn-sm" onclick="ForestApply.search()">검색</button>
+          <button class="btn btn-outline btn-sm" onclick="App.toast('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info')">엑셀 다운로드</button>
+          <button class="btn btn-gray btn-sm" onclick="location.reload()">초기화</button>
+          <button class="btn btn-primary btn-sm" onclick="">검색</button>
         </div>
       </div>
 
       <!-- 목록 상단 -->
       <div class="list-top">
-        <div class="list-count">총 <strong id="applyCount">0</strong>건</div>
-        <select class="form-control" id="pageSizeSelect" onchange="ForestApply.changePageSize(+this.value)"
-          style="width:130px;height:36px;font-size:13px">
+        <div class="list-count">총 <strong>3</strong>건</div>
+        <select class="form-control" style="width:130px;height:36px;font-size:13px">
           <option value="10">10개씩 보기</option>
           <option value="30">30개씩 보기</option>
           <option value="50">50개씩 보기</option>
@@ -117,7 +116,39 @@
               <th style="width:12%">관리자 메모</th>
             </tr>
           </thead>
-          <tbody id="applyTableBody"></tbody>
+          <tbody>
+            <tr onclick="location.href='apply-forest-detail.html?id=5001'">
+              <td class="td-muted">3</td>
+              <td class="td-muted">FST-2026-00001</td>
+              <td style="font-weight:500">도봉초등학교</td>
+              <td>김민수</td>
+              <td class="td-muted">02-1000-3000</td>
+              <td class="td-muted">2026-03-15</td>
+              <td class="td-muted cell-datetime">2026-01-05 09:00:00</td>
+              <td class="td-muted"></td>
+            </tr>
+            <tr onclick="location.href='apply-forest-detail.html?id=5002'">
+              <td class="td-muted">2</td>
+              <td class="td-muted">FST-2026-00002</td>
+              <td style="font-weight:500">서울시 북부장애인복지관</td>
+              <td>이영희</td>
+              <td class="td-muted">031-1001-3001</td>
+              <td class="td-muted">2026-04-10</td>
+              <td class="td-muted cell-datetime">2026-02-10 14:30:00</td>
+              <td class="td-muted">방문 경로 안내 전송</td>
+            </tr>
+            <tr onclick="location.href='apply-forest-detail.html?id=5003'">
+              <td class="td-muted">1</td>
+              <td class="td-muted">FST-2026-00003</td>
+              <td style="font-weight:500">노원구청</td>
+              <td>박철호</td>
+              <td class="td-muted">02-1002-3002</td>
+              <td class="td-muted">2026-04-22</td>
+              <td class="td-muted cell-datetime">2026-03-05 11:15:00</td>
+              <td class="td-muted">참가 인원 재확인 요청</td>
+            </tr>
+            <!-- 데이터 없을 때: <tr><td colspan="8" class="td-empty">신청 내역이 없습니다.</td></tr> -->
+          </tbody>
         </table>
       </div>
 
@@ -133,141 +164,6 @@
   <script>
   'use strict';
   AdminSidebar.mount('apply-forest');
-
-  const ORGS_F    = ['도봉초등학교','서울시 북부장애인복지관','노원구청','강북구 주민센터','의정부 생태공원','인천 연수구청',
-                     '부산 금정구청','수원 영통구청','성남 분당도서관','고양 덕양구청','하남 복지관','파주 교육지원청',
-                     '광명 시청','시흥 환경센터','안산 바다여행학교','용인 처인구청','평택 시청','여주 교육청','이천 농촌체험센터','안양 만안구청'];
-  const CONTACTS_F = ['김민수','이영희','박철호','최순영','정혜진','윤대성','강미경','조현준','신태양','한지수'];
-  const PARTICIPANTS_F = ['초등 3학년 30명','유치원생 25명 (5세)','중학생 40명','성인 20명','노인 15명','장애인 10명','지역주민 50명','어린이집 영아 15명'];
-  const CONTENTS_F = [
-    '봄 숲 생태 탐방 프로그램을 희망합니다. 나무 이름 알기, 새소리 듣기 활동 포함 부탁드립니다.',
-    '장애 학생 대상 오감 자연 체험 프로그램을 신청합니다. 휠체어 접근 가능한 코스 필요합니다.',
-    '생태 환경 교육 연계 수업입니다. 탄소중립과 숲의 관계를 쉽게 설명해주시면 좋겠습니다.',
-    '지역 주민 환경 교육 행사입니다. 도심 속 숲 생태 해설 위주로 진행 부탁드립니다.',
-  ];
-
-  const ALL_DATA_F = Array.from({ length: 18 }, (_, i) => {
-    const mm  = String(((i % 3) + 1)).padStart(2, '0');
-    const dd  = String(((i % 22) + 1)).padStart(2, '0');
-    const vdd = String(((i % 28) + 5)).padStart(2, '0');
-    const hh  = String(((i * 2) % 8) + 9).padStart(2, '0');
-    const min = String((i * 13) % 60).padStart(2, '0');
-    const ss  = String((i * 19) % 60).padStart(2, '0');
-    return {
-      id:           5000 + i,
-      applyNo:      `FST-2026-${String(i + 1).padStart(5, '0')}`,
-      orgName:      ORGS_F[i % ORGS_F.length],
-      contactName:  CONTACTS_F[i % CONTACTS_F.length],
-      phone:        `0${(i % 2 === 0 ? '2' : '31')}-${String(1000 + i).padStart(4, '0')}-${String(3000 + i).padStart(4, '0')}`,
-      email:        i % 4 !== 0 ? `contact${5000 + i}@example.com` : '',
-      visitDate:    `2026-0${(i % 3) + 2}-${vdd}`,
-      participants: PARTICIPANTS_F[i % PARTICIPANTS_F.length],
-      content:      CONTENTS_F[i % CONTENTS_F.length],
-      applyDate:    `2026-${mm}-${dd}`,
-      applyDatetime:`2026-${mm}-${dd} ${hh}:${min}:${ss}`,
-      adminMemo:    ['','방문 경로 안내 전송','','','참가 인원 재확인 요청','','강사 매칭 검토 중','','','이메일 회신 대기','',''][i % 12],
-    };
-  });
-
-  const ForestApply = {
-    _data:     ALL_DATA_F,
-    _filtered: [...ALL_DATA_F],
-    _page:     1,
-    _pageSize: 10,
-
-    search() {
-      const dateFrom  = document.getElementById('filterDateFrom')?.value  || '';
-      const dateTo    = document.getElementById('filterDateTo')?.value    || '';
-      const visitFrom = document.getElementById('filterVisitFrom')?.value || '';
-      const visitTo   = document.getElementById('filterVisitTo')?.value   || '';
-      const kwType    = document.getElementById('filterSearchType')?.value || 'all';
-      const keyword   = (document.getElementById('filterKeyword')?.value  || '').trim().toLowerCase();
-
-      this._filtered = this._data.filter(d => {
-        if (dateFrom  && d.applyDate  < dateFrom)  return false;
-        if (dateTo    && d.applyDate  > dateTo)    return false;
-        if (visitFrom && d.visitDate  < visitFrom) return false;
-        if (visitTo   && d.visitDate  > visitTo)   return false;
-        if (keyword) {
-          const m = { orgName: d.orgName, contactName: d.contactName, phone: d.phone };
-          if (kwType !== 'all') return m[kwType]?.toLowerCase().includes(keyword);
-          return Object.values(m).some(v => v.toLowerCase().includes(keyword));
-        }
-        return true;
-      });
-      this._page = 1;
-      this.render();
-    },
-
-    setDatePreset(range) {
-      const to = new Date(), from = new Date();
-      if (range !== 'today') from.setDate(from.getDate() - range);
-      const fmt = d => d.toISOString().split('T')[0];
-      document.getElementById('filterDateFrom').value = fmt(from);
-      document.getElementById('filterDateTo').value   = fmt(to);
-      this.search();
-    },
-
-    reset() {
-      ['filterDateFrom','filterDateTo','filterVisitFrom','filterVisitTo','filterKeyword'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-      });
-      document.getElementById('filterSearchType').value = 'all';
-      this._filtered = [...this._data];
-      this._page = 1;
-      this.render();
-    },
-
-    changePageSize(size) { this._pageSize = size; this._page = 1; this.render(); },
-
-    render() {
-      const total = this._filtered.length;
-      const start = (this._page - 1) * this._pageSize;
-      const slice = this._filtered.slice(start, start + this._pageSize);
-
-      const countEl = document.getElementById('applyCount');
-      if (countEl) countEl.textContent = total.toLocaleString();
-
-      const tbody = document.getElementById('applyTableBody');
-      if (!tbody) return;
-
-      if (!slice.length) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:#8a9e84">검색 결과가 없습니다.</td></tr>`;
-        App.renderPagination('applyPagination', 1, 1, () => {});
-        return;
-      }
-
-      tbody.innerHTML = slice.map((d, i) => {
-        const seq = total - start - i;
-        const memo = d.adminMemo || '';
-        const memoCell = memo
-          ? `<span style="font-size:12px;color:#5a7a5a">${memo.length > 10 ? memo.slice(0, 10) + '…' : memo}</span>`
-          : `<span style="color:#ccc;font-size:12px">—</span>`;
-        return `<tr onclick="location.href='apply-forest-detail.html?id=${d.id}'">
-          <td style="text-align:center">${seq}</td>
-          <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">${d.applyNo}</td>
-          <td style="font-weight:600">${d.orgName}</td>
-          <td style="text-align:center">${d.contactName}</td>
-          <td style="text-align:center;font-size:13px" class="cell-datetime">${d.phone}</td>
-          <td style="text-align:center;font-size:13px;color:#2e5c2e;font-weight:600">${d.visitDate}</td>
-          <td style="text-align:center;font-size:13px" class="cell-datetime">${d.applyDatetime}</td>
-          <td style="text-align:center">${memoCell}</td>
-        </tr>`;
-      }).join('');
-
-      App.renderPagination(
-        'applyPagination', this._page,
-        Math.ceil(total / this._pageSize) || 1,
-        p => { this._page = p; this.render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-      );
-    },
-
-    // TODO: AJAX — window.location.href = ADMIN_API.applyForest + '/export?' + new URLSearchParams(currentFilter);
-    exportExcel() { App.toast('숲해설신청 목록 엑셀 다운로드를 시작합니다.', 'info'); },
-  };
-
-  ForestApply.render();
   </script>
 </body>
 </html>

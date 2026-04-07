@@ -234,7 +234,212 @@
       </div>
 
       <div id="detailWrap">
-        <div style="text-align:center;padding:60px;color:var(--gray-mid)">회원 정보를 불러오는 중입니다...</div>
+        <div style="display:flex;flex-direction:column;gap:0">
+
+          <!-- ① 관리 설정 — 컴팩트 요약 바 -->
+          <div class="admin-summary-bar">
+            <span class="asb-label">관리자 전용</span>
+            <div class="asb-item">
+              <span class="asb-key">회원 구분</span>
+              <span class="badge badge-green" style="font-size:11px">정회원</span>
+            </div>
+            <div class="asb-item">
+              <span class="asb-key">회원 상태</span>
+              <span class="badge badge-green" style="font-size:11px">정상</span>
+            </div>
+            <div class="asb-spacer"></div>
+            <span class="asb-joindate">가입일: 2026-03-15</span>
+          </div>
+
+          <!-- ② 본인인증 기반 정보 -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">본인인증 기반 정보</span>
+              <span class="badge-readonly">본인인증 확인 항목</span>
+              <span class="info-tag">사용자는 임의 수정 불가(추가 인증 필요) | 관리자 임의 수정 가능</span>
+            </div>
+            <div class="card-body">
+              <div class="detail-grid col4">
+                <div class="form-group">
+                  <label class="form-label">이름</label>
+                  <div class="detail-value">김숲해설</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">성별</label>
+                  <div class="detail-value">여성</div>
+                </div>
+                <div class="form-group span2">
+                  <label class="form-label">생년월일</label>
+                  <div class="detail-value">1985년 4월 12일</div>
+                </div>
+                <div class="form-group span2">
+                  <label class="form-label">휴대폰 번호</label>
+                  <div class="detail-value">010-1234-5678</div>
+                  <div style="font-size:11px;color:var(--gray-mid);margin-top:3px">본인인증으로 확인된 번호</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ③ 계정·연락처 정보 -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">계정 · 연락처 정보</span>
+            </div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:18px">
+
+              <!-- 아이디 + 이메일 -->
+              <div class="detail-grid">
+                <div class="form-group">
+                  <label class="form-label">아이디 <span style="font-size:11px;color:var(--gray-mid);margin-left:4px">(변경 불가)</span></label>
+                  <div class="detail-value" style="color:var(--gray-mid)">forest001</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">이메일</label>
+                  <div class="detail-value">forest001@foresto.or.kr</div>
+                </div>
+              </div>
+
+              <!-- 비밀번호 임시 발송 -->
+              <div class="form-group">
+                <label class="form-label">비밀번호 관리</label>
+                <div style="display:flex;align-items:center;gap:10px;margin-top:2px">
+                  <div class="detail-value" style="letter-spacing:2px;color:var(--gray-mid)">●●●●●●●●</div>
+                  <button class="btn btn-outline btn-sm" onclick="MemberDetail.sendTempPw()">임시 비밀번호 발송</button>
+                  <span style="font-size:12px;color:var(--gray-mid)">등록된 이메일로 임시 비밀번호가 발송됩니다</span>
+                </div>
+              </div>
+
+              <!-- 주소 -->
+              <div class="form-group">
+                <label class="form-label">주소</label>
+                <div class="detail-value" style="color:var(--gray-mid);font-size:13px;margin-top:2px">[01234]</div>
+                <div class="detail-value" style="font-size:13px">서울특별시 도봉구 방학동 123-45</div>
+              </div>
+
+              <!-- 직업 + 가입경로 -->
+              <div class="detail-grid">
+                <div class="form-group">
+                  <label class="form-label">직업</label>
+                  <div class="detail-value">환경교육강사</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">가입경로</label>
+                  <div class="detail-value">홈페이지</div>
+                </div>
+              </div>
+
+              <!-- 선택약관동의내역 -->
+              <div class="form-group">
+                <label class="form-label">선택약관 동의 내역</label>
+                <div style="border:1px solid var(--gray-light);border-radius:var(--radius);margin-top:4px;max-width:480px">
+                  <div class="terms-row" style="padding:9px 14px">
+                    <span class="terms-name">마케팅 수신 동의</span>
+                    <div class="terms-state">
+                      <span class="badge badge-green" style="font-size:11px">동의</span>
+                      <span class="terms-date">최종 저장: 2026-03-15 14:32</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="font-size:11px;color:var(--gray-mid);margin-top:4px">* 약관 항목은 실제 구현 시 약관 관리와 연동됩니다.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ④ 교육 신청 내역 -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">교육 신청 내역</span>
+              <span class="info-tag">1건 (최신순)</span>
+            </div>
+            <div id="appsSection">
+              <div class="table-wrap" style="margin:0">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th style="width:44px" class="center">NO</th>
+                      <th style="width:150px" class="center">신청일시</th>
+                      <th style="width:90px" class="center">강좌 구분</th>
+                      <th>강좌명</th>
+                      <th style="width:110px" class="center">교육일자(시작)</th>
+                      <th style="width:80px" class="center">상태</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="center" style="color:var(--gray-mid);font-size:12px">1</td>
+                      <td class="center" style="font-size:12px;color:var(--gray-mid)">2026-04-01 09:00:00</td>
+                      <td class="center"><span class="badge badge-gray" style="font-size:11px">전문과정</span></td>
+                      <td style="font-size:13px;font-weight:500">제55기 숲해설가 전문가과정</td>
+                      <td class="center" style="font-size:12px;color:var(--gray-mid)">2026-04-01</td>
+                      <td class="center"><span class="badge badge-blue" style="font-size:11px">신청완료</span></td>
+                    </tr>
+                    <!-- 데이터 없을 때: <tr><td colspan="6" class="td-empty">신청 내역이 없습니다.</td></tr> -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑤ 활동 정보 (소속) -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">활동 정보 (소속)</span>
+              <span class="info-tag">1건</span>
+            </div>
+            <div>
+              <div class="table-wrap" style="margin:0">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th style="width:52px" class="center">번호</th>
+                      <th>소속명</th>
+                      <th style="width:130px" class="center">소속 유형</th>
+                      <th style="width:120px" class="center">가입일</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="center" style="color:var(--gray-mid);font-size:13px">1</td>
+                      <td style="font-weight:500;font-size:13px">숲사랑동아리</td>
+                      <td class="center">
+                        <span class="badge badge-blue" style="font-size:11px">동아리</span>
+                      </td>
+                      <td class="center" style="font-size:12px;color:var(--gray-mid)">2025-03-01</td>
+                    </tr>
+                    <!-- 데이터 없을 때: <tr><td colspan="4" class="td-empty">소속 정보가 없습니다.</td></tr> -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑥ 관리자 메모 -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">관리자 메모</span>
+              <span class="badge-admin-only">회원 미노출</span>
+            </div>
+            <div class="card-body">
+              <textarea class="form-control" id="fMemo" rows="4"
+                placeholder="내부 메모 (회원에게 노출되지 않습니다)"
+                style="font-size:13px;resize:vertical"></textarea>
+              <div class="memo-footer">
+                <button class="btn btn-outline btn-sm" onclick="MemberDetail.saveMemo()">메모 저장</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑦ 하단 액션 바 -->
+          <div class="detail-bottom-bar">
+            <button class="btn btn-danger btn-sm" onclick="MemberDetail.openWithdrawModal()">탈퇴 처리</button>
+            <div class="bar-right">
+              <button class="btn btn-gray btn-sm" onclick="history.back()">목록으로</button>
+              <button class="btn btn-primary btn-sm" onclick="MemberDetail.goEdit()">수정</button>
+            </div>
+          </div>
+
+        </div>
       </div>
     </main>
   </div>
@@ -269,370 +474,14 @@
   <script src="../assets/js/pages/admin.js"></script>
   <script>
     AdminSidebar.mount('members');
-    /* ── 샘플 상수 */
-    const JOBS = ['직장인','자영업자','공무원·교원','전문직','학생','주부','은퇴·퇴직','기타'];
-    const JOIN_PATHS = ['지인 소개','검색 (네이버/구글)','SNS (인스타그램/페이스북)','협회 홍보물','카페·블로그','기타'];
-    const ADDRS = [
-      { zip:'03000', addr1:'서울특별시 종로구 세종대로 110' },
-      { zip:'06141', addr1:'서울특별시 강남구 테헤란로 512' },
-      { zip:'14556', addr1:'경기도 부천시 원미구 부흥로 1' },
-      { zip:'48058', addr1:'부산광역시 해운대구 해운대해변로 264' },
-      { zip:'61466', addr1:'광주광역시 동구 금남로 1가' },
-    ];
-    const SAMPLE_COURSES = [
-      { name:'55기 숲해설가 전문가과정', type:'전문과정', startDate:'2026-04-01' },
-      { name:'시민아카데미 봄 숲 이야기', type:'기초과정', startDate:'2026-03-10' },
-      { name:'역량강화 교육 — 심화과정', type:'전문과정', startDate:'2026-02-15' },
-      { name:'54기 숲해설가 전문가과정', type:'전문과정', startDate:'2025-10-01' },
-    ];
-    const COURSE_STATUSES = ['신청','취소','수료','미수료'];
-    const AFFIL_CLUBS   = ['초록숲 동아리','봄내음 동아리','산들바람 동아리','생태탐험대'];
-    const AFFIL_SAGONG  = ['서울 사공단','경기 사공단','부산 사공단'];
-    const GRADES = [
-      { key:'fullMember', label:'정회원'   },
-      { key:'member',     label:'일반회원' },
-      { key:'member',     label:'일반회원' },
-      { key:'fullMember', label:'정회원'   },
-      { key:'member',     label:'일반회원' },
-    ];
-
-    /* ── 회원 샘플 데이터 */
-    const ALL_MEMBERS = Array.from({ length: 50 }, (_, i) => {
-      const g   = GRADES[i % 5];
-      const mm  = String((i % 9) + 1).padStart(2,'0');
-      const dd  = String((i % 20) + 1).padStart(2,'0');
-      const mDay  = String((i % 20) + 1).padStart(2,'0');
-      const mHour = String((i % 12) + 8).padStart(2,'0');
-      const mMin  = String((i * 7) % 60).padStart(2,'0');
-      const mSec  = String((i * 13) % 60).padStart(2,'0');
-      const hasMarketing = i % 3 === 0;
-      const appCount = i % 4;
-      const apps = Array.from({ length: appCount }, (_, j) => ({
-        course:    SAMPLE_COURSES[(i + j) % SAMPLE_COURSES.length].name,
-        type:      SAMPLE_COURSES[(i + j) % SAMPLE_COURSES.length].type,
-        startDate: SAMPLE_COURSES[(i + j) % SAMPLE_COURSES.length].startDate,
-        applyDate: `2026-${mm}-${String(((i * 3 + j * 7 + 5) % 20) + 1).padStart(2,'0')} ${mHour}:${mMin}:${mSec}`,
-        status:    COURSE_STATUSES[(i + j) % 4],
-      }));
-      const affilCount = i % 3;
-      const affils = Array.from({ length: affilCount }, (_, j) => ({
-        type:     j % 2 === 0 ? '동아리' : '사회공헌사업단',
-        name:     j % 2 === 0
-          ? AFFIL_CLUBS[j % AFFIL_CLUBS.length]
-          : AFFIL_SAGONG[j % AFFIL_SAGONG.length],
-        joinDate: `2025-${String((j % 9) + 1).padStart(2,'0')}-${String((j * 5 + 1) % 28 + 1).padStart(2,'0')}`,
-      }));
-
-      return {
-        id:          50 - i,
-        userId:      `forest${String(50 - i).padStart(3,'0')}`,
-        name:        ['김숲해','이정회','박초록','최나무','정바람','한생태','윤들판','임해설','조산림','강자연'][i % 10],
-        gender:      i % 2 === 0 ? 'm' : 'f',
-        birthY:      String(1970 + (i % 30)),
-        birthM:      String((i % 12) + 1).padStart(2,'0'),
-        birthD:      String((i % 28) + 1).padStart(2,'0'),
-        phone:       `010-${String(1000 + i).padStart(4,'0')}-${String(5000 + i).padStart(4,'0')}`,
-        email:       `user${50 - i}@example.com`,
-        zip:         ADDRS[i % 5].zip,
-        addr1:       ADDRS[i % 5].addr1,
-        addr2:       `${(i + 1) * 100}호`,
-        overseas:    i % 10 === 0,
-        job:         JOBS[i % 8],
-        joinPath:    JOIN_PATHS[i % 6],
-        grade:       g.key,
-        gradeLabel:  g.label,
-        joinDate:    `2026-${mm}-${dd}`,
-        status:      i % 7 === 0 ? 'blocked' : 'active',
-        marketing:   hasMarketing,
-        marketingAt: hasMarketing ? `2026-${mm}-${mDay} ${mHour}:${mMin}` : null,
-        memo:        i % 4 === 0 ? '정회원 전환 요청 확인 완료' : '',
-        apps,
-        affils,
-      };
-    });
-
-    const GRADE_BADGE = { fullMember:'badge-green', member:'badge-blue', admin:'badge-red' };
 
     const MemberDetail = {
-      _m: null,
-      _appsPage: 1,
-      _appsPageSize: 5,
-
-      init() {
-        const id = Number(App.getParam('id'));
-        const m  = ALL_MEMBERS.find(x => x.id === id);
-        if (!m) {
-          document.getElementById('detailWrap').innerHTML =
-            `<div style="text-align:center;padding:60px;color:var(--gray-mid)">해당 회원을 찾을 수 없습니다.</div>`;
-          return;
-        }
-        this._m = m;
-        document.getElementById('pageTitle').textContent = `회원 상세 — ${m.name}`;
-
-        document.getElementById('detailWrap').innerHTML = `
-          <div style="display:flex;flex-direction:column;gap:0">
-
-            <!-- ① 관리 설정 — 컴팩트 요약 바 -->
-            <div class="admin-summary-bar">
-              <span class="asb-label">관리자 전용</span>
-              <div class="asb-item">
-                <span class="asb-key">회원 구분</span>
-                <span class="badge ${GRADE_BADGE[m.grade]||'badge-gray'}" style="font-size:11px">${m.gradeLabel}</span>
-              </div>
-              <div class="asb-item">
-                <span class="asb-key">회원 상태</span>
-                <span class="badge ${m.status==='active' ? 'badge-green' : 'badge-red'}" style="font-size:11px">
-                  ${m.status==='active' ? '정상' : '차단'}
-                </span>
-                ${m.status==='blocked' ? '<span style="font-size:11px;color:var(--danger);margin-left:4px">로그인 불가</span>' : ''}
-              </div>
-              <div class="asb-spacer"></div>
-              <span class="asb-joindate">가입일: ${m.joinDate}</span>
-            </div>
-
-            <!-- ② 본인인증 기반 정보 -->
-            <div class="card">
-              <div class="card-header">
-                <span class="card-title">본인인증 기반 정보</span>
-                <span class="badge-readonly">본인인증 확인 항목</span>
-                <span class="info-tag">사용자는 임의 수정 불가(추가 인증 필요) | 관리자 임의 수정 가능</span>
-              </div>
-              <div class="card-body">
-                <div class="detail-grid col4">
-                  <div class="form-group">
-                    <label class="form-label">이름</label>
-                    <div class="detail-value">${m.name}</div>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">성별</label>
-                    <div class="detail-value">${m.gender === 'm' ? '남성' : '여성'}</div>
-                  </div>
-                  <div class="form-group span2">
-                    <label class="form-label">생년월일</label>
-                    <div class="detail-value">${m.birthY}년 ${Number(m.birthM)}월 ${Number(m.birthD)}일</div>
-                  </div>
-                  <div class="form-group span2">
-                    <label class="form-label">휴대폰 번호</label>
-                    <div class="detail-value">${m.phone}</div>
-                    <div style="font-size:11px;color:var(--gray-mid);margin-top:3px">본인인증으로 확인된 번호</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ③ 계정·연락처 정보 -->
-            <div class="card">
-              <div class="card-header">
-                <span class="card-title">계정 · 연락처 정보</span>
-              </div>
-              <div class="card-body" style="display:flex;flex-direction:column;gap:18px">
-
-                <!-- 아이디 + 이메일 -->
-                <div class="detail-grid">
-                  <div class="form-group">
-                    <label class="form-label">아이디 <span style="font-size:11px;color:var(--gray-mid);margin-left:4px">(변경 불가)</span></label>
-                    <div class="detail-value" style="color:var(--gray-mid)">${m.userId}</div>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">이메일</label>
-                    <div class="detail-value">${m.email}</div>
-                  </div>
-                </div>
-
-                <!-- 비밀번호 임시 발송 -->
-                <div class="form-group">
-                  <label class="form-label">비밀번호 관리</label>
-                  <div style="display:flex;align-items:center;gap:10px;margin-top:2px">
-                    <div class="detail-value" style="letter-spacing:2px;color:var(--gray-mid)">●●●●●●●●</div>
-                    <button class="btn btn-outline btn-sm" onclick="MemberDetail.sendTempPw()">임시 비밀번호 발송</button>
-                    <span style="font-size:12px;color:var(--gray-mid)">등록된 이메일로 임시 비밀번호가 발송됩니다</span>
-                  </div>
-                </div>
-
-                <!-- 주소 -->
-                <div class="form-group">
-                  <label class="form-label">주소</label>
-                  <div class="detail-value" style="color:var(--gray-mid);font-size:13px;margin-top:2px">
-                    ${m.overseas ? '[해외 거주]' : '[' + m.zip + ']'}
-                  </div>
-                  <div class="detail-value" style="font-size:13px">${m.addr1}</div>
-                  ${m.addr2 ? `<div class="detail-value" style="font-size:13px">${m.addr2}</div>` : ''}
-                  ${m.overseas ? '<div style="font-size:11px;color:var(--gray-mid);margin-top:3px">해외 거주 회원</div>' : ''}
-                </div>
-
-                <!-- 직업 + 가입경로 -->
-                <div class="detail-grid">
-                  <div class="form-group">
-                    <label class="form-label">직업</label>
-                    <div class="detail-value">${m.job}</div>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">가입경로</label>
-                    <div class="detail-value">${m.joinPath}</div>
-                  </div>
-                </div>
-
-                <!-- 선택약관동의내역 -->
-                <div class="form-group">
-                  <label class="form-label">선택약관 동의 내역</label>
-                  <div style="border:1px solid var(--gray-light);border-radius:var(--radius);margin-top:4px;max-width:480px">
-                    <div class="terms-row" style="padding:9px 14px">
-                      <span class="terms-name">마케팅 수신 동의</span>
-                      <div class="terms-state">
-                        <span class="badge ${m.marketing ? 'badge-green' : 'badge-gray'}" style="font-size:11px">
-                          ${m.marketing ? '동의' : '미동의'}
-                        </span>
-                        <span class="terms-date">
-                          ${m.marketingAt ? `최종 저장: ${m.marketingAt}` : '동의 이력 없음'}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div style="font-size:11px;color:var(--gray-mid);margin-top:4px">* 약관 항목은 실제 구현 시 약관 관리와 연동됩니다.</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ④ 교육 신청 내역 -->
-            <div class="card">
-              <div class="card-header">
-                <span class="card-title">교육 신청 내역</span>
-                <span class="info-tag">${m.apps.length}건 (최신순)</span>
-              </div>
-              <div id="appsSection">
-                ${this._renderApps(m.apps)}
-              </div>
-            </div>
-
-            <!-- ⑤ 활동 정보 (소속) -->
-            <div class="card">
-              <div class="card-header">
-                <span class="card-title">활동 정보 (소속)</span>
-                <span class="info-tag">${m.affils.length}건</span>
-              </div>
-              <div>
-                ${m.affils.length ? `
-                  <div class="table-wrap" style="margin:0">
-                    <table class="admin-table">
-                      <thead>
-                        <tr>
-                          <th style="width:52px" class="center">번호</th>
-                          <th>소속명</th>
-                          <th style="width:130px" class="center">소속 유형</th>
-                          <th style="width:120px" class="center">가입일</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        ${m.affils.map((a, idx) => `
-                          <tr>
-                            <td class="center" style="color:var(--gray-mid);font-size:13px">${idx + 1}</td>
-                            <td style="font-weight:500;font-size:13px">${a.name}</td>
-                            <td class="center">
-                              <span class="badge ${a.type === '동아리' ? 'badge-blue' : 'badge-green'}" style="font-size:11px">
-                                ${a.type}
-                              </span>
-                            </td>
-                            <td class="center" style="font-size:12px;color:var(--gray-mid)">${a.joinDate}</td>
-                          </tr>`).join('')}
-                      </tbody>
-                    </table>
-                  </div>` : '<div class="affil-empty">소속 정보가 없습니다.</div>'}
-              </div>
-            </div>
-
-            <!-- ⑥ 관리자 메모 -->
-            <div class="card">
-              <div class="card-header">
-                <span class="card-title">관리자 메모</span>
-                <span class="badge-admin-only">회원 미노출</span>
-              </div>
-              <div class="card-body">
-                <textarea class="form-control" id="fMemo" rows="4"
-                  placeholder="내부 메모 (회원에게 노출되지 않습니다)"
-                  style="font-size:13px;resize:vertical">${m.memo}</textarea>
-                <div class="memo-footer">
-                  <button class="btn btn-outline btn-sm" onclick="MemberDetail.saveMemo()">메모 저장</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- ⑦ 하단 액션 바 -->
-            <div class="detail-bottom-bar">
-              <button class="btn btn-danger btn-sm" onclick="MemberDetail.openWithdrawModal()">탈퇴 처리</button>
-              <div class="bar-right">
-                <button class="btn btn-gray btn-sm" onclick="history.back()">목록으로</button>
-                <button class="btn btn-primary btn-sm" onclick="MemberDetail.goEdit()">수정</button>
-              </div>
-            </div>
-
-          </div>`;
-
-      },
-
-      _renderApps(apps) {
-        const total   = apps.length;
-        const pSize   = this._appsPageSize;
-        const page    = this._appsPage;
-        const totalPg = Math.ceil(total / pSize) || 1;
-        const slice   = apps.slice((page - 1) * pSize, page * pSize);
-
-        const STATUS_BADGE = { '신청':'badge-blue', '수료':'badge-green', '취소':'badge-red', '미수료':'badge-gray' };
-
-        const tableHtml = total ? `
-          <div class="table-wrap" style="margin:0">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th style="width:44px" class="center">NO</th>
-                  <th style="width:150px" class="center">신청일시</th>
-                  <th style="width:90px" class="center">강좌 구분</th>
-                  <th>강좌명</th>
-                  <th style="width:110px" class="center">교육일자(시작)</th>
-                  <th style="width:80px" class="center">상태</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${slice.map((a, idx) => `
-                  <tr>
-                    <td class="center" style="color:var(--gray-mid);font-size:12px">${(page-1)*pSize + idx + 1}</td>
-                    <td class="center" style="font-size:12px;color:var(--gray-mid)">${a.applyDate}</td>
-                    <td class="center"><span class="badge badge-gray" style="font-size:11px">${a.type}</span></td>
-                    <td style="font-size:13px;font-weight:500">${a.course}</td>
-                    <td class="center" style="font-size:12px;color:var(--gray-mid)">${a.startDate}</td>
-                    <td class="center">
-                      <span class="badge ${STATUS_BADGE[a.status]||'badge-gray'}" style="font-size:11px">${a.status}</span>
-                    </td>
-                  </tr>`).join('')}
-              </tbody>
-            </table>
-          </div>` :
-          `<p style="padding:20px;text-align:center;color:var(--gray-mid);font-size:13px">신청 내역이 없습니다.</p>`;
-
-        const paginHtml = totalPg > 1 ? `
-          <div class="mini-pagination">
-            ${Array.from({length: totalPg}, (_, k) => k + 1).map(p => `
-              <button class="${p === page ? 'active' : ''}"
-                onclick="MemberDetail._appsPage=${p};MemberDetail._reRenderApps()">${p}</button>
-            `).join('')}
-          </div>` : '';
-
-        return tableHtml + paginHtml;
-      },
-
-      _reRenderApps() {
-        const sec = document.getElementById('appsSection');
-        if (sec && this._m) sec.innerHTML = this._renderApps(this._m.apps);
-      },
-
       saveMemo() {
-        const memo = document.getElementById('fMemo')?.value || '';
         App.toast('메모가 저장되었습니다.', 'success');
       },
 
       sendTempPw() {
-        const email = this._m?.email;
-        if (!email) return;
-        App.toast(`${email}으로 임시 비밀번호를 발송하였습니다. (실제 구현 시 서버 API 연동)`, 'success');
+        App.toast('forest001@foresto.or.kr으로 임시 비밀번호를 발송하였습니다. (실제 구현 시 서버 API 연동)', 'success');
       },
 
       openWithdrawModal() {
@@ -650,7 +499,6 @@
       },
 
       withdraw() {
-        if (!this._m) return;
         const reason = document.getElementById('fWithdrawReason')?.value.trim();
         if (!reason) {
           App.toast('탈퇴 사유를 입력해주세요.', 'warning');
@@ -658,18 +506,14 @@
           return;
         }
         this.closeWithdrawModal();
-        const name = this._m.name;
-        App.toast(`${name}님이 탈퇴 처리되었습니다. 탈퇴회원 목록에서 확인할 수 있습니다.`, 'success');
+        App.toast('김숲해설님이 탈퇴 처리되었습니다. 탈퇴회원 목록에서 확인할 수 있습니다.', 'success');
         setTimeout(() => location.href = 'members.html', 1500);
       },
 
       goEdit() {
-        const id = App.getParam('id');
-        location.href = `member-edit.html?id=${id}`;
+        location.href = 'member-edit.html?id=1';
       },
     };
-
-    MemberDetail.init();
 
     /* 모달 오버레이 클릭 시 닫기 */
     const _wModal = document.getElementById('withdrawModal');

@@ -53,7 +53,111 @@
         </div>
       </div>
 
-      <div class="admin-content" id="detailContent"></div>
+      <div class="admin-content" id="detailContent">
+
+        <!-- 카드1: 기본 정보 -->
+        <div class="form-card">
+          <div class="form-card-head">기본 정보</div>
+          <div class="form-row">
+            <div class="form-label">접수번호</div>
+            <div class="form-content">
+              <span class="detail-val mono" style="font-weight:700;color:#2e5c2e">INS-2026-00001</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">이름</div>
+            <div class="form-half">
+              <span class="detail-val" style="font-weight:600">김민준</span>
+            </div>
+            <div class="form-label">거주지역</div>
+            <div class="form-half">
+              <span class="detail-val">서울</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">연락처</div>
+            <div class="form-half">
+              <span class="detail-val mono">010-1234-5678</span>
+            </div>
+            <div class="form-label">이메일</div>
+            <div class="form-half">
+              <span class="detail-val">kim@example.com</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">생년월일</div>
+            <div class="form-content">
+              <span class="detail-val mono">1985-03-15</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">신청일시</div>
+            <div class="form-content">
+              <span class="detail-val mono">2026-01-10 09:07:00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 카드2: 활동 정보 -->
+        <div class="form-card">
+          <div class="form-card-head">활동 정보</div>
+          <div class="form-row">
+            <div class="form-label">신청 활동 일정</div>
+            <div class="form-content">
+              <span class="detail-val" style="color:#4a7c59">2026-03-15 토요일 오전 9시 — 도봉산</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">자격증</div>
+            <div class="form-content">
+              <span class="detail-val">산림청 숲해설가 자격증 보유</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">경력</div>
+            <div class="form-content">
+              <span class="detail-val">3년</span>
+            </div>
+          </div>
+          <div class="form-row" style="align-items:flex-start">
+            <div class="form-label" style="padding-top:14px">첨부파일</div>
+            <div class="form-content" style="align-items:flex-start;padding-top:12px;padding-bottom:12px">
+              <div class="file-list">
+                <div class="file-item">
+                  <span class="file-name-link" onclick="App.toast('PHP 연동 후 파일을 다운로드할 수 있습니다.', 'info')">자격증사본_김민준.pdf</span>
+                  <span class="file-size">241 KB</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">개인정보 동의</div>
+            <div class="form-content">
+              <span class="detail-val">동의함</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 카드3: 관리자 메모 -->
+        <div class="form-card">
+          <div class="form-card-head">관리자 메모</div>
+          <div style="padding:16px">
+            <textarea class="memo-textarea" id="adminMemo" placeholder="관리자 메모를 입력하세요. (신청자에게 표시되지 않습니다)"></textarea>
+          </div>
+          <div class="memo-footer">
+            <button class="btn btn-gray btn-sm" onclick="clearMemo()">초기화</button>
+            <button class="btn btn-primary btn-sm" onclick="saveMemo()">메모 저장</button>
+          </div>
+        </div>
+
+        <div class="detail-bottom-bar">
+          <div></div>
+          <div class="btn-group-right">
+            <button class="btn btn-gray btn-sm" onclick="history.back()">목록으로</button>
+          </div>
+        </div>
+
+      </div>
     </main>
   </div>
 
@@ -64,167 +168,8 @@
   'use strict';
   AdminSidebar.mount('apply-instructor');
 
-  const NAMES_I   = ['이초록','박나무','김하늘','최바람','정숲','윤생태','강자연','조청산','신이슬','한나비',
-                     '문솔잎','류햇살','백물결','안구름','송봄비','임꽃길','권들판','오숲속','황모래','노파도'];
-  const REGIONS_I = ['서울','경기','인천','부산','경기','서울','서울','인천','기타','경기'];
-  const DAYS_I    = [['월','수','금'],['무관'],['화','목'],['토','일'],['월','화','수','목','금'],
-                     ['무관'],['수','금'],['토'],['월','목'],['무관'],['월','화','목','금'],['일']];
-  const AREAS_I   = [
-    '서울 북부 지역 학교 연계 숲 생태 교육',
-    '경기 남부 유치원·어린이집 산림 체험 활동',
-    '인천·부천 지역 시민 대상 숲해설 프로그램',
-    '자연환경해설, 도시 공원 해설 위주',
-    '도봉·노원 산림 치유 프로그램, 생태 탐방',
-  ];
-  const COURSES_I = ['50기','52기','53기','51기','49기','48기','54기','47기','55기',''];
-
-  const ALL_DATA_I = Array.from({ length: 60 }, (_, i) => {
-    const mm  = String(((i % 3) + 1)).padStart(2, '0');
-    const dd  = String(((i % 25) + 1)).padStart(2, '0');
-    const hh  = String(((i * 2) % 10) + 9).padStart(2, '0');
-    const min = String((i * 11) % 60).padStart(2, '0');
-    const ss  = String((i * 17) % 60).padStart(2, '0');
-    return {
-      id:         5000 + i,
-      applyNo:    `INS-2026-${String(i + 1).padStart(5, '0')}`,
-      name:       NAMES_I[i % NAMES_I.length],
-      email:      `inst${4000 + i}@example.com`,
-      phone:      `010-${String(3000 + i).padStart(4, '0')}-${String(7000 + i).padStart(4, '0')}`,
-      region:     REGIONS_I[i % REGIONS_I.length],
-      days:       DAYS_I[i % DAYS_I.length],
-      area:       AREAS_I[i % AREAS_I.length],
-      course:     COURSES_I[i % COURSES_I.length],
-      note:       i % 3 === 0 ? '장애인 대상 프로그램 경험 있음' : '',
-      applyDatetime: `2026-${mm}-${dd} ${hh}:${min}:${ss}`,
-      files:      i % 3 === 2 ? [] : [{name:`자격증사본_${NAMES_I[i % NAMES_I.length]}.pdf`, size:`${130 + i * 11} KB`, ext:'pdf'}],
-    };
-  });
-
-  function _fileListHtml(files) {
-    if (!files || !files.length) return '<span class="detail-val muted">첨부된 파일 없음</span>';
-    return '<div class="file-list">' + files.map(f =>
-      `<div class="file-item">
-        <span class="file-name-link" onclick="downloadFile('${f.name}')">${f.name}</span>
-        <span class="file-size">${f.size}</span>
-      </div>`).join('') + '</div>';
-  }
-  function downloadFile(name) {
-    /* TODO: AJAX — fetch(ADMIN_API.base + '/files/download?name=' + encodeURIComponent(name)) */
-    App.toast('PHP 연동 후 파일을 다운로드할 수 있습니다.', 'info');
-  }
-
-  function renderDetail(d) {
-    document.getElementById('detailContent').innerHTML = `
-
-      <!-- 카드1: 기본 정보 -->
-      <div class="form-card">
-        <div class="form-card-head">기본 정보</div>
-        <div class="form-row">
-          <div class="form-label">접수번호</div>
-          <div class="form-content">
-            <span class="detail-val mono" style="font-weight:700;color:#2e5c2e">${d.applyNo}</span>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-label">이름</div>
-          <div class="form-half">
-            <span class="detail-val" style="font-weight:600">${d.name}</span>
-          </div>
-          <div class="form-label">거주지역</div>
-          <div class="form-half">
-            <span class="detail-val">${d.region}</span>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-label">연락처</div>
-          <div class="form-half">
-            <span class="detail-val mono">${d.phone}</span>
-          </div>
-          <div class="form-label">이메일</div>
-          <div class="form-half">
-            <span class="detail-val">${d.email}</span>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-label">신청일시</div>
-          <div class="form-content">
-            <span class="detail-val mono">${d.applyDatetime}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 카드2: 활동 정보 -->
-      <div class="form-card">
-        <div class="form-card-head">활동 정보</div>
-        <div class="form-row">
-          <div class="form-label">활동 가능 요일</div>
-          <div class="form-half" style="flex-wrap:wrap;gap:4px">
-            ${d.days.length
-              ? d.days.map(day => `<span style="display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;background:${day==='무관'?'#f5f5f5':'#e8f5e9'};color:${day==='무관'?'#888':'#2e7d32'};border:1px solid ${day==='무관'?'#e0e0e0':'#c8e6c9'}">${day}</span>`).join('')
-              : '<span class="detail-val muted">—</span>'}
-          </div>
-          <div class="form-label">전문가과정 수료</div>
-          <div class="form-half">
-            <span class="detail-val">${d.course ? d.course + ' 수료' : '—'}</span>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-label">활동 가능 지역/분야</div>
-          <div class="form-content">
-            <span class="detail-val long">${d.area || '—'}</span>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-label">기타 사항</div>
-          <div class="form-content">
-            <span class="detail-val">${d.note || '<span class="detail-val muted">없음</span>'}</span>
-          </div>
-        </div>
-        <div class="form-row" style="align-items:flex-start">
-          <div class="form-label" style="padding-top:14px">첨부파일</div>
-          <div class="form-content" style="align-items:flex-start;padding-top:12px;padding-bottom:12px">${_fileListHtml(d.files)}</div>
-        </div>
-        <div class="form-row">
-          <div class="form-label">개인정보 동의</div>
-          <div class="form-content">
-            <span class="detail-val">동의함</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 카드3: 관리자 메모 -->
-      <div class="form-card">
-        <div class="form-card-head">관리자 메모</div>
-        <div style="padding:16px">
-          <textarea class="memo-textarea" id="adminMemo" placeholder="관리자 메모를 입력하세요. (신청자에게 표시되지 않습니다)"></textarea>
-        </div>
-        <div class="memo-footer">
-          <button class="btn btn-gray btn-sm" onclick="clearMemo()">초기화</button>
-          <button class="btn btn-primary btn-sm" onclick="saveMemo(${d.id})">메모 저장</button>
-        </div>
-      </div>
-
-      <div class="detail-bottom-bar">
-        <div></div>
-        <div class="btn-group-right">
-          <button class="btn btn-gray btn-sm" onclick="history.back()">목록으로</button>
-        </div>
-      </div>`;
-  }
-
-  function saveMemo(id) { App.toast('관리자 메모가 저장되었습니다.', 'success'); }
-  function clearMemo()  { const el = document.getElementById('adminMemo'); if (el) el.value = ''; }
-
-  (function init() {
-    const id = Number(new URLSearchParams(location.search).get('id'));
-    const d  = ALL_DATA_I.find(x => x.id === id);
-    if (!d) {
-      document.getElementById('detailContent').innerHTML =
-        `<div style="padding:60px;text-align:center;color:#aabba4">신청 정보를 찾을 수 없습니다. (id: ${id || '미지정'})</div>`;
-      return;
-    }
-    renderDetail(d);
-  })();
+  function saveMemo() { App.toast('관리자 메모가 저장되었습니다.', 'success'); }
+  function clearMemo() { const el = document.getElementById('adminMemo'); if (el) el.value = ''; }
   </script>
 </body>
 </html>

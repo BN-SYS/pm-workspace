@@ -12,7 +12,6 @@
   <link rel="stylesheet" href="../assets/css/list-common.css">
   <link rel="stylesheet" href="../assets/css/pages/admin.css">
   <style>
-    /* 체크박스 컬럼 — table-layout:fixed 오버라이드 */
     .admin-table th.col-chk,
     .admin-table td.col-chk {
       width: 3%;
@@ -43,11 +42,9 @@
         </div>
       </div>
 
-      <!-- ① 검색 필터 -->
+      <!-- 검색 필터 -->
       <div class="filter-card">
         <div class="filter-body">
-
-          <!-- 행 1: 가입기간 -->
           <div class="filter-row">
             <span class="filter-label">가입기간</span>
             <div class="filter-content">
@@ -57,22 +54,20 @@
                 <input type="date" id="filterDateTo">
               </div>
               <div class="date-preset-group">
-                <button class="date-preset-btn" onclick="Members.setDatePreset('today')">오늘</button>
-                <button class="date-preset-btn" onclick="Members.setDatePreset(7)">7일</button>
-                <button class="date-preset-btn" onclick="Members.setDatePreset(30)">30일</button>
-                <button class="date-preset-btn" onclick="Members.setDatePreset(90)">3개월</button>
-                <button class="date-preset-btn" onclick="Members.setDatePreset(180)">6개월</button>
+                <button class="date-preset-btn">오늘</button>
+                <button class="date-preset-btn">7일</button>
+                <button class="date-preset-btn">30일</button>
+                <button class="date-preset-btn">3개월</button>
+                <button class="date-preset-btn">6개월</button>
               </div>
             </div>
           </div>
-
-          <!-- 행 2: 등급 + 상태 (정확히 50/50) -->
           <div class="filter-row">
             <div class="filter-half">
               <span class="filter-label">등급</span>
               <div class="filter-content">
                 <div class="chip-group">
-                  <label class="chip"><input type="radio" name="filterGrade" value=""><span>전체</span></label>
+                  <label class="chip"><input type="radio" name="filterGrade" value="" checked><span>전체</span></label>
                   <label class="chip"><input type="radio" name="filterGrade" value="member"><span>일반회원</span></label>
                   <label class="chip"><input type="radio" name="filterGrade" value="fullMember"><span>정회원</span></label>
                   <label class="chip"><input type="radio" name="filterGrade" value="admin"><span>관리자</span></label>
@@ -83,15 +78,13 @@
               <span class="filter-label">상태</span>
               <div class="filter-content">
                 <div class="chip-group">
-                  <label class="chip"><input type="radio" name="filterStatus" value=""><span>전체</span></label>
+                  <label class="chip"><input type="radio" name="filterStatus" value="" checked><span>전체</span></label>
                   <label class="chip"><input type="radio" name="filterStatus" value="active"><span>정상</span></label>
                   <label class="chip"><input type="radio" name="filterStatus" value="blocked"><span>차단</span></label>
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- 행 4: 검색어 (입력창 우측 끝까지 채움) -->
           <div class="filter-row">
             <span class="filter-label">검색어</span>
             <div class="filter-content">
@@ -104,45 +97,36 @@
                   <option value="email">이메일</option>
                 </select>
                 <div class="kw-input-wrap">
-                  <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요"
-                    onkeydown="if(event.key==='Enter') MemberAdmin.search()">
+                  <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요">
                 </div>
               </div>
             </div>
           </div>
-
         </div>
-
-        <!-- 액션 푸터 -->
         <div class="filter-footer">
-          <button class="btn btn-outline btn-sm" onclick="MemberAdmin.exportExcel()">엑셀 다운로드</button>
-          <button class="btn btn-gray btn-sm" onclick="MemberAdmin.resetFilter()">초기화</button>
-          <button class="btn btn-primary btn-sm" onclick="MemberAdmin.search()">검색</button>
+          <button class="btn btn-outline btn-sm" onclick="App.toast('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info')">엑셀 다운로드</button>
+          <button class="btn btn-gray btn-sm">초기화</button>
+          <button class="btn btn-primary btn-sm">검색</button>
         </div>
       </div>
 
-      <!-- ② 목록 상단 -->
+      <!-- 목록 상단 -->
       <div class="list-top">
-        <div class="list-count">총 <strong id="memberCount">0</strong>건</div>
-        <select class="form-control" id="pageSizeSelect" onchange="MemberAdmin.changePageSize(+this.value)"
-          style="width:130px;height:36px;font-size:13px">
-          <option value="10">10개씩 보기</option>
-          <option value="30">30개씩 보기</option>
-          <option value="50">50개씩 보기</option>
-          <option value="100">100개씩 보기</option>
+        <div class="list-count">총 <strong>3</strong>건</div>
+        <select class="form-control" style="width:130px;height:36px;font-size:13px">
+          <option>10개씩 보기</option>
+          <option>30개씩 보기</option>
+          <option>50개씩 보기</option>
+          <option>100개씩 보기</option>
         </select>
       </div>
 
-      <!-- ③ 테이블 -->
+      <!-- 테이블 -->
       <div class="table-wrap">
         <table class="admin-table">
           <thead>
             <tr>
-              <!-- col-chk: 3% (CSS에서 정의) -->
-              <th class="col-chk">
-                <input type="checkbox" id="chkAll" onchange="MemberAdmin.toggleAll(this.checked)" title="전체 선택/해제">
-              </th>
-              <!-- 이름 width 미지정으로 나머지 흡수 -->
+              <th class="col-chk"><input type="checkbox" id="chkAll" onchange="toggleAll(this.checked)" title="전체 선택/해제"></th>
               <th style="width:4%">번호</th>
               <th style="width:8%">구분</th>
               <th style="width:10%">아이디</th>
@@ -155,20 +139,56 @@
               <th style="width:6%">상태</th>
             </tr>
           </thead>
-          <tbody id="memberTableBody"></tbody>
+          <tbody>
+            <tr onclick="location.href='member-detail.html?id=1'">
+              <td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="1" onchange="syncDeleteBtn()"></td>
+              <td class="col-no">3</td>
+              <td class="center"><span class="badge badge-green">정회원</span></td>
+              <td>forest001</td>
+              <td><strong>김숲해</strong></td>
+              <td class="center td-muted">여</td>
+              <td class="center td-muted">1985-04-12</td>
+              <td class="center td-muted">010-1234-5678</td>
+              <td class="td-muted">forest001@foresto.or.kr</td>
+              <td class="center cell-datetime">2026-03-15 09:23:41</td>
+              <td class="center"><span class="badge badge-green">정상</span></td>
+            </tr>
+            <tr onclick="location.href='member-detail.html?id=2'">
+              <td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="2" onchange="syncDeleteBtn()"></td>
+              <td class="col-no">2</td>
+              <td class="center"><span class="badge badge-blue">일반회원</span></td>
+              <td>forest002</td>
+              <td><strong>이정회</strong></td>
+              <td class="center td-muted">남</td>
+              <td class="center td-muted">1991-08-27</td>
+              <td class="center td-muted">010-2345-6789</td>
+              <td class="td-muted">forest002@foresto.or.kr</td>
+              <td class="center cell-datetime">2026-03-20 14:05:17</td>
+              <td class="center"><span class="badge badge-green">정상</span></td>
+            </tr>
+            <tr onclick="location.href='member-detail.html?id=3'">
+              <td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="3" onchange="syncDeleteBtn()"></td>
+              <td class="col-no">1</td>
+              <td class="center"><span class="badge badge-blue">일반회원</span></td>
+              <td>forest003</td>
+              <td><strong>박초록</strong></td>
+              <td class="center td-muted">여</td>
+              <td class="center td-muted">1978-12-03</td>
+              <td class="center td-muted">010-3456-7890</td>
+              <td class="td-muted">forest003@foresto.or.kr</td>
+              <td class="center cell-datetime">2026-04-01 11:48:33</td>
+              <td class="center"><span class="badge badge-blocked">차단</span></td>
+            </tr>
+            <!-- 데이터 없을 때: <tr><td colspan="11" class="td-empty">조회된 회원이 없습니다.</td></tr> -->
+          </tbody>
         </table>
       </div>
 
-      <!-- ④ 페이지네이션 -->
-      <div class="pagination" id="memberPagination"></div>
+      <div class="pagination"></div>
 
-      <!-- ⑤ 하단 버튼 -->
       <div class="table-bottom-bar">
-        <button class="btn btn-danger btn-danger-filled btn-sm" onclick="MemberAdmin.deleteSelected()" id="btnDeleteSelected" disabled>
-          선택 삭제
-        </button>
+        <button class="btn btn-danger btn-danger-filled btn-sm" id="btnDeleteSelected" disabled onclick="deleteSelected()">선택 삭제</button>
       </div>
-
     </main>
   </div>
 
@@ -177,185 +197,23 @@
   <script src="../assets/js/pages/admin.js"></script>
   <script>
     AdminSidebar.mount('members');
-    /* 라디오 초기값 */
-    document.querySelector('input[name="filterGrade"][value=""]').checked = true;
-    document.querySelector('input[name="filterStatus"][value=""]').checked = true;
 
-    /* ── 샘플 데이터 */
-    const NAMES = ['김숲해', '이정회', '박초록', '최나무', '정바람', '한생태', '윤들판', '임해설', '조산림', '강자연'];
-    const GRADES = [
-      { key: 'fullMember', label: '정회원' },
-      { key: 'member', label: '일반회원' },
-      { key: 'member', label: '일반회원' },
-      { key: 'fullMember', label: '정회원' },
-      { key: 'member', label: '일반회원' },
-    ];
+    function toggleAll(checked) {
+      document.querySelectorAll('.row-chk').forEach(cb => cb.checked = checked);
+      syncDeleteBtn();
+    }
 
-    const ALL_MEMBERS = Array.from({ length: 50 }, (_, i) => {
-      const g = GRADES[i % 5];
-      const mm = String((i % 9) + 1).padStart(2, '0');
-      const dd = String((i % 20) + 1).padStart(2, '0');
-      const hh = String((i * 3) % 24).padStart(2, '0');
-      const mi = String((i * 7) % 60).padStart(2, '0');
-      const ss = String((i * 11) % 60).padStart(2, '0');
-      return {
-        id: 50 - i,
-        userId: `forest${String(50 - i).padStart(3, '0')}`,
-        name: NAMES[i % 10],
-        gender: i % 2 === 0 ? '남' : '여',
-        birth: `${1970 + (i % 30)}-${String((i % 12) + 1).padStart(2, '0')}-${String((i % 28) + 1).padStart(2, '0')}`,
-        phone: `010-${String(1000 + i).padStart(4, '0')}-${String(5000 + i).padStart(4, '0')}`,
-        email: `user${50 - i}@foresto.or.kr`,
-        grade: g.key,
-        gradeLabel: g.label,
-        joinDate: `2026-${mm}-${dd}`,                       /* 날짜 필터용 (date 비교) */
-        joinDatetime: `2026-${mm}-${dd} ${hh}:${mi}:${ss}`,   /* 표시용 (초 포함) */
-        status: i % 7 === 0 ? 'blocked' : 'active',
-      };
-    });
+    function syncDeleteBtn() {
+      const any = document.querySelectorAll('.row-chk:checked').length > 0;
+      const btn = document.getElementById('btnDeleteSelected');
+      if (btn) btn.disabled = !any;
+    }
 
-    const GRADE_BADGE = { fullMember: 'badge-green', member: 'badge-blue', admin: 'badge-red' };
-    const GRADE_LABEL = { fullMember: '정회원', member: '일반회원', admin: '관리자' };
-
-    const MemberAdmin = {
-      filtered: [...ALL_MEMBERS],
-      currentPage: 1,
-      pageSize: 10,
-
-      _dateInRange(dateStr, from, to) {
-        if (!from && !to) return true;
-        const d = new Date(dateStr);
-        if (from && !to) return d >= new Date(from);
-        if (!from && to) return d <= new Date(to);
-        return d >= new Date(from) && d <= new Date(to);
-      },
-
-      search() {
-        const from = document.getElementById('filterDateFrom').value;
-        const to = document.getElementById('filterDateTo').value;
-        const grade = document.querySelector('input[name="filterGrade"]:checked')?.value || '';
-        const status = document.querySelector('input[name="filterStatus"]:checked')?.value || '';
-        const kwType = document.getElementById('filterKeywordType').value;
-        const kw = document.getElementById('filterKeyword').value.trim().toLowerCase();
-
-        this.filtered = ALL_MEMBERS.filter(m => {
-          if (!this._dateInRange(m.joinDate, from, to)) return false;
-          if (grade && m.grade !== grade) return false;
-          if (status && m.status !== status) return false;
-          if (kw) {
-            if (!kwType) {
-              const hay = (m.userId + m.name + m.phone + m.email).toLowerCase();
-              if (!hay.includes(kw)) return false;
-            } else {
-              if (!String(m[kwType] || '').toLowerCase().includes(kw)) return false;
-            }
-          }
-          return true;
-        });
-        this.currentPage = 1;
-        this.render();
-      },
-
-      setDatePreset(range) {
-        const to = new Date();
-        const from = new Date();
-        if (range === 'today') {
-          /* 오늘만 */
-        } else {
-          from.setDate(from.getDate() - range);
-        }
-        const fmt = d => d.toISOString().split('T')[0];
-        document.getElementById('filterDateFrom').value = fmt(from);
-        document.getElementById('filterDateTo').value = fmt(to);
-        this.search();
-      },
-
-      resetFilter() {
-        document.getElementById('filterDateFrom').value = '';
-        document.getElementById('filterDateTo').value = '';
-        document.querySelector('input[name="filterGrade"][value=""]').checked = true;
-        document.querySelector('input[name="filterStatus"][value=""]').checked = true;
-        document.getElementById('filterKeywordType').value = '';
-        document.getElementById('filterKeyword').value = '';
-        this.filtered = [...ALL_MEMBERS];
-        this.currentPage = 1;
-        this.render();
-      },
-
-      changePageSize(size) { this.pageSize = size; this.currentPage = 1; this.render(); },
-
-      toggleAll(checked) {
-        document.querySelectorAll('.row-chk').forEach(cb => cb.checked = checked);
-        this._syncDeleteBtn();
-      },
-
-      _syncDeleteBtn() {
-        const any = document.querySelectorAll('.row-chk:checked').length > 0;
-        document.getElementById('btnDeleteSelected').disabled = !any;
-        document.getElementById('chkAll').indeterminate = false;
-      },
-
-      deleteSelected() {
-        const checked = [...document.querySelectorAll('.row-chk:checked')];
-        if (!checked.length) return;
-        const ids = checked.map(cb => Number(cb.dataset.id));
-        if (!confirm(`선택한 ${ids.length}명의 회원을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
-        ids.forEach(id => {
-          const idx = ALL_MEMBERS.findIndex(m => m.id === id);
-          if (idx > -1) ALL_MEMBERS.splice(idx, 1);
-        });
-        this.filtered = this.filtered.filter(m => !ids.includes(m.id));
-        this.render();
-        App.toast(`${ids.length}명이 삭제되었습니다.`, 'success');
-      },
-
-      // TODO: AJAX — window.location.href = ADMIN_API.memberExcel + '?' + new URLSearchParams(currentFilter);
-      exportExcel() {
-        App.toast('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info');
-      },
-
-      render() {
-        const total = this.filtered.length;
-        const start = (this.currentPage - 1) * this.pageSize;
-        const slice = this.filtered.slice(start, start + this.pageSize);
-
-        document.getElementById('memberCount').textContent = total.toLocaleString();
-        document.getElementById('chkAll').checked = false;
-        document.getElementById('btnDeleteSelected').disabled = true;
-
-        document.getElementById('memberTableBody').innerHTML = slice.map((m, i) => `
-          <tr onclick="location.href='member-detail.html?id=${m.id}'" title="${m.name} 상세보기">
-            <td class="col-chk" onclick="event.stopPropagation()">
-              <input type="checkbox" class="row-chk" data-id="${m.id}"
-                onchange="MemberAdmin._syncDeleteBtn()">
-            </td>
-            <td class="col-no">${total - start - i}</td>
-            <td class="center">
-              <span class="badge ${GRADE_BADGE[m.grade] || 'badge-gray'}">
-                ${GRADE_LABEL[m.grade] || m.grade}
-              </span>
-            </td>
-            <td>${m.userId}</td>
-            <td><strong>${m.name}</strong></td>
-            <td class="center td-muted">${m.gender}</td>
-            <td class="center td-muted">${m.birth}</td>
-            <td class="center td-muted">${m.phone}</td>
-            <td class="td-muted">${m.email}</td>
-            <td class="center cell-datetime">${m.joinDatetime}</td>
-            <td class="center">
-              <span class="badge ${m.status === 'active' ? 'badge-green' : 'badge-blocked'}">
-                ${m.status === 'active' ? '정상' : '차단'}
-              </span>
-            </td>
-          </tr>`).join('');
-
-        App.renderPagination('memberPagination', this.currentPage,
-          Math.ceil(total / this.pageSize) || 1,
-          p => { this.currentPage = p; this.render(); });
-      },
-    };
-
-    MemberAdmin.render();
+    function deleteSelected() {
+      const checked = document.querySelectorAll('.row-chk:checked').length;
+      if (!checked) return;
+      App.toast(`${checked}명이 삭제되었습니다.`, 'success');
+    }
   </script>
 </body>
 

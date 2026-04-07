@@ -58,7 +58,7 @@
           <strong id="bannerTitle"></strong>
           <span class="banner-meta" id="bannerMeta"></span>
         </div>
-        <button class="btn btn-gray btn-xs btn-clear" onclick="InstructorApply.clearScheduleFilter()">전체 보기</button>
+        <button class="btn btn-gray btn-xs btn-clear" onclick="location.reload()">전체 보기</button>
       </div>
 
       <!-- 검색 필터 -->
@@ -71,6 +71,9 @@
             <div class="filter-content">
               <select id="filterSchedule" style="height:34px;padding:0 10px;border:1px solid #d5e0ce;border-radius:6px;font-size:13px;font-family:'Noto Sans KR',sans-serif;min-width:300px;max-width:100%">
                 <option value="">전체 일정</option>
+                <option value="1">2026-03-15 토요일 — 도봉산</option>
+                <option value="2">2026-04-05 일요일 — 수락산</option>
+                <option value="3">2026-04-20 토요일 — 불암산</option>
               </select>
             </div>
           </div>
@@ -85,11 +88,11 @@
                 <input type="date" id="filterDateTo">
               </div>
               <div class="date-preset-group">
-                <button class="date-preset-btn" onclick="InstructorApply.setDatePreset('today')">오늘</button>
-                <button class="date-preset-btn" onclick="InstructorApply.setDatePreset(7)">7일</button>
-                <button class="date-preset-btn" onclick="InstructorApply.setDatePreset(30)">30일</button>
-                <button class="date-preset-btn" onclick="InstructorApply.setDatePreset(90)">3개월</button>
-                <button class="date-preset-btn" onclick="InstructorApply.setDatePreset(180)">6개월</button>
+                <button class="date-preset-btn">오늘</button>
+                <button class="date-preset-btn">7일</button>
+                <button class="date-preset-btn">30일</button>
+                <button class="date-preset-btn">3개월</button>
+                <button class="date-preset-btn">6개월</button>
               </div>
             </div>
           </div>
@@ -121,8 +124,7 @@
                   <option value="phone">연락처</option>
                 </select>
                 <div class="kw-input-wrap">
-                  <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요"
-                    onkeydown="if(event.key==='Enter') InstructorApply.search()">
+                  <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요">
                 </div>
               </div>
             </div>
@@ -130,15 +132,15 @@
 
         </div>
         <div class="filter-footer">
-          <button class="btn btn-outline btn-sm" onclick="InstructorApply.exportExcel()">엑셀 다운로드</button>
-          <button class="btn btn-gray btn-sm" onclick="InstructorApply.reset()">초기화</button>
-          <button class="btn btn-primary btn-sm" onclick="InstructorApply.search()">검색</button>
+          <button class="btn btn-outline btn-sm" onclick="App.toast('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info')">엑셀 다운로드</button>
+          <button class="btn btn-gray btn-sm" onclick="location.reload()">초기화</button>
+          <button class="btn btn-primary btn-sm">검색</button>
         </div>
       </div>
 
       <!-- 목록 상단 -->
       <div class="list-top">
-        <div class="list-count">총 <strong id="applyCount">0</strong>건</div>
+        <div class="list-count">총 <strong>3</strong>건</div>
       </div>
 
       <!-- 테이블 -->
@@ -157,12 +159,47 @@
               <th style="width:11%">관리자 메모</th>
             </tr>
           </thead>
-          <tbody id="applyTableBody"></tbody>
+          <tbody>
+            <tr class="applicant-row" onclick="location.href='apply-instructor-detail.html?id=1'">
+              <td style="text-align:center">3</td>
+              <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">INS-2026-00001</td>
+              <td style="font-size:12px;color:#4a7c59">2026-03-15 토요일 오전 9시 — 도봉산</td>
+              <td style="font-weight:600">김민준<span style="color:#5a7a5a;font-size:12px">(ins5001)</span></td>
+              <td style="text-align:center;font-size:13px">서울</td>
+              <td style="text-align:center;font-size:13px" class="cell-datetime">010-1234-5678</td>
+              <td style="font-size:13px">kim@example.com</td>
+              <td style="text-align:center;font-size:13px" class="cell-datetime">2026-01-10 09:07</td>
+              <td style="text-align:center"><span style="color:#ccc;font-size:12px">—</span></td>
+            </tr>
+            <tr class="applicant-row" onclick="location.href='apply-instructor-detail.html?id=2'">
+              <td style="text-align:center">2</td>
+              <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">INS-2026-00002</td>
+              <td style="font-size:12px;color:#4a7c59">2026-04-05 일요일 오전 10시 — 수락산</td>
+              <td style="font-weight:600">이서연<span style="color:#5a7a5a;font-size:12px">(ins5002)</span></td>
+              <td style="text-align:center;font-size:13px">경기</td>
+              <td style="text-align:center;font-size:13px" class="cell-datetime">010-2345-6789</td>
+              <td style="font-size:13px">lee@example.com</td>
+              <td style="text-align:center;font-size:13px" class="cell-datetime">2026-02-05 14:23</td>
+              <td style="text-align:center"><span style="font-size:12px;color:#5a7a5a">경력증명서 요청</span></td>
+            </tr>
+            <tr class="applicant-row" onclick="location.href='apply-instructor-detail.html?id=3'">
+              <td style="text-align:center">1</td>
+              <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">INS-2026-00003</td>
+              <td style="font-size:12px;color:#4a7c59">2026-04-20 토요일 오전 9시 — 불암산</td>
+              <td style="font-weight:600">박지훈<span style="color:#5a7a5a;font-size:12px">(ins5003)</span></td>
+              <td style="text-align:center;font-size:13px">인천</td>
+              <td style="text-align:center;font-size:13px" class="cell-datetime">010-3456-7890</td>
+              <td style="font-size:13px">park@example.com</td>
+              <td style="text-align:center;font-size:13px" class="cell-datetime">2026-03-01 11:15</td>
+              <td style="text-align:center"><span style="color:#ccc;font-size:12px">—</span></td>
+            </tr>
+            <!-- 데이터 없을 때: <tr><td colspan="9" class="td-empty">내역이 없습니다.</td></tr> -->
+          </tbody>
         </table>
       </div>
 
       <!-- 페이지네이션 -->
-      <div class="pagination" id="applyPagination"></div>
+      <div class="pagination"></div>
 
     </main>
   </div>
@@ -170,184 +207,9 @@
   <script src="../assets/js/app.js"></script>
   <script src="../assets/js/components/header.js"></script>
   <script src="../assets/js/pages/admin.js"></script>
-  <script src="../assets/js/pages/education.js"></script>
   <script>
   'use strict';
   AdminSidebar.mount('apply-instructor');
-
-  /* ── 강사신청 일정 목록 (필터 셀렉트 채우기) */
-  const INSTR_SCHEDULES_ADMIN = (window.ALL_COURSES_RAW || [])
-    .filter(c => c.type === '강사활동')
-    .sort((a, b) => b.date.localeCompare(a.date));
-
-  const scheduleSelect = document.getElementById('filterSchedule');
-  INSTR_SCHEDULES_ADMIN.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = String(c.id);
-    opt.textContent = `${c.title.replace('[강사활동] ', '')} (${c.date.slice(0,10)})`;
-    scheduleSelect.appendChild(opt);
-  });
-
-  /* ── 더미 신청자 데이터 (일정별) */
-  const NAMES_I   = ['이초록','박나무','김하늘','최바람','정숲','윤생태','강자연','조청산','신이슬','한나비',
-                     '문솔잎','류햇살','백물결','안구름','송봄비','임꽃길','권들판','오숲속','황모래','노파도'];
-  const REGIONS_I = ['서울','경기','인천','부산','경기','서울','서울','인천','기타','경기'];
-
-  const ALL_DATA_I = Array.from({ length: 60 }, (_, i) => {
-    const scheduleIdx = i % INSTR_SCHEDULES_ADMIN.length;
-    const sc = INSTR_SCHEDULES_ADMIN[scheduleIdx];
-    const mm  = String(((i % 3) + 1)).padStart(2, '0');
-    const dd  = String(((i % 25) + 1)).padStart(2, '0');
-    const hh  = String(((i * 2) % 10) + 9).padStart(2, '0');
-    const min = String((i * 11) % 60).padStart(2, '0');
-    const ss  = String((i * 17) % 60).padStart(2, '0');
-    return {
-      id:         5000 + i,
-      applyNo:    `INS-2026-${String(i + 1).padStart(5, '0')}`,
-      scheduleId: sc.id,
-      scheduleTitle: sc.title,
-      name:       NAMES_I[i % NAMES_I.length],
-      userId:     `ins${5001 + i}`,
-      email:      `inst${5000 + i}@example.com`,
-      phone:      `010-${String(3000 + i).padStart(4, '0')}-${String(7000 + i).padStart(4, '0')}`,
-      region:     REGIONS_I[i % REGIONS_I.length],
-      applyDate:  `2026-${mm}-${dd}`,
-      applyDatetime: `2026-${mm}-${dd} ${hh}:${min}:${ss}`,
-      adminMemo:  ['','서류 검토 완료','','활동지역 재확인 필요','','','이력서 요청함','','','연락처 변경 안내','',''][i % 12],
-    };
-  });
-
-  const InstructorApply = {
-    _data:     ALL_DATA_I,
-    _filtered: [...ALL_DATA_I],
-    _page:     1,
-    _pageSize: 10,
-
-    clearScheduleFilter() {
-      document.getElementById('filterSchedule').value = '';
-      document.getElementById('scheduleBanner').style.display = 'none';
-      this.search();
-    },
-
-    search() {
-      const scheduleId  = document.getElementById('filterSchedule')?.value || '';
-      const dateFrom    = document.getElementById('filterDateFrom')?.value || '';
-      const dateTo      = document.getElementById('filterDateTo')?.value   || '';
-      const region      = document.querySelector('input[name="filterRegion"]:checked')?.value || '';
-      const kwType      = document.getElementById('filterSearchType')?.value || 'all';
-      const keyword     = (document.getElementById('filterKeyword')?.value || '').trim().toLowerCase();
-
-      /* 일정 배너 업데이트 */
-      const banner = document.getElementById('scheduleBanner');
-      if (scheduleId) {
-        const sc = INSTR_SCHEDULES_ADMIN.find(c => String(c.id) === scheduleId);
-        if (sc && banner) {
-          banner.style.display = 'flex';
-          document.getElementById('bannerTitle').textContent = sc.title;
-          document.getElementById('bannerMeta').textContent  = ` — 활동일 ${sc.date.slice(0,10)} | 접수기간 ${sc.from} ~ ${sc.to}`;
-        }
-      } else {
-        if (banner) banner.style.display = 'none';
-      }
-
-      this._filtered = this._data.filter(d => {
-        if (scheduleId && String(d.scheduleId) !== scheduleId) return false;
-        if (dateFrom && d.applyDate < dateFrom) return false;
-        if (dateTo   && d.applyDate > dateTo)   return false;
-        if (region && d.region !== region) return false;
-        if (keyword) {
-          const m = { name: d.name, email: d.email, phone: d.phone, userId: d.userId || '' };
-          if (kwType !== 'all') return (m[kwType] || '').toLowerCase().includes(keyword);
-          return Object.values(m).some(v => v.toLowerCase().includes(keyword));
-        }
-        return true;
-      });
-      this._page = 1;
-      this.render();
-    },
-
-    setDatePreset(range) {
-      const to = new Date(), from = new Date();
-      if (range !== 'today') from.setDate(from.getDate() - range);
-      const fmt = d => d.toISOString().split('T')[0];
-      document.getElementById('filterDateFrom').value = fmt(from);
-      document.getElementById('filterDateTo').value   = fmt(to);
-      this.search();
-    },
-
-    reset() {
-      document.getElementById('filterSchedule').value  = '';
-      document.getElementById('filterDateFrom').value  = '';
-      document.getElementById('filterDateTo').value    = '';
-      document.getElementById('filterKeyword').value   = '';
-      document.getElementById('filterSearchType').value = 'all';
-      document.querySelector('input[name="filterRegion"][value=""]').checked = true;
-      const banner = document.getElementById('scheduleBanner');
-      if (banner) banner.style.display = 'none';
-      this._filtered = [...this._data];
-      this._page = 1;
-      this.render();
-    },
-
-    changePageSize(size) { this._pageSize = size; this._page = 1; this.render(); },
-
-    render() {
-      const total = this._filtered.length;
-      const start = (this._page - 1) * this._pageSize;
-      const slice = this._filtered.slice(start, start + this._pageSize);
-
-      const countEl = document.getElementById('applyCount');
-      if (countEl) countEl.textContent = total.toLocaleString();
-
-      const tbody = document.getElementById('applyTableBody');
-      if (!tbody) return;
-
-      if (!slice.length) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:#8a9e84">검색 결과가 없습니다.</td></tr>`;
-        App.renderPagination('applyPagination', 1, 1, () => {});
-        return;
-      }
-
-      tbody.innerHTML = slice.map((d, i) => {
-        const seq = total - start - i;
-        const memo = d.adminMemo || '';
-        const memoCell = memo
-          ? `<span style="font-size:12px;color:#5a7a5a">${memo.length > 10 ? memo.slice(0, 10) + '…' : memo}</span>`
-          : `<span style="color:#ccc;font-size:12px">—</span>`;
-        const nameCell = `${d.name}<span style="color:#5a7a5a;font-size:12px">(${d.userId})</span>`;
-        const scheduleLabel = d.scheduleTitle.replace('[강사활동] ', '');
-        return `<tr class="applicant-row" onclick="location.href='apply-instructor-detail.html?id=${d.id}'">
-          <td style="text-align:center">${seq}</td>
-          <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">${d.applyNo}</td>
-          <td style="font-size:12px;color:#4a7c59">${scheduleLabel}</td>
-          <td style="font-weight:600">${nameCell}</td>
-          <td style="text-align:center;font-size:13px">${d.region}</td>
-          <td style="text-align:center;font-size:13px" class="cell-datetime">${d.phone}</td>
-          <td style="font-size:13px">${d.email}</td>
-          <td style="text-align:center;font-size:13px" class="cell-datetime">${d.applyDatetime}</td>
-          <td style="text-align:center">${memoCell}</td>
-        </tr>`;
-      }).join('');
-
-      App.renderPagination(
-        'applyPagination', this._page,
-        Math.ceil(total / this._pageSize) || 1,
-        p => { this._page = p; this.render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-      );
-    },
-
-    // TODO: AJAX — window.location.href = ADMIN_API.applyInstructor + '/export?' + new URLSearchParams(currentFilter);
-    exportExcel() { App.toast('강사신청 목록 엑셀 다운로드를 시작합니다.', 'info'); },
-  };
-
-  /* URL에서 일정 필터 자동 적용 (instructor-schedule.html "신청자" 버튼 클릭 시) */
-  const presetScheduleId = App.getParam('scheduleId');
-  if (presetScheduleId) {
-    const sel = document.getElementById('filterSchedule');
-    if (sel) sel.value = presetScheduleId;
-  }
-
-  InstructorApply.search();
   </script>
 </body>
 </html>

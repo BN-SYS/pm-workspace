@@ -133,3 +133,4 @@ git push 전 반드시 확인:
 | 2026-04-01 | 코드 품질 리팩토링 — reset.css 중복 링크 61개 파일 제거(common.css @import 중복), variables.css 중복 1건, 샘플 데이터 전체 3건으로 축소(education 7타입/community 6종/member 6종) | 전 HTML 61개, education.js, community.js, member.js |
 | 2026-04-01 | 아이콘 경로 전체 마이그레이션 — common_assets/icons/ → assets/icons/, 미존재 아이콘 17개 복사, 강사신청 회원전용 제한, apply-instructor.html 회원구분 필터 제거, apply-instructor-detail ID 수정(5000대), instructor-schedule-edit 신규(course-edit 동일 레이아웃) | admin.js, 19개 admin HTML, common.css, list-common.css, about.css, admin.css |
 | 2026-04-01 | 마이페이지 신청내역 통합 — 교육+강사활동 단일 탭, 상태 신청/취소/미선정/완료 공통화, 수료증↔활동확인서 type 파라미터 분기, mypage.css .my-wrap 추가(헤더 동일 폭) | mypage/index.html, mypage/certificate-preview.html, assets/js/pages/mypage.js, assets/css/pages/mypage.css |
+| 2026-04-07 | 관리자 전 페이지 샘플데이터 JS→HTML 전환 — Array.from mock 데이터·렌더링 함수 전부 제거, 최대 3건 정적 HTML 삽입, 빈 상태 주석 추가, PHP 백엔드 연동 준비 완료 | admin/*.html (24개 전체) |

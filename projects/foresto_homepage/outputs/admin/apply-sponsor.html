@@ -49,11 +49,11 @@
                 <input type="date" id="filterDateTo">
               </div>
               <div class="date-preset-group">
-                <button class="date-preset-btn" onclick="SponsorApply.setDatePreset('today')">오늘</button>
-                <button class="date-preset-btn" onclick="SponsorApply.setDatePreset(7)">7일</button>
-                <button class="date-preset-btn" onclick="SponsorApply.setDatePreset(30)">30일</button>
-                <button class="date-preset-btn" onclick="SponsorApply.setDatePreset(90)">3개월</button>
-                <button class="date-preset-btn" onclick="SponsorApply.setDatePreset(180)">6개월</button>
+                <button class="date-preset-btn">오늘</button>
+                <button class="date-preset-btn">7일</button>
+                <button class="date-preset-btn">30일</button>
+                <button class="date-preset-btn">3개월</button>
+                <button class="date-preset-btn">6개월</button>
               </div>
             </div>
           </div>
@@ -108,8 +108,7 @@
                   <option value="email">이메일</option>
                 </select>
                 <div class="kw-input-wrap">
-                  <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요"
-                    onkeydown="if(event.key==='Enter') SponsorApply.search()">
+                  <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요">
                 </div>
               </div>
             </div>
@@ -117,17 +116,16 @@
 
         </div>
         <div class="filter-footer">
-          <button class="btn btn-outline btn-sm" onclick="SponsorApply.exportExcel()">엑셀 다운로드</button>
-          <button class="btn btn-gray btn-sm" onclick="SponsorApply.reset()">초기화</button>
-          <button class="btn btn-primary btn-sm" onclick="SponsorApply.search()">검색</button>
+          <button class="btn btn-outline btn-sm" onclick="App.toast('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info')">엑셀 다운로드</button>
+          <button class="btn btn-gray btn-sm" onclick="location.reload()">초기화</button>
+          <button class="btn btn-primary btn-sm">검색</button>
         </div>
       </div>
 
       <!-- 목록 상단 -->
       <div class="list-top">
-        <div class="list-count">총 <strong id="applyCount">0</strong>건</div>
-        <select class="form-control" id="pageSizeSelect" onchange="SponsorApply.changePageSize(+this.value)"
-          style="width:130px;height:36px;font-size:13px">
+        <div class="list-count">총 <strong>3</strong>건</div>
+        <select class="form-control" style="width:130px;height:36px;font-size:13px">
           <option value="10">10개씩 보기</option>
           <option value="30">30개씩 보기</option>
           <option value="50">50개씩 보기</option>
@@ -152,12 +150,50 @@
               <th style="width:11%">관리자 메모</th>
             </tr>
           </thead>
-          <tbody id="applyTableBody"></tbody>
+          <tbody>
+            <tr onclick="location.href='apply-sponsor-detail.html?id=1'">
+              <td style="text-align:center">3</td>
+              <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">SPN-2026-00001</td>
+              <td style="font-weight:600">홍길동<span style="color:#5a7a5a;font-size:12px">(spn3001)</span></td>
+              <td style="text-align:center"><span class="badge badge-green">회원</span></td>
+              <td style="text-align:center"><span class="badge-regular">정기</span></td>
+              <td style="text-align:center" class="amount-val">30,000원</td>
+              <td style="text-align:center;font-size:13px">교육 프로그램 지원</td>
+              <td style="text-align:center;font-size:13px" class="cell-datetime">010-0001-1001</td>
+              <td style="text-align:center;font-size:13px" class="cell-datetime">2026-01-05 09:00</td>
+              <td style="text-align:center"><span style="color:#ccc;font-size:12px">—</span></td>
+            </tr>
+            <tr onclick="location.href='apply-sponsor-detail.html?id=2'">
+              <td style="text-align:center">2</td>
+              <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">SPN-2026-00002</td>
+              <td style="font-weight:600">김영희</td>
+              <td style="text-align:center"><span class="badge badge-gray">비회원</span></td>
+              <td style="text-align:center"><span class="badge-once">일시</span></td>
+              <td style="text-align:center" class="amount-val">50,000원</td>
+              <td style="text-align:center;font-size:13px">사회공헌 활동 지원</td>
+              <td style="text-align:center;font-size:13px" class="cell-datetime">010-0002-1002</td>
+              <td style="text-align:center;font-size:13px" class="cell-datetime">2026-02-10 14:30</td>
+              <td style="text-align:center"><span style="font-size:12px;color:#5a7a5a">은행 계좌 재확인</span></td>
+            </tr>
+            <tr onclick="location.href='apply-sponsor-detail.html?id=3'">
+              <td style="text-align:center">1</td>
+              <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">SPN-2026-00003</td>
+              <td style="font-weight:600">이철수<span style="color:#5a7a5a;font-size:12px">(spn3003)</span></td>
+              <td style="text-align:center"><span class="badge badge-green">회원</span></td>
+              <td style="text-align:center"><span class="badge-regular">정기</span></td>
+              <td style="text-align:center" class="amount-val">100,000원</td>
+              <td style="text-align:center;font-size:13px">자유 사용 (지정 없음)</td>
+              <td style="text-align:center;font-size:13px" class="cell-datetime">010-0003-1003</td>
+              <td style="text-align:center;font-size:13px" class="cell-datetime">2026-03-05 11:15</td>
+              <td style="text-align:center"><span style="color:#ccc;font-size:12px">—</span></td>
+            </tr>
+            <!-- 데이터 없을 때: <tr><td colspan="10" class="td-empty">내역이 없습니다.</td></tr> -->
+          </tbody>
         </table>
       </div>
 
       <!-- 페이지네이션 -->
-      <div class="pagination" id="applyPagination"></div>
+      <div class="pagination"></div>
 
     </main>
   </div>
@@ -168,162 +204,6 @@
   <script>
   'use strict';
   AdminSidebar.mount('apply-sponsor');
-
-  const NAMES_S    = ['홍길동','김영희','이철수','박미영','정도현','최수진','윤현우','임나래','강민서','조태양',
-                      '신지수','한가람','문유리','류승훈','백채원','안지호','송하늘','권보름','오세진','황나비'];
-  const AMOUNTS_S  = [10000, 30000, 50000, 100000, 30000, 50000, 10000, 100000, 50000, 30000];
-  const TYPES_S    = ['정기','일시','정기','정기','일시','정기','일시','정기','일시','일시'];
-  const PURPOSES_S = ['교육 프로그램 지원','사회공헌 활동 지원','교육 자료 개발 지원','자유 사용 (지정 없음)',
-                      '교육 프로그램 지원','사회공헌 활동 지원','자유 사용 (지정 없음)','교육 자료 개발 지원',
-                      '사회공헌 활동 지원','교육 프로그램 지원'];
-  const BANKS_S    = ['국민은행','신한은행','우리은행','하나은행','농협은행','기업은행','카카오뱅크','토스뱅크'];
-
-  const ALL_DATA_S = Array.from({ length: 22 }, (_, i) => {
-    const mm  = String(((i % 3) + 1)).padStart(2, '0');
-    const dd  = String(((i % 25) + 1)).padStart(2, '0');
-    const hh  = String(((i * 3) % 11) + 9).padStart(2, '0');
-    const min = String((i * 9) % 60).padStart(2, '0');
-    const ss  = String((i * 17) % 60).padStart(2, '0');
-    const isMember  = i % 3 !== 0;
-    const name      = NAMES_S[i % NAMES_S.length];
-    const type      = TYPES_S[i % TYPES_S.length];
-    return {
-      id:            6000 + i,
-      applyNo:       `DON-2026-${String(i + 1).padStart(5, '0')}`,
-      name,
-      isMember,
-      userId:        isMember ? `don${6001 + i}` : null,
-      phone:         `010-${String(4000 + i).padStart(4, '0')}-${String(8000 + i).padStart(4, '0')}`,
-      email:         `donor${6000 + i}@example.com`,
-      donateType:    type,
-      amount:        AMOUNTS_S[i % AMOUNTS_S.length],
-      purpose:       PURPOSES_S[i % PURPOSES_S.length],
-      /* 자동이체 계좌 — 정기후원일 때만 */
-      bank:          type === '정기' ? BANKS_S[i % BANKS_S.length] : null,
-      accountHolder: type === '정기' ? name : null,
-      accountNo:     type === '정기' ? `${String(100 + i).padStart(3,'0')}${String(456 + i).padStart(3,'0')}-${String(78 + i).padStart(2,'0')}-${String(901234 + i).padStart(6,'0')}` : null,
-      agreePrivacy:  true,
-      applyDate:     `2026-${mm}-${dd}`,
-      applyDatetime: `2026-${mm}-${dd} ${hh}:${min}:${ss}`,
-      adminMemo:     ['','','','감사 문자 발송','','','정기 결제 안내 예정','','','입금 확인 완료','',''][i % 12],
-    };
-  });
-
-  const SponsorApply = {
-    _data:     ALL_DATA_S,
-    _filtered: [...ALL_DATA_S],
-    _page:     1,
-    _pageSize: 10,
-
-    search() {
-      const dateFrom = document.getElementById('filterDateFrom')?.value  || '';
-      const dateTo   = document.getElementById('filterDateTo')?.value    || '';
-      const type       = document.querySelector('input[name="filterType"]:checked')?.value       || '';
-      const purpose    = document.querySelector('input[name="filterPurpose"]:checked')?.value    || '';
-      const memberType = document.querySelector('input[name="filterMemberType"]:checked')?.value || '';
-      const kwType     = document.getElementById('filterSearchType')?.value || 'all';
-      const keyword    = (document.getElementById('filterKeyword')?.value  || '').trim().toLowerCase();
-
-      this._filtered = this._data.filter(d => {
-        if (dateFrom   && d.applyDate   < dateFrom)  return false;
-        if (dateTo     && d.applyDate   > dateTo)    return false;
-        if (type       && d.donateType !== type)     return false;
-        if (purpose    && d.purpose    !== purpose)  return false;
-        if (memberType === 'member' && !d.isMember)  return false;
-        if (memberType === 'guest'  &&  d.isMember)  return false;
-        if (keyword) {
-          const m = { name: d.name, phone: d.phone, email: d.email, userId: d.userId || '' };
-          if (kwType !== 'all') return (m[kwType] || '').toLowerCase().includes(keyword);
-          return Object.values(m).some(v => v.toLowerCase().includes(keyword));
-        }
-        return true;
-      });
-      this._page = 1;
-      this.render();
-    },
-
-    setDatePreset(range) {
-      const to = new Date(), from = new Date();
-      if (range !== 'today') from.setDate(from.getDate() - range);
-      const fmt = d => d.toISOString().split('T')[0];
-      document.getElementById('filterDateFrom').value = fmt(from);
-      document.getElementById('filterDateTo').value   = fmt(to);
-      this.search();
-    },
-
-    reset() {
-      document.getElementById('filterDateFrom').value = '';
-      document.getElementById('filterDateTo').value   = '';
-      document.getElementById('filterKeyword').value  = '';
-      document.getElementById('filterSearchType').value = 'all';
-      document.querySelector('input[name="filterType"][value=""]').checked       = true;
-      document.querySelector('input[name="filterPurpose"][value=""]').checked   = true;
-      document.querySelector('input[name="filterMemberType"][value=""]').checked = true;
-      this._filtered = [...this._data];
-      this._page = 1;
-      this.render();
-    },
-
-    changePageSize(size) { this._pageSize = size; this._page = 1; this.render(); },
-
-    render() {
-      const total = this._filtered.length;
-      const start = (this._page - 1) * this._pageSize;
-      const slice = this._filtered.slice(start, start + this._pageSize);
-
-      const countEl = document.getElementById('applyCount');
-      if (countEl) countEl.textContent = total.toLocaleString();
-
-      const tbody = document.getElementById('applyTableBody');
-      if (!tbody) return;
-
-      if (!slice.length) {
-        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:40px;color:#8a9e84">검색 결과가 없습니다.</td></tr>`;
-        App.renderPagination('applyPagination', 1, 1, () => {});
-        return;
-      }
-
-      tbody.innerHTML = slice.map((d, i) => {
-        const seq    = total - start - i;
-        const typeBadge = d.donateType === '정기'
-          ? `<span class="badge-regular">정기</span>`
-          : `<span class="badge-once">일시</span>`;
-        const memo = d.adminMemo || '';
-        const memoCell = memo
-          ? `<span style="font-size:12px;color:#5a7a5a">${memo.length > 10 ? memo.slice(0, 10) + '…' : memo}</span>`
-          : `<span style="color:#ccc;font-size:12px">—</span>`;
-        const nameCell = d.isMember
-          ? `${d.name}<span style="color:#5a7a5a;font-size:12px">(${d.userId})</span>`
-          : d.name;
-        const memberBadge = d.isMember
-          ? `<span class="badge badge-green">회원</span>`
-          : `<span class="badge badge-gray">비회원</span>`;
-        return `<tr onclick="location.href='apply-sponsor-detail.html?id=${d.id}'">
-          <td style="text-align:center">${seq}</td>
-          <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">${d.applyNo}</td>
-          <td style="font-weight:600">${nameCell}</td>
-          <td style="text-align:center">${memberBadge}</td>
-          <td style="text-align:center">${typeBadge}</td>
-          <td style="text-align:center" class="amount-val">${d.amount.toLocaleString()}원</td>
-          <td style="text-align:center;font-size:13px">${d.purpose}</td>
-          <td style="text-align:center;font-size:13px" class="cell-datetime">${d.phone}</td>
-          <td style="text-align:center;font-size:13px" class="cell-datetime">${d.applyDatetime}</td>
-          <td style="text-align:center">${memoCell}</td>
-        </tr>`;
-      }).join('');
-
-      App.renderPagination(
-        'applyPagination', this._page,
-        Math.ceil(total / this._pageSize) || 1,
-        p => { this._page = p; this.render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-      );
-    },
-
-    // TODO: AJAX — window.location.href = ADMIN_API.applySponsor + '/export?' + new URLSearchParams(currentFilter);
-    exportExcel() { App.toast('후원신청 목록 엑셀 다운로드를 시작합니다.', 'info'); },
-  };
-
-  SponsorApply.render();
   </script>
 </body>
 </html>

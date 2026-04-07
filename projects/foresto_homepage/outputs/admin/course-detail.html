@@ -287,30 +287,30 @@
           <div class="form-row">
             <div class="form-label">과정명</div>
             <div class="form-content">
-              <span class="detail-val" id="dCourseName">—</span>
+              <span class="detail-val">제55기 숲해설가 전문가과정</span>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-label">과정상태</div>
-            <div class="form-content" id="dStatus">—</div>
+            <div class="form-content"><span class="badge badge-green">접수중</span></div>
           </div>
 
           <div class="form-row">
             <div class="form-label">교육기간</div>
             <div class="form-content">
-              <span class="detail-val mono" id="dEduStart">—</span>
+              <span class="detail-val mono">2026-04-01</span>
               <span class="date-sep">~</span>
-              <span class="detail-val mono" id="dEduEnd">—</span>
+              <span class="detail-val mono">2026-04-30</span>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-label">접수기간</div>
             <div class="form-content">
-              <span class="detail-val mono" id="dApplyStart">—</span>
+              <span class="detail-val mono">2026-03-01 09:00</span>
               <span class="date-sep">~</span>
-              <span class="detail-val mono" id="dApplyEnd">—</span>
+              <span class="detail-val mono">2026-03-25 18:00</span>
             </div>
           </div>
 
@@ -318,20 +318,20 @@
           <div class="form-row">
             <div class="form-label">총 강좌수</div>
             <div class="form-half">
-              <span class="detail-val" id="dLessonCount">—</span>
+              <span class="detail-val">16강</span>
             </div>
             <div class="form-label">총 교육시간</div>
             <div class="form-half">
-              <span class="detail-val" id="dEduHours">—</span>
+              <span class="detail-val">40시간 30분</span>
             </div>
           </div>
 
           <!-- 신청파일첨부 / 수료증 발급 2분할 -->
           <div class="form-row">
             <div class="form-label">신청파일첨부</div>
-            <div class="form-half" id="dFileRequired">—</div>
+            <div class="form-half"><span class="badge-on">✓ 사용</span></div>
             <div class="form-label">수료증 발급</div>
-            <div class="form-half" id="dCertIssue">—</div>
+            <div class="form-half"><span class="badge-on">✓ 발급</span></div>
           </div>
 
           <!-- 신청자 현황 -->
@@ -339,15 +339,15 @@
             <div class="form-label">신청자 현황</div>
             <div class="form-content">
               <div class="applicant-wrap">
-                <span class="applicant-count" id="dApplicantCount">0</span>
+                <span class="applicant-count">17</span>
                 <span class="detail-val muted">명 신청</span>
                 <span class="applicant-divider">/</span>
-                <span class="capacity-info">정원 <strong id="dCapacity">0</strong>명</span>
+                <span class="capacity-info">정원 <strong>30</strong>명</span>
                 <div class="progress-wrap">
                   <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" id="dProgressBar" style="width:0%"></div>
+                    <div class="progress-bar-fill" style="width:57%"></div>
                   </div>
-                  <span class="progress-pct" id="dProgressPct">0%</span>
+                  <span class="progress-pct">57%</span>
                 </div>
                 <button class="btn-excel" onclick="CourseDetail.downloadApplicants()">
                   <span class="btn-excel-icon">XL</span>
@@ -360,7 +360,7 @@
           <div class="form-row">
             <div class="form-label">등록일</div>
             <div class="form-content">
-              <span class="detail-val mono" id="dRegDate">—</span>
+              <span class="detail-val mono">2026-02-14</span>
             </div>
           </div>
         </div>
@@ -368,14 +368,45 @@
         <!-- ════ 과정 상세내용 ════ -->
         <div class="form-card">
           <div class="form-card-head">과정 상세내용</div>
-          <div class="content-view" id="dContent">—</div>
+          <div class="content-view">본 과정은 숲해설가 자격 취득을 위한 기초 이론 과정입니다.
+
+■ 교육 목표
+- 숲의 생태 기초 이론을 체계적으로 습득합니다.
+- 숲해설 기법과 프로그램 개발 역량을 기릅니다.
+- 현장 실습을 통해 해설 능력을 실전 수준으로 높입니다.
+
+■ 주요 커리큘럼
+- 식물 생태학 기초 (4강)
+- 동물·곤충 생태학 기초 (4강)
+- 숲 체험 활동 기법 (4강)
+- 현장 실습 및 발표 (4강)
+
+■ 강사진
+- 김○○ 교수 (숲 생태학 전공)
+- 이○○ 박사 (환경교육학 전공)
+
+■ 유의사항
+- 전 과정 출석률 80% 이상 시 수료증 발급
+- 야외 실습 시 편한 복장 착용 필수</div>
         </div>
 
         <!-- ════ 첨부파일 ════ -->
         <div class="form-card">
           <div class="form-card-head">첨부파일</div>
-          <div class="file-list" id="dFileList">
-            <span class="detail-val muted">첨부파일 없음</span>
+          <div class="file-list">
+            <div class="file-item">
+              <div class="file-item-icon pdf">PDF</div>
+              <span class="file-item-name">기초과정_커리큘럼_2026.pdf</span>
+              <span class="file-item-size">1.2MB</span>
+              <button class="btn-download" onclick="CourseDetail.downloadFile('기초과정_커리큘럼_2026.pdf')">다운로드</button>
+            </div>
+            <div class="file-item">
+              <div class="file-item-icon hwp">HWP</div>
+              <span class="file-item-name">강사소개서_제55기.hwp</span>
+              <span class="file-item-size">340KB</span>
+              <button class="btn-download" onclick="CourseDetail.downloadFile('강사소개서_제55기.hwp')">다운로드</button>
+            </div>
+            <!-- 첨부파일 없을 때: <span class="detail-val muted">첨부파일 없음</span> -->
           </div>
         </div>
 
@@ -409,116 +440,6 @@
   };
   AdminSidebar.mount(_keyMap[_type] || 'course-basic');
 
-  /* 상태 뱃지 */
-  const STATUS_BADGE = {
-    '준비중':   { cls: 'badge-gray',   label: '준비중' },
-    '접수중':   { cls: 'badge-green',  label: '접수중' },
-    '접수마감': { cls: 'badge-orange', label: '접수마감' },
-  };
-
-  /* 파일 아이콘 타입 */
-  function fileIconType(name) {
-    const ext = name.split('.').pop().toLowerCase();
-    if (ext === 'pdf')  return 'pdf';
-    if (ext === 'hwp')  return 'hwp';
-    if (['xlsx','xls'].includes(ext)) return 'xlsx';
-    if (['docx','doc'].includes(ext)) return 'docx';
-    return 'etc';
-  }
-
-  /* 더미 데이터 (실제 구현 시 API로 대체) */
-  const DUMMY = {
-    id: _id || '1000',
-    name: '제55기 숲해설가 기초과정',
-    status: '접수중',
-    eduStart: '2026-04-01',
-    eduEnd:   '2026-04-30',
-    applyStart: '2026-03-01 09:00',
-    applyEnd:   '2026-03-28 18:00',
-    capacity:   30,
-    applicants: 17,
-    lessonCount: 16,
-    eduHours: 40, eduMinutes: 30,
-    fileRequired: true,
-    certIssue: true,
-    regDate: '2026-02-14',
-    content: `본 과정은 숲해설가 자격 취득을 위한 기초 이론 과정입니다.
-
-■ 교육 목표
-- 숲의 생태 기초 이론을 체계적으로 습득합니다.
-- 숲해설 기법과 프로그램 개발 역량을 기릅니다.
-- 현장 실습을 통해 해설 능력을 실전 수준으로 높입니다.
-
-■ 주요 커리큘럼
-- 식물 생태학 기초 (4강)
-- 동물·곤충 생태학 기초 (4강)
-- 숲 체험 활동 기법 (4강)
-- 현장 실습 및 발표 (4강)
-
-■ 강사진
-- 김○○ 교수 (숲 생태학 전공)
-- 이○○ 박사 (환경교육학 전공)
-
-■ 유의사항
-- 전 과정 출석률 80% 이상 시 수료증 발급
-- 야외 실습 시 편한 복장 착용 필수`,
-    files: [
-      { name: '기초과정_커리큘럼_2026.pdf', size: '1.2MB' },
-      { name: '강사소개서_제55기.hwp',     size: '340KB' },
-    ],
-  };
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const d = DUMMY;
-
-    document.getElementById('dCourseName').textContent = d.name;
-
-    const st = STATUS_BADGE[d.status] || { cls: 'badge-gray', label: d.status };
-    document.getElementById('dStatus').innerHTML = `<span class="badge ${st.cls}">${st.label}</span>`;
-
-    document.getElementById('dEduStart').textContent    = d.eduStart;
-    document.getElementById('dEduEnd').textContent      = d.eduEnd;
-    document.getElementById('dApplyStart').textContent  = d.applyStart;
-    document.getElementById('dApplyEnd').textContent    = d.applyEnd;
-    document.getElementById('dLessonCount').textContent = `${d.lessonCount}강`;
-    document.getElementById('dEduHours').textContent    = `${d.eduHours}시간 ${String(d.eduMinutes ?? 0).padStart(2,'0')}분`;
-    document.getElementById('dRegDate').textContent     = d.regDate;
-
-    document.getElementById('dFileRequired').innerHTML = d.fileRequired
-      ? '<span class="badge-on">✓ 사용</span>'
-      : '<span class="badge-off">— 미사용</span>';
-
-    document.getElementById('dCertIssue').innerHTML = d.certIssue
-      ? '<span class="badge-on">✓ 발급</span>'
-      : '<span class="badge-off">— 미발급</span>';
-
-    /* 신청자 진행률 */
-    const pct = Math.min(Math.round((d.applicants / d.capacity) * 100), 100);
-    document.getElementById('dApplicantCount').textContent = d.applicants;
-    document.getElementById('dCapacity').textContent       = d.capacity;
-    const bar = document.getElementById('dProgressBar');
-    bar.style.width = `${pct}%`;
-    if (pct >= 100) bar.classList.add('full');
-    document.getElementById('dProgressPct').textContent = `${pct}%`;
-
-    /* 상세내용 */
-    document.getElementById('dContent').textContent = d.content;
-
-    /* 첨부파일 */
-    if (d.files && d.files.length) {
-      document.getElementById('dFileList').innerHTML = d.files.map(f => {
-        const ico = fileIconType(f.name);
-        return `
-          <div class="file-item">
-            <div class="file-item-icon ${ico}">${ico.toUpperCase()}</div>
-            <span class="file-item-name">${f.name}</span>
-            <span class="file-item-size">${f.size}</span>
-            <button class="btn-download" onclick="CourseDetail.downloadFile('${f.name}')">다운로드</button>
-          </div>`;
-      }).join('');
-    }
-  });
-
   /* ── 액션 */
   const CourseDetail = {
 
@@ -547,7 +468,6 @@
     },
 
     downloadApplicants() {
-      /* 실제 구현 시: 서버 API 호출 → 엑셀 파일 스트림 다운로드 */
       App.toast('신청자 목록 엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info');
     },
 

@@ -265,7 +265,27 @@
 
           <div style="padding:16px;">
             <div class="file-attach-wrap" id="fileAttachWrap">
-              <!-- JS로 3개 렌더링 -->
+              <div class="file-attach-row" id="fileRow0">
+                <div class="file-attach-input-wrap">
+                  <div class="file-fake-name" id="fileName0">파일을 선택해주세요</div>
+                  <button class="btn-file-browse" onclick="document.getElementById('fileInput0').click()">파일 선택</button>
+                </div>
+                <button class="btn-file-remove hidden" title="삭제">×</button>
+              </div>
+              <div class="file-attach-row" id="fileRow1">
+                <div class="file-attach-input-wrap">
+                  <div class="file-fake-name" id="fileName1">파일을 선택해주세요</div>
+                  <button class="btn-file-browse" onclick="document.getElementById('fileInput1').click()">파일 선택</button>
+                </div>
+                <button class="btn-file-remove hidden" title="삭제">×</button>
+              </div>
+              <div class="file-attach-row" id="fileRow2">
+                <div class="file-attach-input-wrap">
+                  <div class="file-fake-name" id="fileName2">파일을 선택해주세요</div>
+                  <button class="btn-file-browse" onclick="document.getElementById('fileInput2').click()">파일 선택</button>
+                </div>
+                <button class="btn-file-remove hidden" title="삭제">×</button>
+              </div>
             </div>
             <p class="file-hint">허용 형식: PDF, HWP, DOCX, XLSX, JPG, PNG, ZIP</p>
           </div>
@@ -289,76 +309,30 @@
   <script src="../assets/js/app.js"></script>
   <script src="../assets/js/components/header.js"></script>
   <script src="../assets/js/pages/admin.js"></script>
-  <script src="../assets/js/pages/education.js"></script>
   <script>
   'use strict';
 
-  document.addEventListener('DOMContentLoaded', () => {
-    AdminSidebar.mount('instructor-schedule');
+  AdminSidebar.mount('instructor-schedule');
 
-    const id = new URLSearchParams(location.search).get('id');
-    if (id) {
-      document.getElementById('pageTitle').textContent = '강사 활동 일정 수정';
-      document.title = '강사 활동 일정 수정 | 관리자 | 한국숲해설가협회';
-      InstrScheduleEdit.load(id);
+  /* 파일첨부 — 선택 이벤트 처리 */
+  [0, 1, 2].forEach(idx => {
+    const input = document.getElementById('fileInput' + idx);
+    if (input) {
+      input.addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+        if (file.size > 10 * 1024 * 1024) {
+          App.toast('파일 크기는 10MB 이하만 가능합니다.', 'warning');
+          this.value = '';
+          return;
+        }
+        const nameEl   = document.getElementById('fileName' + idx);
+        const removeBtn = document.querySelector('#fileRow' + idx + ' .btn-file-remove');
+        if (nameEl)    { nameEl.textContent = file.name; nameEl.classList.add('has-file'); }
+        if (removeBtn) removeBtn.classList.remove('hidden');
+      });
     }
-
-    FileAttach.render();
-
-    document.getElementById('fFileRequired').addEventListener('change', function () {
-      document.getElementById('fileRequiredDesc').textContent = this.checked
-        ? '활성화 — 신청폼에 파일첨부 필드 표시 (필수 제출)'
-        : '비활성화 — 신청폼에 파일첨부 미사용';
-    });
-
-    document.getElementById('fConfirmIssue').addEventListener('change', function () {
-      document.getElementById('confirmIssueDesc').textContent = this.checked
-        ? '활성화 — 활동 처리 시 활동확인서 자동발급'
-        : '비활성화 — 활동 처리 시 활동확인서 자동발급 안함';
-    });
   });
-
-
-  /* 파일첨부 모듈 */
-  const FileAttach = {
-    files: [null, null, null],
-
-    render() {
-      const wrap = document.getElementById('fileAttachWrap');
-      wrap.innerHTML = this.files.map((f, i) => `
-        <div class="file-attach-row" id="fileRow${i}">
-          <div class="file-attach-input-wrap">
-            <div class="file-fake-name ${f ? 'has-file' : ''}" id="fileName${i}">
-              ${f ? f.name : '파일을 선택해주세요'}
-            </div>
-            <button class="btn-file-browse" onclick="FileAttach.browse(${i})">파일 선택</button>
-          </div>
-          <button class="btn-file-remove ${f ? '' : 'hidden'}"
-                  onclick="FileAttach.remove(${i})" title="삭제">×</button>
-        </div>`).join('');
-    },
-
-    browse(idx) { document.getElementById(`fileInput${idx}`).click(); },
-
-    handleChange(idx, input) {
-      const file = input.files[0];
-      if (!file) return;
-      if (file.size > 10 * 1024 * 1024) {
-        App.toast('파일 크기는 10MB 이하만 가능합니다.', 'warning');
-        input.value = '';
-        return;
-      }
-      this.files[idx] = file;
-      this.render();
-    },
-
-    remove(idx) {
-      this.files[idx] = null;
-      document.getElementById(`fileInput${idx}`).value = '';
-      this.render();
-    },
-  };
-
 
   /* SmartEditor2 모의 동작 */
   const SeEditor = {
@@ -375,6 +349,7 @@
       this.htmlMode = !this.htmlMode;
       btn.classList.toggle('active', this.htmlMode);
       const ta = document.getElementById('seContent');
+      if (!ta) return;
       if (this.htmlMode) {
         ta.placeholder = 'HTML 소스를 직접 편집합니다.';
         ta.style.fontFamily = 'monospace';
@@ -391,46 +366,50 @@
     },
   };
 
+  /* 토글 설명 업데이트 */
+  const fFileRequired = document.getElementById('fFileRequired');
+  if (fFileRequired) {
+    fFileRequired.addEventListener('change', function () {
+      const desc = document.getElementById('fileRequiredDesc');
+      if (desc) desc.textContent = this.checked
+        ? '활성화 — 신청폼에 파일첨부 필드 표시 (필수 제출)'
+        : '비활성화 — 신청폼에 파일첨부 미사용';
+    });
+  }
 
-  /* InstrScheduleEdit — 저장 / 불러오기 */
+  const fConfirmIssue = document.getElementById('fConfirmIssue');
+  if (fConfirmIssue) {
+    fConfirmIssue.addEventListener('change', function () {
+      const desc = document.getElementById('confirmIssueDesc');
+      if (desc) desc.textContent = this.checked
+        ? '활성화 — 활동 처리 시 활동확인서 자동발급'
+        : '비활성화 — 활동 처리 시 활동확인서 자동발급 안함';
+    });
+  }
+
+  /* 저장 */
   const InstrScheduleEdit = {
-
-    load(id) {
-      const course = (window.ALL_COURSES_RAW || []).find(c => c.id === Number(id));
-      if (!course) return;
-
-      document.getElementById('fTitle').value         = course.title || '';
-      document.getElementById('fDateStart').value     = (course.date || '').slice(0, 10);
-      document.getElementById('fDateEnd').value       = (course.date || '').slice(0, 10);
-      document.getElementById('fFrom').value          = course.from  ? course.from + 'T00:00'  : '';
-      document.getElementById('fTo').value            = course.to    ? course.to   + 'T23:59'  : '';
-      document.getElementById('fQuota').value         = course.quota || '';
-      document.getElementById('seContent').value      = course.guide || '';
-    },
-
     validate() {
-      const title     = document.getElementById('fTitle').value.trim();
-      const dateStart = document.getElementById('fDateStart').value;
-      const dateEnd   = document.getElementById('fDateEnd').value;
-      const from      = document.getElementById('fFrom').value;
-      const to        = document.getElementById('fTo').value;
-      const quota     = document.getElementById('fQuota').value;
+      const title     = document.getElementById('fTitle')?.value.trim();
+      const dateStart = document.getElementById('fDateStart')?.value;
+      const dateEnd   = document.getElementById('fDateEnd')?.value;
+      const from      = document.getElementById('fFrom')?.value;
+      const to        = document.getElementById('fTo')?.value;
+      const quota     = document.getElementById('fQuota')?.value;
 
-      if (!title)     { App.toast('활동명을 입력해주세요.', 'warning'); document.getElementById('fTitle').focus(); return false; }
-      if (!dateStart) { App.toast('활동 시작일을 선택해주세요.', 'warning'); return false; }
-      if (!dateEnd)   { App.toast('활동 종료일을 선택해주세요.', 'warning'); return false; }
-      if (dateStart > dateEnd) { App.toast('활동 종료일이 시작일보다 빠를 수 없습니다.', 'warning'); return false; }
-      if (!from)      { App.toast('접수 시작일시를 선택해주세요.', 'warning'); return false; }
-      if (!to)        { App.toast('접수 종료일시를 선택해주세요.', 'warning'); return false; }
-      if (from >= to) { App.toast('접수 종료일시가 시작일시보다 빠를 수 없습니다.', 'warning'); return false; }
-      if (!quota || quota < 1) { App.toast('정원을 1명 이상 입력해주세요.', 'warning'); document.getElementById('fQuota').focus(); return false; }
-
+      if (!title)               { App.toast('활동명을 입력해주세요.', 'warning'); document.getElementById('fTitle')?.focus(); return false; }
+      if (!dateStart)           { App.toast('활동 시작일을 선택해주세요.', 'warning'); return false; }
+      if (!dateEnd)             { App.toast('활동 종료일을 선택해주세요.', 'warning'); return false; }
+      if (dateStart > dateEnd)  { App.toast('활동 종료일이 시작일보다 빠를 수 없습니다.', 'warning'); return false; }
+      if (!from)                { App.toast('접수 시작일시를 선택해주세요.', 'warning'); return false; }
+      if (!to)                  { App.toast('접수 종료일시를 선택해주세요.', 'warning'); return false; }
+      if (from >= to)           { App.toast('접수 종료일시가 시작일시보다 빠를 수 없습니다.', 'warning'); return false; }
+      if (!quota || quota < 1)  { App.toast('정원을 1명 이상 입력해주세요.', 'warning'); document.getElementById('fQuota')?.focus(); return false; }
       return true;
     },
 
     save() {
       if (!this.validate()) return;
-      /* TODO: AJAX — POST/PUT ADMIN_API.instructorSchedule */
       App.toast('저장되었습니다.', 'success');
       setTimeout(() => { location.href = 'instructor-schedule.html'; }, 900);
     },
