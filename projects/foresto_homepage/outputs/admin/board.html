@@ -23,6 +23,23 @@
     }
     /* 고정행 강조 */
     tr.row-pinned { background:#fffbeb; }
+
+    /* 썸네일 컬럼 — 협회지/전국지역협회/사공단소개/동아리소개 전용 */
+    .col-thumb { width:80px; text-align:center; vertical-align:middle; }
+    .thumb-img {
+      display: inline-block;
+      width: 64px; height: 48px;
+      border-radius: 5px;
+      background: #d4e8d0;   /* PHP 연동 시 <img> 태그로 교체 */
+      object-fit: cover;
+      vertical-align: middle;
+    }
+    .thumb-img.has-img {
+      background: none;
+      width: 64px; height: 48px;
+      border: 1px solid #e3eadd;
+    }
+    .thumb-none { font-size:11px; color:#bbb; }
   </style>
 </head>
 <body class="admin-body">
@@ -81,6 +98,7 @@
           <colgroup>
             <col style="width:34px">
             <col style="width:52px">
+            <col class="col-thumb"><!-- 썸네일 컬럼: newsletter/region/intro/club만 노출 -->
             <col>
             <col style="width:8%">
             <col style="width:9%">
@@ -92,6 +110,7 @@
                 <input type="checkbox" id="chkAll" onchange="BoardAdmin.toggleAll(this.checked)">
               </th>
               <th>No</th>
+              <th class="col-thumb">썸네일</th>
               <th style="text-align:center">제목</th>
               <th>작성자</th>
               <th>등록일</th>
@@ -103,6 +122,10 @@
             <tr class="row-pinned">
               <td class="col-chk"><input type="checkbox" class="row-chk" data-id="5001" onchange="BoardAdmin._syncBtns()"></td>
               <td><span class="pin-badge">고정</span></td>
+              <td class="col-thumb">
+                <!-- PHP: 에디터 첫 번째 이미지 경로를 src에 삽입. 없으면 thumb-none 노출 -->
+                <span class="thumb-img"></span>
+              </td>
               <td style="text-align:center"><a class="post-title-link" href="board-detail.html?type=notice&id=5001">2026년 상반기 협회 공지사항</a></td>
               <td>관리자A</td>
               <td class="cell-mono">2026-03-15</td>
@@ -112,6 +135,9 @@
             <tr>
               <td class="col-chk"><input type="checkbox" class="row-chk" data-id="5002" onchange="BoardAdmin._syncBtns()"></td>
               <td>3</td>
+              <td class="col-thumb">
+                <span class="thumb-img"></span>
+              </td>
               <td style="text-align:center"><a class="post-title-link" href="board-detail.html?type=notice&id=5002">회원증 갱신 안내</a></td>
               <td>관리자B</td>
               <td class="cell-mono">2026-03-10</td>
@@ -120,6 +146,9 @@
             <tr>
               <td class="col-chk"><input type="checkbox" class="row-chk" data-id="5003" onchange="BoardAdmin._syncBtns()"></td>
               <td>2</td>
+              <td class="col-thumb">
+                <span class="thumb-none">-</span><!-- 이미지 없는 경우 -->
+              </td>
               <td style="text-align:center"><a class="post-title-link" href="board-detail.html?type=notice&id=5003">사무국 이전 안내</a></td>
               <td>관리자A</td>
               <td class="cell-mono">2026-02-28</td>
@@ -128,12 +157,15 @@
             <tr>
               <td class="col-chk"><input type="checkbox" class="row-chk" data-id="5004" onchange="BoardAdmin._syncBtns()"></td>
               <td>1</td>
+              <td class="col-thumb">
+                <span class="thumb-img"></span>
+              </td>
               <td style="text-align:center"><a class="post-title-link" href="board-detail.html?type=notice&id=5004">개인정보처리방침 개정 안내</a></td>
               <td>관리자A</td>
               <td class="cell-mono">2026-02-15</td>
               <td class="cell-mono">53</td>
             </tr>
-            <!-- 데이터 없을 때: <tr><td colspan="6" class="td-empty">등록된 게시글이 없습니다.</td></tr> -->
+            <!-- 데이터 없을 때: <tr><td colspan="7" class="td-empty">등록된 게시글이 없습니다.</td></tr> -->
           </tbody>
         </table>
       </div>
@@ -154,14 +186,14 @@
   <script src="../assets/js/pages/admin.js"></script>
   <script>
   const BOARD_CONFIG = {
-    notice:       { title: '공지사항 관리',  navKey: 'board-notice'       },
-    newsletter:   { title: '협회지 관리',    navKey: 'board-newsletter'   },
-    press:        { title: '언론보도 관리',  navKey: 'board-press'        },
-    gallery:      { title: '갤러리 관리',    navKey: 'board-gallery'      },
-    'forest-work':{ title: '숲일터 관리',    navKey: 'board-forest-work'  },
-    region:       { title: '전국지역협회 관리', navKey: 'board-region'    },
-    intro:        { title: '사공단소개 관리',  navKey: 'board-intro'      },
-    club:         { title: '동아리소개 관리',  navKey: 'board-club'       },
+    notice:       { title: '공지사항 관리',     navKey: 'board-notice',       thumb: false },
+    newsletter:   { title: '협회지 관리',        navKey: 'board-newsletter',   thumb: true  },
+    press:        { title: '언론보도 관리',      navKey: 'board-press',        thumb: false },
+    gallery:      { title: '갤러리 관리',        navKey: 'board-gallery',      thumb: false },
+    'forest-work':{ title: '숲일터 관리',        navKey: 'board-forest-work',  thumb: false },
+    region:       { title: '전국지역협회 관리',  navKey: 'board-region',       thumb: true  },
+    intro:        { title: '사공단소개 관리',    navKey: 'board-intro',        thumb: true  },
+    club:         { title: '동아리소개 관리',    navKey: 'board-club',         thumb: true  },
   };
 
   const BTYPE   = new URLSearchParams(location.search).get('type') || 'notice';
@@ -174,6 +206,11 @@
 
   const btnCreate = document.getElementById('btnCreate');
   if (btnCreate) btnCreate.onclick = () => { location.href = 'board-edit.html?type=' + BTYPE; };
+
+  /* 썸네일 컬럼: 해당 게시판 타입이 아니면 숨김 */
+  if (!BCONFIG.thumb) {
+    document.querySelectorAll('.col-thumb').forEach(el => { el.style.display = 'none'; });
+  }
 
   AdminSidebar.mount(BCONFIG.navKey);
 

@@ -12,6 +12,7 @@ document.title = [C.projectName, 'SB', C.version].filter(Boolean).join(' — ');
 
 // ── 상태 ──
 let currentFilter = 'all', searchKw = '', currentDetailId = null, lastDetailId = null;
+let viewMode = 'image'; // 'proto' | 'image'
 
 // ── 섹션 헬퍼 ──
 const SEC = {
@@ -170,21 +171,64 @@ function showDetail(id) {
   document.getElementById('detailNum').textContent = p.id;
   document.getElementById('detailTitle').textContent = p.name;
   updateNavButtons();
-
-  const wrap = document.getElementById('detail-img-wrap');
-  wrap.innerHTML = '<img id="detail-img" src="" alt="" onclick="openModal()">';
-  const img = document.getElementById('detail-img');
-  img.style.cssText = 'cursor:zoom-in;width:98%;max-width:98%;height:auto';
-  img.alt = p.name;
-  img.onerror = function () {
-    const icon = p.section === 'doc' ? '📄' : '🖼';
-    const text = p.section === 'doc' ? '문서 이미지 미등록' : '스크린샷 미캡처';
-    wrap.innerHTML = `<div class="detail-no-img"><div class="icon">${icon}</div><p>${text}</p><p class="sub">${p.img}</p></div>`;
-  };
-  img.src = `images/${p.img}`;
+  updateViewToggleBtn(p);
+  renderDetailContent(p);
   document.getElementById('detail-view').scrollTop = 0;
   buildDescPanel(p);
   highlightSidebar(id);
+}
+
+function renderDetailContent(p) {
+  const wrap = document.getElementById('detail-img-wrap');
+  const hasProto = p.path && p.path !== '#';
+  const useProto = hasProto && viewMode === 'proto';
+
+  if (useProto) {
+    const iframeW = 1400;
+    wrap.innerHTML = `<iframe id="detail-iframe" src="${p.path}" style="width:${iframeW}px;border:none;display:block;transform-origin:top left;position:absolute;top:0;left:0;"></iframe>`;
+    const applyScale = () => {
+      const iframe = document.getElementById('detail-iframe');
+      if (!iframe) return;
+      const availW = wrap.clientWidth;
+      const availH = wrap.clientHeight;
+      const scale = Math.min(1, availW / iframeW);
+      iframe.style.transform = `scale(${scale})`;
+      iframe.style.width = `${iframeW}px`;
+      iframe.style.height = `${availH / scale}px`;
+    };
+    applyScale();
+    if (window._iframeResizeObs) window._iframeResizeObs.disconnect();
+    window._iframeResizeObs = new ResizeObserver(applyScale);
+    window._iframeResizeObs.observe(wrap);
+  } else {
+    wrap.innerHTML = '<img id="detail-img" src="" alt="" onclick="openModal()">';
+    const img = document.getElementById('detail-img');
+    img.style.cssText = 'cursor:zoom-in;width:98%;max-width:98%;height:auto';
+    img.alt = p.name;
+    img.onerror = function () {
+      const icon = p.section === 'doc' ? '📄' : '🖼';
+      const text = p.section === 'doc' ? '문서 이미지 미등록' : '스크린샷 미캡처';
+      wrap.innerHTML = `<div class="detail-no-img"><div class="icon">${icon}</div><p>${text}</p><p class="sub">${p.img}</p></div>`;
+    };
+    img.src = `images/${p.img}`;
+  }
+}
+
+function updateViewToggleBtn(p) {
+  const btn = document.getElementById('btnViewToggle');
+  if (!btn) return;
+  const hasProto = p && p.path && p.path !== '#';
+  btn.style.display = hasProto ? '' : 'none';
+  btn.textContent = viewMode === 'proto' ? '🖼 스크린샷' : '▶ 프로토타입';
+  btn.title = viewMode === 'proto' ? '스크린샷으로 보기' : '프로토타입으로 보기';
+}
+
+function toggleViewMode() {
+  viewMode = viewMode === 'proto' ? 'image' : 'proto';
+  const p = PAGES.find(pg => pg.id === currentDetailId);
+  if (!p) return;
+  updateViewToggleBtn(p);
+  renderDetailContent(p);
 }
 
 function buildDescPanel(p) {

@@ -118,8 +118,8 @@
 ======================================== */
 .payment-options {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 36px; /* ✅ 24px → 36px (1.5배) */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
     margin-bottom: 40px;
 }
 
@@ -361,6 +361,57 @@
     font-weight: 600;
 }
 
+/* 오답 확인 카드 */
+.payment-card.odam {
+    border-color: #00b894;
+    border-width: 3px;
+}
+
+.payment-card.odam:hover {
+    border-color: #00957a;
+    box-shadow: 0 12px 30px rgba(0, 184, 148, 0.2);
+}
+
+.card-tag.odam-tag {
+    background: #00b894;
+}
+
+.discount-percent.odam-badge {
+    background: #00b894;
+}
+
+.price.odam-price {
+    color: #00b894;
+}
+
+.benefits-list li.odam-caution {
+    color: #888;
+    font-size: 0.95rem;
+}
+
+.benefits-list li.odam-caution:before {
+    content: "※";
+    color: #bbb;
+    font-size: 1rem;
+}
+
+.value-comparison.odam-comparison {
+    background: rgba(0, 184, 148, 0.08);
+}
+
+.comparison-value.odam-value {
+    color: #00b894;
+}
+
+.payment-btn.odam-btn {
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    color: white;
+}
+
+.payment-btn.odam-btn:hover {
+    box-shadow: 0 8px 20px rgba(0, 184, 148, 0.4);
+}
+
 /* 버튼 */
 .payment-btn {
     width: 100%;
@@ -564,15 +615,25 @@
     }
 }
 
+@media (max-width: 1100px) {
+    .payment-options {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+    .payment-card.odam {
+        grid-column: 1 / -1;
+        max-width: 480px;
+        margin: 0 auto;
+        width: 100%;
+    }
+}
+
 @media (max-width: 1024px) {
     .payment-container {
         max-width: 900px;
     }
-    
-    .payment-options {
-        gap: 24px;
-    }
-    
+
     .payment-card {
         padding: 36px 30px;
     }

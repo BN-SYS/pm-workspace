@@ -28,7 +28,7 @@ window.PAGES = [
   },
   {
     id: 'DOC-04', section: 'doc', group: 'Documents', name: '사용자 Flow Chart',
-    path: '#', img: 'flowchart.png', tags: [],
+    path: 'flowchart.html', img: 'flowchart.png', tags: [],
     desc: '사용자 주요 태스크별 화면 흐름도'
   },
   {

@@ -137,18 +137,7 @@ function initPaymentPage() {
 
 // 테스트 데이터 검증
 function validateTestData() {
-    const userData = localStorage.getItem('userData');
-    const stage1 = localStorage.getItem('stage1Result');
-    const stage2 = localStorage.getItem('stage2Result');
-    const stage3 = localStorage.getItem('stage3Result');
-
-    // 테스트 데이터가 없으면 홈으로 리다이렉트
-    if (!userData || !stage1 || !stage2 || !stage3) {
-        alert('테스트를 먼저 완료해주세요.');
-        window.location.href = 'index.html';
-        return false;
-    }
-    
+    // PHP 연동 전 프로토타입: 검증 생략 (실제 구현 시 서버사이드 세션 검증으로 대체)
     return true;
 }
 
@@ -167,6 +156,8 @@ function preventDuplicatePayment() {
             if (confirm('이미 결제하셨습니다. 결과 페이지로 이동하시겠습니까?')) {
                 if (payment.type === 'basic') {
                     window.location.href = 'result-basic.html';
+                } else if (payment.type === 'odam') {
+                    window.location.href = 'result-odam.html';
                 } else {
                     window.location.href = 'result-detail.html';
                 }
@@ -200,22 +191,25 @@ function processPayment(type) {
         return;
     }
 
-    const userData = JSON.parse(localStorage.getItem('userData'));
-    const stage1 = JSON.parse(localStorage.getItem('stage1Result'));
-    const stage2 = JSON.parse(localStorage.getItem('stage2Result'));
-    const stage3 = JSON.parse(localStorage.getItem('stage3Result'));
+    // PHP 연동 전 프로토타입: 데이터 없을 때 샘플로 대체
+    const userData = safeGetLocalStorage('userData') || { name: '홍길동', email: 'test@mensa.kr' };
 
     // 가격 정보
     const prices = {
-        basic: { 
-            original: 19900, 
+        basic: {
+            original: 19900,
             discounted: 14900,
             name: '기본 결과'
         },
-        detail: { 
-            original: 39900, 
+        detail: {
+            original: 39900,
             discounted: 23900,
             name: '상세 리포트'
+        },
+        odam: {
+            original: 9900,
+            discounted: 5000,
+            name: '오답 확인'
         }
     };
     
@@ -264,6 +258,8 @@ ${selectedPrice.name} 결제를 진행하시겠습니까?`;
         setTimeout(() => {
             if (type === 'basic') {
                 window.location.href = 'result-basic.html';
+            } else if (type === 'odam') {
+                window.location.href = 'result-odam.html';
             } else {
                 window.location.href = 'result-detail.html';
             }

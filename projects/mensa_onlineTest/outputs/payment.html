@@ -85,6 +85,38 @@
                         <span class="btn-text">상세 리포트로 완벽 분석하기</span>
                     </button>
                 </div>
+
+                <!-- ✅ 오답 확인 (신규) - 단독 결제 가능 -->
+                <div class="payment-card odam" onclick="processPayment('odam')">
+                    <div class="card-tag odam-tag">신규</div>
+                    <h3>오답 확인</h3>
+
+                    <div class="price-wrapper">
+                        <div class="discount-badge">
+                            <span class="discount-percent odam-badge">50% 할인</span>
+                        </div>
+                        <div class="original-price">9,900원</div>
+                        <div class="price odam-price">
+                            5,000<small>원</small>
+                        </div>
+                        <!-- PHP: 가격 미확정 — 클라이언트 확정 후 반영 -->
+                        <div class="price-description">웹 열람 전용 · 1회 제공</div>
+                    </div>
+
+                    <ul class="benefits-list">
+                        <li><strong>단계별 오답 수 확인</strong></li>
+                        <li><strong>틀린 문제 및 선택 답안 확인</strong></li>
+                    </ul>
+
+                    <!-- <div class="value-comparison odam-comparison">
+                        <span class="comparison-text">제공 내용</span>
+                        <span class="comparison-value odam-value">오답 문제 확인</span>
+                    </div> -->
+
+                    <button class="payment-btn odam-btn" onclick="processPayment('odam')">
+                        <span class="btn-text">오답 확인하기</span>
+                    </button>
+                </div>
             </div>
 
         </div>

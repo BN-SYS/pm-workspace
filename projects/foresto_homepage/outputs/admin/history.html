@@ -31,13 +31,24 @@
       text-overflow: clip;
     }
     .history-thumb {
-      width: 54px;
-      height: 38px;
+      width: 64px;
+      height: 48px;
       object-fit: cover;
-      border-radius: 4px;
+      border-radius: 5px;
       display: block;
       margin: 0 auto;
+      border: 1px solid #e3eadd;
     }
+    /* 이미지 없는 경우 플레이스홀더 */
+    .thumb-placeholder {
+      display: block;
+      width: 64px;
+      height: 48px;
+      background: #d4e8d0;
+      border-radius: 5px;
+      margin: 0 auto;
+    }
+    .thumb-none { font-size:11px; color:#bbb; }
   </style>
 </head>
 <body class="admin-body">
@@ -76,7 +87,10 @@
               <td class="center">3</td>
               <td class="center cell-mono">2026-03-09 14:22:00</td>
               <td class="center" style="font-weight:700;font-size:15px">2026</td>
-              <td class="center td-thumb"><span style="color:var(--gray-mid);font-size:12px">-</span></td>
+              <td class="center td-thumb">
+                <!-- PHP: src에 연도 대표 이미지 경로 삽입. 없으면 thumb-none 노출 -->
+                <span class="thumb-none">-</span>
+              </td>
               <td class="td-history-content">
                 <div class="history-item-line">03.30 제55기 숲해설가 전문가과정 모집 시작</div>
                 <div class="history-item-line">03.30 2026년도 정기 이사회 개최, 사업계획 확정</div>
@@ -86,7 +100,7 @@
                   <button class="btn btn-outline btn-xs"
                     onclick="event.stopPropagation();location.href='history-edit.html?year=2026'">수정</button>
                   <button class="btn btn-danger btn-xs"
-                    onclick="event.stopPropagation();App.toast('2026년 연혁이 삭제되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', \'error\')">삭제</button>
+                    onclick="event.stopPropagation();App.toast('2026년 연혁이 삭제되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', 'error')">삭제</button>
                 </div>
               </td>
             </tr>
@@ -94,7 +108,10 @@
               <td class="center">2</td>
               <td class="center cell-mono">2026-02-15 09:10:00</td>
               <td class="center" style="font-weight:700;font-size:15px">2025</td>
-              <td class="center td-thumb"><span style="color:var(--gray-mid);font-size:12px">-</span></td>
+              <td class="center td-thumb">
+                <!-- PHP: src에 연도 대표 이미지 경로 삽입 -->
+                <span class="thumb-placeholder"></span>
+              </td>
               <td class="td-history-content">
                 <div class="history-item-line">03.30 제54기 전문가과정 수료식, 수료생 42명 배출</div>
                 <div class="history-item-line">03.30 전국 지역 숲해설가 연합 워크숍 개최 (전주)</div>
@@ -105,7 +122,7 @@
                   <button class="btn btn-outline btn-xs"
                     onclick="event.stopPropagation();location.href='history-edit.html?year=2025'">수정</button>
                   <button class="btn btn-danger btn-xs"
-                    onclick="event.stopPropagation();App.toast('2025년 연혁이 삭제되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', \'error\')">삭제</button>
+                    onclick="event.stopPropagation();App.toast('2025년 연혁이 삭제되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', 'error')">삭제</button>
                 </div>
               </td>
             </tr>
@@ -113,7 +130,10 @@
               <td class="center">1</td>
               <td class="center cell-mono">2026-01-20 16:05:00</td>
               <td class="center" style="font-weight:700;font-size:15px">2023</td>
-              <td class="center td-thumb"><span style="color:var(--gray-mid);font-size:12px">-</span></td>
+              <td class="center td-thumb">
+                <!-- PHP: src에 연도 대표 이미지 경로 삽입 -->
+                <span class="thumb-placeholder"></span>
+              </td>
               <td class="td-history-content">
                 <div class="history-item-line">03.30 창립 25주년 기념행사 및 심포지엄 개최</div>
                 <div class="history-item-line">03.30 사회공헌단 확대 개편, 전국 12개 권역 운영 체계 구축</div>
@@ -124,7 +144,7 @@
                   <button class="btn btn-outline btn-xs"
                     onclick="event.stopPropagation();location.href='history-edit.html?year=2023'">수정</button>
                   <button class="btn btn-danger btn-xs"
-                    onclick="event.stopPropagation();App.toast('2023년 연혁이 삭제되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', \'error\')">삭제</button>
+                    onclick="event.stopPropagation();App.toast('2023년 연혁이 삭제되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', 'error')">삭제</button>
                 </div>
               </td>
             </tr>
