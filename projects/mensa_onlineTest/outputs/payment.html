@@ -87,16 +87,16 @@
                 </div>
 
                 <!-- ✅ 오답 확인 (신규) - 단독 결제 가능 -->
-                <div class="payment-card odam" onclick="processPayment('odam')">
-                    <div class="card-tag odam-tag">신규</div>
+                <div class="payment-card incorrect" onclick="processPayment('incorrect')">
+                    <div class="card-tag incorrect-tag">신규</div>
                     <h3>오답 확인</h3>
 
                     <div class="price-wrapper">
                         <div class="discount-badge">
-                            <span class="discount-percent odam-badge">50% 할인</span>
+                            <span class="discount-percent incorrect-badge">50% 할인</span>
                         </div>
                         <div class="original-price">9,900원</div>
-                        <div class="price odam-price">
+                        <div class="price incorrect-price">
                             5,000<small>원</small>
                         </div>
                         <!-- PHP: 가격 미확정 — 클라이언트 확정 후 반영 -->
@@ -108,12 +108,12 @@
                         <li><strong>틀린 문제 및 선택 답안 확인</strong></li>
                     </ul>
 
-                    <!-- <div class="value-comparison odam-comparison">
+                    <!-- <div class="value-comparison incorrect-comparison">
                         <span class="comparison-text">제공 내용</span>
-                        <span class="comparison-value odam-value">오답 문제 확인</span>
+                        <span class="comparison-value incorrect-value">오답 문제 확인</span>
                     </div> -->
 
-                    <button class="payment-btn odam-btn" onclick="processPayment('odam')">
+                    <button class="payment-btn incorrect-btn" onclick="processPayment('incorrect')">
                         <span class="btn-text">오답 확인하기</span>
                     </button>
                 </div>

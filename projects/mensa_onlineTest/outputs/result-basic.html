@@ -7,6 +7,35 @@
     <title>테스트 결과 - 온라인 테스트</title>
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/result.css">
+    <style>
+        .incorrect-cta-section {
+            text-align: center;
+            padding: 20px 0 8px;
+            margin-top: 12px;
+            border-top: 1px solid #eee;
+        }
+        .incorrect-cta-label {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 12px;
+        }
+        .incorrect-cta-btn {
+            display: inline-block;
+            padding: 11px 28px;
+            background: #00b894;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .incorrect-cta-btn:hover { background: #00957a; }
+        .incorrect-cta-go { background: #636e72; }
+        .incorrect-cta-go:hover { background: #4a4f52; }
+    </style>
 </head>
 
 <body>
@@ -88,7 +117,7 @@
                             <span class="feature-text">PDF 다운로드 및 인쇄 지원</span>
                         </div>
                     </div>
-                    <button class="upgrade-btn" onclick="upgradeToDetail()">
+                    <button class="upgrade-btn" onclick="processPayment('detail')">
                         <span class="btn-text">9,000원으로 상세 결과 보기</span>
                         <span class="btn-arrow">→</span>
                     </button>
@@ -112,6 +141,17 @@
                 <button class="action-btn" onclick="location.href='index.html'">
                     홈으로
                 </button>
+            </div>
+
+            <!-- 오답 확인 유입 -->
+            <div class="incorrect-cta-section">
+                <p class="incorrect-cta-label">내가 틀린 문제가 궁금하신가요?</p>
+                <button class="incorrect-cta-btn" id="incorrectBuyBtn" onclick="processPayment('incorrect')">
+                    오답 확인 구매하기 &nbsp;·&nbsp; 5,000원
+                </button>
+                <a class="incorrect-cta-btn incorrect-cta-go" id="incorrectGoBtn" href="result-incorrect.html" style="display:none">
+                    오답 확인 바로가기 →
+                </a>
             </div>
         </div>
     </main>

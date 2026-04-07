@@ -12,13 +12,13 @@
     ============================================================ */
 
     /* 유출 방지: 드래그·복사 차단 */
-    .odam-body {
+    .incorrect-body {
       user-select: none;
       -webkit-user-select: none;
       -moz-user-select: none;
     }
 
-    /* 워터마크 오버레이 — 콘텐츠 영역(.odam-container) 안에만 */
+    /* 워터마크 오버레이 — 콘텐츠 영역(.incorrect-container) 안에만 */
     #watermarkOverlay {
       position: absolute;
       inset: 0;
@@ -28,7 +28,7 @@
     }
 
     /* ---- 페이지 래퍼 ---- */
-    .odam-container {
+    .incorrect-container {
       position: relative;
       max-width: 860px;
       margin: 32px auto 60px;
@@ -104,6 +104,13 @@
       font-size: 15px;
       font-weight: 700;
       color: #fff;
+    }
+
+    .stage-title-name {
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.8);
+      margin-left: 2px;
     }
 
     .stage-wrong-count {
@@ -371,11 +378,11 @@
   </style>
 </head>
 
-<body class="odam-body">
+<body class="incorrect-body">
   <div id="header-placeholder"></div>
 
   <main>
-    <div class="odam-container">
+    <div class="incorrect-container">
 
       <!-- 워터마크 오버레이 (JS 생성 — 실서버 연동 시 PHP GD/Imagick 서버사이드로 교체) -->
       <div id="watermarkOverlay"></div>
@@ -405,7 +412,12 @@
         <?php if (empty($stage['wrongs'])): continue; endif; ?>
         <div class="stage-section">
           <div class="stage-header">
-            <span class="stage-label"><?= $stage['label'] ?>단계</span>
+            <span class="stage-label">
+              <?= $stage['label'] ?>단계
+              <?php if (!empty($stage['title'])): ?>
+                <span class="stage-title-name">· <?= htmlspecialchars($stage['title']) ?></span>
+              <?php endif; ?>
+            </span>
             <span class="stage-wrong-count">
               <?= count($stage['wrongs']) ?>문항 틀림 (<?= count($stage['wrongs']) ?> / <?= $stage['total'] ?>)
             </span>
@@ -453,7 +465,8 @@
       ══════════════════════════════ -->
       <div class="stage-section">
         <div class="stage-header">
-          <span class="stage-label">1단계</span>
+          <!-- ▼ PHP: $stage['label']단계 · $stage['title'] (관리자 설정 타이틀) -->
+          <span class="stage-label">1단계 <span class="stage-title-name">· 패턴인식</span></span>
           <span class="stage-wrong-count">2문항 틀림 (2 / 15)</span>
         </div>
         <div class="stage-body">
@@ -501,7 +514,8 @@
       ══════════════════════════════ -->
       <div class="stage-section">
         <div class="stage-header">
-          <span class="stage-label">2단계</span>
+          <!-- ▼ PHP: $stage['label']단계 · $stage['title'] -->
+          <span class="stage-label">2단계 <span class="stage-title-name">· 논리사고</span></span>
           <span class="stage-wrong-count">3문항 틀림 (3 / 5)</span>
         </div>
         <div class="stage-body">
@@ -565,7 +579,8 @@
       ══════════════════════════════ -->
       <div class="stage-section">
         <div class="stage-header">
-          <span class="stage-label">3단계</span>
+          <!-- ▼ PHP: $stage['label']단계 · $stage['title'] -->
+          <span class="stage-label">3단계 <span class="stage-title-name">· 종합인지</span></span>
           <span class="stage-wrong-count">1문항 틀림 (1 / 5)</span>
         </div>
         <div class="stage-body">

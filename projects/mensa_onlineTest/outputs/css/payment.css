@@ -362,53 +362,53 @@
 }
 
 /* 오답 확인 카드 */
-.payment-card.odam {
+.payment-card.incorrect {
     border-color: #00b894;
     border-width: 3px;
 }
 
-.payment-card.odam:hover {
+.payment-card.incorrect:hover {
     border-color: #00957a;
     box-shadow: 0 12px 30px rgba(0, 184, 148, 0.2);
 }
 
-.card-tag.odam-tag {
+.card-tag.incorrect-tag {
     background: #00b894;
 }
 
-.discount-percent.odam-badge {
+.discount-percent.incorrect-badge {
     background: #00b894;
 }
 
-.price.odam-price {
+.price.incorrect-price {
     color: #00b894;
 }
 
-.benefits-list li.odam-caution {
+.benefits-list li.incorrect-caution {
     color: #888;
     font-size: 0.95rem;
 }
 
-.benefits-list li.odam-caution:before {
+.benefits-list li.incorrect-caution:before {
     content: "※";
     color: #bbb;
     font-size: 1rem;
 }
 
-.value-comparison.odam-comparison {
+.value-comparison.incorrect-comparison {
     background: rgba(0, 184, 148, 0.08);
 }
 
-.comparison-value.odam-value {
+.comparison-value.incorrect-value {
     color: #00b894;
 }
 
-.payment-btn.odam-btn {
+.payment-btn.incorrect-btn {
     background: linear-gradient(135deg, #00b894, #00cec9);
     color: white;
 }
 
-.payment-btn.odam-btn:hover {
+.payment-btn.incorrect-btn:hover {
     box-shadow: 0 8px 20px rgba(0, 184, 148, 0.4);
 }
 
@@ -621,7 +621,7 @@
         gap: 24px;
     }
 
-    .payment-card.odam {
+    .payment-card.incorrect {
         grid-column: 1 / -1;
         max-width: 480px;
         margin: 0 auto;
