@@ -361,54 +361,54 @@
     font-weight: 600;
 }
 
-/* 오답 확인 카드 */
-.payment-card.incorrect {
+/* 상세리포트 + 오답확인 번들 카드 */
+.payment-card.bundle {
     border-color: #00b894;
     border-width: 3px;
 }
 
-.payment-card.incorrect:hover {
+.payment-card.bundle:hover {
     border-color: #00957a;
     box-shadow: 0 12px 30px rgba(0, 184, 148, 0.2);
 }
 
-.card-tag.incorrect-tag {
+.card-tag.bundle-tag {
     background: #00b894;
 }
 
-.discount-percent.incorrect-badge {
+.discount-percent.bundle-badge {
     background: #00b894;
 }
 
-.price.incorrect-price {
+.price.bundle-price {
     color: #00b894;
 }
 
-.benefits-list li.incorrect-caution {
+.benefits-list li.bundle-caution {
     color: #888;
     font-size: 0.95rem;
 }
 
-.benefits-list li.incorrect-caution:before {
+.benefits-list li.bundle-caution:before {
     content: "※";
     color: #bbb;
     font-size: 1rem;
 }
 
-.value-comparison.incorrect-comparison {
+.value-comparison.bundle-comparison {
     background: rgba(0, 184, 148, 0.08);
 }
 
-.comparison-value.incorrect-value {
+.comparison-value.bundle-value {
     color: #00b894;
 }
 
-.payment-btn.incorrect-btn {
+.payment-btn.bundle-btn {
     background: linear-gradient(135deg, #00b894, #00cec9);
     color: white;
 }
 
-.payment-btn.incorrect-btn:hover {
+.payment-btn.bundle-btn:hover {
     box-shadow: 0 8px 20px rgba(0, 184, 148, 0.4);
 }
 
@@ -621,7 +621,7 @@
         gap: 24px;
     }
 
-    .payment-card.incorrect {
+    .payment-card.bundle {
         grid-column: 1 / -1;
         max-width: 480px;
         margin: 0 auto;

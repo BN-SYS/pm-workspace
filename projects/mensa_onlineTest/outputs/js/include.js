@@ -127,9 +127,9 @@ function initUserHeader() {
 // 결제 처리 — 프로토타입: 확인창 없이 결과 페이지로 직접 이동
 // PHP 연동 시: PG사 결제 → 서버 검증 → 구매 이력 저장 → 리다이렉트
 function processPayment(type) {
-    if (type === 'basic')     location.href = 'result-basic.html';
-    else if (type === 'incorrect') location.href = 'result-incorrect.html';
-    else                      location.href = 'result-detail.html';
+    if (type === 'basic')   location.href = 'result-basic.html';
+    else if (type === 'bundle') location.href = 'result-detail.html'; // 번들: 상세리포트 화면으로 이동, 오답확인 링크는 result-detail 하단에서 제공
+    else                    location.href = 'result-detail.html';
 }
 
 /* ========================================

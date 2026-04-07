@@ -143,15 +143,12 @@
                 </button>
             </div>
 
-            <!-- 오답 확인 유입 -->
+            <!-- 번들 유입 — 오답 확인은 상세리포트+오답확인 패키지에서만 제공 -->
             <div class="incorrect-cta-section">
-                <p class="incorrect-cta-label">내가 틀린 문제가 궁금하신가요?</p>
-                <button class="incorrect-cta-btn" id="incorrectBuyBtn" onclick="processPayment('incorrect')">
-                    오답 확인 구매하기 &nbsp;·&nbsp; 5,000원
+                <p class="incorrect-cta-label">오답 확인은 <strong>상세리포트 + 오답확인</strong> 패키지에서만 제공됩니다.</p>
+                <button class="incorrect-cta-btn" onclick="processPayment('bundle')">
+                    상세리포트 + 오답확인 패키지 · 28,900원
                 </button>
-                <a class="incorrect-cta-btn incorrect-cta-go" id="incorrectGoBtn" href="result-incorrect.html" style="display:none">
-                    오답 확인 바로가기 →
-                </a>
             </div>
         </div>
     </main>

@@ -86,35 +86,36 @@
                     </button>
                 </div>
 
-                <!-- ✅ 오답 확인 (신규) - 단독 결제 가능 -->
-                <div class="payment-card incorrect" onclick="processPayment('incorrect')">
-                    <div class="card-tag incorrect-tag">신규</div>
-                    <h3>오답 확인</h3>
+                <!-- ✅ 상세리포트 + 오답확인 번들 -->
+                <div class="payment-card bundle" onclick="processPayment('bundle')">
+                    <div class="card-tag bundle-tag">패키지</div>
+                    <h3>상세리포트<br>+ 오답 확인</h3>
 
                     <div class="price-wrapper">
                         <div class="discount-badge">
-                            <span class="discount-percent incorrect-badge">50% 할인</span>
+                            <span class="discount-percent bundle-badge">42% 할인</span>
                         </div>
-                        <div class="original-price">9,900원</div>
-                        <div class="price incorrect-price">
-                            5,000<small>원</small>
+                        <div class="original-price">49,800원</div>
+                        <div class="price bundle-price">
+                            28,900<small>원</small>
                         </div>
-                        <!-- PHP: 가격 미확정 — 클라이언트 확정 후 반영 -->
-                        <div class="price-description">웹 열람 전용 · 1회 제공</div>
+                        <div class="price-description">상세리포트 + 오답 5,000원 추가</div>
                     </div>
 
                     <ul class="benefits-list">
-                        <li><strong>단계별 오답 수 확인</strong></li>
-                        <li><strong>틀린 문제 및 선택 답안 확인</strong></li>
+                        <li><strong class="highlight-text">상세리포트 전체 포함</strong></li>
+                        <li><strong>단계별 틀린 문제 이미지</strong></li>
+                        <li>내가 선택한 보기 이미지</li>
+                        <li class="bundle-caution">오답 확인 웹 열람 전용 (1회)</li>
                     </ul>
 
-                    <!-- <div class="value-comparison incorrect-comparison">
-                        <span class="comparison-text">제공 내용</span>
-                        <span class="comparison-value incorrect-value">오답 문제 확인</span>
-                    </div> -->
+                    <div class="value-comparison bundle-comparison">
+                        <span class="comparison-text">오답 확인은</span>
+                        <span class="comparison-value bundle-value">이 패키지에서만 제공</span>
+                    </div>
 
-                    <button class="payment-btn incorrect-btn" onclick="processPayment('incorrect')">
-                        <span class="btn-text">오답 확인하기</span>
+                    <button class="payment-btn bundle-btn" onclick="processPayment('bundle')">
+                        <span class="btn-text">상세리포트 + 오답 확인하기</span>
                     </button>
                 </div>
             </div>
