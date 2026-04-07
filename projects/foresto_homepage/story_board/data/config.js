@@ -1,8 +1,8 @@
 /**
  * config.js — 프로젝트별 설정
  *
- * 새 프로젝트에서 이 파일만 수정하면 됩니다.
- * css/sb.css, js/sb.js, index.html 은 건드리지 마세요.
+ * 새 프로젝트에서 이 파일을 수정한다.
+ * css/sb.css, js/sb.js, index.html 은 건드리지 말기.
  */
 
 window.SB_CONFIG = {

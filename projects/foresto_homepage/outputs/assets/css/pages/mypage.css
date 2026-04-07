@@ -78,6 +78,16 @@
   border-bottom: 1px solid var(--green-pale);
 }
 
+/* ── 변경 불가 필드 — 클릭·선택 동작 없음 */
+.form-control[readonly] {
+  background: var(--gray-bg);
+  color: var(--gray-mid);
+  pointer-events: none;
+  user-select: none;
+  cursor: default;
+  border-color: var(--gray-light);
+}
+
 /* ── 폼 그리드 */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; }
 .form-row  { display: flex; flex-direction: column; gap: 5px; }
@@ -86,6 +96,7 @@
   font-weight: 600; color: var(--green-main);
 }
 .form-row .form-control { height: 40px; }
+.form-row select.form-control { height: auto; min-height: 40px; padding-top: 0; padding-bottom: 0; }
 .pw-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px 20px; }
 
 /* ── 액션 */
@@ -199,6 +210,41 @@
   /* 사이드바 nav 모바일: 아바타 영역 콤팩트 */
   .my-avatar { width: 52px; height: 52px; font-size: 22px; }
   .my-name { font-size: var(--text-md); }
+}
+
+/* ── 소속 리스트 */
+.affiliation-admin-note {
+  font-size: var(--text-xs);
+  font-weight: 400;
+  color: var(--gray-mid);
+  margin-left: 6px;
+}
+.affiliation-list {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.affiliation-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--gray-bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--gray-light);
+}
+.affiliation-name {
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--gray-dark);
+  flex: 1;
+}
+.affiliation-date {
+  font-size: var(--text-sm);
+  color: var(--gray-mid);
+  white-space: nowrap;
 }
 
 /* ── 탈퇴 탭 강조 */

@@ -37,7 +37,6 @@ window.SPECS['A01'] = `
   - 삭제 Confirm·완료·실패 동작: <strong>DOC06: C05 삭제 공통 패턴 적용 --><br>
   - 전체 선택 체크박스 동작: <strong>DOC06: C02-4 전체 선택 체크박스 적용 -->
 </p>
-<p class="spec-note">⚠️ 삭제 방식 협의 필요 — Hard Delete vs. Soft Delete(상태값 변경). Soft Delete 권장.</p>
 
 <h4>④ 페이지네이션</h4>
 <strong>DOC06: C03 페이지네이션 공통 규칙 적용</strong>
@@ -45,7 +44,7 @@ window.SPECS['A01'] = `
 <h4>⑤ [새로고침] · [+ 회원 등록] 버튼</h4>
 <p>
   - 위치: 화면 우측 상단(타이틀 옆)<br>
-  - [새로고침]: 현재 검색 조건 유지한 채 목록 데이터 재조회. ⚠️ 전체 페이지 새로고침 vs. 데이터만 재조회 협의 필요<br>
+  - [새로고침]: 현재 검색 조건 유지한 채 목록 데이터 재조회.
   - [+ 회원 등록]: 회원 등록 화면(A03)으로 이동
 </p>
 
@@ -56,15 +55,15 @@ window.SPECS['A01'] = `
   <tbody>
     <tr><td>0</td><td>체크박스</td><td>checkbox</td><td>C</td><td>헤더 체크박스: 현재 페이지 전체 선택/해제</td></tr>
     <tr><td>1</td><td>번호</td><td>number</td><td>C</td><td>자동 번호 (역순). 검색 결과 기준 넘버링.</td></tr>
-    <tr><td>2</td><td>회원구분</td><td>badge</td><td>C</td><td>정회원/일반회원. 배지 색상 구분. ⚠️ 등급 체계·색상 확정 필요</td></tr>
+    <tr><td>2</td><td>회원구분</td><td>badge</td><td>C</td><td>정회원/일반회원/관리자. 배지 색상 구분.</td></tr>
     <tr><td>3</td><td>아이디</td><td>text</td><td>L</td><td>회원 로그인 ID</td></tr>
     <tr><td>4</td><td>이름</td><td>text</td><td>L</td><td>회원 실명. 클릭 시 상세(A02) 이동.</td></tr>
     <tr><td>5</td><td>성별</td><td>text</td><td>C</td><td>남/여</td></tr>
     <tr><td>6</td><td>생년월일</td><td>date</td><td>C</td><td>YYYY-MM-DD</td></tr>
-    <tr><td>7</td><td>연락처</td><td>text</td><td>C</td><td>010-XXXX-XXXX 형태. ⚠️ 마스킹 적용 여부 협의 필요</td></tr>
+    <tr><td>7</td><td>연락처</td><td>text</td><td>C</td><td>010-0000-0000 형태.</td></tr>
     <tr><td>8</td><td>이메일</td><td>text</td><td>L</td><td>가입 이메일 주소</td></tr>
     <tr><td>9</td><td>가입일시</td><td>datetime</td><td>C</td><td>YYYY-MM-DD HH:MM:SS. 기본 정렬: 가입일시 내림차순(최신순).</td></tr>
-    <tr><td>10</td><td>회원상태</td><td>badge</td><td>C</td><td>정상/차단. 색상 구분(정상: 녹색, 차단: 적색). ⚠️ 상태값 확정 필요</td></tr>
+    <tr><td>10</td><td>회원상태</td><td>badge</td><td>C</td><td>정상/차단. 색상 구분(정상: 녹색, 차단: 적색).</td></tr>
   </tbody>
 </table>
 

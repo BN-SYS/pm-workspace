@@ -271,6 +271,7 @@
     AdminSidebar.mount('members');
     /* ── 샘플 상수 */
     const JOBS = ['직장인','자영업자','공무원·교원','전문직','학생','주부','은퇴·퇴직','기타'];
+    const JOIN_PATHS = ['지인 소개','검색 (네이버/구글)','SNS (인스타그램/페이스북)','협회 홍보물','카페·블로그','기타'];
     const ADDRS = [
       { zip:'03000', addr1:'서울특별시 종로구 세종대로 110' },
       { zip:'06141', addr1:'서울특별시 강남구 테헤란로 512' },
@@ -337,6 +338,7 @@
         addr2:       `${(i + 1) * 100}호`,
         overseas:    i % 10 === 0,
         job:         JOBS[i % 8],
+        joinPath:    JOIN_PATHS[i % 6],
         grade:       g.key,
         gradeLabel:  g.label,
         joinDate:    `2026-${mm}-${dd}`,
@@ -458,10 +460,16 @@
                   ${m.overseas ? '<div style="font-size:11px;color:var(--gray-mid);margin-top:3px">해외 거주 회원</div>' : ''}
                 </div>
 
-                <!-- 직업 -->
-                <div class="form-group">
-                  <label class="form-label">직업</label>
-                  <div class="detail-value">${m.job}</div>
+                <!-- 직업 + 가입경로 -->
+                <div class="detail-grid">
+                  <div class="form-group">
+                    <label class="form-label">직업</label>
+                    <div class="detail-value">${m.job}</div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">가입경로</label>
+                    <div class="detail-value">${m.joinPath}</div>
+                  </div>
                 </div>
 
                 <!-- 선택약관동의내역 -->
