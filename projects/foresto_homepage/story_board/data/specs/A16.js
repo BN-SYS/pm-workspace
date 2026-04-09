@@ -9,10 +9,10 @@ window.SPECS       = window.SPECS       || {};
 window.ANNOTATIONS = window.ANNOTATIONS || {};
 
 window.ANNOTATIONS['A16'] = [
-  { n: 1, x: 13, y:  7 },   // 기본 정보 카드
-  { n: 2, x: 13, y: 30 },   // 활동 정보 카드
-  { n: 3, x: 13, y: 68 },   // 관리자 메모 카드
-  { n: 4, x: 88, y: 88 },   // 하단 액션 버튼
+  { n: 1, x: 13, y: 12 },   // 기본 정보 카드
+  { n: 2, x: 13, y: 34 },   // 활동 정보 카드
+  { n: 3, x: 13, y: 57 },   // 관리자 메모 카드
+  { n: 4, x: 93, y: 76 },   // 하단 액션 버튼
 ];
 
 window.SPECS['A16'] = `

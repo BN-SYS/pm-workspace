@@ -9,10 +9,10 @@ window.SPECS       = window.SPECS       || {};
 window.ANNOTATIONS = window.ANNOTATIONS || {};
 
 window.ANNOTATIONS['A18'] = [
-  { n: 1, x: 13, y:  7 },   // 신청 기관 정보 카드
-  { n: 2, x: 13, y: 34 },   // 신청 내용 카드
-  { n: 3, x: 13, y: 68 },   // 관리자 메모 카드
-  { n: 4, x: 88, y: 88 },   // 하단 액션 버튼
+  { n: 1, x: 13, y: 12 },   // 신청 기관 정보 카드
+  { n: 2, x: 13, y: 31 },   // 신청 내용 카드
+  { n: 3, x: 13, y: 54 },   // 관리자 메모 카드
+  { n: 4, x: 93, y: 74 },   // 하단 액션 버튼
 ];
 
 window.SPECS['A18'] = `

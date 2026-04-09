@@ -10,9 +10,9 @@ window.SPECS = window.SPECS || {};
 window.ANNOTATIONS = window.ANNOTATIONS || {};
 
 window.ANNOTATIONS['A02-1'] = [
-  { n: 1, x: 39, y: 39 },  // 모달 헤더 (경고 아이콘 + 타이틀)
-  { n: 2, x: 39, y: 45 },  // 안내 문구 (탈퇴 처리 시 정보 이동 및 복구 불가 안내)
-  { n: 3, x: 39, y: 50 },  // 탈퇴 사유 입력 (라벨 + textarea)
+  { n: 1, x: 40, y: 34 },  // 모달 헤더 (경고 아이콘 + 타이틀)
+  { n: 2, x: 40, y: 43 },  // 안내 문구 (탈퇴 처리 시 정보 이동 및 복구 불가 안내)
+  { n: 3, x: 40, y: 49 },  // 탈퇴 사유 입력 (라벨 + textarea)
   { n: 4, x: 52, y: 63 },  // 하단 버튼 ([취소] [탈퇴 처리])
 ];
 window.SPECS['A02-1'] = `

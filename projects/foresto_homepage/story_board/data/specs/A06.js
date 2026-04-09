@@ -9,11 +9,11 @@ window.SPECS       = window.SPECS       || {};
 window.ANNOTATIONS = window.ANNOTATIONS || {};
 
 window.ANNOTATIONS['A06'] = [
-  { n: 1, x: 13, y:  7 },   // 기본 정보
-  { n: 2, x: 13, y: 24 },   // 신청자 현황
-  { n: 3, x: 13, y: 34 },   // 과정 상세내용
-  { n: 4, x: 13, y: 73 },   // 첨부파일
-  { n: 5, x: 13, y: 90 },   // 하단 버튼 영역
+  { n: 1, x: 13, y: 11 },   // 기본 정보
+  { n: 2, x: 13, y: 34 },   // 신청자 현황
+  { n: 3, x: 13, y: 42 },   // 과정 상세내용
+  { n: 4, x: 13, y: 81 },   // 첨부파일
+  { n: 5, x: 13, y: 94 },   // 하단 버튼 영역
 ];
 
 window.SPECS['A06'] = `

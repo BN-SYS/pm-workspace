@@ -9,9 +9,9 @@ window.SPECS       = window.SPECS       || {};
 window.ANNOTATIONS = window.ANNOTATIONS || {};
 
 window.ANNOTATIONS['A04'] = [
-  { n: 1, x: 13, y:  8 },   // 안내 문구 (조회 전용 경고)
+  { n: 1, x: 13, y:  11 },   // 안내 문구 (조회 전용 경고)
   { n: 2, x: 13, y: 15 },   // 검색·필터 영역
-  { n: 3, x: 13, y: 24 },   // 목록 테이블
+  { n: 3, x: 13, y: 28 },   // 목록 테이블
 ];
 
 window.SPECS['A04'] = `

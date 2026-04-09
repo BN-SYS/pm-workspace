@@ -9,10 +9,10 @@ window.SPECS       = window.SPECS       || {};
 window.ANNOTATIONS = window.ANNOTATIONS || {};
 
 window.ANNOTATIONS['A07'] = [
-  { n: 1, x: 13, y:  9 },   // 기본 정보
-  { n: 2, x: 13, y: 46 },   // 과정 상세내용 (에디터)
-  { n: 3, x: 13, y: 72 },   // 첨부파일
-  { n: 4, x: 88, y: 94 },   // 하단 버튼 (취소·저장)
+  { n: 1, x: 13, y: 11 },   // 기본 정보
+  { n: 2, x: 13, y: 51 },   // 과정 상세내용 (에디터)
+  { n: 3, x: 13, y: 78 },   // 첨부파일
+  { n: 4, x: 90, y: 94 },   // 하단 버튼 (취소·저장)
 ];
 
 window.SPECS['A07'] = `

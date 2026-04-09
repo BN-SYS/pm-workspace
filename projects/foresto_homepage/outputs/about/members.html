@@ -123,16 +123,18 @@
           const avatarInner = o.img
             ? `<img src="${o.img}" alt="${o.name}">`
             : `<span class="og-card-avatar-ph"></span>`;
-          const detail = o.detail ? `<div class="og-card-detail">${o.detail}</div>` : '';
+          const detailSpan = o.detail ? `<span class="og-card-sep">·</span><span class="og-card-detail">${o.detail}</span>` : '';
           const photoTip = o.img ? `<span class="og-photo-tip"><img src="${o.img}" alt="${o.name}"></span>` : '';
           return `
             <div class="og-card${o.img ? ' has-photo' : ''}">
               ${photoTip}
               <div class="og-card-avatar">${avatarInner}</div>
               <div class="og-card-info">
-                <div class="og-card-role">${o.title}</div>
-                <div class="og-card-name">${o.name}</div>
-                ${detail}
+                <div class="og-card-header">
+                  <span class="og-card-role">${o.title}</span>
+                  <span class="og-card-name">${o.name}</span>
+                  ${detailSpan}
+                </div>
               </div>
             </div>`;
         }).join('') + `</div>`;

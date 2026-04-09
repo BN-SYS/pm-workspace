@@ -160,12 +160,15 @@ function Start-CDPCapture {
 
   $port = Get-Random -Minimum 9300 -Maximum 9399
   
+  $tmpProfile = Join-Path ([System.IO.Path]::GetTempPath()) "chrome_cap_$port"
   $proc = Start-Process $chrome -ArgumentList @(
     "--headless=new",
     "--disable-gpu",
     "--no-sandbox",
+    "--disable-dev-shm-usage",
     "--disable-web-security",
     "--allow-file-access-from-files",
+    "--user-data-dir=$tmpProfile",
     "--remote-debugging-port=$port",
     "--window-size=${width},900",
     $FileUri
@@ -175,7 +178,9 @@ function Start-CDPCapture {
 
   try {
     $json = Invoke-RestMethod "http://localhost:$port/json" -TimeoutSec 5
-    $wsUrl = $json[0].webSocketDebuggerUrl
+    $pageTab = $json | Where-Object { $_.type -eq 'page' } | Select-Object -First 1
+    if (-not $pageTab) { $pageTab = $json[0] }
+    $wsUrl = $pageTab.webSocketDebuggerUrl
 
     $ws = New-Object System.Net.WebSockets.ClientWebSocket
     $cts = New-Object System.Threading.CancellationTokenSource
@@ -192,18 +197,27 @@ function Start-CDPCapture {
     }
     Start-Sleep -Milliseconds $waitMs
 
-    # 높이 측정 + 여백 제거
+    # 전체 페이지 높이 측정 (내부 스크롤 컨테이너 overflow 해제 후 측정)
     $jsHeight = @"
 (() => {
-  document.documentElement.style.overflow = 'hidden';
-  document.body.style.overflow = 'hidden';
   document.querySelectorAll('*').forEach(el => {
     const cs = getComputedStyle(el);
     if (cs.position === 'fixed' || cs.position === 'sticky') el.style.position = 'relative';
     if (parseFloat(cs.minHeight) > 300) el.style.minHeight = 'auto';
+    if (el !== document.body && el !== document.documentElement) {
+      const ov = cs.overflow, ovy = cs.overflowY;
+      if (ov === 'hidden' || ovy === 'hidden' || ov === 'auto' || ovy === 'auto' || ov === 'scroll' || ovy === 'scroll') {
+        el.style.overflow = 'visible';
+        el.style.height = 'auto';
+        el.style.maxHeight = 'none';
+      }
+    }
   });
   const b = document.body, h = document.documentElement;
-  return Math.max(b.scrollHeight, b.offsetHeight, b.clientHeight, h.scrollHeight, h.offsetHeight, h.clientHeight);
+  const measured = Math.max(b.scrollHeight, b.offsetHeight, h.scrollHeight, h.offsetHeight);
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+  return measured + 60;
 })()
 "@
     $r = Send-WS $ws $cmdId "Runtime.evaluate" @{ expression = $jsHeight; returnByValue = $true }
@@ -257,28 +271,23 @@ function Start-CDPCapture {
         $modal = $modals[$mi]
         $modalImgPath = $ImgPath -replace '\.png$', "_modal$($mi+1).png"
 
-        # 모달 열기
-        $jsOpen = "document.querySelectorAll('[data-bs-toggle=""modal""],[data-toggle=""modal""],[onclick*=""modal""],[onclick*=""Modal""],button[class*=""modal""],a[class*=""modal""],[data-modal],[data-popup]')[$($modal.index)].click()"
-        Send-WS $ws $cmdId "Runtime.evaluate" @{ expression = $jsOpen; returnByValue = $true } | Out-Null
-        $cmdId++
-        Start-Sleep -Milliseconds 1200
-
-        # 모달 상태 높이 재측정
-        $r = Send-WS $ws $cmdId "Runtime.evaluate" @{ expression = $jsHeight; returnByValue = $true }
-        $cmdId++
-        $mHeight = [int]$r.result.result.value
-        if ($mHeight -lt $height) { $mHeight = $height }
-
+        # 모달 캡처 전 뷰포트를 화면 크기로 복원 (fixed 모달 정상 렌더링)
         Send-WS $ws $cmdId "Emulation.setDeviceMetricsOverride" @{
-          width = $width; height = $mHeight; deviceScaleFactor = 1; mobile = $false
+          width = $width; height = 900; deviceScaleFactor = 1; mobile = $false
         } | Out-Null
         $cmdId++
         Start-Sleep -Milliseconds 300
 
+        # 모달 열기
+        $jsOpen = "document.querySelectorAll('[data-bs-toggle=""modal""],[data-toggle=""modal""],[onclick*=""modal""],[onclick*=""Modal""],button[class*=""modal""],a[class*=""modal""],[data-modal],[data-popup]')[$($modal.index)].click()"
+        Send-WS $ws $cmdId "Runtime.evaluate" @{ expression = $jsOpen; returnByValue = $true } | Out-Null
+        $cmdId++
+        Start-Sleep -Milliseconds 1500
+
         $r = Send-WS $ws $cmdId "Page.captureScreenshot" @{
           format = "png"
-          clip = @{ x = 0; y = 0; width = $width; height = $mHeight; scale = 1 }
-          captureBeyondViewport = $true
+          clip = @{ x = 0; y = 0; width = $width; height = 900; scale = 1 }
+          captureBeyondViewport = $false
         }
         $cmdId++
 

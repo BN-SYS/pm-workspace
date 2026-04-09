@@ -9,11 +9,11 @@ window.SPECS       = window.SPECS       || {};
 window.ANNOTATIONS = window.ANNOTATIONS || {};
 
 window.ANNOTATIONS['A12'] = [
-  { n: 1, x: 13, y:  6 },   // 모드 구분 (등록/수정 타이틀)
-  { n: 2, x: 13, y: 12 },   // 기본 정보 카드
-  { n: 3, x: 13, y: 47 },   // 활동 안내 카드 (SmartEditor2)
-  { n: 4, x: 13, y: 73 },   // 첨부파일 카드
-  { n: 5, x: 88, y: 94 },   // 하단 버튼 (취소·저장)
+  { n: 1, x: 21, y:  5 },   // 모드 구분 (등록/수정 타이틀)
+  { n: 2, x: 13, y: 11 },   // 기본 정보 카드
+  { n: 3, x: 13, y: 51 },   // 활동 안내 카드 (SmartEditor2)
+  { n: 4, x: 13, y: 78 },   // 첨부파일 카드
+  { n: 5, x: 90, y: 94 },   // 하단 버튼 (취소·저장)
 ];
 
 window.SPECS['A12'] = `
