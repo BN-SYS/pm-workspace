@@ -237,7 +237,7 @@
         <div style="display:flex;flex-direction:column;gap:0">
 
           <!-- ① 관리 설정 — 컴팩트 요약 바 -->
-          <div class="admin-summary-bar">
+          <div class="admin-summary-bar" data-sb-anno="1:관리자 전용 설정 요약 바 (회원구분·상태·가입일)">
             <span class="asb-label">관리자 전용</span>
             <div class="asb-item">
               <span class="asb-key">회원 구분</span>
@@ -252,7 +252,7 @@
           </div>
 
           <!-- ② 본인인증 기반 정보 -->
-          <div class="card">
+          <div class="card" data-sb-anno="2:본인인증 기반 정보 (이름·성별·생년월일·휴대폰)">
             <div class="card-header">
               <span class="card-title">본인인증 기반 정보</span>
               <span class="badge-readonly">본인인증 확인 항목</span>
@@ -282,7 +282,7 @@
           </div>
 
           <!-- ③ 계정·연락처 정보 -->
-          <div class="card">
+          <div class="card" data-sb-anno="3:계정·연락처 정보 (아이디·이메일·비밀번호·주소·약관)">
             <div class="card-header">
               <span class="card-title">계정 · 연락처 정보</span>
             </div>
@@ -347,7 +347,7 @@
           </div>
 
           <!-- ④ 교육 신청 내역 -->
-          <div class="card">
+          <div class="card" data-sb-anno="4:교육 신청 내역 테이블">
             <div class="card-header">
               <span class="card-title">교육 신청 내역</span>
               <span class="info-tag">1건 (최신순)</span>
@@ -382,7 +382,7 @@
           </div>
 
           <!-- ⑤ 활동 정보 (소속) -->
-          <div class="card">
+          <div class="card" data-sb-anno="5:활동 정보 — 소속 테이블">
             <div class="card-header">
               <span class="card-title">활동 정보 (소속)</span>
               <span class="info-tag">1건</span>
@@ -415,7 +415,7 @@
           </div>
 
           <!-- ⑥ 관리자 메모 -->
-          <div class="card">
+          <div class="card" data-sb-anno="6:관리자 메모 (회원 미노출)">
             <div class="card-header">
               <span class="card-title">관리자 메모</span>
               <span class="badge-admin-only">회원 미노출</span>
@@ -431,7 +431,7 @@
           </div>
 
           <!-- ⑦ 하단 액션 바 -->
-          <div class="detail-bottom-bar">
+          <div class="detail-bottom-bar" data-sb-anno="7:하단 액션 바 (탈퇴처리·목록·수정)">
             <button class="btn btn-danger btn-sm" onclick="MemberDetail.openWithdrawModal()">탈퇴 처리</button>
             <div class="bar-right">
               <button class="btn btn-gray btn-sm" onclick="history.back()">목록으로</button>

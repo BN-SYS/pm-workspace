@@ -42,14 +42,10 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <h1 class="admin-page-title">일정 수정</h1>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-gray btn-sm" onclick="history.back()">취소</button>
-          <button class="btn btn-primary btn-sm" onclick="CalEdit.save()">저장</button>
-        </div>
       </div>
 
-      <div class="admin-content">
-        <div class="edit-card">
+      <div class="admin-content" data-sb-anno="1:일정 등록/수정 콘텐츠 영역">
+        <div class="edit-card" data-sb-anno="2:일정 정보 카드 (카테고리·일정일·일정명·링크)">
           <div class="edit-card-head">일정 정보</div>
           <div class="edit-body">
 
@@ -94,7 +90,7 @@
         </div>
 
         <!-- 하단 버튼 -->
-        <div class="detail-bottom-bar">
+        <div class="detail-bottom-bar" data-sb-anno="3:하단 액션 바 (취소·저장)">
           <div></div>
           <div class="btn-group-right">
             <button class="btn btn-gray" onclick="history.back()">취소</button>

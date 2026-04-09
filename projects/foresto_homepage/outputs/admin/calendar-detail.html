@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -71,18 +71,15 @@
       <div class="admin-topbar">
         <h1 class="admin-page-title">일정 상세</h1>
         <div style="display:flex;gap:8px">
-          <button class="btn btn-gray btn-sm" onclick="history.back()">목록으로</button>
           <button class="btn btn-danger btn-sm"
             onclick="App.toast('일정이 삭제되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', 'error')">삭제</button>
-          <button class="btn btn-primary btn-sm"
-            onclick="location.href='calendar-edit.html?id=3001'">수정하기</button>
         </div>
       </div>
 
       <div class="admin-content">
 
         <!-- ════ 일정 정보 ════ -->
-        <div class="form-card">
+        <div class="form-card" data-sb-anno="1:일정 정보">
           <div class="form-card-head">일정 정보</div>
           <div class="form-row">
             <div class="form-label">일정명</div>
@@ -111,7 +108,7 @@
         </div>
 
         <!-- ════ 등록 정보 ════ -->
-        <div class="form-card">
+        <div class="form-card" data-sb-anno="2:등록 정보">
           <div class="form-card-head">등록 정보</div>
           <div class="form-row">
             <div class="form-label">등록자</div>

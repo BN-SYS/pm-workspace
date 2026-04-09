@@ -184,8 +184,6 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <h1 class="admin-page-title" id="pageTitle">게시글 등록</h1>
-        <button class="btn btn-gray btn-sm"
-          onclick="if(confirm('작성을 취소하시겠습니까?')) location.href='board.html?type='+BTYPE">취소</button>
       </div>
 
       <!-- 썸네일 게시판 안내 -->
@@ -195,11 +193,11 @@
         이미지가 없으면 기본 썸네일로 표시됩니다.
       </div>
 
-      <div class="edit-card">
+      <div class="edit-card" data-sb-anno="1:게시글 등록/수정 폼 카드">
         <div class="edit-card-body">
 
           <!-- 제목 -->
-          <div class="form-group">
+          <div class="form-group" data-sb-anno="2:제목 입력 필드">
             <label class="form-label">제목 <span class="req">*</span></label>
             <input type="text" id="inputTitle" placeholder="제목을 입력하세요">
           </div>
@@ -214,7 +212,7 @@
           </div>
 
           <!-- 내용 (SE2 목업) -->
-          <div class="form-group" style="margin-bottom:0">
+          <div class="form-group" style="margin-bottom:0" data-sb-anno="3:내용 에디터 (스마트에디터2 목업)">
             <label class="form-label">내용 <span class="req">*</span></label>
             <div class="se2-wrap">
 
@@ -284,7 +282,7 @@
         </div>
 
         <!-- 파일 첨부 -->
-        <div style="padding:18px 28px;border-top:1px solid #f0f4ee">
+        <div style="padding:18px 28px;border-top:1px solid #f0f4ee" data-sb-anno="4:파일 첨부 영역 (최대 3개)">
           <label class="form-label" style="margin-bottom:10px;display:block">
             파일 첨부 <span style="color:#aabba4;font-size:12px;font-weight:400">(최대 3개)</span>
           </label>
@@ -304,7 +302,7 @@
           </div>
         </div>
 
-        <div class="edit-card-footer">
+        <div class="edit-card-footer" data-sb-anno="5:하단 액션 바 (취소·저장)">
           <button class="btn btn-gray btn-sm"
             onclick="if(confirm('작성을 취소하시겠습니까?')) location.href='board.html?type='+BTYPE">취소</button>
           <button class="btn btn-primary" onclick="BoardEdit.save()">저장</button>

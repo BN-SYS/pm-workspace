@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -49,15 +49,12 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <h1 class="admin-page-title">숲해설신청 상세</h1>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-gray btn-sm" onclick="history.back()">목록</button>
-        </div>
       </div>
 
       <div class="admin-content" id="detailContent">
 
         <!-- 카드1: 신청 기관 정보 -->
-        <div class="form-card">
+        <div class="form-card" data-sb-anno="1:신청 기관 정보">
           <div class="form-card-head">신청 기관 정보</div>
           <div class="form-row">
             <div class="form-label">접수번호</div>
@@ -94,7 +91,7 @@
         </div>
 
         <!-- 카드2: 신청 내용 -->
-        <div class="form-card">
+        <div class="form-card" data-sb-anno="2:신청 내용">
           <div class="form-card-head">신청 내용</div>
           <div class="form-row">
             <div class="form-label">방문 희망일</div>
@@ -134,7 +131,7 @@
         </div>
 
         <!-- 카드3: 관리자 메모 -->
-        <div class="form-card">
+        <div class="form-card" data-sb-anno="3:관리자 메모">
           <div class="form-card-head">관리자 메모</div>
           <div style="padding:16px">
             <textarea class="memo-textarea" id="adminMemo" placeholder="관리자 메모를 입력하세요. (신청자에게 표시되지 않습니다)"></textarea>

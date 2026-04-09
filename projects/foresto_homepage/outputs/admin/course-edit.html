@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -342,10 +342,6 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <h1 class="admin-page-title" id="pageTitle">강좌 등록</h1>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-gray btn-sm" onclick="history.back()">취소</button>
-          <button class="btn btn-primary btn-sm" onclick="CourseEdit.save()">저장</button>
-        </div>
       </div>
 
       <div class="admin-content">
@@ -353,7 +349,7 @@
         <!-- ════════════════════════════════════
              기본정보 카드
              ════════════════════════════════════ -->
-        <div class="form-card">
+        <div class="form-card" data-sb-anno="1:기본 정보">
           <div class="form-card-head">기본 정보</div>
 
           <!-- 과정명 / 기수 -->
@@ -477,7 +473,7 @@
         <!-- ════════════════════════════════════
              과정 상세내용 (SmartEditor2 모의)
              ════════════════════════════════════ -->
-        <div class="form-card">
+        <div class="form-card" data-sb-anno="2:과정 상세내용">
           <div class="form-card-head">과정 상세내용</div>
 
           <div style="padding:16px;">

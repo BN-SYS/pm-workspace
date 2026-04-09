@@ -247,7 +247,7 @@
       </div>
 
       <!-- ① 조직도 이미지 -->
-      <div class="card" style="margin-bottom:20px">
+      <div class="card" style="margin-bottom:20px" data-sb-anno="1:조직도 이미지 업로드 카드">
         <div class="card-header">
           <span class="card-title">조직도 이미지</span>
           <span style="font-size:12px;color:#8a9e84">사용자 페이지(조직도 메뉴)에 그대로 표시됩니다</span>
@@ -270,7 +270,7 @@
       </div>
 
       <!-- ② 임원진 관리 -->
-      <div class="card">
+      <div class="card" data-sb-anno="2:임원진 명단 관리 카드 (그룹별 테이블)">
         <div class="card-header">
           <span class="card-title">임원진 명단 관리</span>
           <button class="btn btn-outline btn-sm" onclick="OrgAdmin.addGroup()">+ 그룹 추가</button>
@@ -282,7 +282,7 @@
           <div id="groupList">
 
             <!-- 그룹 1: 함께하는 사람들 -->
-            <div class="og-card" id="group-1">
+            <div class="og-card" id="group-1" data-sb-anno="3:임원 그룹 카드 — 함께하는 사람들">
               <div class="og-card-head">
                 <div style="display:flex;gap:3px;flex-shrink:0">
                   <button class="og-order-btn" title="위로" disabled>▲</button>
@@ -338,7 +338,7 @@
             </div>
 
             <!-- 그룹 2: 지역 대표자 명단 -->
-            <div class="og-card" id="group-2">
+            <div class="og-card" id="group-2" data-sb-anno="4:임원 그룹 카드 — 지역 대표자 명단">
               <div class="og-card-head">
                 <div style="display:flex;gap:3px;flex-shrink:0">
                   <button class="og-order-btn" title="위로" onclick="App.toast('순서가 변경되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', \'info\')">▲</button>
@@ -407,7 +407,7 @@
   </div>
 
   <!-- ③ 임원 등록/수정 모달 -->
-  <div class="og-modal-overlay" id="ogModal">
+  <div class="og-modal-overlay" id="ogModal" data-sb-anno="5:임원 등록/수정 모달">
     <div class="og-modal">
       <div class="og-modal-head">
         <span class="og-modal-title" id="ogModalTitle">임원 등록</span>
