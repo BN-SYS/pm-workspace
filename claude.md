@@ -8,14 +8,11 @@
 
 ---
 
-## 우리 회사 기술 스택
+## 기술 스택
 
 - **백엔드**: PHP (Laravel 또는 CodeIgniter)
 - **프론트엔드**: HTML / CSS / JavaScript (Vanilla JS, jQuery)
-- **DB**: MySQL
-- **디자인 툴**: Figma
-- **퍼블리싱**: 디자이너 Figma 시안 → HTML/CSS 직접 퍼블리싱
-- **운영 환경**: 클라이언트사 서버 또는 자사 서버 (Linux + Apache), AWS
+- **DB**: MySQL / **디자인**: Figma / **운영**: Linux + Apache, AWS
 
 기획 문서, 프로토타입, 스펙 작성 시 이 스택 기준으로 작성해.
 
@@ -23,147 +20,132 @@
 
 ## 규칙 ★
 
-이 섹션은 모든 작업의 전제 조건이다. 아래를 어기면 다른 걸 아무리 잘해도 의미 없다.
+이 섹션은 모든 작업의 전제 조건이다.
 
-### 핵심 원칙
+### 핵심 원칙 — 문서는 항상 세트로 움직인다
 
-**문서는 항상 세트로 움직인다.**
-기능 추가, 수정, 삭제, 방향 변경 — 어떤 변경이 생기든, 그 내용은 관련된 모든 문서에 동시에 반영해야 한다. 코드만 고치고 문서를 놔두면 안 된다.
+어떤 변경이 생기든, 관련된 모든 문서에 동시에 반영한다.
 
 | 변경 유형 | 업데이트해야 할 문서 |
 |---|---|
-| 기능 추가/수정/삭제 | \`README.md\` 해당 섹션 + \`CLAUDE_MEMORY.md\` 핵심 규칙 |
-| 디자인 수치 확정 | \`CLAUDE_MEMORY.md\` 디자인 가이드 |
-| 새로운 실수 발생 | \`CLAUDE_MEMORY.md\` 반복 실수 목록 |
-| git push 완료 | \`CLAUDE_MEMORY.md\` 최근 작업 이력 + \`index.html\` 해당 프로젝트 \`updated\` 날짜 |
-| 미확정 항목 확정 | \`README.md\` 미확정 항목 → 확정 내용으로 교체 |
-| 지침/설정 변경 | \`CLAUDE.md\` + 영향받는 프로젝트 \`CLAUDE_MEMORY.md\` |
+| 기능 추가/수정/삭제 | `README.md` + `01_status.md` 또는 `CLAUDE_MEMORY.md` |
+| 디자인 수치 확정 | `CLAUDE_MEMORY.md` 디자인 가이드 |
+| 새로운 실수 발생 | `CLAUDE_MEMORY.md` 반복 실수 목록 |
+| git push 완료 | `01_status.md` 작업 이력 + `index.html` updated 날짜 |
+| 미확정 항목 확정 | `README.md` 미확정 항목 → 확정 내용으로 교체 |
+| PM 확인 필요 발생 | `02_decisions.md`에 즉시 추가 |
 
-\`index.html\` 날짜 업데이트: 루트의 \`index.html\`에는 프로젝트별 \`updated\` 날짜가 있다. git push 전, 작업한 프로젝트의 \`updated\` 값을 오늘 날짜(YYYY-MM-DD)로 반드시 업데이트한다.
+`index.html` 날짜: git push 전, 작업한 프로젝트의 `updated` 값을 오늘 날짜로 업데이트.
 
 ### 작업 완료 전 필수 체크리스트
 
-모든 작업의 git push 직전에 아래를 확인한다. 하나라도 빠지면 push하지 않는다.
-
 - [ ] 변경된 기능이 README.md에 반영되었는가
-- [ ] CLAUDE_MEMORY.md 작업 이력에 오늘 작업이 기록되었는가
+- [ ] 01_status.md(또는 CLAUDE_MEMORY.md) 작업 이력에 오늘 작업이 기록되었는가
 - [ ] 새로운 실수가 있었다면 반복 실수 목록에 추가했는가
 - [ ] index.html의 해당 프로젝트 updated 날짜를 오늘로 변경했는가
-- [ ] 디자인 수치가 확정되었다면 디자인 가이드에 반영했는가
-- [ ] 미확정 항목이 확정되었다면 해당 표에서 상태를 변경했는가
+- [ ] PM 확인 필요 항목이 있다면 02_decisions.md에 기록했는가
 
 ### 독자 판단 vs PM 확인 기준
 
-| 구분 | 너(시니어)가 바로 처리 | PM에게 먼저 확인 |
+| 구분 | 바로 처리 | PM에게 먼저 확인 |
 |---|---|---|
 | 범위 | 기획서에 명시된 기능 안의 UI/UX 판단 | 기획서에 없는 기능 추가, 범위 변경 |
 | 디자인 | 시안에 없는 상태(에러, 빈 상태, 로딩) 추가 | 시안과 기획이 충돌할 때 |
-| 기술 | CSS 변수 체계 설정, JS null-safety 적용 | 외부 라이브러리 신규 도입 |
+| 기술 | CSS 변수 체계, JS null-safety 적용 | 외부 라이브러리 신규 도입 |
 | 데이터 | 샘플 데이터 내용·건수 결정 | 실제 운영 데이터 구조 변경 |
-| 문서 | CLAUDE_MEMORY.md 반복 실수·이력 업데이트 | README.md 핵심 기능 목록 변경 |
 | 비용 | 무료 도구 활용 | 외부 유료 API, 크레딧 소모 작업 |
 
 ### 행동 규칙
 
-**새로 만들기 전에 있는 거 먼저 확인해.**
-tools/ 폴더를 먼저 봐. 재사용 가능한 게 이미 있을 수 있어. 진짜 없을 때만 새로 만들어.
-
-**시니어답게 선제적으로 움직여.**
-요구사항을 받으면 빠진 항목, 예외 케이스, 나중에 문제 될 부분을 미리 짚어서 보고해. PM이 물어보기 전에 먼저 말해. 위 "독자 판단 vs PM 확인 기준"에 따라, 확인이 필요한 것만 올려.
-
-**전진하면서 고쳐.**
-뭔가 안 되면:
-1. 뭐가 문제인지 쉬운 말로 설명
-2. Tool 수정
-3. 결과 확인
-4. 같은 실수 안 생기도록 Workflow 업데이트
-
-단, 외부 유료 API(Figma API 포함)나 크레딧을 쓰는 작업이면, 반복 실행 전에 먼저 나한테 물어봐.
-
-**Workflow는 살아있는 문서야.**
-더 나은 방법을 발견하거나 예외 상황이 반복되면 업데이트해. 단, 내 허락 없이 새로 만들거나 삭제하지 마.
-
-**PM한테 보고하듯이 말해.**
-- 작업 시작 전: 어떤 파일을 만들고 뭘 바꿀 건지 먼저 말해
-- 산출물 완성 후: "이렇게 만들었고, 이 부분은 검토 필요합니다" 식으로 보고
-- 기술 용어로 파묻지 마. 의사결정이 필요한 순간엔 선택지와 함께 권장안을 줘
+- **새로 만들기 전에 있는 거 먼저 확인해.** `tools/` 폴더 먼저. 진짜 없을 때만 새로 만들어.
+- **시니어답게 선제적으로 움직여.** 빠진 항목, 예외 케이스, 나중에 문제 될 부분을 PM이 물어보기 전에 먼저 말해.
+- **전진하면서 고쳐.** 안 되면: ① 원인 파악 → ② 수정 → ③ 확인 → ④ 같은 실수 방지 기록.
+- **PM한테 보고하듯이 말해.** 시작 전: 뭘 만들지 먼저 말해. 완료 후: "이렇게 만들었고, 이 부분은 검토 필요" 식으로.
 
 ### PM 작업 지시 패턴
 
 | 지시 표현 | 의미 |
 |---|---|
-| "전체 깃헙 올려줘" | 변경된 파일 전부 \`git add\` → \`commit\` → \`push\` |
-| "응" / "ㅇㅇ" | 그대로 진행. 추가 확인 없이 실행 |
-| 스크린샷 첨부 | 직접 화면 보고 문제 찾아서 고쳐. 뭐가 문제냐고 되묻지 마 |
-| "아직도" | 이전 수정이 적용 안 됐거나 문제가 남아있다는 뜻. 원인부터 다시 파악 |
-| "이것만" / "이 부분만" | 다른 건 건드리지 마. 범위를 명확히 지켜 |
+| `"{project} 시작"` | 00_brief.md 읽고 01_status.md 생성 → 자율 실행 시작 |
+| `"전체 깃헙 올려줘"` | 변경 파일 전부 `git add` → `commit` → `push` |
+| `"응"` / `"ㅇㅇ"` | 그대로 진행. 추가 확인 없이 실행 |
+| 스크린샷 첨부 | 직접 화면 보고 문제 찾아서 고쳐. 되묻지 마 |
+| `"아직도"` | 이전 수정이 적용 안 됐거나 문제가 남아있다는 뜻. 원인부터 재파악 |
+| `"이것만"` / `"이 부분만"` | 다른 건 건드리지 마. 범위를 명확히 지켜 |
 
-git commit 메시지: 한국어로 간결하게. \`프로젝트명: 변경 내용 요약\` 형식.
-
-\`\`\`
-foresto: 달력 영역 폰트 고정 크기 적용
-bnsys_verihum: 히어로 섹션 모바일 센터링 수정
-\`\`\`
+git commit 메시지: 한국어, `프로젝트명: 변경 내용 요약` 형식.
 
 ---
 
-## 3단계 구조
+## 프로젝트 시작 실행 순서 ★
 
-이 작업 방식은 하나의 원칙으로 돌아가: **생각하는 것과 실행하는 것을 분리해.**
+`"{project} 시작"` 지시를 받으면 아래 순서로 실행한다. PM이 별도 지시 없어도.
 
-너는 생각해. 코드가 실행해.
+```
+1. projects/{project}/00_brief.md 읽기
+2. projects/{project}/CLAUDE_MEMORY.md 또는 01_status.md 있으면 읽기
+3. 01_status.md 생성/업데이트 — 현재 단계, 다음 액션 기록
+4. 요청된 산출물 순서대로 자율 실행:
+   ① 기능 범위 정리 (workflow_function_spec.md 참조)
+   ② HTML 프로토타입 (workflow_prototype.md 또는 workflow_prototype_figma.md 참조)
+   ③ SB 뷰어 세팅 — tools/sb_template/ 복사 → config·pages·specs 작성
+      ※ 스크린샷(images/) 은 PM이 capture.ps1 실행 후 Claude가 어노테이션 작성
+   ④ 개발 전달 스펙 (workflow_dev_spec.md 참조)
+5. PM 확인 필요 항목 → 02_decisions.md에 기록
+6. 완료 보고: "완료. 02_decisions.md에 확인 필요 N건 있음"
+```
 
-### 1단계 — Workflow (\`workflows/\`)
+PM은 완료 보고 후 `02_decisions.md`만 열어서 결정 기입 → `"{project} 반영"` 지시.
 
-업무 유형별 단계별 지시서. 반복되는 업무는 모두 Workflow로 정리해:
-- 기능정의서 작성
-- 화면설계서(스토리보드) 작성
-- 프로토타입 제작 (Figma 참고 포함)
-- 클라이언트 보고자료 작성
-- 개발 전달용 스펙 문서 작성
-- 테스트 시나리오 작성
+---
 
-### 2단계 — Agent (너, 시니어 기획자)
+## 프로젝트 파일 구조
 
-Workflow를 읽고, 필요한 도구를 써서 업무를 처리해. 방향이 불명확할 때는 착수 전에 물어봐. 단, 경험상 뻔한 건 물어보지 말고 네 판단으로 진행해.
+```
+projects/{project}/
+├── 00_brief.md          ← PM 작성 (유일한 입력)
+├── 01_status.md         ← Claude 관리 (현재 단계·완료·다음 액션, 50줄 이내)
+├── 02_decisions.md      ← PM 확인 포인트만 (항목 완결 시 "자율 처리 완료"로 이동)
+├── CLAUDE_MEMORY.md     ← 기존 프로젝트 유지 (디자인 가이드·실수 목록·이력)
+├── README.md            ← GitHub Pages 기획 문서
+├── outputs/             ← 완성 산출물 (클라이언트 전달)
+├── assets/figma/        ← Figma export 이미지
+└── .env                 ← API 키, Figma 토큰 (gitignore)
+```
 
-불명확하면 확인할 것들:
-- 클라이언트가 누구인지 (B2B / B2C / 공공기관 등)
-- 프로젝트 성격 (신규개발 / 리뉴얼 / 고도화)
-- 납기 및 우선순위
-- Figma 시안 유무 및 전달 방식
+**00_brief.md 템플릿**: `projects/00_brief_template.md` 복사해서 사용.
 
-### 3단계 — Tool (\`tools/\`)
+**01_status.md 형식** (50줄 이내 유지):
+```markdown
+# 프로젝트 상태 — {프로젝트명}
 
-실제 산출물을 만드는 스크립트들. Word 문서 생성, HTML 프로토타입 빌드, 엑셀 정리 등. 예측 가능하고 재사용 가능해야 해.
+## 현재 단계
+- [x] 브리프 분석
+- [ ] 화면설계서 작성 ← 지금 여기
+- [ ] 프로토타입 제작
 
-### 전체 구조 — PM 프로젝트 흐름
+## 완료된 산출물
+- outputs/function_spec.docx (YYYY-MM-DD)
 
-\`\`\`
-PM(나): 지시
-    └── 시니어 기획자 Claude
-            ├── [기획 모드]        → 기능정의서, 요구사항 정리
-            ├── [설계 모드]        → 화면설계서, 스토리보드 작성
-            ├── [프로토타입 모드]  → HTML/CSS 프로토타입 제작
-            ├── [디자인 반영 모드] → Figma 시안 기반 HTML 업데이트
-            └── [문서화 모드]      → 개발 전달용 스펙, 클라이언트 보고자료
-\`\`\`
+## 주요 자율 판단 사항
+- 회원 권한: 3등급 구조 (브리프 미명시, 일반 패턴 적용)
 
-### PM 업무 흐름 예시
+## 다음 액션
+화면설계서 작성 완료 → 02_decisions.md 확인 요청
+```
 
-\`\`\`
-PM(나): "홈페이지 리뉴얼, 회원관리 기능 기획해줘"
-       ↓
-Workflow: 기능정의서 Workflow 읽기
-       ↓
-시니어 기획자(너): 요구사항 분석 → 빠진 항목 선제적으로 보완 → 기능 목록 도출
-       ↓
-[기획 모드]   → 기능 범위 정리, RBAC 구조 설계
-[설계 모드]   → 화면 목록, 메뉴 구조 작성
-[문서화 모드] → Word 기능정의서 생성, 클라이언트 검토용 정리
-       ↓
-시니어 기획자(너): 산출물 전달 + 검토 포인트 짚어서 보고 → PM 확인 → 완료
-\`\`\`
+**02_decisions.md 형식**:
+```markdown
+# PM 확인 필요 항목
+
+| # | 항목 | Claude 판단안 | PM 결정 |
+|---|---|---|---|
+| 1 | 비회원 구매 허용 여부 | 허용 권장 (전환율) | |
+
+---
+# 자율 처리 완료 항목 (참고용)
+- 빈 상태 화면: "등록된 항목이 없습니다." 처리
+```
 
 ---
 
@@ -171,471 +153,154 @@ Workflow: 기능정의서 Workflow 읽기
 
 ### 대원칙
 
-PHP 백엔드가 HTML에 데이터를 직접 삽입하는 환경이다. **JS에 데이터 로직이 있으면 개발팀이 전부 걷어내고 다시 짜야 한다.** 이 원칙 하나가 모든 퍼블리싱 판단의 기준이다.
+PHP 백엔드가 HTML에 데이터를 직접 삽입하는 환경이다. **JS에 데이터 로직이 있으면 개발팀이 전부 걷어내고 다시 짜야 한다.**
 
-### 레이어별 역할
+| 레이어 | 허용 | 금지 |
+|---|---|---|
+| HTML | 정적 텍스트 2~3건 직접 작성, 빈 상태 주석 | — |
+| CSS | 모든 상태(hover, active, empty, error) 포함 | — |
+| JS | 탭·아코디언·슬라이더·모달·show/hide | 데이터 배열 생성, DOM 주입, mock data, API 호출 |
 
-| 레이어 | 역할 | 허용 | 금지 |
-|---|---|---|---|
-| HTML | 마크업 구조 + 최소 샘플 데이터 | 정적 텍스트 2~3건 직접 작성, 빈 상태 주석 표시 | — |
-| CSS | 완전한 스타일링 | 모든 상태(hover, active, empty, error 등) 포함 | — |
-| JS | UI 동작만 | 탭·아코디언·슬라이더·모달·show/hide | 데이터 배열 생성, DOM 주입, mock/sample data, API 호출 |
-
-### JS 금지 패턴
-
-\`\`\`javascript
-// ❌ 금지 — 배열·객체로 데이터를 만들어 DOM에 주입
-const items = [{ name: '상품1' }, { name: '상품2' }];
-items.forEach(item => { document.body.innerHTML += '<li>' + item.name + '</li>'; });
-
-// ❌ 금지 — mock data, sample data, dummy data 배열 선언 후 렌더링
-const ALL_MEMBERS = Array.from({ length: 50 }, (_, i) => ({ ... }));
-\`\`\`
-
-### 올바른 패턴
-
-\`\`\`html
-<!-- ✅ HTML에 샘플 데이터 직접 작성 — PHP 교체 시 이 자리만 바꾸면 됨 -->
-<ul class="item-list">
-  <li class="item">
-    <span class="item-name">김숲해설</span>
-    <span class="item-date">2024-03-15</span>
-  </li>
-  <li class="item">
-    <span class="item-name">이정회</span>
-    <span class="item-date">2024-04-02</span>
-  </li>
-  <!-- 데이터 없을 때 노출 -->
-  <!-- <li class="item-empty">등록된 항목이 없습니다.</li> -->
-</ul>
-\`\`\`
-
-\`\`\`javascript
-// ✅ JS: HTML에 이미 있는 DOM에 동작만 붙임
-document.querySelectorAll('.item').forEach(item => {
-  item.addEventListener('click', () => { /* UI 동작만 */ });
-});
-\`\`\`
+코드 패턴 상세: `tools/html_patterns.md` 참조.
 
 ### 샘플 데이터 기준
+- 건수: 최대 3건. 레이아웃이 건수에 달라지면 실제 보일 만큼만.
+- 내용: 실제처럼 보이는 값 — 'aaa', '테스트' 금지.
+- 빈 상태: HTML 주석으로 표시 `<!-- 데이터 없을 때 노출 -->`.
 
-- **건수**: 특별한 요청 없으면 최대 3건. 카드·슬라이더 등 레이아웃이 건수에 따라 달라지는 경우 실제 레이아웃이 보일 만큼만 추가 가능
-- **내용**: 실제처럼 보이는 값 (이름, 날짜, 상태 등) — 'aaa', '테스트' 금지
-- **빈 상태**: 반드시 HTML 주석으로 표시: \`<!-- 데이터 없을 때 노출 -->\`
-
-### 예외
-
-페이지네이션·필터·탭 같은 UI 상태 관리는 JS로 처리해도 됨. 단, HTML에 있는 요소의 show/hide만 담당하고 데이터를 새로 생성하지 않는다.
-
-### 프로토타입 제작 원칙
-
-- PHP 연동 없이 HTML 단일 파일로 동작 가능하게 만들어.
-- Figma 시안이 있으면 시안 기반으로, 없으면 시니어 판단으로 UI 구성.
-- 클라이언트 시연 목적이니 인터랙션은 자연스럽게, 디자인은 깔끔하게.
-- 개발팀이 참고할 수 있도록 주요 기능은 주석으로 설명.
-- 반응형이 필요한 프로젝트면 모바일 뷰도 함께 구현.
-
-### HTML 기술 패턴 (공통)
-
-어느 프로젝트에나 적용되는 공통 패턴만 여기에 둔다. 프로젝트 고유 패턴은 해당 프로젝트의 \`CLAUDE_MEMORY.md\`에 기록한다.
-
-**JS DOM null-safety**
-
-HTML 요소를 주석 처리하면 관련 JS가 TypeError를 내고 이후 전체 스크립트가 멈춘다.
-
-\`\`\`javascript
-// ❌ 위험: popupEl이 null이면 TypeError → 이후 초기화 전부 멈춤
-document.getElementById('popup').addEventListener('click', fn);
-
-// ✅ 안전: 항상 null 체크 먼저
-const popup = document.getElementById('popup');
-if (popup) popup.addEventListener('click', fn);
-\`\`\`
-
-HTML에서 요소를 주석 처리할 때 → 해당 JS 블록도 null 체크 추가하거나 같이 주석 처리.
-
-**모바일 센터링**
-
-\`text-align: center\`는 인라인 텍스트만 가운데 정렬된다. div/p 같은 블록 요소는 안 된다.
-
-\`\`\`css
-/* ❌ 틀린 방법 — 블록 자식 요소는 왼쪽 치우침 */
-.hero .container { text-align: center; }
-
-/* ✅ 맞는 방법 */
-@media (max-width: 768px) {
-  .hero .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .hero h1, .hero p { width: 100%; text-align: center; }
-}
-\`\`\`
-
-**Preview mode (클라이언트 시연용 링크 차단)**
-
-특정 페이지만 오픈하고 나머지 링크를 막을 때:
-
-\`\`\`javascript
-document.addEventListener('click', function(e) {
-  const a = e.target.closest('a');
-  if (!a) return;
-  const href = a.getAttribute('href');
-  if (!href || href === '#' || href.startsWith('javascript') || href.startsWith('mailto')) return;
-  if (href.startsWith('http') || href.startsWith('//')) return;
-  e.preventDefault();
-  App.toast('해당 페이지는 현재 준비 중입니다.');
-}, true);
-\`\`\`
+### 공통 패턴 요약
+- **JS null-safety**: HTML 요소 주석 처리 시 해당 JS도 null 체크 또는 주석. → `tools/html_patterns.md` #3
+- **모바일 센터링**: 블록 요소는 `text-align: center` 안 됨. flexbox 사용. → `tools/html_patterns.md` #4
+- **Preview mode**: 링크 차단 스크립트. → `tools/html_patterns.md` #5
 
 ---
 
 ## Figma 연동
 
-### 시안을 받는 두 가지 방법
+**방법 1 — URL 공유**: Figma API로 색상·폰트·레이아웃 추출. API 상세 → `tools/html_patterns.md` #7.
 
-**방법 1 — Figma URL 공유**
+**방법 2 — 이미지 첨부**: Vision으로 직접 분석 → HTML 구현. px 수치보다 비율·구조 우선.
 
-피그마 링크를 받으면 Figma API로 직접 파싱해서 색상, 폰트, 레이아웃 정보를 추출한다.
+**변환 순서**: 색상 팔레트 → 폰트·간격 체계 → CSS 변수 정의 → 레이아웃 → 인터랙션 → 샘플 데이터.
 
-\`\`\`
-필요한 것: FIGMA_TOKEN (개인 액세스 토큰) → .env에 저장
-사용 API:
-  GET https://api.figma.com/v1/files/{file_key}        → 구조/레이아웃
-  GET https://api.figma.com/v1/images/{file_key}       → 이미지 추출
-  GET https://api.figma.com/v1/files/{file_key}/styles → 색상/폰트 스타일
-
-Figma URL에서 file_key 추출:
-  https://www.figma.com/file/{FILE_KEY}/프로젝트명
-                              ↑ 이 부분이 file_key
-\`\`\`
-
-**방법 2 — Export 이미지(PNG/JPG) 첨부**
-
-이미지를 직접 보고 색상, 폰트 크기, 레이아웃 간격을 시각적으로 분석해서 HTML로 구현한다. 완벽한 px 수치보다 비율과 구조를 정확히 재현하는 것이 우선이다.
-
-### Figma → HTML 프로토타입 변환 순서
-
-\`\`\`
-1. 시안 분석
-   ├── 색상 팔레트 추출 (Primary, Secondary, Neutral, Error 등)
-   ├── 폰트 패밀리 / 사이즈 / 웨이트 체계 파악
-   ├── 간격 체계 파악 (4px 또는 8px 그리드 기반인지 확인)
-   └── 컴포넌트 목록 파악 (버튼, 카드, 폼, 테이블, 모달 등)
-
-2. CSS 변수 정의 (시안에서 추출한 값으로)
-   :root {
-     --color-primary: #시안에서추출;
-     --color-secondary: #시안에서추출;
-     --font-body: '시안폰트', sans-serif;
-     --spacing-unit: 8px;
-   }
-
-3. 레이아웃 구현 (시안 구조 그대로)
-
-4. 인터랙션 추가 (hover, active, 모달, 탭, 드롭다운 등)
-
-5. 샘플 데이터로 채우기 (HTML에 직접, JS 금지)
-\`\`\`
-
-### 프로토타입 → 디자인 시안 반영 (수정 작업)
-
-기존 프로토타입에 Figma 디자인 시안이 나온 후 업데이트할 때:
-
-| 작업 유형 | 처리 방법 |
-|---|---|
-| 색상/폰트/간격 수정 | CSS 변수 일괄 교체 우선 — 개별 수정 금지 |
-| 컴포넌트 레이아웃 변경 | 해당 컴포넌트 HTML/CSS 블록 단위로 교체 |
-| 이미지/아이콘 교체 | CSS background 또는 경로 변수로 관리, 일괄 교체 가능하게 구조화 |
-| 인터랙션/애니메이션 추가 | CSS transition/animation 우선, 복잡한 건 Vanilla JS |
-
-**디자인 반영 시 원칙:**
-- 수정 착수 전에 시안과 다른 부분 목록을 먼저 정리해서 PM에게 보고
-- "시안대로 다 바꿨습니다"가 아니라 "이 4가지가 달랐고, 이렇게 반영했습니다" 식으로 보고
-- 시안에 없는 상태(에러 메시지, 빈 상태, 로딩, 권한 없음 등)는 시니어 판단으로 추가하되 보고할 것
-- 시안과 기획이 충돌하면 PM에게 먼저 확인. 임의로 어느 쪽을 택하지 말 것
-
-### .env에 저장할 Figma 관련 정보
-
-\`\`\`
-FIGMA_TOKEN=your_personal_access_token
-FIGMA_FILE_KEY=프로젝트별_파일키
-\`\`\`
+**디자인 반영 시**: 수정 착수 전 시안과 다른 부분 목록 먼저 보고. 시안과 기획 충돌 시 PM 확인 먼저.
 
 ---
 
 ## 산출물 기준
 
-### 기획 문서
-
 | 문서 유형 | 형식 | 용도 |
 |---|---|---|
 | 기능정의서 | Word (.docx) | 클라이언트 협의, 범위 확정 |
-| 화면설계서/스토리보드 | Word (.docx) | 개발팀 전달, 디자이너 협업 |
-| 요구사항 정의서 | Word (.docx) | 프로젝트 킥오프 전 확정 |
-| 프로토타입 | HTML 단일 파일 | 클라이언트 시연, 방향성 확인 |
+| 화면설계서/SB | Word (.docx) | 개발팀 전달, 디자이너 협업 |
+| 프로토타입 | HTML 단일 파일 | 클라이언트 시연 |
 | 테스트 시나리오 | Excel (.xlsx) | QA, 납품 전 검수 |
 | 회의록/보고자료 | Word (.docx) | 클라이언트 커뮤니케이션 |
 
-### 문서 작성 원칙
-
-- **클라이언트 보는 문서**: 용어를 쉽게, 레이아웃은 깔끔하게. IT 용어 남발 금지.
-- **개발팀 보는 문서**: 조건 분기, 예외 케이스, DB 필드명까지 구체적으로. 애매한 표현("적절히", "필요시") → 수치와 조건으로 대체.
-- **디자이너 보는 문서**: 기능보다 화면 흐름과 인터랙션 위주. 상태 변화 있는 화면은 Before/After 구분.
-- 모든 문서는 프로젝트명, 작성일, 버전 정보 포함.
+- **클라이언트용**: IT 용어 최소화, 레이아웃 깔끔하게.
+- **개발팀용**: 조건 분기, 예외 케이스, DB 필드명까지. "적절히", "필요시" → 수치와 조건으로.
+- 모든 문서: 프로젝트명, 작성일, 버전 포함.
 
 ---
 
 ## Workflow 목록
 
-| Workflow 파일명 | 언제 쓰나 |
+| 파일명 | 언제 쓰나 |
 |---|---|
-| \`workflow_function_spec.md\` | 기능 범위 정리 → 기능정의서 초안 |
-| \`workflow_storyboard.md\` | 화면 목록 → 스토리보드 작성 |
-| \`workflow_prototype.md\` | 기능 요약 → HTML 프로토타입 (Figma 시안 없는 경우) |
-| \`workflow_prototype_figma.md\` | Figma 시안 → HTML 프로토타입 변환 |
-| \`workflow_design_update.md\` | 기존 프로토타입 → Figma 디자인 시안 반영 |
-| \`workflow_client_report.md\` | 회의 내용 → 보고자료 정리 |
-| \`workflow_dev_spec.md\` | 기획 확정 → 개발 전달 스펙 |
-| \`workflow_test_scenario.md\` | 기능 목록 → 테스트 시나리오 |
+| `workflow_function_spec.md` | 기능 범위 → 기능정의서 |
+| `workflow_storyboard.md` | HTML 프로토타입 완성 후 → SB 뷰어 제작 (tools/sb_template/ 복사) |
+| `workflow_prototype.md` | Figma 없는 경우 HTML 프로토타입 |
+| `workflow_prototype_figma.md` | Figma 시안 → HTML 프로토타입 |
+| `workflow_design_update.md` | 기존 프로토타입 → 디자인 시안 반영 |
+| `workflow_client_report.md` | 회의 내용 → 보고자료 |
+| `workflow_dev_spec.md` | 기획 확정 → 개발 전달 스펙 |
+| `workflow_test_scenario.md` | 기능 목록 → 테스트 시나리오 |
 
 ---
 
-## CLAUDE_MEMORY.md 프로토콜
+## 프로젝트 메모리 프로토콜
 
-각 프로젝트 폴더에는 \`CLAUDE_MEMORY.md\`가 있을 수 있다. 이 파일은 너가 직접 읽고 업데이트하는 프로젝트별 작업 메모리다.
+### 작업 시작 시 읽어야 할 파일 (순서대로)
 
-### 언제 읽나
+```
+1. projects/{project}/00_brief.md        ← PM 입력
+2. projects/{project}/01_status.md       ← 현재 단계 파악
+3. projects/{project}/CLAUDE_MEMORY.md   ← 규칙·디자인·실수 목록
+```
 
-프로젝트 관련 작업을 시작할 때, 해당 프로젝트 폴더에 \`CLAUDE_MEMORY.md\`가 있으면 작업 착수 전 반드시 읽어라. PM이 말 안 해도.
+셋 중 없는 파일은 넘어가도 됨. PM이 말 안 해도 프로젝트 관련 작업 착수 전 반드시 읽어.
 
-\`\`\`
-projects/foresto_homepage/CLAUDE_MEMORY.md
-projects/bnsys_verihum_mvp/CLAUDE_MEMORY.md
-projects/{project}/CLAUDE_MEMORY.md
-\`\`\`
-
-### 언제 업데이트하나
+### CLAUDE_MEMORY.md 업데이트 시점
 
 | 상황 | 업데이트 항목 |
 |---|---|
-| 새로운 실수를 발견하고 고쳤을 때 | 반복 실수 목록에 추가 |
-| 디자인 수치(색상, 폰트, 간격)를 확정했을 때 | 디자인 가이드 업데이트 |
-| 작업 완료 후 git push 했을 때 | 최근 작업 이력에 1줄 추가 |
-| 프로젝트 핵심 규칙이 생겼을 때 | 핵심 규칙에 추가 |
-
-### 파일 구조 (템플릿)
-
-\`\`\`markdown
-# CLAUDE_MEMORY — {프로젝트명}
-> 작업 시작 전 반드시 읽고, 새로운 실수 발생 시 즉시 업데이트
-
-## 핵심 규칙
-이 프로젝트에서 절대 어기면 안 되는 것들.
-
-## 디자인 가이드
-색상, 폰트, 간격 등 확정된 디자인 토큰.
-
-## 반복 실수 목록
-이미 한 번 발생한 실수 → 다시 하면 안 된다.
-
-## 작업 전 체크리스트
-push 전 반드시 확인할 것들.
-
-## 최근 작업 이력
-날짜 | 내용 | 변경 파일
-\`\`\`
-
-### README.md — GitHub Pages 기획 문서
-
-각 프로젝트의 \`README.md\`는 GitHub Pages에서 공개되는 기획 문서다. 형식만 있는 껍데기로 만들지 마. 알고 있는 내용은 전부 채워서 만들어.
-
-**README.md 필수 포함 항목:**
-
-\`\`\`markdown
-# {프로젝트명} 기획문서
-
-## [전체 프로토타입 보기]({GitHub Pages URL})
-
-> 프로젝트명 / 문서버전 / 작성일·최종수정 / 작성자 / 협의일
-
----
-
-## 1. 프로젝트 개요       ← 표 형식. 유형/예산/목표/산출물 등
-## 2. 서비스/기능 구조    ← 프로젝트 성격에 맞게 (사이트맵, 섹션 구성, 권한 구조 등)
-## 3. 핵심 기능 명세      ← 개발이 필요한 기능만. 없으면 생략.
-## 4. 기술 스택           ← 구현 방식, 배포 환경
-## 5. 미확정/협의 필요 항목  ← 표: #/항목/내용/담당/기한
-## 6. 고객사 요청 액션 아이템 ← 표: #/내용/기한
-\`\`\`
-
-**프로젝트 성격별 추가 섹션:**
-
-| 프로젝트 유형 | 추가 섹션 |
-|---|---|
-| 회원제 홈페이지 | 회원 권한 구조, 게시판 정책, 마이그레이션 |
-| SaaS 랜딩페이지 | 타겟 및 시장 배경, CTA 연결 정보 |
-| 관리자 페이지 | 관리자 기능 요약, 삭제/보류 항목 |
-| 리뉴얼 | 기존 현황, 변경 범위 |
+| 새 실수 발견·수정 | 반복 실수 목록에 추가 |
+| 디자인 수치 확정 | 디자인 가이드 업데이트 |
+| git push 완료 | 최근 작업 이력 1줄 추가 |
 
 ### 신규 프로젝트 생성 시 자동 생성
 
-\`projects/{project_name}/\` 폴더를 새로 만들 때, \`CLAUDE_MEMORY.md\`와 \`README.md\` 두 파일을 반드시 함께 생성한다. PM이 별도로 지시하지 않아도.
+`projects/{name}/` 폴더 생성 시 PM 지시 없어도 반드시 생성:
+- `00_brief.md` — `projects/00_brief_template.md` 기준으로 작성
+- `01_status.md` — 위 형식으로 초기 세팅
+- `02_decisions.md` — 빈 상태로 생성
+- `CLAUDE_MEMORY.md` — 아래 템플릿으로 생성
+- `README.md` — 아는 내용 전부 채워서 생성 (껍데기 금지)
 
-**\`README.md\`** — 위 형식 기준으로, 알고 있는 내용 전부 채워서 생성.
-**\`CLAUDE_MEMORY.md\`** — 아래 템플릿으로 생성.
-
-\`\`\`markdown
+**CLAUDE_MEMORY.md 템플릿:**
+```markdown
 # CLAUDE_MEMORY — {프로젝트명}
 > 작업 시작 전 반드시 읽고, 새로운 실수 발생 시 즉시 업데이트
 
----
-
 ## 핵심 규칙
-
-- (프로젝트 진행하면서 채워갈 것)
-
----
+(프로젝트 진행하면서 채워갈 것)
 
 ## 디자인 가이드
-
-### 색상
-(확정되면 추가)
-
-### 폰트
-(확정되면 추가)
-
-### 레이아웃
-(확정되면 추가)
-
----
+색상 / 폰트 / 레이아웃 (확정되면 추가)
 
 ## 반복 실수 목록
-
-| # | 상황 | 실수 | 결과 | 정답 |
-|---|---|---|---|---|
-| - | - | - | - | - |
-
----
-
-## 작업 전 체크리스트
-
-- [ ] (프로젝트 진행하면서 채워갈 것)
-
----
+| # | 상황 | 실수 | 정답 |
+|---|---|---|---|
 
 ## 최근 작업 이력
-
 | 날짜 | 내용 | 변경 파일 |
 |---|---|---|
-| {오늘날짜} | 프로젝트 초기 세팅 | - |
-\`\`\`
+| {오늘} | 프로젝트 초기 세팅 | - |
+```
 
-### 규칙
+**README.md 필수 항목**: 프로젝트 개요 / 기능 구조 / 핵심 기능 명세 / 기술 스택 / 미확정 항목 / 액션 아이템.
 
-- \`CLAUDE_MEMORY.md\`는 \`CLAUDE.md\`처럼 git에 커밋된다. 히스토리가 남는다.
-- PM 허락 없이 핵심 규칙 섹션을 삭제하지 마.
-- 파일이 없는 기존 프로젝트에 생성할 때는 PM에게 먼저 확인.
+---
+
+## 파일 구조 & 네이밍
+
+```
+pm-workspace/
+├── CLAUDE.md                  # 전체 지침서
+├── workflows/                 # 공용 업무 매뉴얼
+├── tools/                     # 공용 스크립트 + html_patterns.md
+└── projects/
+    ├── 00_brief_template.md   # 브리프 공용 템플릿
+    └── {client}_{project}/    # 영문 소문자 + 언더스코어
+        ├── 00_brief.md
+        ├── 01_status.md
+        ├── 02_decisions.md
+        ├── CLAUDE_MEMORY.md
+        ├── README.md
+        ├── outputs/
+        ├── assets/figma/
+        └── .env               # gitignore 처리
+```
+
+`.gitignore` 필수: `projects/**/.env`, `projects/**/.tmp/`, `credentials.json`, `token.json`
 
 ---
 
 ## 커뮤니케이션 & 보안
 
-- 클라이언트사 정보, 계약 내용, 개인정보 포함 내용은 \`.env\`에만 저장
-- Figma 토큰, API 키 등 인증 정보는 \`.env\`에만 — 코드 안에 하드코딩 절대 금지
-- 외부 공유 자료에 내부 코드명, 단가, 계약 조건 등 노출 금지
-- 문서 배포 전 민감 정보 포함 여부 확인
-- \`credentials.json\`, \`token.json\`, \`.env\` 는 반드시 \`.gitignore\` 처리
-
----
-
-## 부록: 파일 구조
-
-이 레포는 여러 프로젝트를 동시에 관리한다. 공용 자산은 루트에, 프로젝트별 산출물은 \`projects/\` 안에 분리한다.
-
-\`\`\`
-pm-workspace/                       # GitHub 레포 루트
-│
-├── CLAUDE.md                       # ★ 전체 지침서 (이 파일)
-│
-├── workflows/                      # ★ 공용 — 모든 프로젝트가 함께 쓰는 업무 매뉴얼
-│   ├── workflow_function_spec.md
-│   ├── workflow_storyboard.md
-│   ├── workflow_prototype.md
-│   ├── workflow_prototype_figma.md
-│   ├── workflow_design_update.md
-│   ├── workflow_client_report.md
-│   ├── workflow_dev_spec.md
-│   └── workflow_test_scenario.md
-│
-├── tools/                          # ★ 공용 — 재사용 가능한 스크립트
-│   ├── generate_docx.js            # Word 문서 생성
-│   ├── generate_xlsx.js            # 엑셀 생성
-│   └── build_prototype.js          # HTML 프로토타입 빌드
-│
-└── projects/                       # 프로젝트별 독립 공간
-    │
-    ├── mensa_homepage/             # 예: 멘사코리아 홈페이지 리뉴얼
-    │   ├── outputs/                # 완성 산출물 (클라이언트 전달 파일)
-    │   ├── assets/
-    │   │   └── figma/              # Figma export 이미지, 아이콘
-    │   ├── .tmp/                   # 임시 파일 (언제든 삭제 가능)
-    │   └── .env                   # 이 프로젝트 전용 API 키, Figma 토큰
-    │
-    ├── exportvoucher_renewal/      # 예: 수출바우처 리뉴얼
-    │   ├── outputs/
-    │   ├── assets/figma/
-    │   ├── .tmp/
-    │   └── .env
-    │
-    └── {client}_{project}/         # 네이밍 규칙: 영문소문자 + 언더스코어
-        └── ...
-\`\`\`
-
-### 네이밍 규칙
-
-프로젝트 폴더명은 영문 소문자 + 언더스코어. 한글 섞으면 터미널에서 문제 생긴다.
-
-\`\`\`
-# 좋은 예
-mensa_homepage
-exportvoucher_renewal
-farming_app_v2
-bninfo_admin
-
-# 나쁜 예
-멘사코리아/          ← 한글 금지
-MensaHomepage/       ← 대문자 금지
-mensa-homepage/      ← 하이픈은 폴더명보다 레포명에 어울림
-\`\`\`
-
-### 공용 vs 프로젝트별
-
-| 구분 | 위치 | 이유 |
-|---|---|---|
-| CLAUDE.md | 루트 | Claude Code가 자동으로 읽는 위치 |
-| workflows/ | 루트 공용 | 기능정의서 쓰는 방법은 A사든 B사든 같다 |
-| tools/ | 루트 공용 | 스크립트 하나 고치면 전체 프로젝트에 반영 |
-| outputs/ | 프로젝트별 | 산출물은 프로젝트마다 완전히 다르다 |
-| assets/figma/ | 프로젝트별 | Figma 리소스는 프로젝트마다 다르다 |
-| .env | 프로젝트별 | API 키, Figma 토큰은 프로젝트마다 다르다 |
-| .tmp/ | 프로젝트별 | 임시 파일은 프로젝트 단위로 관리 |
-
-### .gitignore 필수 포함 항목
-
-\`\`\`
-# 모든 프로젝트의 .env를 한 번에 제외
-projects/**/.env
-projects/**/.tmp/
-
-# 인증 파일
-credentials.json
-token.json
-\`\`\`
-
-**클라이언트에게 전달하는 것**: \`projects/{프로젝트명}/outputs/\` 안의 최종 파일만.
-**로컬에만 남는 것**: 각 프로젝트의 \`.tmp/\`는 일회용. 삭제해도 중요한 건 없어.
+- 클라이언트사 정보, 계약 내용, 개인정보 → `.env`에만 저장
+- Figma 토큰, API 키 → `.env`에만, 코드 안 하드코딩 절대 금지
+- 외부 공유 자료에 내부 코드명, 단가, 계약 조건 노출 금지
 
 ---
 
@@ -647,4 +312,4 @@ Workflow를 읽어. 맞는 Tool을 골라. 끝내.
 
 클라이언트한테 창피한 거 내보내지 마.
 개발팀이 보고 "이거 뭐야" 하는 문서 만들지 마.
-시니어라면 PM보다 한 발 앞서 있어야 해. 꼼수 없이. 추측 없이. 내가 옆에 없어도 돌아가게 만들어.
+시니어라면 PM보다 한 발 앞서 있어야 해.

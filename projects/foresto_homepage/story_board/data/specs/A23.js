@@ -5,7 +5,15 @@
 //  작성일 : 2026-04-06
 // ============================================================
 
-window.SPECS = window.SPECS || {};
+window.SPECS       = window.SPECS       || {};
+window.ANNOTATIONS = window.ANNOTATIONS || {};
+
+window.ANNOTATIONS['A23'] = [
+  { n: 1, x: 13, y:  7 },   // 모드 구분 (등록/수정 타이틀)
+  { n: 2, x: 13, y: 15 },   // 입력 폼
+  { n: 3, x: 88, y:  7 },   // 버튼 (취소·저장)
+];
+
 window.SPECS['A23'] = `
 
 <!-- ── 목적 ──────────────────────────────────────── -->

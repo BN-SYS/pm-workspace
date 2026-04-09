@@ -5,7 +5,15 @@
 //  작성일 : 2026-04-06
 // ============================================================
 
-window.SPECS = window.SPECS || {};
+window.SPECS       = window.SPECS       || {};
+window.ANNOTATIONS = window.ANNOTATIONS || {};
+
+// A22는 단일 카드 화면. ③ 데이터 없음은 상태 규칙이므로 별도 annotation 없음
+window.ANNOTATIONS['A22'] = [
+  { n: 1, x: 13, y: 17 },   // 일정 정보 카드
+  { n: 2, x: 88, y:  7 },   // 상단 버튼 그룹 (목록으로·삭제·수정하기)
+];
+
 window.SPECS['A22'] = `
 
 <!-- ── 목적 ──────────────────────────────────────── -->

@@ -5,7 +5,15 @@
 //  작성일 : 2026-04-06
 // ============================================================
 
-window.SPECS = window.SPECS || {};
+window.SPECS       = window.SPECS       || {};
+window.ANNOTATIONS = window.ANNOTATIONS || {};
+
+window.ANNOTATIONS['A28'] = [
+  { n: 1, x: 90, y:  7 },   // 상단 버튼 ([+ 항목 추가])
+  { n: 2, x: 13, y: 11 },   // 목록 테이블
+  { n: 3, x: 88, y: 22 },   // 행 내 관리 버튼 (수정·삭제)
+];
+
 window.SPECS['A28'] = `
 
 <!-- ── 목적 ──────────────────────────────────────── -->
