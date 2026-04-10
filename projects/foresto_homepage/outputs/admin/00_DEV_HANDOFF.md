@@ -14,8 +14,8 @@ admin/                         ← 이 폴더
 ├── [목록 페이지] — 필터 + 테이블 + 페이지네이션
 │   ├── members.html           # 회원 목록
 │   ├── members-withdrawn.html # 탈퇴회원 목록
-│   ├── courses.html           # 강좌 목록 (탭: 기초/자격/역량/아카데미)
-│   ├── applicants.html        # 신청자 통합 목록
+│   ├── courses.html           # 강좌 목록 (탭: 기초/자격/역량/아카데미) + 강사신청도 동일 레이아웃과 프로세스
+│   ├── applicants.html        # 신청자 통합 목록 + 강사신청도 동일 레이아웃과 프로세스
 │   ├── calendar.html          # 일정 목록
 │   ├── board.html             # 게시판 목록 (?type=notice|newsletter|press|gallery|...)
 │   ├── apply-regular.html     # 정회원신청 목록
@@ -37,9 +37,8 @@ admin/                         ← 이 폴더
 │
 ├── [상세/처리 페이지]
 │   ├── member-detail.html     # 회원 상세 (열람 + 상태변경)
-│   ├── applicant-detail.html  # 강좌 신청자 상세
+│   ├── applicant-detail.html  # 강좌 신청자 상세 /  + 강사신청자 상세도 동일 레이아웃과 프로세스
 │   ├── apply-regular-detail.html
-│   ├── apply-instructor-detail.html
 │   ├── apply-forest-detail.html
 │   ├── apply-sponsor-detail.html
 │   ├── course-detail.html
@@ -426,8 +425,8 @@ fetch(ADMIN_API.memberSave, {
 | 파라미터 | 타입 | 값 | 설명 |
 |---|---|---|---|
 | `date_from` / `date_to` | string | | 신청일 범위 |
-| `status` | string | `pending` \| `approved` \| `rejected` | 처리 상태 |
-| `region` | string | `서울` \| `경기` \| ... | 거주 지역 |
+| `act_status` | string | `활동 중` \| `활동 예정` \| `미활동` | 활동 여부 |
+| `member_type` | string | `member` \| `guest` | 회원 구분 |
 | `kw_type` | string | `name` \| `phone` \| `email` | 검색 기준 |
 | `kw` | string | | 검색어 |
 
@@ -435,15 +434,15 @@ fetch(ADMIN_API.memberSave, {
 // 응답 items
 {
   "id": 1,
-  "applyNo": "APP-2026-00001",
+  "applyNo": "REG-2026-00001",
   "name": "홍길동",
   "phone": "010-1234-5678",
   "email": "user@foresto.or.kr",
-  "region": "서울",
-  "career": "숲해설가 활동 5년",
+  "memberType": "member",
+  "memberTypeLabel": "회원",
+  "actStatus": "활동 중",
   "appliedAt": "2026-01-20 14:32:00",
-  "status": "pending",
-  "statusLabel": "검토중",
+  "memo": "관리자 메모",
   "attachFiles": [
     { "name": "자격증.pdf", "url": "/uploads/apply/regular/1/cert.pdf", "size": "1.2MB" }
   ]
