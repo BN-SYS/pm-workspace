@@ -112,9 +112,9 @@ window.SPECS['A34'] = `
     <tr><td>팝업 제목</td><td>Y</td><td>1자 이상</td><td>팝업 제목을 입력해주세요.</td></tr>
     <tr><td>노출 시작일시</td><td>Y</td><td>datetime-local 선택</td><td>노출 기간을 입력해주세요.</td></tr>
     <tr><td>노출 종료일시</td><td>Y</td><td>datetime-local 선택. 시작일시보다 이후</td><td>종료일시는 시작일시 이후여야 합니다.</td></tr>
-    <tr><td>팝업 창 크기</td><td>Y</td><td>가로 200~900px, 세로 160~800px. 숫자</td><td>⚠️ 범위 이탈 시 에러 메시지 협의 필요</td></tr>
+    <tr><td>팝업 창 크기</td><td>Y</td><td>가로 200~900px, 세로 160~800px. 숫자</td><td>팝업 창 크기를 확인해주세요.</td></tr>
     <tr><td>이미지</td><td>N</td><td>선택 업로드. JPG·PNG·GIF</td><td>—</td></tr>
-    <tr><td>내용 (SE2)</td><td>N</td><td>선택 입력. ⚠️ 필수 여부 협의 필요</td><td>—</td></tr>
+    <tr><td>내용 (SE2)</td><td>N</td><td>선택 입력.</td><td>—</td></tr>
     <tr><td>링크 URL</td><td>N</td><td>선택 입력</td><td>—</td></tr>
   </tbody>
 </table>
