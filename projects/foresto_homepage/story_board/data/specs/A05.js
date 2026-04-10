@@ -28,7 +28,7 @@ window.SPECS['A05'] = `
 <h4>① 검색·필터 영역</h4>
 <p>
   - 교육시작일: 날짜 범위 선택. <strong>DOC06: C01 날짜 범위 검색 공통 규칙 적용</strong><br>
-  - 상태 필터: 버튼 그룹 토글(전체/준비중/접수중/접수마감). 기본값 "전체" ⚠️ 상태값 확정 필요<br>
+  - 상태 필터: 버튼 그룹 토글(전체/준비중/접수중/접수마감). 기본값 "전체"<br>
   - 과정명: 텍스트 입력. placeholder "과정명을 입력하세요"<br>
   - [검색]·[초기화]: <strong>DOC06: C04 검색어 입력 공통 규칙 적용</strong><br>
   - [엑셀 다운로드]: <strong>DOC06: C06 엑셀 다운로드 공통 규칙 적용</strong>
@@ -44,11 +44,10 @@ window.SPECS['A05'] = `
 
 <h4>③ [선택 삭제] 버튼</h4>
 <p>
-  - 미선택 클릭 시 Alert: "삭제할 강좌를 선택해주세요."<br>
+  - 미선택 클릭 시 Alert: "삭제할 항목을 선택해주세요."<br>
   - 삭제 Confirm·완료·실패 동작: <strong>DOC06: C05 삭제 공통 패턴 적용 --><br>
   - 전체 선택 체크박스 동작: <strong>DOC06: C02-4 전체 선택 체크박스 적용 -->
 </p>
-<p class="spec-note">⚠️ 삭제 방식 협의 필요 — Hard Delete vs. Soft Delete. 접수중/접수마감 상태 강좌 삭제 차단 여부 협의 필요.</p>
 
 <h4>④ [새로고침] · [+ 강좌 등록] 버튼</h4>
 <p>
@@ -67,7 +66,7 @@ window.SPECS['A05'] = `
     <tr><td>2</td><td>과정명</td><td>text</td><td>L</td><td>강좌 제목. 클릭 시 상세(A06) 이동.</td></tr>
     <tr><td>3</td><td>시작일</td><td>date</td><td>C</td><td>YYYY-MM-DD. 교육 시작일.</td></tr>
     <tr><td>4</td><td>접수기간</td><td>text</td><td>C</td><td>YYYY-MM-DD HH:MM ~ YYYY-MM-DD HH:MM</td></tr>
-    <tr><td>5</td><td>상태</td><td>badge</td><td>C</td><td>준비중/접수중/접수마감. ⚠️ 상태값·색상 확정 필요</td></tr>
+    <tr><td>5</td><td>상태</td><td>badge</td><td>C</td><td>준비중/접수중/접수마감.</td></tr>
     <tr><td>6</td><td>등록일</td><td>datetime</td><td>C</td><td>YYYY-MM-DD HH:MM. 기본 정렬: 등록일 내림차순(최신순).</td></tr>
   </tbody>
 </table>
@@ -79,7 +78,7 @@ window.SPECS['A05'] = `
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
     <tr><td>교육시작일 범위 오류</td><td>Alert</td><td>시작일이 종료일보다 클 수 없습니다.</td></tr>
-    <tr><td>삭제 미선택</td><td>Alert</td><td>삭제할 강좌를 선택해주세요.</td></tr>
+    <tr><td>삭제 미선택</td><td>Alert</td><td>삭제할 항목을 선택해주세요.</td></tr>
   </tbody>
 </table>
 
@@ -90,7 +89,7 @@ window.SPECS['A05'] = `
   <thead><tr><th>필드</th><th>필수</th><th>규칙</th><th>에러 메시지</th></tr></thead>
   <tbody>
     <tr><td>과정명</td><td>N</td><td>입력 시 최소 2자 이상</td><td>과정명은 2자 이상 입력해주세요.</td></tr>
-    <tr><td>선택 삭제</td><td>Y</td><td>체크박스 1건 이상 선택</td><td>삭제할 강좌를 선택해주세요.</td></tr>
+    <tr><td>선택 삭제</td><td>Y</td><td>체크박스 1건 이상 선택</td><td>삭제할 항목을 선택해주세요.</td></tr>
   </tbody>
 </table>
 

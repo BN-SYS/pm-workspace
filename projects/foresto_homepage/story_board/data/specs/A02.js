@@ -107,7 +107,7 @@ window.SPECS['A02'] = `
   <thead><tr><th>#</th><th>컬럼명</th><th>타입</th><th>정렬</th><th>비고</th></tr></thead>
   <tbody>
     <tr><td>1</td><td>번호</td><td>number</td><td>C</td><td>자동 번호</td></tr>
-    <tr><td>2</td><td>소속명</td><td>text</td><td>L</td><td>소속 동아리명/사회공헌사업단명</td></tr>
+    <tr><td>2</td><td>소속명</td><td>text</td><td>L</td><td>소속 동아리명/사회공헌사업단명. 저장 시점 이름 스냅샷 표시 (게시글 삭제·수정 후에도 유지)</td></tr>
     <tr><td>3</td><td>소속 유형</td><td>text</td><td>C</td><td>동아리/사회공헌사업단</td></tr>
     <tr><td>4</td><td>가입일</td><td>date</td><td>C</td><td>YYYY-MM-DD. 기본 정렬: 가입일 내림차순(최신순).</td></tr>
   </tbody>

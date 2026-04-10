@@ -27,13 +27,13 @@ window.SPECS['A04'] = `
 <h4>① 안내 문구</h4>
 <p>
   - 페이지 상단 경고성 안내 영역. 배경색 강조(연한 노랑/베이지 등)로 시각적 구분<br>
-  - 문구: "※ 탈퇴 회원 정보는 조회 전용입니다. 복구 기능은 제공되지 않습니다." ⚠️ 안내 문구 확정 필요
+  - 문구: "※ 탈퇴 회원 정보는 조회 전용입니다. 복구 기능은 제공되지 않습니다."
 </p>
 
 <h4>② 검색·필터 영역</h4>
 <p>
   - 탈퇴일: 날짜 범위 선택. <strong>DOC06: C01 날짜 범위 검색 공통 규칙 적용</strong><br>
-  - 검색어 조건: 셀렉트박스(전체 필드/이름/아이디/이메일/연락처). 기본값 "전체 필드" ⚠️ 검색 조건 항목 확정 필요<br>
+  - 검색어 조건: 셀렉트박스(전체 필드/이름/아이디/연락처). 기본값 "전체 필드"<br>
   - 검색어 입력·[검색]·[초기화]: <strong>DOC06: C04 검색어 입력 공통 규칙 적용</strong><br>
   - [엑셀 다운로드]: <strong>DOC06: C06 엑셀 다운로드 공통 규칙 적용</strong>
 </p>
@@ -56,11 +56,11 @@ window.SPECS['A04'] = `
     <tr><td>2</td><td>탈퇴일</td><td>datetime</td><td>C</td><td>YYYY-MM-DD HH:MM:SS. 기본 정렬: 탈퇴일 내림차순(최신순).</td></tr>
     <tr><td>3</td><td>아이디</td><td>text</td><td>L</td><td>회원 로그인 ID</td></tr>
     <tr><td>4</td><td>이름</td><td>text</td><td>L</td><td>회원 실명</td></tr>
-    <tr><td>5</td><td>구분</td><td>badge</td><td>C</td><td>정회원/일반회원. ⚠️ 등급 체계 확정 필요</td></tr>
+    <tr><td>5</td><td>구분</td><td>badge</td><td>C</td><td>정회원/일반회원/관리자.</td></tr>
     <tr><td>6</td><td>이메일</td><td>text</td><td>L</td><td>가입 이메일 주소</td></tr>
-    <tr><td>7</td><td>연락처</td><td>text</td><td>C</td><td>010-XXXX-XXXX 형태. ⚠️ 마스킹 적용 여부 협의 필요</td></tr>
+    <tr><td>7</td><td>연락처</td><td>text</td><td>C</td><td>010-0000-0000 형태.</td></tr>
     <tr><td>8</td><td>탈퇴 사유</td><td>text</td><td>L</td><td>말줄임(…) 처리. hover 시 툴팁 전체 내용 노출.</td></tr>
-    <tr><td>9</td><td>탈퇴 처리자</td><td>text</td><td>C</td><td>처리 주체 (예: admin/관리자명/시스템)</td></tr>
+    <tr><td>9</td><td>탈퇴 처리자</td><td>text</td><td>C</td><td>처리 주체 (예: admin/관리자명/시스템(회원이 탈퇴한 경우))</td></tr>
   </tbody>
 </table>
 

@@ -77,7 +77,7 @@ window.SPECS['A21'] = `
 <table>
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
-    <tr><td>삭제 미선택</td><td>Alert</td><td>삭제할 일정을 선택해주세요.</td></tr>
+    <tr><td>삭제 미선택</td><td>Alert</td><td>삭제할 항목을 선택해주세요.</td></tr>
     <tr><td>날짜 범위 오류</td><td>Alert</td><td>시작일이 종료일보다 클 수 없습니다.</td></tr>
   </tbody>
 </table>

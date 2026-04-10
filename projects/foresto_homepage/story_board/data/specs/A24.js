@@ -79,7 +79,7 @@ window.SPECS['A24'] = `
 <table>
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
-    <tr><td>삭제 미선택</td><td>Alert</td><td>삭제할 게시글을 선택해주세요.</td></tr>
+    <tr><td>삭제 미선택</td><td>Alert</td><td>삭제할 항목을 선택해주세요.</td></tr>
   </tbody>
 </table>
 

@@ -44,7 +44,7 @@ window.SPECS['A01'] = `
 
 <h4>③ [선택 삭제] 버튼</h4>
 <p>
-  - 미선택 클릭 시 Alert: "삭제할 회원을 선택해주세요."<br>
+  - 미선택 클릭 시 Alert: "삭제할 항목을 선택해주세요."<br>
   - 삭제 Confirm·완료·실패 동작: <strong>DOC06: C05 삭제 공통 패턴 적용 --><br>
   - 전체 선택 체크박스 동작: <strong>DOC06: C02-4 전체 선택 체크박스 적용 -->
 </p>
@@ -85,7 +85,7 @@ window.SPECS['A01'] = `
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
     <tr><td>가입일 범위 오류</td><td>Alert</td><td>시작일이 종료일보다 클 수 없습니다.</td></tr>
-    <tr><td>삭제 미선택</td><td>Alert</td><td>삭제할 회원을 선택해주세요.</td></tr>
+    <tr><td>삭제 미선택</td><td>Alert</td><td>삭제할 항목을 선택해주세요.</td></tr>
   </tbody>
 </table>
 
@@ -95,7 +95,7 @@ window.SPECS['A01'] = `
 <table>
   <thead><tr><th>필드</th><th>필수</th><th>규칙</th><th>에러 메시지</th></tr></thead>
   <tbody>
-    <tr><td>선택 삭제</td><td>Y</td><td>체크박스 1건 이상 선택</td><td>삭제할 회원을 선택해주세요.</td></tr>
+    <tr><td>선택 삭제</td><td>Y</td><td>체크박스 1건 이상 선택</td><td>삭제할 항목을 선택해주세요.</td></tr>
   </tbody>
 </table>
 

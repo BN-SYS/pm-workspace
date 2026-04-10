@@ -407,22 +407,13 @@
           <div class="form-row">
             <div class="form-label">총 강좌수</div>
             <div class="form-content" style="border-right:1px solid #f0f4ee; flex:1">
-              <div class="input-suffix">
-                <input type="number" id="fLessonCount" class="form-input w80"
-                       min="0" placeholder="0" value="16">
-                <span>강</span>
-              </div>
+              <input type="text" id="fLessonCount" class="form-input"
+                     placeholder="예) 총 16강" value="총 16강" style="width:160px">
             </div>
             <div class="form-label">총 교육시간</div>
             <div class="form-content" style="flex:1">
-              <div style="display:flex;align-items:center;gap:8px">
-                <input type="number" id="fEduHours" class="form-input w80"
-                       min="0" placeholder="0" value="40">
-                <span style="font-size:13px;color:var(--gray-dark)">시간</span>
-                <input type="number" id="fEduMinutes" class="form-input w80"
-                       min="0" max="59" placeholder="0" value="30">
-                <span style="font-size:13px;color:var(--gray-dark)">분</span>
-              </div>
+              <input type="text" id="fEduHours" class="form-input"
+                     placeholder="예) 40시간 30분" value="40시간 30분 (이론 20h + 실습 20h)" style="width:220px">
             </div>
           </div>
 

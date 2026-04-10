@@ -34,10 +34,6 @@
     .check-ok { color: #16a34a; font-size: 12px; font-weight: 600; }
     .check-ng { color: var(--danger); font-size: 12px; font-weight: 600; }
     .pw-wrap { position: relative; }
-    .pw-toggle { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; }
-    .pw-toggle img { width: 16px; opacity: .5; }
-    .pw-toggle:hover img { opacity: .9; }
-    .pw-wrap input { padding-right: 34px; }
     .form-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 20px 0; border-top: 1px solid var(--gray-light); margin-top: 8px; }
     select.form-control { padding-top: 7px; padding-bottom: 7px; }
     .affil-table select.form-control { padding-top: 5px; padding-bottom: 5px; }
@@ -109,12 +105,10 @@
               <label class="form-label">비밀번호 <span class="req">*</span></label>
               <div class="pw-wrap">
                 <input type="password" class="form-control" id="fPw" placeholder="영문 + 숫자 + 특수문자 8자 이상" style="height:36px" oninput="checkPwMatch()">
-                <button type="button" class="pw-toggle" onclick="togglePw('fPw',this)"><img src="../assets/icons/eye.png" alt="보기"></button>
               </div>
               <label class="form-label" style="margin-top:10px">비밀번호 확인 <span class="req">*</span></label>
               <div class="pw-wrap">
                 <input type="password" class="form-control" id="fPwConfirm" placeholder="비밀번호 재입력" style="height:36px" oninput="checkPwMatch()">
-                <button type="button" class="pw-toggle" onclick="togglePw('fPwConfirm',this)"><img src="../assets/icons/eye.png" alt="보기"></button>
               </div>
               <div id="pwMsg" style="margin-top:5px;font-size:12px"></div>
             </div>
@@ -314,15 +308,6 @@
       if (!typeEl || !nameEl) return;
       const names = AFFIL_DATA[typeEl.value] || [];
       nameEl.innerHTML = names.map(n => `<option>${n}</option>`).join('');
-    }
-
-    function togglePw(inputId, btn) {
-      const input = document.getElementById(inputId);
-      if (!input) return;
-      const isHidden = input.type === 'password';
-      input.type = isHidden ? 'text' : 'password';
-      const ico = btn.querySelector('img');
-      if (ico) ico.style.opacity = isHidden ? '1' : '.5';
     }
 
     function checkPwMatch() {

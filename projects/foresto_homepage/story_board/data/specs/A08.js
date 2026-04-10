@@ -44,7 +44,7 @@ window.SPECS['A08'] = `
 
 <h4>③ 하단 버튼 영역</h4>
 <p>
-  - [선택 삭제]: 미선택 클릭 시 Alert: "삭제할 신청자를 선택해주세요."<br>
+  - [선택 삭제]: 미선택 클릭 시 Alert: "삭제할 항목을 선택해주세요."<br>
   - 삭제 Confirm·완료·실패 동작: <strong>DOC06: C05 삭제 공통 패턴 적용 --><br>
   - 전체 선택 체크박스 동작: <strong>DOC06: C02-4 전체 선택 체크박스 적용 --><br>
   - [신청 승인/반려]: 우측 배치. 체크박스 선택 후 일괄 승인 또는 반려 처리. ⚠️ 승인/반려 프로세스 확정 필요<br>
@@ -79,7 +79,7 @@ window.SPECS['A08'] = `
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
     <tr><td>신청일 범위 오류</td><td>Alert</td><td>시작일이 종료일보다 클 수 없습니다.</td></tr>
-    <tr><td>삭제 미선택</td><td>Alert</td><td>삭제할 신청자를 선택해주세요.</td></tr>
+    <tr><td>삭제 미선택</td><td>Alert</td><td>삭제할 항목을 선택해주세요.</td></tr>
     <tr><td>상태변경 미선택</td><td>Alert</td><td>상태를 변경할 신청자를 선택해주세요.</td></tr>
     <tr><td>상태변경 완료</td><td>Alert</td><td>상태가 변경되었습니다.</td></tr>
     <tr><td>상태변경 실패</td><td>Alert</td><td>상태 변경 중 오류가 발생했습니다. 다시 시도해주세요.</td></tr>
@@ -92,7 +92,7 @@ window.SPECS['A08'] = `
 <table>
   <thead><tr><th>필드</th><th>필수</th><th>규칙</th><th>에러 메시지</th></tr></thead>
   <tbody>
-    <tr><td>선택 삭제</td><td>Y</td><td>체크박스 1건 이상 선택</td><td>삭제할 신청자를 선택해주세요.</td></tr>
+    <tr><td>선택 삭제</td><td>Y</td><td>체크박스 1건 이상 선택</td><td>삭제할 항목을 선택해주세요.</td></tr>
   </tbody>
 </table>
 
