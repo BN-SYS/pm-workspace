@@ -9,8 +9,12 @@ window.SPECS       = window.SPECS       || {};
 window.ANNOTATIONS = window.ANNOTATIONS || {};
 
 window.ANNOTATIONS['A13'] = [
-  { n: 1, x: 13.8, y: 9.3 },   // 기본 정보
-  { n: 2, x: 13.8, y: 49.1 },   // 활동 안내
+  { n: 1, x: 21, y: 5 },
+  { n: 2, x: 13.8, y: 9.3 },   // 기본 정보
+  { n: 3, x: 13.8, y: 49.1 },   // 활동 안내
+  { n: 4, x: 13.8, y: 76 },   // 첨부파일
+  { n: 5, x: 13.8, y: 92 },   // 저장 버튼
+
 ];
 
 window.SPECS['A13'] = `
@@ -59,7 +63,7 @@ window.SPECS['A13'] = `
 <h4>⑤ 하단 버튼</h4>
 <p>
   - [취소]: history.back(). <strong>DOC06: C08 적용</strong><br>
-  - [저장]: 유효성 검사 후 API 호출. 상단 타이틀 옆 버튼과 하단 버튼 모두 동작
+  - [저장]: 유효성 검사 후 API 호출. 하단 버튼만 동작
 </p>
 
 <!-- ── Alert 메시지 ──────────────────────────────── -->
