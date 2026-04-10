@@ -132,7 +132,7 @@ window.SPECS['A03'] = `
 <table>
   <thead><tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr></thead>
   <tbody>
-    <tr><td>A02</td><td>회원 상세</td><td>수정 모드 진입 원본/저장 완료 후 이동</td></tr>
+    <tr><td>A02</td><td>회원 상세</td><td>저장 완료 후 이동</td></tr>
   </tbody>
 </table>
 
