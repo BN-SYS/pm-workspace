@@ -1,5 +1,5 @@
 ﻿// ============================================================
-//  A11 — 강사 일정 목록
+//  A11 — 강사 신청 일정 목록
 //  그룹 : 강사 일정관리
 //  섹션 : admin
 //  작성일 : 2026-04-06
@@ -19,7 +19,7 @@ window.SPECS['A11'] = `
 
 <!-- ── 목적 ──────────────────────────────────────── -->
 <h3>목적</h3>
-<p>강사 활동 일정 전체를 목록으로 조회하고, 검색·필터로 원하는 일정을 찾아 등록·수정·삭제하는 화면. 각 일정의 신청인원과 접수 상태를 한눈에 확인할 수 있다.</p>
+<p>강사 신청 일정 전체를 목록으로 조회하고, 검색·필터로 원하는 일정을 찾는 화면. 행 클릭 시 상세(A12)로 이동. 각 일정의 신청인원과 접수 상태를 한눈에 확인할 수 있다.</p>
 
 <!-- ── 구조 및 상세 ──────────────────────────────── -->
 <h3>구조 및 상세</h3>
@@ -41,12 +41,12 @@ window.SPECS['A11'] = `
 
 <h4>③ 목록 테이블</h4>
 <p>
-  - 행 클릭: 강사 일정 등록/수정(A12)으로 이동 (수정 모드, ?id= 파라미터 전달)<br>
+  - 행 클릭: 강사 신청 일정 상세(A12)로 이동<br>
   - 접수 상태는 접수기간·정원 여유 기준으로 자동 산출: 준비중/접수중/마감
 </p>
 
 <h4>④ [+ 일정 등록] 버튼</h4>
-<p>강사 일정 등록/수정(A12) 화면으로 이동 (등록 모드)</p>
+<p>강사 신청 일정 등록/수정(A13) 화면으로 이동 (등록 모드)</p>
 
 <h4>⑤ 페이지네이션</h4>
 <strong>DOC06: C03 페이지네이션 공통 규칙 적용</strong>
@@ -57,13 +57,12 @@ window.SPECS['A11'] = `
   <thead><tr><th>#</th><th>컬럼명</th><th>타입</th><th>정렬</th><th>비고</th></tr></thead>
   <tbody>
     <tr><td>1</td><td>No</td><td>number</td><td>C</td><td>역순 자동 넘버링</td></tr>
-    <tr><td>2</td><td>활동명</td><td>text</td><td>L</td><td>클릭 시 A12(수정) 이동</td></tr>
+    <tr><td>2</td><td>활동명</td><td>text</td><td>L</td><td>행 클릭 시 A12(상세) 이동</td></tr>
     <tr><td>3</td><td>활동일자</td><td>date</td><td>C</td><td>YYYY-MM-DD</td></tr>
     <tr><td>4</td><td>접수 기간</td><td>text</td><td>C</td><td>YYYY-MM-DD HH:MM ~ YYYY-MM-DD HH:MM</td></tr>
     <tr><td>5</td><td>정원</td><td>number</td><td>C</td><td>N명</td></tr>
-    <tr><td>6</td><td>신청인원</td><td>number</td><td>C</td><td>N명</td></tr>
+    <tr><td>6</td><td>신청인원</td><td>number</td><td>C</td><td>N명. 강사신청 목록(A16)에서 별도 관리</td></tr>
     <tr><td>7</td><td>접수상태</td><td>badge</td><td>C</td><td>준비중(gray)/접수중(green)/마감(red)</td></tr>
-    <tr><td>8</td><td>관리</td><td>button</td><td>C</td><td>⚠️ 수정/삭제 버튼 구성 협의 필요</td></tr>
   </tbody>
 </table>
 
@@ -86,7 +85,8 @@ window.SPECS['A11'] = `
 <table>
   <thead><tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr></thead>
   <tbody>
-    <tr><td>A12</td><td>강사 일정 등록/수정</td><td>[+ 일정 등록] 버튼/목록 행 클릭 시 이동</td></tr>
+    <tr><td>A12</td><td>강사 신청 일정 상세</td><td>행 클릭 시 이동</td></tr>
+    <tr><td>A13</td><td>강사 신청 일정 등록/수정</td><td>[+ 일정 등록] 버튼 클릭 시 이동</td></tr>
   </tbody>
 </table>
 
