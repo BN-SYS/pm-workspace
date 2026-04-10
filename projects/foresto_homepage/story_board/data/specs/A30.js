@@ -54,8 +54,8 @@ window.SPECS['A30'] = `
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
     <tr><td>[삭제] 클릭</td><td>Confirm (DOC06: C05)</td><td>이 배너를 삭제하시겠습니까?</td></tr>
-    <tr><td>삭제 성공</td><td>Toast (error 스타일)</td><td>배너가 삭제되었습니다.</td></tr>
-    <tr><td>빈 슬롯 클릭 (3개 초과 시도)</td><td>Toast (error)</td><td>배너는 최대 3개까지 등록할 수 있습니다.</td></tr>
+    <tr><td>삭제 성공</td><td>Alert (error 스타일)</td><td>배너가 삭제되었습니다.</td></tr>
+    <tr><td>빈 슬롯 클릭 (3개 초과 시도)</td><td>Alert</td><td>배너는 최대 3개까지 등록할 수 있습니다.</td></tr>
   </tbody>
 </table>
 

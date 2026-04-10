@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -286,12 +286,12 @@
               <div class="og-card-head">
                 <div style="display:flex;gap:3px;flex-shrink:0">
                   <button class="og-order-btn" title="위로" disabled>▲</button>
-                  <button class="og-order-btn" title="아래로" onclick="App.toast('순서가 변경되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', \'info\')">▼</button>
+                  <button class="og-order-btn" title="아래로" onclick="alert('순서가 변경되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', \'info\')">▼</button>
                 </div>
                 <input class="og-group-name" type="text" value="함께하는 사람들" placeholder="그룹명 입력">
                 <div style="display:flex;gap:6px;margin-left:auto">
                   <button class="btn btn-outline btn-xs" onclick="OrgAdmin.openModal(1)">+ 임원 추가</button>
-                  <button class="btn btn-danger btn-xs" onclick="App.toast('그룹을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">그룹 삭제</button>
+                  <button class="btn btn-danger btn-xs" onclick="alert('그룹을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">그룹 삭제</button>
                 </div>
               </div>
               <div style="overflow-x:auto">
@@ -313,7 +313,7 @@
                       <td class="og-col-title" style="color:#4a5545">상임 대표</td>
                       <td class="og-col-name" style="font-weight:600">김국희</td>
                       <td class="og-col-detail" style="color:#636e72;font-size:13px"></td>
-                      <td class="og-col-action"><button class="btn btn-outline btn-xs" onclick="OrgAdmin.openModal(1,1)">수정</button> <button class="btn btn-danger btn-xs" onclick="App.toast('임원을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">삭제</button></td>
+                      <td class="og-col-action"><button class="btn btn-outline btn-xs" onclick="OrgAdmin.openModal(1,1)">수정</button> <button class="btn btn-danger btn-xs" onclick="alert('임원을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">삭제</button></td>
                     </tr>
                     <tr>
                       <td class="og-col-order"><div class="og-order-pair"><button class="og-order-btn">▲</button><button class="og-order-btn">▼</button></div></td>
@@ -321,7 +321,7 @@
                       <td class="og-col-title" style="color:#4a5545">고문</td>
                       <td class="og-col-name" style="font-weight:600">김성혁</td>
                       <td class="og-col-detail" style="color:#636e72;font-size:13px">전 농림부 장관</td>
-                      <td class="og-col-action"><button class="btn btn-outline btn-xs" onclick="OrgAdmin.openModal(1,2)">수정</button> <button class="btn btn-danger btn-xs" onclick="App.toast('임원을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">삭제</button></td>
+                      <td class="og-col-action"><button class="btn btn-outline btn-xs" onclick="OrgAdmin.openModal(1,2)">수정</button> <button class="btn btn-danger btn-xs" onclick="alert('임원을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">삭제</button></td>
                     </tr>
                     <tr>
                       <td class="og-col-order"><div class="og-order-pair"><button class="og-order-btn">▲</button><button class="og-order-btn" disabled>▼</button></div></td>
@@ -329,7 +329,7 @@
                       <td class="og-col-title" style="color:#4a5545">사무처</td>
                       <td class="og-col-name" style="font-weight:600">양동회</td>
                       <td class="og-col-detail" style="color:#636e72;font-size:13px">사무처장</td>
-                      <td class="og-col-action"><button class="btn btn-outline btn-xs" onclick="OrgAdmin.openModal(1,9)">수정</button> <button class="btn btn-danger btn-xs" onclick="App.toast('임원을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">삭제</button></td>
+                      <td class="og-col-action"><button class="btn btn-outline btn-xs" onclick="OrgAdmin.openModal(1,9)">수정</button> <button class="btn btn-danger btn-xs" onclick="alert('임원을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">삭제</button></td>
                     </tr>
                     <!-- 데이터 없을 때: <tr><td colspan="6" class="og-empty">등록된 임원이 없습니다.</td></tr> -->
                   </tbody>
@@ -341,13 +341,13 @@
             <div class="og-card" id="group-2" data-sb-anno="4:임원 그룹 카드 — 지역 대표자 명단">
               <div class="og-card-head">
                 <div style="display:flex;gap:3px;flex-shrink:0">
-                  <button class="og-order-btn" title="위로" onclick="App.toast('순서가 변경되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', \'info\')">▲</button>
+                  <button class="og-order-btn" title="위로" onclick="alert('순서가 변경되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', \'info\')">▲</button>
                   <button class="og-order-btn" title="아래로" disabled>▼</button>
                 </div>
                 <input class="og-group-name" type="text" value="지역 대표자 명단" placeholder="그룹명 입력">
                 <div style="display:flex;gap:6px;margin-left:auto">
                   <button class="btn btn-outline btn-xs" onclick="OrgAdmin.openModal(2)">+ 임원 추가</button>
-                  <button class="btn btn-danger btn-xs" onclick="App.toast('그룹을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">그룹 삭제</button>
+                  <button class="btn btn-danger btn-xs" onclick="alert('그룹을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">그룹 삭제</button>
                 </div>
               </div>
               <div style="overflow-x:auto">
@@ -369,7 +369,7 @@
                       <td class="og-col-title" style="color:#4a5545">강원협회</td>
                       <td class="og-col-name" style="font-weight:600">김론수</td>
                       <td class="og-col-detail" style="color:#636e72;font-size:13px">상임대표 / 사무처장: 서세정</td>
-                      <td class="og-col-action"><button class="btn btn-outline btn-xs" onclick="OrgAdmin.openModal(2,10)">수정</button> <button class="btn btn-danger btn-xs" onclick="App.toast('임원을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">삭제</button></td>
+                      <td class="og-col-action"><button class="btn btn-outline btn-xs" onclick="OrgAdmin.openModal(2,10)">수정</button> <button class="btn btn-danger btn-xs" onclick="alert('임원을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">삭제</button></td>
                     </tr>
                     <tr>
                       <td class="og-col-order"><div class="og-order-pair"><button class="og-order-btn">▲</button><button class="og-order-btn">▼</button></div></td>
@@ -377,7 +377,7 @@
                       <td class="og-col-title" style="color:#4a5545">경북협회</td>
                       <td class="og-col-name" style="font-weight:600">김영삼</td>
                       <td class="og-col-detail" style="color:#636e72;font-size:13px">상임대표 / 사무국장: 원지환</td>
-                      <td class="og-col-action"><button class="btn btn-outline btn-xs" onclick="OrgAdmin.openModal(2,11)">수정</button> <button class="btn btn-danger btn-xs" onclick="App.toast('임원을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">삭제</button></td>
+                      <td class="og-col-action"><button class="btn btn-outline btn-xs" onclick="OrgAdmin.openModal(2,11)">수정</button> <button class="btn btn-danger btn-xs" onclick="alert('임원을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">삭제</button></td>
                     </tr>
                     <tr>
                       <td class="og-col-order"><div class="og-order-pair"><button class="og-order-btn">▲</button><button class="og-order-btn" disabled>▼</button></div></td>
@@ -385,7 +385,7 @@
                       <td class="og-col-title" style="color:#4a5545">광주전남협회</td>
                       <td class="og-col-name" style="font-weight:600">이미영</td>
                       <td class="og-col-detail" style="color:#636e72;font-size:13px">상임대표 / 사무처장: 김미성</td>
-                      <td class="og-col-action"><button class="btn btn-outline btn-xs" onclick="OrgAdmin.openModal(2,12)">수정</button> <button class="btn btn-danger btn-xs" onclick="App.toast('임원을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">삭제</button></td>
+                      <td class="og-col-action"><button class="btn btn-outline btn-xs" onclick="OrgAdmin.openModal(2,12)">수정</button> <button class="btn btn-danger btn-xs" onclick="alert('임원을 삭제하시겠습니까? (실제 구현 시 서버 API와 연동됩니다.)', \'warning\')">삭제</button></td>
                     </tr>
                     <!-- 데이터 없을 때: <tr><td colspan="6" class="og-empty">등록된 임원이 없습니다.</td></tr> -->
                   </tbody>
@@ -570,18 +570,18 @@
       saveModal() {
         const title = document.getElementById('ogTitleInput')?.value.trim();
         const name  = document.getElementById('ogNameInput')?.value.trim();
-        if (!title) { App.toast('직책을 입력해주세요.', 'warning'); document.getElementById('ogTitleInput')?.focus(); return; }
-        if (!name)  { App.toast('이름을 입력해주세요.', 'warning'); document.getElementById('ogNameInput')?.focus();  return; }
+        if (!title) { alert('직책을 입력해주세요.'); document.getElementById('ogTitleInput')?.focus(); return; }
+        if (!name)  { alert('이름을 입력해주세요.'); document.getElementById('ogNameInput')?.focus();  return; }
         this.closeModal();
-        App.toast('저장되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', 'success');
+        alert('저장되었습니다. (실제 구현 시 서버 API와 연동됩니다.)');
       },
 
       addGroup() {
-        App.toast('그룹 추가 기능은 실제 구현 시 서버 API와 연동됩니다.', 'info');
+        alert('그룹 추가 기능은 실제 구현 시 서버 API와 연동됩니다.');
       },
 
       saveAll() {
-        App.toast('조직도 및 임원진 정보가 저장되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', 'success');
+        alert('조직도 및 임원진 정보가 저장되었습니다. (실제 구현 시 서버 API와 연동됩니다.)');
       },
     };
 

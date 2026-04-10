@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -289,17 +289,25 @@
         <div class="reg-card-body" style="display:flex;flex-direction:column;gap:14px">
           <div class="form-group">
             <label class="form-label">신청 상태</label>
-            <div style="display:flex;gap:16px;margin-top:2px">
+            <div style="display:flex;gap:16px;margin-top:2px;flex-wrap:wrap">
               <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer">
-                <input type="radio" name="regStatus" value="신청완료" checked style="accent-color:var(--green-dark)">
-                신청완료
+                <input type="radio" name="regStatus" value="신청" checked style="accent-color:var(--green-dark)">
+                신청
               </label>
               <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer">
                 <input type="radio" name="regStatus" value="취소" style="accent-color:var(--green-dark)">
                 취소
               </label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer">
+                <input type="radio" name="regStatus" value="수료" style="accent-color:var(--green-dark)">
+                수료
+              </label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer">
+                <input type="radio" name="regStatus" value="미수료" style="accent-color:var(--green-dark)">
+                미수료
+              </label>
             </div>
-            <div style="font-size:11px;color:var(--gray-mid);margin-top:4px">관리자가 직접 등록하는 신청은 기본값 '신청완료'로 처리됩니다.</div>
+            <div style="font-size:11px;color:var(--gray-mid);margin-top:4px">관리자가 직접 등록하는 신청은 기본값 '신청'으로 처리됩니다.</div>
           </div>
           <div class="form-group">
             <label class="form-label">관리자 메모 <span style="font-weight:400;color:var(--gray-mid)">(선택)</span></label>
@@ -568,11 +576,11 @@
     /* ─── 최종 제출 ─── */
     submit() {
       if (!this._member) {
-        App.toast('회원을 검색하여 선택해주세요.', 'warning');
+        alert('회원을 검색하여 선택해주세요.');
         return;
       }
       if (!this._course || !this._schedule) {
-        App.toast('강좌와 교육 일정을 선택해주세요.', 'warning');
+        alert('강좌와 교육 일정을 선택해주세요.');
         return;
       }
 
@@ -591,10 +599,7 @@
       }
 
       const status = document.querySelector('input[name="regStatus"]:checked')?.value || '신청완료';
-      App.toast(
-        `${this._member.name}님을 [${this._course.name}] 과정에 신청 등록하였습니다. (${status})`,
-        'success'
-      );
+      alert(`${this._member.name}님을 [${this._course.name}] 과정에 신청 등록하였습니다. (${status})`);
       setTimeout(() => location.href = 'applicants.html', 1500);
     },
   };

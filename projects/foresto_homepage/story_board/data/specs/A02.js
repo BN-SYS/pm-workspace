@@ -5,7 +5,7 @@
 //  작성일 : 2026-04-06
 // ============================================================
 
-window.SPECS       = window.SPECS       || {};
+window.SPECS = window.SPECS || {};
 window.ANNOTATIONS = window.ANNOTATIONS || {};
 
 window.ANNOTATIONS['A02'] = [
@@ -39,13 +39,12 @@ window.SPECS['A02'] = `
   - 회원 상태: 정상/차단<br>
   - 표기 상태: 현재 활성 상태 배지 노출<br>
   - 우측에 작성일(가입일시) 노출<br>
-  - 구분·상태 변경 후 상단 [수정] 버튼으로 저장
 </p>
 
 <h4>③ 본인인증 기반 정보</h4>
 <p>
   - 이름/성별/생년월일/휴대폰 번호<br>
-  - 본인인증으로 수집된 정보 → 읽기 전용(관리자 수정 불가)<br>
+  * 수석부장님은 성별은 본인인증에서 못받아온다하셨었는데, 확인요청
   - 우측 상단에 인증 수단 안내 문구 노출
 </p>
 
@@ -53,10 +52,10 @@ window.SPECS['A02'] = `
 <p>
   - 아이디: 읽기 전용 (변경 불가)<br>
   - 이메일: 가입 시 등록 이메일<br>
-  - 비밀번호: ●●●●●●●● 마스킹 노출. [임시 비밀번호 발송] 클릭 시 회원 이메일로 임시 비밀번호 발송됨. ⚠️ 임시 비밀번호 규칙(자릿수·구성) 확정 필요<br>
-  - 주소: [개인 거주] 라벨 + 기본주소 + 상세주소. "해외 거주 표기" 안내 ⚠️ 해외 거주자 표기 방식 협의 필요<br>
-  - 직업: 회원 입력값<br>
-  - 선택약관 동의 내역: 항목별 동의/미동의 + 설정 일시 노출 ⚠️ 선택약관 항목 목록 확정 필요
+  - 비밀번호: ●●●●●●●● 마스킹 노출. [임시 비밀번호 발송] 클릭 시 회원 이메일로 임시 비밀번호 발송됨. 
+  - 주소: 우편번호 + 기본주소 + 상세주소. "해외 거주" 선택한 경우 주소 타이틀 좌측 해외거주 표기 <br>
+  - 직업: 회원 선택값<br>
+  - 선택약관 동의 내역: 마케팅 정보 수신 동의/미동의 + 설정 일시 노출
 </p>
 
 <h4>⑤ 교육 신청 내역</h4>
@@ -70,7 +69,6 @@ window.SPECS['A02'] = `
 <p>
   - 회원의 소속 정보 목록. 우측 상단 총 건수 표시<br>
   - 데이터 없음: "소속 정보가 없습니다."<br>
-  - ⚠️ 행 클릭 시 소속 상세 이동 여부 협의 필요
 </p>
 
 <h4>⑦ 관리자 메모</h4>
@@ -78,17 +76,15 @@ window.SPECS['A02'] = `
   - 관리자 전용 메모. 사용자(회원)에게 미노출<br>
   - 텍스트 에어리어 자유 입력. [메모 저장] 클릭 시 저장<br>
   - 수정 시 기존 내용 덮어쓰기(버전 관리 없음)<br>
-  - 우측 상단 최종 수정 일시 노출. ⚠️ 최대 글자 수 제한 협의 필요
+  - 우측 상단 최종 수정 일시 노출.
 </p>
 
-<h4>⑧ 회원 탈퇴 처리</h4>
+<h4>⑧ 하단 버튼 영역</h4>
 <p>
-  - 빨간색 강조 영역으로 시각적 구분<br>
-  - 탈퇴 시 복구 불가 경고 안내 문구 노출 ⚠️ 안내 문구 확정 필요<br>
-  - 탈퇴 사유 * (필수): 텍스트 입력<br>
-  - [탈퇴 처리] 클릭 → Confirm 후 탈퇴 처리 → 회원 목록(A01)으로 이동
+  - [탈퇴 처리] 클릭시 탈퇴 처리 모달(A02-1) 노출<br>
+  - [목록으로] 클릭시 목록(A01) 이동<br>
+  - [수정] 클릭시 회원 수정 화면(A03)으로 이동<br>
 </p>
-<p class="spec-note">⚠️ 탈퇴 처리 방식 협의 필요 — Hard Delete vs. Soft Delete. 개인정보보호법 기준 보관 기간 확인 필요.</p>
 
 
 <!-- ── 테이블 컬럼 ───────────────────────────────── -->
@@ -99,10 +95,10 @@ window.SPECS['A02'] = `
   <tbody>
     <tr><td>1</td><td>번호</td><td>number</td><td>C</td><td>자동 번호 (역순)</td></tr>
     <tr><td>2</td><td>신청일시</td><td>datetime</td><td>C</td><td>YYYY-MM-DD HH:MM. 기본 정렬: 신청일시 내림차순(최신순).</td></tr>
-    <tr><td>3</td><td>강좌 구분</td><td>text</td><td>C</td><td>⚠️ 구분값 확정 필요</td></tr>
+    <tr><td>3</td><td>강좌 구분</td><td>text</td><td>C</td><td>기초과정/자격취득과정/역량강화/회원아카데미</td></tr>
     <tr><td>4</td><td>강좌명</td><td>text</td><td>L</td><td>클릭 시 신청 상세(A09) 이동.</td></tr>
     <tr><td>5</td><td>교육일자(시작)</td><td>date</td><td>C</td><td>YYYY-MM-DD</td></tr>
-    <tr><td>6</td><td>상태</td><td>badge</td><td>C</td><td>⚠️ 상태값 확정 필요</td></tr>
+    <tr><td>6</td><td>상태</td><td>badge</td><td>C</td><td>신청/취소/수료/미수료</td></tr>
   </tbody>
 </table>
 
@@ -111,9 +107,9 @@ window.SPECS['A02'] = `
   <thead><tr><th>#</th><th>컬럼명</th><th>타입</th><th>정렬</th><th>비고</th></tr></thead>
   <tbody>
     <tr><td>1</td><td>번호</td><td>number</td><td>C</td><td>자동 번호</td></tr>
-    <tr><td>2</td><td>소속명</td><td>text</td><td>L</td><td>소속 기관/단체명</td></tr>
-    <tr><td>3</td><td>소속 유형</td><td>text</td><td>C</td><td>⚠️ 분류값 확정 필요</td></tr>
-    <tr><td>4</td><td>가입일</td><td>date</td><td>C</td><td>YYYY-MM-DD. 기본 정렬: 가입일 내림차순.</td></tr>
+    <tr><td>2</td><td>소속명</td><td>text</td><td>L</td><td>소속 동아리명/사회공헌사업단명</td></tr>
+    <tr><td>3</td><td>소속 유형</td><td>text</td><td>C</td><td>동아리/사회공헌사업단</td></tr>
+    <tr><td>4</td><td>가입일</td><td>date</td><td>C</td><td>YYYY-MM-DD. 기본 정렬: 가입일 내림차순(최신순).</td></tr>
   </tbody>
 </table>
 
@@ -124,24 +120,10 @@ window.SPECS['A02'] = `
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
     <tr><td>임시 비밀번호 발송 클릭</td><td>Confirm</td><td>회원 이메일로 임시 비밀번호를 발송합니다. 진행하시겠습니까? [확인]/[취소]</td></tr>
-    <tr><td>임시 비밀번호 발송 완료</td><td>Toast</td><td>임시 비밀번호가 발송되었습니다.</td></tr>
+    <tr><td>임시 비밀번호 발송 완료</td><td>Alert</td><td>임시 비밀번호가 발송되었습니다.</td></tr>
     <tr><td>임시 비밀번호 발송 실패</td><td>Alert</td><td>임시 비밀번호 발송에 실패했습니다. 다시 시도해주세요.</td></tr>
-    <tr><td>수정 완료</td><td>Toast</td><td>수정되었습니다.</td></tr>
-    <tr><td>메모 저장 완료</td><td>Toast</td><td>저장되었습니다.</td></tr>
-    <tr><td>탈퇴 사유 미입력</td><td>Alert</td><td>탈퇴 사유를 입력해주세요.</td></tr>
-    <tr><td>탈퇴 처리 컨펌</td><td>Confirm</td><td>탈퇴 처리 후 복구가 불가합니다. 정말 탈퇴 처리하시겠습니까? [확인]/[취소]</td></tr>
-    <tr><td>탈퇴 처리 완료</td><td>Alert</td><td>탈퇴 처리되었습니다.</td></tr>
-    <tr><td>탈퇴 처리 실패</td><td>Alert</td><td>탈퇴 처리 중 오류가 발생했습니다. 다시 시도해주세요.</td></tr>
-  </tbody>
-</table>
-
-<!-- ── Validation ────────────────────────────────── -->
-<h3>Validation</h3>
-<table>
-  <thead><tr><th>필드</th><th>필수</th><th>규칙</th><th>에러 메시지</th></tr></thead>
-  <tbody>
-    <tr><td>탈퇴 사유</td><td>Y</td><td>1자 이상 입력</td><td>탈퇴 사유를 입력해주세요.</td></tr>
-    <tr><td>관리자 메모</td><td>N</td><td>⚠️ 최대 글자 수 협의 필요</td><td>메모는 {N}자 이내로 입력해주세요.</td></tr>
+    <tr><td>수정 완료</td><td>Alert</td><td>수정되었습니다.</td></tr>
+    <tr><td>메모 저장 완료</td><td>Alert</td><td>저장되었습니다.</td></tr> 
   </tbody>
 </table>
 

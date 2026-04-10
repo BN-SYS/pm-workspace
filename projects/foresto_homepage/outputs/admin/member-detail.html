@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -464,7 +464,7 @@
       </div>
       <div class="withdraw-modal-foot">
         <button class="btn btn-gray btn-sm" onclick="MemberDetail.closeWithdrawModal()">취소</button>
-        <button class="btn btn-danger btn-sm" onclick="MemberDetail.withdraw()">탈퇴 처리</button>
+        <button class="btn btn-danger btn-sm" id="btnWithdrawConfirm" onclick="MemberDetail.withdraw()" disabled>탈퇴 처리</button>
       </div>
     </div>
   </div>
@@ -477,18 +477,20 @@
 
     const MemberDetail = {
       saveMemo() {
-        App.toast('메모가 저장되었습니다.', 'success');
+        alert('메모가 저장되었습니다.');
       },
 
       sendTempPw() {
-        App.toast('forest001@foresto.or.kr으로 임시 비밀번호를 발송하였습니다. (실제 구현 시 서버 API 연동)', 'success');
+        alert('forest001@foresto.or.kr으로 임시 비밀번호를 발송하였습니다. (실제 구현 시 서버 API 연동)');
       },
 
       openWithdrawModal() {
         const modal = document.getElementById('withdrawModal');
         if (!modal) return;
-        const ta = document.getElementById('fWithdrawReason');
-        if (ta) ta.value = '';
+        const ta  = document.getElementById('fWithdrawReason');
+        const btn = document.getElementById('btnWithdrawConfirm');
+        if (ta)  ta.value = '';
+        if (btn) btn.disabled = true;
         modal.classList.add('open');
         if (ta) setTimeout(() => ta.focus(), 100);
       },
@@ -500,13 +502,9 @@
 
       withdraw() {
         const reason = document.getElementById('fWithdrawReason')?.value.trim();
-        if (!reason) {
-          App.toast('탈퇴 사유를 입력해주세요.', 'warning');
-          document.getElementById('fWithdrawReason')?.focus();
-          return;
-        }
+        if (!reason) return;
         this.closeWithdrawModal();
-        App.toast('김숲해설님이 탈퇴 처리되었습니다. 탈퇴회원 목록에서 확인할 수 있습니다.', 'success');
+        alert('김숲해설님이 탈퇴 처리되었습니다. 탈퇴회원 목록에서 확인할 수 있습니다.');
         setTimeout(() => location.href = 'members.html', 1500);
       },
 
@@ -514,6 +512,11 @@
         location.href = 'member-edit.html?id=1';
       },
     };
+
+    /* 탈퇴 사유 입력 여부에 따라 버튼 활성화 */
+    document.getElementById('fWithdrawReason').addEventListener('input', function() {
+      document.getElementById('btnWithdrawConfirm').disabled = !this.value.trim();
+    });
 
     /* 모달 오버레이 클릭 시 닫기 */
     const _wModal = document.getElementById('withdrawModal');

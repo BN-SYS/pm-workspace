@@ -63,8 +63,8 @@ window.SPECS['A20'] = `
 <table>
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
-    <tr><td>[메모 저장] 성공</td><td>Toast (success)</td><td>메모가 저장되었습니다.</td></tr>
-    <tr><td>[메모 저장] 실패</td><td>Toast (error)</td><td>저장에 실패했습니다. (DOC06: C07)</td></tr>
+    <tr><td>[메모 저장] 성공</td><td>Alert</td><td>메모가 저장되었습니다.</td></tr>
+    <tr><td>[메모 저장] 실패</td><td>Alert</td><td>저장에 실패했습니다. (DOC06: C07)</td></tr>
   </tbody>
 </table>
 

@@ -274,7 +274,7 @@
       const ids = [...document.querySelectorAll('.row-chk:checked')];
       if (!ids.length) return;
       if (!confirm(`선택한 ${ids.length}건의 일정을 삭제하시겠습니까?`)) return;
-      App.toast(`${ids.length}건의 일정이 삭제되었습니다. (실제 구현 시 서버 API와 연동됩니다.)`, 'error');
+      alert(`${ids.length}건의 일정이 삭제되었습니다. (실제 구현 시 서버 API와 연동됩니다.)`);
     },
 
     openModal(id = null) {
@@ -295,10 +295,10 @@
       const cat   = document.getElementById('evtCat')?.value.trim();
       const title = document.getElementById('evtTitle')?.value.trim();
       const date  = document.getElementById('evtDate')?.value;
-      if (!cat)   { App.toast('카테고리를 선택해주세요.', 'error'); return; }
-      if (!title) { App.toast('일정명을 입력해주세요.', 'error'); return; }
-      if (!date)  { App.toast('일정일을 선택해주세요.', 'error'); return; }
-      App.toast('일정이 저장되었습니다. (실제 구현 시 서버 API와 연동됩니다.)', 'success');
+      if (!cat)   { alert('카테고리를 선택해주세요.'); return; }
+      if (!title) { alert('일정명을 입력해주세요.'); return; }
+      if (!date)  { alert('일정일을 선택해주세요.'); return; }
+      alert('일정이 저장되었습니다. (실제 구현 시 서버 API와 연동됩니다.)');
       App.closeModal('calModal');
     },
 

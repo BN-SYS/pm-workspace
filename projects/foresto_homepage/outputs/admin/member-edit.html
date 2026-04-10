@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -170,7 +170,7 @@
             <label class="form-label">주소</label>
             <div style="display:flex;gap:8px;align-items:center">
               <input type="text" class="form-control" id="fZip" value="03152" placeholder="우편번호" style="width:110px;height:36px;font-size:13px;flex-shrink:0">
-              <button type="button" class="btn btn-outline btn-sm" onclick="App.toast('우편번호 검색 — 실제 구현 시 Kakao 주소 API 연동 예정', 'info')">우편번호 찾기</button>
+              <button type="button" class="btn btn-outline btn-sm" onclick="alert('우편번호 검색 — 실제 구현 시 Kakao 주소 API 연동 예정')">우편번호 찾기</button>
               <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;white-space:nowrap">
                 <input type="checkbox" id="fOverseas" onchange="toggleOverseas(this.checked)"> 해외 거주
               </label>
@@ -339,7 +339,7 @@
     function checkUserId() {
       const userId = document.getElementById('fUserId')?.value.trim() || '';
       const msg = document.getElementById('userIdMsg');
-      if (!userId) { App.toast('아이디를 입력해주세요.', 'warning'); return; }
+      if (!userId) { alert('아이디를 입력해주세요.'); return; }
       /* TODO: 서버 중복 확인 API 연동 */
       idChecked = true;
       if (msg) { msg.textContent = '사용 가능한 아이디입니다.'; msg.className = 'check-ok'; }
@@ -354,19 +354,19 @@
     function save() {
       const name  = document.getElementById('fName')?.value.trim();
       const email = document.getElementById('fEmail')?.value.trim();
-      if (!name)  { App.toast('이름을 입력해주세요.', 'warning'); return; }
-      if (!email) { App.toast('이메일을 입력해주세요.', 'warning'); return; }
+      if (!name)  { alert('이름을 입력해주세요.'); return; }
+      if (!email) { alert('이메일을 입력해주세요.'); return; }
       if (!isEdit) {
         const userId = document.getElementById('fUserId')?.value.trim();
-        if (!userId)      { App.toast('아이디를 입력해주세요.', 'warning'); return; }
-        if (!idChecked)   { App.toast('아이디 중복 확인을 해주세요.', 'warning'); return; }
+        if (!userId)      { alert('아이디를 입력해주세요.'); return; }
+        if (!idChecked)   { alert('아이디 중복 확인을 해주세요.'); return; }
         const pw  = document.getElementById('fPw')?.value || '';
         const pw2 = document.getElementById('fPwConfirm')?.value || '';
-        if (!pw || pw.length < 8) { App.toast('비밀번호는 8자 이상 입력해주세요.', 'warning'); return; }
-        if (pw !== pw2)  { App.toast('비밀번호가 일치하지 않습니다.', 'warning'); return; }
+        if (!pw || pw.length < 8) { alert('비밀번호는 8자 이상 입력해주세요.'); return; }
+        if (pw !== pw2)  { alert('비밀번호가 일치하지 않습니다.'); return; }
       }
       /* TODO: POST /admin/api/members (등록) | PUT /admin/api/members/{id} (수정) */
-      App.toast(isEdit ? `${name}님의 정보가 수정되었습니다.` : `${name}님이 등록되었습니다.`, 'success');
+      alert(isEdit ? `${name}님의 정보가 수정되었습니다.` : `${name}님이 등록되었습니다.`);
       setTimeout(() => location.href = 'members.html', 1500);
     }
 

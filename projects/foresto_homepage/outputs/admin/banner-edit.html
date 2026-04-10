@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -481,7 +481,7 @@
         this.editId = parseInt(id);
         const banner = BANNERS_EDIT.find(b => b.id === this.editId);
         if (!banner) {
-          App.toast('배너를 찾을 수 없습니다.', 'error');
+          alert('배너를 찾을 수 없습니다.');
           location.href = 'banner.html';
           return;
         }
@@ -596,13 +596,13 @@
     /* 유효성 검사 */
     validate() {
       if (!this.imgDataUrl) {
-        App.toast('배너 이미지를 등록해주세요.', 'error');
+        alert('배너 이미지를 등록해주세요.');
         document.getElementById('imgUploadZone').scrollIntoView({ behavior: 'smooth', block: 'center' });
         return false;
       }
       const main = document.getElementById('inputMainText').value.trim();
       if (!main) {
-        App.toast('메인 텍스트를 입력해주세요.', 'error');
+        alert('메인 텍스트를 입력해주세요.');
         document.getElementById('inputMainText').focus();
         return false;
       }
@@ -624,7 +624,7 @@
       /* 실제 구현 시 API 호출 */
       const isEdit = this.editId !== null;
       /* TODO: AJAX — fetch(ADMIN_API.bannerSave, { method:'POST', body:JSON.stringify(payload) }) */
-      App.toast(isEdit ? '배너가 수정되었습니다.' : '배너가 등록되었습니다.', 'success');
+      alert(isEdit ? '배너가 수정되었습니다.' : '배너가 등록되었습니다.');
       setTimeout(() => { location.href = 'banner.html'; }, 700);
     },
 

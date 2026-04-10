@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -394,7 +394,7 @@
       if (url) {
         document.getElementById('se2Content').focus();
         document.execCommand('insertHTML', false, `<img src="${url}" alt="" style="max-width:100%"><br>`);
-        App.toast('첫 번째 이미지가 썸네일로 자동 저장됩니다.', 'info');
+        alert('첫 번째 이미지가 썸네일로 자동 저장됩니다.');
       }
       this._updateCount();
     },
@@ -447,12 +447,12 @@
     save() {
       const title   = document.getElementById('inputTitle').value.trim();
       const content = document.getElementById('se2Content').innerHTML.trim();
-      if (!title)   { App.toast('제목을 입력해주세요.', 'error'); return; }
+      if (!title)   { alert('제목을 입력해주세요.'); return; }
       if (!content || content === '<br>') {
-        App.toast('내용을 입력해주세요.', 'error'); return;
+        alert('내용을 입력해주세요.'); return;
       }
       /* TODO: AJAX — fetch(ADMIN_API.boardSave, { method:'POST', body:JSON.stringify(payload) }) */
-      App.toast(isEdit ? '게시글이 수정되었습니다.' : '게시글이 등록되었습니다.', 'success');
+      alert(isEdit ? '게시글이 수정되었습니다.' : '게시글이 등록되었습니다.');
       setTimeout(() => { location.href = `board.html?type=${BTYPE}`; }, 800);
     },
   };

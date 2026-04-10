@@ -40,7 +40,7 @@ window.SPECS['A23'] = `
 <h4>③ 버튼</h4>
 <p>
   - [취소]: history.back(). <strong>DOC06: C08 적용</strong><br>
-  - [저장]: 유효성 검사 후 API 호출. 성공 시 Toast → history.back()
+  - [저장]: 유효성 검사 후 API 호출. 성공 시 Alert → history.back()
 </p>
 
 <!-- ── Alert 메시지 ──────────────────────────────── -->
@@ -49,10 +49,10 @@ window.SPECS['A23'] = `
 <table>
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
-    <tr><td>날짜 미입력</td><td>Toast (warning)</td><td>날짜를 선택해주세요.</td></tr>
-    <tr><td>카테고리 미선택</td><td>Toast (warning)</td><td>카테고리를 선택해주세요.</td></tr>
-    <tr><td>제목 미입력</td><td>Toast (warning)</td><td>제목을 입력해주세요.</td></tr>
-    <tr><td>저장 성공</td><td>Toast (success)</td><td>일정이 저장되었습니다.</td></tr>
+    <tr><td>날짜 미입력</td><td>Alert</td><td>날짜를 선택해주세요.</td></tr>
+    <tr><td>카테고리 미선택</td><td>Alert</td><td>카테고리를 선택해주세요.</td></tr>
+    <tr><td>제목 미입력</td><td>Alert</td><td>제목을 입력해주세요.</td></tr>
+    <tr><td>저장 성공</td><td>Alert</td><td>일정이 저장되었습니다.</td></tr>
   </tbody>
 </table>
 

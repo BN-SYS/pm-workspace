@@ -71,7 +71,7 @@ window.SPECS['A31'] = `
 <h4>⑦ 저장/취소 버튼</h4>
 <p>
   - [취소]: A30(배너 관리)으로 이동. <strong>DOC06: C08 적용</strong><br>
-  - [저장]: 유효성 검사 후 API 호출. 성공 시 Toast → A30 이동
+  - [저장]: 유효성 검사 후 API 호출. 성공 시 Alert → A30 이동
 </p>
 
 <!-- ── Alert 메시지 ──────────────────────────────── -->
@@ -80,10 +80,10 @@ window.SPECS['A31'] = `
 <table>
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
-    <tr><td>이미지 미등록</td><td>Toast (error)</td><td>배너 이미지를 등록해주세요.</td></tr>
-    <tr><td>메인 텍스트 미입력</td><td>Toast (error)</td><td>메인 텍스트를 입력해주세요.</td></tr>
-    <tr><td>저장 성공 (등록)</td><td>Toast (success)</td><td>배너가 등록되었습니다.</td></tr>
-    <tr><td>저장 성공 (수정)</td><td>Toast (success)</td><td>배너가 수정되었습니다.</td></tr>
+    <tr><td>이미지 미등록</td><td>Alert</td><td>배너 이미지를 등록해주세요.</td></tr>
+    <tr><td>메인 텍스트 미입력</td><td>Alert</td><td>메인 텍스트를 입력해주세요.</td></tr>
+    <tr><td>저장 성공 (등록)</td><td>Alert</td><td>배너가 등록되었습니다.</td></tr>
+    <tr><td>저장 성공 (수정)</td><td>Alert</td><td>배너가 수정되었습니다.</td></tr>
   </tbody>
 </table>
 

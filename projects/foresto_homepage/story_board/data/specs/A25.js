@@ -68,7 +68,7 @@ window.SPECS['A25'] = `
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
     <tr><td>[삭제] 클릭</td><td>Confirm (DOC06: C05)</td><td>삭제하시겠습니까?</td></tr>
-    <tr><td>삭제 성공</td><td>Toast (error 스타일)</td><td>삭제되었습니다.</td></tr>
+    <tr><td>삭제 성공</td><td>Alert (error 스타일)</td><td>삭제되었습니다.</td></tr>
   </tbody>
 </table>
 

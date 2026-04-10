@@ -70,8 +70,8 @@ window.SPECS['A12'] = `
   <tbody>
     <tr><td>활동기간 오류</td><td>Alert</td><td>활동 시작일이 종료일보다 클 수 없습니다.</td></tr>
     <tr><td>접수기간 오류</td><td>Alert</td><td>접수 시작일시가 종료일시보다 클 수 없습니다.</td></tr>
-    <tr><td>파일 크기 초과</td><td>Toast (warning)</td><td>파일 크기는 10MB 이하만 가능합니다.</td></tr>
-    <tr><td>저장 성공</td><td>Toast (success)</td><td>저장되었습니다. (DOC06: C07)</td></tr>
+    <tr><td>파일 크기 초과</td><td>Alert</td><td>파일 크기는 10MB 이하만 가능합니다.</td></tr>
+    <tr><td>저장 성공</td><td>Alert</td><td>저장되었습니다. (DOC06: C07)</td></tr>
   </tbody>
 </table>
 

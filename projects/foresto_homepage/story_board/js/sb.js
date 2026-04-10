@@ -186,14 +186,14 @@ function renderDetailContent(p) {
   const useProto = hasProto && viewMode === 'proto';
 
   if (useProto) {
-    const iframeW = 1400;
+    const iframeW = 1920;
     wrap.innerHTML = `<iframe id="detail-iframe" src="${p.path}" style="width:${iframeW}px;border:none;display:block;transform-origin:top left;position:absolute;top:0;left:0;"></iframe>`;
     const applyScale = () => {
       const iframe = document.getElementById('detail-iframe');
       if (!iframe) return;
       const availW = wrap.clientWidth;
       const availH = wrap.clientHeight;
-      const scale = Math.min(1, availW / iframeW);
+      const scale = availW / iframeW;
       iframe.style.transform = `scale(${scale})`;
       iframe.style.width = `${iframeW}px`;
       iframe.style.height = `${availH / scale}px`;

@@ -468,16 +468,16 @@
 
     deleteCourse() {
       if (!confirm('이 강좌를 삭제하시겠습니까?\n삭제 후에는 복구가 불가합니다.')) return;
-      App.toast('강좌가 삭제되었습니다.', 'success');
+      alert('강좌가 삭제되었습니다.');
       setTimeout(() => { location.href = this._backUrl(); }, 900);
     },
 
     downloadApplicants() {
-      App.toast('신청자 목록 엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info');
+      alert('신청자 목록 엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.');
     },
 
     downloadFile(name) {
-      App.toast(`${name} 다운로드 — 실제 구현 시 서버 파일 경로와 연동됩니다.`, 'info');
+      alert(`${name} 다운로드 — 실제 구현 시 서버 파일 경로와 연동됩니다.`);
     },
   };
   </script>

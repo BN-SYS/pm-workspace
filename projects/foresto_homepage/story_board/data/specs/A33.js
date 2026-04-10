@@ -87,7 +87,7 @@ window.SPECS['A33'] = `
 <h4>⑨ 저장/취소 버튼</h4>
 <p>
   - [취소]: A32(팝업 관리)로 이동. <strong>DOC06: C08 적용</strong><br>
-  - [저장]: 유효성 검사 후 API 호출. 성공 시 Toast → A32 이동
+  - [저장]: 유효성 검사 후 API 호출. 성공 시 Alert → A32 이동
 </p>
 
 <!-- ── Alert 메시지 ──────────────────────────────── -->
@@ -96,11 +96,11 @@ window.SPECS['A33'] = `
 <table>
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
-    <tr><td>팝업 제목 미입력</td><td>Toast (warning)</td><td>팝업 제목을 입력해주세요.</td></tr>
-    <tr><td>노출 기간 미입력</td><td>Toast (warning)</td><td>노출 기간을 입력해주세요.</td></tr>
-    <tr><td>종료일이 시작일보다 빠름</td><td>Toast (warning)</td><td>종료일시는 시작일시 이후여야 합니다.</td></tr>
-    <tr><td>저장 성공 (등록)</td><td>Toast (success)</td><td>팝업이 등록되었습니다.</td></tr>
-    <tr><td>저장 성공 (수정)</td><td>Toast (success)</td><td>팝업이 수정되었습니다.</td></tr>
+    <tr><td>팝업 제목 미입력</td><td>Alert</td><td>팝업 제목을 입력해주세요.</td></tr>
+    <tr><td>노출 기간 미입력</td><td>Alert</td><td>노출 기간을 입력해주세요.</td></tr>
+    <tr><td>종료일이 시작일보다 빠름</td><td>Alert</td><td>종료일시는 시작일시 이후여야 합니다.</td></tr>
+    <tr><td>저장 성공 (등록)</td><td>Alert</td><td>팝업이 등록되었습니다.</td></tr>
+    <tr><td>저장 성공 (수정)</td><td>Alert</td><td>팝업이 수정되었습니다.</td></tr>
   </tbody>
 </table>
 

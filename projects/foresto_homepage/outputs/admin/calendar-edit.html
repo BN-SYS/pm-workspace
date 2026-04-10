@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -113,11 +113,11 @@
       const cat   = document.getElementById('evtCat')?.value;
       const title = document.getElementById('evtTitle')?.value.trim();
       const date  = document.getElementById('evtDate')?.value;
-      if (!cat)   { App.toast('카테고리를 선택해주세요.', 'warning'); return; }
-      if (!title) { App.toast('일정명을 입력해주세요.', 'warning');   return; }
-      if (!date)  { App.toast('일정일을 선택해주세요.', 'warning');   return; }
+      if (!cat)   { alert('카테고리를 선택해주세요.'); return; }
+      if (!title) { alert('일정명을 입력해주세요.');   return; }
+      if (!date)  { alert('일정일을 선택해주세요.');   return; }
       /* TODO: fetch(ADMIN_API.calendarSave, { method:'POST', body:JSON.stringify({cat,title,date,link}) }) */
-      App.toast('일정이 저장되었습니다. (실제 구현 시 서버 API와 연동됩니다.)');
+      alert('일정이 저장되었습니다. (실제 구현 시 서버 API와 연동됩니다.)');
       setTimeout(() => history.back(), 900);
     },
   };

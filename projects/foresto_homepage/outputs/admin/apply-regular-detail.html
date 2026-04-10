@@ -204,7 +204,7 @@
     btn.textContent = _acctVisible ? '숨기기' : '확인';
   }
 
-  function saveMemo() { App.toast('관리자 메모가 저장되었습니다.', 'success'); }
+  function saveMemo() { alert('관리자 메모가 저장되었습니다.'); }
   function clearMemo() {
     const el = document.getElementById('adminMemo');
     if (el) el.value = '';

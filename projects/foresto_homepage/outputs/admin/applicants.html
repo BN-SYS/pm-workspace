@@ -131,26 +131,16 @@
             </div>
           </div>
 
-          <!-- 행 4: 신청상태 | 수료상태 (50/50) -->
+          <!-- 행 4: 상태 -->
           <div class="filter-row">
-            <div class="filter-half">
-              <span class="filter-label">신청상태</span>
-              <div class="filter-content">
-                <div class="chip-group">
-                  <label class="chip"><input type="radio" name="filterApply" value=""><span>전체</span></label>
-                  <label class="chip"><input type="radio" name="filterApply" value="신청완료"><span>신청완료</span></label>
-                  <label class="chip"><input type="radio" name="filterApply" value="취소"><span>취소</span></label>
-                </div>
-              </div>
-            </div>
-            <div class="filter-half">
-              <span class="filter-label">수료상태</span>
-              <div class="filter-content">
-                <div class="chip-group">
-                  <label class="chip"><input type="radio" name="filterCompletion" value=""><span>전체</span></label>
-                  <label class="chip"><input type="radio" name="filterCompletion" value="수료"><span>수료</span></label>
-                  <label class="chip"><input type="radio" name="filterCompletion" value="미수료"><span>미수료</span></label>
-                </div>
+            <span class="filter-label">상태</span>
+            <div class="filter-content">
+              <div class="chip-group">
+                <label class="chip"><input type="radio" name="filterStatus" value=""><span>전체</span></label>
+                <label class="chip"><input type="radio" name="filterStatus" value="신청"><span>신청</span></label>
+                <label class="chip"><input type="radio" name="filterStatus" value="취소"><span>취소</span></label>
+                <label class="chip"><input type="radio" name="filterStatus" value="수료"><span>수료</span></label>
+                <label class="chip"><input type="radio" name="filterStatus" value="미수료"><span>미수료</span></label>
               </div>
             </div>
           </div>
@@ -175,7 +165,7 @@
 
         </div>
         <div class="filter-footer">
-          <button class="btn btn-outline btn-sm" onclick="App.toast('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info')">엑셀 다운로드</button>
+          <button class="btn btn-outline btn-sm" onclick="alert('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.')">엑셀 다운로드</button>
           <button class="btn btn-gray btn-sm">초기화</button>
           <button class="btn btn-primary btn-sm">검색</button>
         </div>
@@ -207,8 +197,7 @@
             <col style="width:10%">     <!-- 핸드폰 -->
             <col style="width:11%">     <!-- 신청일시 -->
             <col style="width:11%">     <!-- 취소일시 -->
-            <col style="width:6%">      <!-- 신청상태 -->
-            <col style="width:6%">      <!-- 수료상태 -->
+            <col style="width:8%">      <!-- 상태 -->
           </colgroup>
           <thead>
             <tr>
@@ -226,8 +215,7 @@
               <th>핸드폰</th>
               <th>신청일시</th>
               <th>취소일시</th>
-              <th>신청상태</th>
-              <th>수료상태</th>
+              <th>상태</th>
             </tr>
           </thead>
           <tbody>
@@ -246,8 +234,7 @@
               <td class="cell-mono">010-1234-5678</td>
               <td class="cell-mono">2026-03-01 09:07</td>
               <td class="cell-mono">—</td>
-              <td><span class="badge badge-green">신청완료</span></td>
-              <td><span class="badge badge-orange">미수료</span></td>
+              <td><span class="badge badge-green">신청</span></td>
             </tr>
             <tr class="applicant-row" onclick="location.href='applicant-detail.html?id=2002'">
               <td class="col-chk" onclick="event.stopPropagation()">
@@ -264,7 +251,6 @@
               <td class="cell-mono">010-2345-6789</td>
               <td class="cell-mono">2026-03-05 14:23</td>
               <td class="cell-mono">—</td>
-              <td><span class="badge badge-green">신청완료</span></td>
               <td><span class="badge badge-green">수료</span></td>
             </tr>
             <tr class="applicant-row" onclick="location.href='applicant-detail.html?id=2003'">
@@ -283,9 +269,8 @@
               <td class="cell-mono">2026-03-10 11:15</td>
               <td class="cell-mono">2026-03-13 09:30</td>
               <td><span class="badge badge-orange">취소</span></td>
-              <td><span style="color:#bbb;font-size:13px">—</span></td>
             </tr>
-            <!-- 데이터 없을 때: <tr><td colspan="14" class="td-empty">검색 결과가 없습니다.</td></tr> -->
+            <!-- 데이터 없을 때: <tr><td colspan="13" class="td-empty">검색 결과가 없습니다.</td></tr> -->
           </tbody>
         </table>
       </div>
@@ -302,14 +287,12 @@
         <div class="bulk-btn-group">
           <button class="btn btn-danger btn-danger-filled btn-sm" id="btnBulkDelete"
             onclick="bulkDelete()" disabled>선택 삭제</button>
-        </div>
-        <div class="bulk-btn-group">
           <button class="btn btn-danger btn-sm" id="btnBulkCancel"
-            onclick="bulkChangeApply('취소')" disabled>선택 취소처리</button>
+            onclick="bulkChangeStatus('취소')" disabled>선택 취소처리</button>
           <button class="btn btn-outline btn-sm" id="btnBulkComplete"
-            onclick="bulkChangeCompletion('수료')" disabled>선택 수료처리</button>
+            onclick="bulkChangeStatus('수료')" disabled>선택 수료처리</button>
           <button class="btn btn-gray btn-sm" id="btnBulkIncomplete"
-            onclick="bulkChangeCompletion('미수료')" disabled>선택 미수료처리</button>
+            onclick="bulkChangeStatus('미수료')" disabled>선택 미수료처리</button>
         </div>
       </div>
 
@@ -368,21 +351,14 @@
     const count = document.querySelectorAll('.row-chk:checked').length;
     if (!count) return;
     if (!confirm(`선택한 ${count}명의 신청 데이터를 삭제하시겠습니까?`)) return;
-    App.toast(`${count}명의 신청 데이터가 삭제되었습니다.`, 'success');
+    alert(`${count}명의 신청 데이터가 삭제되었습니다.`);
   }
 
-  function bulkChangeApply(status) {
+  function bulkChangeStatus(status) {
     const count = document.querySelectorAll('.row-chk:checked').length;
     if (!count) return;
     if (!confirm(`선택한 ${count}명을 [${status}] 처리하시겠습니까?`)) return;
-    App.toast(`${count}명이 [${status}] 처리되었습니다.`, 'success');
-  }
-
-  function bulkChangeCompletion(status) {
-    const count = document.querySelectorAll('.row-chk:checked').length;
-    if (!count) return;
-    if (!confirm(`선택한 ${count}명을 [${status}] 처리하시겠습니까?`)) return;
-    App.toast(`${count}명이 [${status}] 처리되었습니다.`, 'success');
+    alert(`${count}명이 [${status}] 처리되었습니다.`);
   }
   </script>
 </body>

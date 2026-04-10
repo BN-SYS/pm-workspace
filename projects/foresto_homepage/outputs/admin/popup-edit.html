@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -561,7 +561,7 @@
         this.editId = parseInt(id);
         const p = POPUPS_EDIT.find(x => x.id === this.editId);
         if (!p) {
-          App.toast('팝업을 찾을 수 없습니다.', 'error');
+          alert('팝업을 찾을 수 없습니다.');
           location.href = 'popup.html';
           return;
         }
@@ -674,22 +674,22 @@
     /* 유효성 검사 */
     validate() {
       if (!document.getElementById('inputAdminTitle').value.trim()) {
-        App.toast('팝업 제목을 입력해주세요.', 'error');
+        alert('팝업 제목을 입력해주세요.');
         document.getElementById('inputAdminTitle').focus();
         return false;
       }
       if (!document.getElementById('inputStartAt').value ||
           !document.getElementById('inputEndAt').value) {
-        App.toast('노출 기간을 설정해주세요.', 'error');
+        alert('노출 기간을 설정해주세요.');
         return false;
       }
       if (document.getElementById('inputStartAt').value >=
           document.getElementById('inputEndAt').value) {
-        App.toast('종료일시는 시작일시보다 이후여야 합니다.', 'error');
+        alert('종료일시는 시작일시보다 이후여야 합니다.');
         return false;
       }
       if (!document.getElementById('se2Content').textContent.trim()) {
-        App.toast('팝업 내용을 입력해주세요.', 'error');
+        alert('팝업 내용을 입력해주세요.');
         document.getElementById('se2Content').focus();
         return false;
       }
@@ -700,7 +700,7 @@
       if (!this.validate()) return;
       const isEdit = this.editId !== null;
       /* TODO: AJAX — fetch(ADMIN_API.popupSave, { method:'POST', body:JSON.stringify(payload) }) */
-      App.toast(isEdit ? '팝업이 수정되었습니다.' : '팝업이 등록되었습니다.', 'success');
+      alert(isEdit ? '팝업이 수정되었습니다.' : '팝업이 등록되었습니다.');
       setTimeout(() => { location.href = 'popup.html'; }, 700);
     },
 

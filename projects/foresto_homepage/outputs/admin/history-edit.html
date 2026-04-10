@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -235,7 +235,7 @@
       save() {
         const year = Number(document.getElementById('eYear')?.value);
         if (!year) {
-          App.toast('연도를 선택해주세요.', 'warning');
+          alert('연도를 선택해주세요.');
           return;
         }
 
@@ -253,12 +253,12 @@
         /* TODO: AJAX
          * const payload = { year, items };
          * fetch(ADMIN_API.historySave, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken }, body: JSON.stringify(payload) })
-         *   .then(r => r.json()).then(data => { App.toast(msg, 'success'); });
+         *   .then(r => r.json()).then(data => { alert(msg); });
          */
-        if (hasError) { App.toast('모든 항목의 내용을 입력해주세요.', 'warning'); return; }
-        if (!items.length) { App.toast('항목을 1개 이상 추가해주세요.', 'warning'); return; }
+        if (hasError) { alert('모든 항목의 내용을 입력해주세요.'); return; }
+        if (!items.length) { alert('항목을 1개 이상 추가해주세요.'); return; }
 
-        App.toast(`${year}년 연혁이 저장되었습니다.`, 'success');
+        alert(`${year}년 연혁이 저장되었습니다.`);
         setTimeout(() => location.href = 'history.html', 900);
       },
     };

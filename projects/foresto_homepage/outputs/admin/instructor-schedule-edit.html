@@ -322,7 +322,7 @@
         const file = this.files[0];
         if (!file) return;
         if (file.size > 10 * 1024 * 1024) {
-          App.toast('파일 크기는 10MB 이하만 가능합니다.', 'warning');
+          alert('파일 크기는 10MB 이하만 가능합니다.');
           this.value = '';
           return;
         }
@@ -362,7 +362,7 @@
     },
 
     showMock(feature) {
-      App.toast(`[SmartEditor2 모의] ${feature} 기능은 실제 구현 시 활성화됩니다.`, 'info');
+      alert(`[SmartEditor2 모의] ${feature} 기능은 실제 구현 시 활성화됩니다.`);
     },
   };
 
@@ -397,20 +397,20 @@
       const to        = document.getElementById('fTo')?.value;
       const quota     = document.getElementById('fQuota')?.value;
 
-      if (!title)               { App.toast('활동명을 입력해주세요.', 'warning'); document.getElementById('fTitle')?.focus(); return false; }
-      if (!dateStart)           { App.toast('활동 시작일을 선택해주세요.', 'warning'); return false; }
-      if (!dateEnd)             { App.toast('활동 종료일을 선택해주세요.', 'warning'); return false; }
-      if (dateStart > dateEnd)  { App.toast('활동 종료일이 시작일보다 빠를 수 없습니다.', 'warning'); return false; }
-      if (!from)                { App.toast('접수 시작일시를 선택해주세요.', 'warning'); return false; }
-      if (!to)                  { App.toast('접수 종료일시를 선택해주세요.', 'warning'); return false; }
-      if (from >= to)           { App.toast('접수 종료일시가 시작일시보다 빠를 수 없습니다.', 'warning'); return false; }
-      if (!quota || quota < 1)  { App.toast('정원을 1명 이상 입력해주세요.', 'warning'); document.getElementById('fQuota')?.focus(); return false; }
+      if (!title)               { alert('활동명을 입력해주세요.'); document.getElementById('fTitle')?.focus(); return false; }
+      if (!dateStart)           { alert('활동 시작일을 선택해주세요.'); return false; }
+      if (!dateEnd)             { alert('활동 종료일을 선택해주세요.'); return false; }
+      if (dateStart > dateEnd)  { alert('활동 종료일이 시작일보다 빠를 수 없습니다.'); return false; }
+      if (!from)                { alert('접수 시작일시를 선택해주세요.'); return false; }
+      if (!to)                  { alert('접수 종료일시를 선택해주세요.'); return false; }
+      if (from >= to)           { alert('접수 종료일시가 시작일시보다 빠를 수 없습니다.'); return false; }
+      if (!quota || quota < 1)  { alert('정원을 1명 이상 입력해주세요.'); document.getElementById('fQuota')?.focus(); return false; }
       return true;
     },
 
     save() {
       if (!this.validate()) return;
-      App.toast('저장되었습니다.', 'success');
+      alert('저장되었습니다.');
       setTimeout(() => { location.href = 'instructor-schedule.html'; }, 900);
     },
   };

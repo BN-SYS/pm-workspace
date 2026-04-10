@@ -34,7 +34,7 @@ window.SPECS['A22'] = `
 <h4>② 상단 버튼 그룹</h4>
 <p>
   - [목록으로]: history.back()<br>
-  - [삭제]: 삭제 Confirm 후 삭제 처리 → Toast → 일정 목록(A21)으로 이동<br>
+  - [삭제]: 삭제 Confirm 후 삭제 처리 → Alert → 일정 목록(A21)으로 이동<br>
   - [수정하기]: 일정 등록/수정(A23)으로 이동 (?id= 전달)
 </p>
 
@@ -48,7 +48,7 @@ window.SPECS['A22'] = `
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
     <tr><td>[삭제] 클릭</td><td>Confirm</td><td>이 일정을 삭제하시겠습니까?</td></tr>
-    <tr><td>삭제 성공</td><td>Toast (error 스타일)</td><td>일정이 삭제되었습니다.</td></tr>
+    <tr><td>삭제 성공</td><td>Alert (error 스타일)</td><td>일정이 삭제되었습니다.</td></tr>
   </tbody>
 </table>
 

@@ -49,7 +49,7 @@ window.SPECS['A29'] = `
 <h4>④ 하단 버튼</h4>
 <p>
   - [취소]: history.back() 또는 A28로 이동. <strong>DOC06: C08 적용</strong><br>
-  - [저장]: 유효성 검사 후 API 호출. 성공 시 Toast 후 A28(연혁 목록)으로 이동
+  - [저장]: 유효성 검사 후 API 호출. 성공 시 Alert 후 A28(연혁 목록)으로 이동
 </p>
 
 <!-- ── Alert 메시지 ──────────────────────────────── -->
@@ -58,10 +58,10 @@ window.SPECS['A29'] = `
 <table>
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
-    <tr><td>연도 미선택</td><td>Toast (warning)</td><td>연도를 선택해주세요.</td></tr>
-    <tr><td>항목 내용 미입력</td><td>Toast (warning)</td><td>모든 항목의 내용을 입력해주세요.</td></tr>
-    <tr><td>항목 0개</td><td>Toast (warning)</td><td>항목을 1개 이상 추가해주세요.</td></tr>
-    <tr><td>저장 성공</td><td>Toast (success)</td><td>{year}년 연혁이 저장되었습니다.</td></tr>
+    <tr><td>연도 미선택</td><td>Alert</td><td>연도를 선택해주세요.</td></tr>
+    <tr><td>항목 내용 미입력</td><td>Alert</td><td>모든 항목의 내용을 입력해주세요.</td></tr>
+    <tr><td>항목 0개</td><td>Alert</td><td>항목을 1개 이상 추가해주세요.</td></tr>
+    <tr><td>저장 성공</td><td>Alert</td><td>{year}년 연혁이 저장되었습니다.</td></tr>
   </tbody>
 </table>
 

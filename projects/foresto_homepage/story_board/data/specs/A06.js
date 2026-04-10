@@ -70,7 +70,7 @@ window.SPECS['A06'] = `
 <table>
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
-    <tr><td>신청자 목록 다운로드 완료</td><td>Toast</td><td>다운로드가 시작되었습니다.</td></tr>
+    <tr><td>신청자 목록 다운로드 완료</td><td>Alert</td><td>다운로드가 시작되었습니다.</td></tr>
     <tr><td>신청자 목록 다운로드 실패</td><td>Alert</td><td>다운로드 중 오류가 발생했습니다. 다시 시도해주세요.</td></tr>
   </tbody>
 </table>

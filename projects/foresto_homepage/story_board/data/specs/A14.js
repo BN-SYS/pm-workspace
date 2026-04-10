@@ -52,7 +52,7 @@ window.SPECS['A14'] = `
 <h4>④ 관리자 메모 카드</h4>
 <p>
   - textarea 입력. 신청자에게 미노출<br>
-  - [메모 저장] 버튼: API PATCH 호출. 성공 시 Toast. <strong>DOC06: C08 적용</strong>
+  - [메모 저장] 버튼: API PATCH 호출. 성공 시 Alert. <strong>DOC06: C08 적용</strong>
 </p>
 
 <h4>⑤ 하단 액션 버튼</h4>
@@ -67,8 +67,8 @@ window.SPECS['A14'] = `
 <table>
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
-    <tr><td>[메모 저장] 성공</td><td>Toast (success)</td><td>메모가 저장되었습니다.</td></tr>
-    <tr><td>[메모 저장] 실패</td><td>Toast (error)</td><td>저장에 실패했습니다. (DOC06: C07)</td></tr>
+    <tr><td>[메모 저장] 성공</td><td>Alert</td><td>메모가 저장되었습니다.</td></tr>
+    <tr><td>[메모 저장] 실패</td><td>Alert</td><td>저장에 실패했습니다. (DOC06: C07)</td></tr>
   </tbody>
 </table>
 

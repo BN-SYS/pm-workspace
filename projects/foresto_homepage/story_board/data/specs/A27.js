@@ -65,7 +65,7 @@ window.SPECS['A27'] = `
   <tbody>
     <tr><td>그룹 삭제</td><td>Confirm (DOC06: C05)</td><td>이 그룹과 하위 임원 정보를 모두 삭제하시겠습니까?</td></tr>
     <tr><td>임원 삭제</td><td>Confirm (DOC06: C05)</td><td>이 임원 정보를 삭제하시겠습니까?</td></tr>
-    <tr><td>저장 성공</td><td>Toast (success)</td><td>저장되었습니다.</td></tr>
+    <tr><td>저장 성공</td><td>Alert</td><td>저장되었습니다.</td></tr>
   </tbody>
 </table>
 

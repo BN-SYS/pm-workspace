@@ -69,9 +69,9 @@ window.SPECS['A26'] = `
 <table>
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
-    <tr><td>제목 미입력</td><td>Toast (warning)</td><td>제목을 입력해주세요.</td></tr>
-    <tr><td>본문 미입력</td><td>Toast (warning)</td><td>내용을 입력해주세요.</td></tr>
-    <tr><td>저장 성공</td><td>Toast (success)</td><td>저장되었습니다.</td></tr>
+    <tr><td>제목 미입력</td><td>Alert</td><td>제목을 입력해주세요.</td></tr>
+    <tr><td>본문 미입력</td><td>Alert</td><td>내용을 입력해주세요.</td></tr>
+    <tr><td>저장 성공</td><td>Alert</td><td>저장되었습니다.</td></tr>
   </tbody>
 </table>
 

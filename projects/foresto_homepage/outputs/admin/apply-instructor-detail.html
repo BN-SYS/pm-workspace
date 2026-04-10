@@ -121,7 +121,7 @@
             <div class="form-content" style="align-items:flex-start;padding-top:12px;padding-bottom:12px">
               <div class="file-list">
                 <div class="file-item">
-                  <span class="file-name-link" onclick="App.toast('PHP 연동 후 파일을 다운로드할 수 있습니다.', 'info')">자격증사본_김민준.pdf</span>
+                  <span class="file-name-link" onclick="alert('PHP 연동 후 파일을 다운로드할 수 있습니다.')">자격증사본_김민준.pdf</span>
                   <span class="file-size">241 KB</span>
                 </div>
               </div>
@@ -165,7 +165,7 @@
   'use strict';
   AdminSidebar.mount('apply-instructor');
 
-  function saveMemo() { App.toast('관리자 메모가 저장되었습니다.', 'success'); }
+  function saveMemo() { alert('관리자 메모가 저장되었습니다.'); }
   function clearMemo() { const el = document.getElementById('adminMemo'); if (el) el.value = ''; }
   </script>
 </body>

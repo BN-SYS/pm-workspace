@@ -94,7 +94,6 @@
                   <option value="userId">아이디</option>
                   <option value="name">이름</option>
                   <option value="phone">연락처</option>
-                  <option value="email">이메일</option>
                 </select>
                 <div class="kw-input-wrap">
                   <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요">
@@ -104,7 +103,7 @@
           </div>
         </div>
         <div class="filter-footer">
-          <button class="btn btn-outline btn-sm" onclick="App.toast('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.', 'info')">엑셀 다운로드</button>
+          <button class="btn btn-outline btn-sm" onclick="alert('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.')">엑셀 다운로드</button>
           <button class="btn btn-gray btn-sm">초기화</button>
           <button class="btn btn-primary btn-sm">검색</button>
         </div>
@@ -216,7 +215,7 @@
     function deleteSelected() {
       const checked = document.querySelectorAll('.row-chk:checked').length;
       if (!checked) return;
-      App.toast(`${checked}명이 삭제되었습니다.`, 'success');
+      alert(`${checked}명이 삭제되었습니다.`);
     }
   </script>
 </body>

@@ -678,7 +678,7 @@
       const file = input.files[0];
       if (!file) return;
       if (file.size > 10 * 1024 * 1024) {
-        App.toast('파일 크기는 10MB 이하만 가능합니다.', 'warning');
+        alert('파일 크기는 10MB 이하만 가능합니다.');
         input.value = '';
         return;
       }
@@ -729,7 +729,7 @@
     },
 
     showMock(feature) {
-      App.toast(`[SmartEditor2 모의] ${feature} 기능은 실제 구현 시 활성화됩니다.`, 'info');
+      alert(`[SmartEditor2 모의] ${feature} 기능은 실제 구현 시 활성화됩니다.`);
     },
   };
 
@@ -747,14 +747,14 @@
       const applyEnd   = document.getElementById('fApplyEnd').value;
       const capacity   = document.getElementById('fCapacity').value;
 
-      if (!name)       { App.toast('과정명을 입력해주세요.', 'warning'); document.getElementById('fCourseName').focus(); return false; }
-      if (!eduStart)   { App.toast('교육 시작일을 선택해주세요.', 'warning'); return false; }
-      if (!eduEnd)     { App.toast('교육 종료일을 선택해주세요.', 'warning'); return false; }
-      if (eduStart > eduEnd) { App.toast('교육 종료일이 시작일보다 빠를 수 없습니다.', 'warning'); return false; }
-      if (!applyStart) { App.toast('접수 시작일시를 선택해주세요.', 'warning'); return false; }
-      if (!applyEnd)   { App.toast('접수 종료일시를 선택해주세요.', 'warning'); return false; }
-      if (applyStart >= applyEnd) { App.toast('접수 종료일시가 시작일시보다 빠를 수 없습니다.', 'warning'); return false; }
-      if (!capacity || capacity < 1) { App.toast('정원을 1명 이상 입력해주세요.', 'warning'); document.getElementById('fCapacity').focus(); return false; }
+      if (!name)       { alert('과정명을 입력해주세요.'); document.getElementById('fCourseName').focus(); return false; }
+      if (!eduStart)   { alert('교육 시작일을 선택해주세요.'); return false; }
+      if (!eduEnd)     { alert('교육 종료일을 선택해주세요.'); return false; }
+      if (eduStart > eduEnd) { alert('교육 종료일이 시작일보다 빠를 수 없습니다.'); return false; }
+      if (!applyStart) { alert('접수 시작일시를 선택해주세요.'); return false; }
+      if (!applyEnd)   { alert('접수 종료일시를 선택해주세요.'); return false; }
+      if (applyStart >= applyEnd) { alert('접수 종료일시가 시작일시보다 빠를 수 없습니다.'); return false; }
+      if (!capacity || capacity < 1) { alert('정원을 1명 이상 입력해주세요.'); document.getElementById('fCapacity').focus(); return false; }
 
       return true;
     },
@@ -765,7 +765,7 @@
 
       /* TODO: AJAX — fetch(ADMIN_API.courseSave, { method: 'POST', body: formData }) */
       /* 실제 구현 시 FormData 구성 후 fetch/AJAX */
-      App.toast('저장되었습니다.', 'success');
+      alert('저장되었습니다.');
       const p   = new URLSearchParams(location.search);
       const t   = p.get('type') || 'basic';
       const tab = p.get('tab');

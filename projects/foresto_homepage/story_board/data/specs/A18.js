@@ -55,8 +55,8 @@ window.SPECS['A18'] = `
 <table>
   <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
   <tbody>
-    <tr><td>파일 다운로드 (PHP 연동 전)</td><td>Toast (info)</td><td>PHP 연동 후 파일을 다운로드할 수 있습니다.</td></tr>
-    <tr><td>[메모 저장] 성공</td><td>Toast (success)</td><td>메모가 저장되었습니다.</td></tr>
+    <tr><td>파일 다운로드 (PHP 연동 전)</td><td>Alert</td><td>PHP 연동 후 파일을 다운로드할 수 있습니다.</td></tr>
+    <tr><td>[메모 저장] 성공</td><td>Alert</td><td>메모가 저장되었습니다.</td></tr>
   </tbody>
 </table>
 
