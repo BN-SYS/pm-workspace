@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -165,42 +165,7 @@
               <th style="width:9%">탈퇴 처리자</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td class="center td-muted">3</td>
-              <td class="center cell-date">2026-01-10 10:23:05</td>
-              <td class="td-muted">forest_old001</td>
-              <td><strong>고산바람</strong></td>
-              <td class="center"><span class="badge badge-green">정회원</span></td>
-              <td class="td-muted">withdrawn1@example.com</td>
-              <td class="center td-muted">010-2001-6001</td>
-              <td class="cell-reason" data-tooltip="개인 정보 보호를 위해 탈퇴 요청"><span class="cell-reason-text">개인 정보 보호를 위해 탈퇴 요청</span></td>
-              <td class="center td-muted">관리자A</td>
-            </tr>
-            <tr>
-              <td class="center td-muted">2</td>
-              <td class="center cell-date">2026-02-18 14:51:30</td>
-              <td class="td-muted">forest_old002</td>
-              <td><strong>서자연</strong></td>
-              <td class="center"><span class="badge badge-blue">일반회원</span></td>
-              <td class="td-muted">withdrawn2@example.com</td>
-              <td class="center td-muted">010-2002-6002</td>
-              <td class="cell-reason" data-tooltip="더 이상 서비스 이용 의향 없음"><span class="cell-reason-text">더 이상 서비스 이용 의향 없음</span></td>
-              <td class="center td-muted">시스템</td>
-            </tr>
-            <tr>
-              <td class="center td-muted">1</td>
-              <td class="center cell-date">2026-03-05 09:10:44</td>
-              <td class="td-muted">forest_old003</td>
-              <td><strong>남숲길</strong></td>
-              <td class="center"><span class="badge badge-blue">일반회원</span></td>
-              <td class="td-muted">withdrawn3@example.com</td>
-              <td class="center td-muted">010-2003-6003</td>
-              <td class="cell-reason" data-tooltip="타 단체로 활동 전환"><span class="cell-reason-text">타 단체로 활동 전환</span></td>
-              <td class="center td-muted">관리자B</td>
-            </tr>
-            <!-- 데이터 없을 때: <tr><td colspan="9" class="td-empty">탈퇴 회원이 없습니다.</td></tr> -->
-          </tbody>
+          <tbody id="tableBody"><!-- JS render --></tbody>
         </table>
       </div>
 
@@ -216,6 +181,34 @@
   <script src="../assets/js/components/header.js"></script>
   <script src="../assets/js/pages/admin.js"></script>
   <script>
+    const SAMPLE_DATA = [
+      { no: 3, withdrawDate: '2026-01-10 10:23:05', userId: 'forest_old001', name: '고산바람', grade: '정회원', gradeBadge: 'badge-green', email: 'withdrawn1@example.com', phone: '010-2001-6001', reason: '개인 정보 보호를 위해 탈퇴 요청', handler: '관리자A' },
+      { no: 2, withdrawDate: '2026-02-18 14:51:30', userId: 'forest_old002', name: '서자연', grade: '일반회원', gradeBadge: 'badge-blue', email: 'withdrawn2@example.com', phone: '010-2002-6002', reason: '더 이상 서비스 이용 의향 없음', handler: '시스템' },
+      { no: 1, withdrawDate: '2026-03-05 09:10:44', userId: 'forest_old003', name: '남숲길', grade: '일반회원', gradeBadge: 'badge-blue', email: 'withdrawn3@example.com', phone: '010-2003-6003', reason: '타 단체로 활동 전환', handler: '관리자B' },
+    ];
+
+    function renderTable(data) {
+      const tbody = document.getElementById('tableBody');
+      if (!tbody) return;
+      if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="9" class="td-empty">탈퇴 회원이 없습니다.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(d => `<tr>
+        <td class="center td-muted">${d.no}</td>
+        <td class="center cell-date">${d.withdrawDate}</td>
+        <td class="td-muted">${d.userId}</td>
+        <td><strong>${d.name}</strong></td>
+        <td class="center"><span class="badge ${d.gradeBadge}">${d.grade}</span></td>
+        <td class="td-muted">${d.email}</td>
+        <td class="center td-muted">${d.phone}</td>
+        <td class="cell-reason" data-tooltip="${d.reason}"><span class="cell-reason-text">${d.reason}</span></td>
+        <td class="center td-muted">${d.handler}</td>
+      </tr>`).join('');
+    }
+
+    renderTable(SAMPLE_DATA);
+
     AdminSidebar.mount('withdrawn');
   </script>
 </body>

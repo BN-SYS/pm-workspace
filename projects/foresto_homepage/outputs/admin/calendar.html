@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -155,39 +155,7 @@
               <th>등록일시</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td class="col-chk"><input type="checkbox" class="row-chk" data-id="3001" onchange="CalAdmin._syncBtns()"></td>
-              <td>3</td>
-              <td><span class="cat-badge cat-edu">교육/강좌</span></td>
-              <td style="text-align:center;font-weight:500;cursor:pointer" onclick="CalAdmin.openModal(3001)">2026 숲해설가 기초과정 개강</td>
-              <td class="cell-mono">2026-04-15</td>
-              <td class="link-cell"><a href="#" onclick="event.preventDefault();event.stopPropagation()">링크</a></td>
-              <td>관리자A</td>
-              <td class="cell-mono">2026-03-10 09:00:00</td>
-            </tr>
-            <tr>
-              <td class="col-chk"><input type="checkbox" class="row-chk" data-id="3002" onchange="CalAdmin._syncBtns()"></td>
-              <td>2</td>
-              <td><span class="cat-badge cat-event">협회행사</span></td>
-              <td style="text-align:center;font-weight:500;cursor:pointer" onclick="CalAdmin.openModal(3002)">봄 정기 협회 총회</td>
-              <td class="cell-mono">2026-05-20</td>
-              <td class="link-cell"><span style="color:#ccc">—</span></td>
-              <td>관리자B</td>
-              <td class="cell-mono">2026-03-15 14:20:00</td>
-            </tr>
-            <tr>
-              <td class="col-chk"><input type="checkbox" class="row-chk" data-id="3003" onchange="CalAdmin._syncBtns()"></td>
-              <td>1</td>
-              <td><span class="cat-badge cat-club">동아리</span></td>
-              <td style="text-align:center;font-weight:500;cursor:pointer" onclick="CalAdmin.openModal(3003)">동아리 3월 정기모임</td>
-              <td class="cell-mono">2026-03-28</td>
-              <td class="link-cell"><span style="color:#ccc">—</span></td>
-              <td>관리자A</td>
-              <td class="cell-mono">2026-03-01 10:05:00</td>
-            </tr>
-            <!-- 데이터 없을 때: <tr><td colspan="8" class="td-empty">등록된 일정이 없습니다.</td></tr> -->
-          </tbody>
+          <tbody id="tableBody"><!-- JS render --></tbody>
         </table>
       </div>
 
@@ -256,6 +224,33 @@
   <script src="../assets/js/components/header.js"></script>
   <script src="../assets/js/pages/admin.js"></script>
   <script>
+  const SAMPLE_DATA = [
+    { id: 3001, no: 3, catKey: 'cat-edu',   catLabel: '교육/강좌', title: '2026 숲해설가 기초과정 개강', date: '2026-04-15', link: '#',  author: '관리자A', regDate: '2026-03-10 09:00:00' },
+    { id: 3002, no: 2, catKey: 'cat-event', catLabel: '협회행사',  title: '봄 정기 협회 총회',          date: '2026-05-20', link: '',   author: '관리자B', regDate: '2026-03-15 14:20:00' },
+    { id: 3003, no: 1, catKey: 'cat-club',  catLabel: '동아리',    title: '동아리 3월 정기모임',         date: '2026-03-28', link: '',   author: '관리자A', regDate: '2026-03-01 10:05:00' },
+  ];
+
+  function renderTable(data) {
+    const tbody = document.getElementById('tableBody');
+    if (!tbody) return;
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="8" class="td-empty">등록된 일정이 없습니다.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(d => `<tr>
+      <td class="col-chk"><input type="checkbox" class="row-chk" data-id="${d.id}" onchange="CalAdmin._syncBtns()"></td>
+      <td>${d.no}</td>
+      <td><span class="cat-badge ${d.catKey}">${d.catLabel}</span></td>
+      <td style="text-align:center;font-weight:500;cursor:pointer" onclick="CalAdmin.openModal(${d.id})">${d.title}</td>
+      <td class="cell-mono">${d.date}</td>
+      <td class="link-cell">${d.link ? `<a href="#" onclick="event.preventDefault();event.stopPropagation()">링크</a>` : '<span style="color:#ccc">—</span>'}</td>
+      <td>${d.author}</td>
+      <td class="cell-mono">${d.regDate}</td>
+    </tr>`).join('');
+  }
+
+  renderTable(SAMPLE_DATA);
+
   AdminSidebar.mount('calendar');
 
   const CalAdmin = {

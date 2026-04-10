@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -145,7 +145,7 @@
             </div>
           </div>
 
-          <!-- 행 4: 검색어 -->
+          <!-- 행 5: 검색어 -->
           <div class="filter-row">
             <span class="filter-label">검색</span>
             <div class="filter-content">
@@ -155,8 +155,7 @@
                   <option value="name">신청자명</option>
                 </select>
                 <div class="kw-input-wrap">
-                  <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요"
-                    onkeydown="if(event.key==='Enter') ApplicantAdmin.search()">
+                  <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요">
                 </div>
               </div>
             </div>
@@ -217,60 +216,7 @@
               <th>상태</th>
             </tr>
           </thead>
-          <tbody>
-            <tr class="applicant-row" onclick="location.href='applicant-detail.html?id=2001'">
-              <td class="col-chk" onclick="event.stopPropagation()">
-                <input type="checkbox" class="row-chk" data-id="2001" onchange="syncBulkBtns()">
-              </td>
-              <td>3</td>
-              <td class="cell-mono">APP-2026-02001</td>
-              <td><span class="badge-type basic">기초과정</span></td>
-              <td class="center" style="font-size:13px">—</td>
-              <td style="font-weight:500;text-align:center">봄 숲 이야기 — 시민아카데미</td>
-              <td><span style="font-weight:600">김민준</span> <span style="font-weight:400;color:#888;font-size:12px">(M02001)</span></td>
-              <td>남</td>
-              <td class="cell-mono">1985-03-15</td>
-              <td class="cell-mono">010-1234-5678</td>
-              <td class="cell-mono">2026-03-01 09:07</td>
-              <td class="cell-mono">—</td>
-              <td><span class="badge badge-green">신청</span></td>
-            </tr>
-            <tr class="applicant-row" onclick="location.href='applicant-detail.html?id=2002'">
-              <td class="col-chk" onclick="event.stopPropagation()">
-                <input type="checkbox" class="row-chk" data-id="2002" onchange="syncBulkBtns()">
-              </td>
-              <td>2</td>
-              <td class="cell-mono">APP-2026-02002</td>
-              <td><span class="badge-type qualify">자격취득과정</span></td>
-              <td class="center" style="font-size:13px">55기</td>
-              <td style="font-weight:500;text-align:center">제55기 숲해설가 전문가과정</td>
-              <td><span style="font-weight:600">이서연</span> <span style="font-weight:400;color:#888;font-size:12px">(M02002)</span></td>
-              <td>여</td>
-              <td class="cell-mono">1990-07-22</td>
-              <td class="cell-mono">010-2345-6789</td>
-              <td class="cell-mono">2026-03-05 14:23</td>
-              <td class="cell-mono">—</td>
-              <td><span class="badge badge-green">수료</span></td>
-            </tr>
-            <tr class="applicant-row" onclick="location.href='applicant-detail.html?id=2003'">
-              <td class="col-chk" onclick="event.stopPropagation()">
-                <input type="checkbox" class="row-chk" data-id="2003" onchange="syncBulkBtns()">
-              </td>
-              <td>1</td>
-              <td class="cell-mono">APP-2026-02003</td>
-              <td><span class="badge-type enhance">역량강화</span></td>
-              <td class="center" style="font-size:13px">—</td>
-              <td style="font-weight:500;text-align:center">숲해설 심화 — 생태 스토리텔링</td>
-              <td><span style="font-weight:600">박지훈</span> <span style="font-weight:400;color:#888;font-size:12px">(M02003)</span></td>
-              <td>남</td>
-              <td class="cell-mono">1978-11-08</td>
-              <td class="cell-mono">010-3456-7890</td>
-              <td class="cell-mono">2026-03-10 11:15</td>
-              <td class="cell-mono">2026-03-13 09:30</td>
-              <td><span class="badge badge-orange">취소</span></td>
-            </tr>
-            <!-- 데이터 없을 때: <tr><td colspan="13" class="td-empty">검색 결과가 없습니다.</td></tr> -->
-          </tbody>
+          <tbody id="tableBody"><!-- JS render --></tbody>
         </table>
       </div>
 
@@ -298,13 +244,45 @@
     </main>
   </div>
 
-
-
   <script src="../assets/js/app.js"></script>
   <script src="../assets/js/components/header.js"></script>
   <script src="../assets/js/pages/admin.js"></script>
   <script>
   'use strict';
+
+  const SAMPLE_DATA = [
+    { id: 2001, no: 3, appNo: 'APP-2026-02001', typeKey: 'basic',   typeLabel: '기초과정',     cohort: '—',   courseName: '봄 숲 이야기 — 시민아카데미',       memberId: 'M02001', name: '김민준', gender: '남', dob: '1985-03-15', phone: '010-1234-5678', applyDate: '2026-03-01 09:07', cancelDate: '—', status: '신청', statusBadge: 'badge-green' },
+    { id: 2002, no: 2, appNo: 'APP-2026-02002', typeKey: 'qualify', typeLabel: '자격취득과정', cohort: '55기', courseName: '제55기 숲해설가 전문가과정',          memberId: 'M02002', name: '이서연', gender: '여', dob: '1990-07-22', phone: '010-2345-6789', applyDate: '2026-03-05 14:23', cancelDate: '—', status: '수료', statusBadge: 'badge-green' },
+    { id: 2003, no: 1, appNo: 'APP-2026-02003', typeKey: 'enhance', typeLabel: '역량강화',     cohort: '—',   courseName: '숲해설 심화 — 생태 스토리텔링', memberId: 'M02003', name: '박지훈', gender: '남', dob: '1978-11-08', phone: '010-3456-7890', applyDate: '2026-03-10 11:15', cancelDate: '2026-03-13 09:30', status: '취소', statusBadge: 'badge-orange' },
+  ];
+
+  function renderTable(data) {
+    const tbody = document.getElementById('tableBody');
+    if (!tbody) return;
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="13" class="td-empty">검색 결과가 없습니다.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(d => `<tr class="applicant-row" onclick="location.href='applicant-detail.html?id=${d.id}'">
+      <td class="col-chk" onclick="event.stopPropagation()">
+        <input type="checkbox" class="row-chk" data-id="${d.id}" onchange="syncBulkBtns()">
+      </td>
+      <td>${d.no}</td>
+      <td class="cell-mono">${d.appNo}</td>
+      <td><span class="badge-type ${d.typeKey}">${d.typeLabel}</span></td>
+      <td class="center" style="font-size:13px">${d.cohort}</td>
+      <td style="font-weight:500;text-align:center">${d.courseName}</td>
+      <td><span style="font-weight:600">${d.name}</span> <span style="font-weight:400;color:#888;font-size:12px">(${d.memberId})</span></td>
+      <td>${d.gender}</td>
+      <td class="cell-mono">${d.dob}</td>
+      <td class="cell-mono">${d.phone}</td>
+      <td class="cell-mono">${d.applyDate}</td>
+      <td class="cell-mono">${d.cancelDate}</td>
+      <td><span class="badge ${d.statusBadge}">${d.status}</span></td>
+    </tr>`).join('');
+  }
+
+  renderTable(SAMPLE_DATA);
 
   AdminSidebar.mount('course-applicants');
 

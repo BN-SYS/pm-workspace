@@ -1,54 +1,53 @@
 ﻿// ============================================================
-//  A11 — 강사 신청 일정 목록
-//  그룹 : 강사 일정관리
+//  A11 — 정회원신청 목록
+//  그룹 : 기타 신청관리
 //  섹션 : admin
 //  작성일 : 2026-04-06
 // ============================================================
 
-window.SPECS = window.SPECS || {};
+window.SPECS       = window.SPECS       || {};
 window.ANNOTATIONS = window.ANNOTATIONS || {};
 
 window.ANNOTATIONS['A11'] = [
   { n: 1, x: 13.8, y: 9.9 },   // 검색·필터 영역
-  { n: 2, x: 13.8, y: 26.2 },   // 목록 상단
-  { n: 3, x: 13.8, y: 29.3 },   // 목록 테이블
-  { n: 4, x: 13.8, y: 45.4 },   // 페이지네이션
+  { n: 2, x: 13.8, y: 29.9 },   // 목록 상단
+  { n: 3, x: 13.8, y: 33 },   // 목록 테이블
+  { n: 4, x: 13.8, y: 49 },   // 페이지네이션
 ];
 
 window.SPECS['A11'] = `
 
 <!-- ── 목적 ──────────────────────────────────────── -->
 <h3>목적</h3>
-<p>강사 신청 일정 전체를 목록으로 조회하고, 검색·필터로 원하는 일정을 찾는 화면. 행 클릭 시 상세(A12)로 이동. 각 일정의 신청인원과 접수 상태를 한눈에 확인할 수 있다.</p>
+<p>정회원 전환 신청 목록을 조회하고, 검색·필터를 통해 특정 신청을 찾아 상세 정보로 진입하는 화면. 엑셀 다운로드 지원(접수번호/회원구분/이름/생년월일/연락처/이메일/주소/신청일/은행명/예금주/계좌번호/현재활동여부/소속기관/가입경로/가입동기/관리자 메모).</p>
 
 <!-- ── 구조 및 상세 ──────────────────────────────── -->
 <h3>구조 및 상세</h3>
 
 <h4>① 검색·필터 영역</h4>
 <p>
-  - 활동일자: 날짜 범위 선택. <strong>DOC06: C01 날짜 범위 검색 공통 규칙 적용</strong><br>
+  - 신청기간: 날짜 범위 선택. <strong>DOC06: C01 날짜 범위 검색 공통 규칙 적용</strong><br>
   - 날짜 프리셋 버튼: 오늘/7일/30일/3개월/6개월<br>
-  - 접수상태 필터: 라디오 칩 그룹 (전체/준비중/접수중/마감). 기본값 "전체"<br>
-  - 검색어: 일정명 키워드 검색. <strong>DOC06: C04 검색어 입력 공통 규칙 적용</strong><br>
+  - 활동여부 필터: 라디오 칩 그룹 (전체/활동 중/활동 예정/미활동). 기본값 "전체"<br>
+  - 회원구분 필터: 라디오 칩 그룹 (전체/회원/비회원). 기본값 "전체"<br>
+  - 검색어 조건: 셀렉트박스(전체/이름/이메일/연락처) + 텍스트 입력. <strong>DOC06: C04 적용</strong><br>
+  - [엑셀 다운로드]: <strong>DOC06: C06 엑셀 다운로드 공통 규칙 적용</strong><br>
   - [초기화]/[검색] 버튼
 </p>
 
 <h4>② 목록 상단</h4>
 <p>
   - 총 건수 표시. <strong>DOC06: C02 목록 테이블 공통 규칙 적용</strong><br>
-  - 행 노출 개수 셀렉트: 10/30/50개씩 보기
+  - 행 노출 개수 셀렉트: 10/30/50/100개씩 보기
 </p>
 
 <h4>③ 목록 테이블</h4>
 <p>
-  - 행 클릭: 강사 신청 일정 상세(A12)로 이동<br>
-  - 접수 상태는 접수기간·정원 여유 기준으로 자동 산출: 준비중/접수중/마감
+  - 행 클릭: 정회원신청 상세(A12)로 이동<br>
+  - 접수번호 형식: REG-2026-NNNNN
 </p>
 
-<h4>④ [+ 일정 등록] 버튼</h4>
-<p>강사 신청 일정 등록/수정(A13) 화면으로 이동 (등록 모드)</p>
-
-<h4>⑤ 페이지네이션</h4>
+<h4>④ 페이지네이션</h4>
 <strong>DOC06: C03 페이지네이션 공통 규칙 적용</strong>
 
 <!-- ── 테이블 컬럼 ───────────────────────────────── -->
@@ -57,24 +56,20 @@ window.SPECS['A11'] = `
   <thead><tr><th>#</th><th>컬럼명</th><th>타입</th><th>정렬</th><th>비고</th></tr></thead>
   <tbody>
     <tr><td>1</td><td>No</td><td>number</td><td>C</td><td>역순 자동 넘버링</td></tr>
-    <tr><td>2</td><td>활동명</td><td>text</td><td>L</td><td>행 클릭 시 A12(상세) 이동</td></tr>
-    <tr><td>3</td><td>활동일자</td><td>date</td><td>C</td><td>YYYY-MM-DD</td></tr>
-    <tr><td>4</td><td>접수 기간</td><td>text</td><td>C</td><td>YYYY-MM-DD HH:MM ~ YYYY-MM-DD HH:MM</td></tr>
-    <tr><td>5</td><td>정원</td><td>number</td><td>C</td><td>N명</td></tr>
-    <tr><td>6</td><td>신청인원</td><td>number</td><td>C</td><td>N명. 강사신청 목록(A16)에서 별도 관리</td></tr>
-    <tr><td>7</td><td>접수상태</td><td>badge</td><td>C</td><td>준비중(gray)/접수중(green)/마감(red)</td></tr>
+    <tr><td>2</td><td>접수번호</td><td>text</td><td>C</td><td>REG-2026-NNNNN 형식</td></tr>
+    <tr><td>3</td><td>이름</td><td>text</td><td>L</td><td>클릭 시 A12 이동</td></tr>
+    <tr><td>4</td><td>회원구분</td><td>badge</td><td>C</td><td>회원(green)/비회원(gray)</td></tr>
+    <tr><td>5</td><td>활동여부</td><td>text</td><td>C</td><td>활동 중/활동 예정/미활동</td></tr>
+    <tr><td>6</td><td>연락처</td><td>text</td><td>C</td><td>010-XXXX-XXXX</td></tr>
+    <tr><td>7</td><td>이메일</td><td>text</td><td>L</td><td></td></tr>
+    <tr><td>8</td><td>신청일</td><td>datetime</td><td>C</td><td>YYYY-MM-DD HH:MM:SS. 기본 정렬: 최신순</td></tr>
+    <tr><td>9</td><td>관리자 메모</td><td>text</td><td>L</td><td>메모 일부 표시 (말줄임)</td></tr>
   </tbody>
 </table>
 
 <!-- ── Alert 메시지 ──────────────────────────────── -->
 <h3>Alert 메시지</h3>
-<p><strong>DOC06: C07 공통 Alert 적용 --></strong></p>
-<table>
-  <thead><tr><th>트리거</th><th>유형</th><th>메시지</th></tr></thead>
-  <tbody>
-    <tr><td>날짜 범위 오류</td><td>Alert</td><td>시작일이 종료일보다 클 수 없습니다.</td></tr>
-  </tbody>
-</table>
+<p><strong>DOC06: C07 공통 Alert 적용 (날짜 범위 오류, 엑셀 건수 초과) --></strong></p>
 
 <!-- ── Validation ────────────────────────────────── -->
 <h3>Validation</h3>
@@ -85,8 +80,7 @@ window.SPECS['A11'] = `
 <table>
   <thead><tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr></thead>
   <tbody>
-    <tr><td>A12</td><td>강사 신청 일정 상세</td><td>행 클릭 시 이동</td></tr>
-    <tr><td>A13</td><td>강사 신청 일정 등록/수정</td><td>[+ 일정 등록] 버튼 클릭 시 이동</td></tr>
+    <tr><td>A12</td><td>정회원신청 상세</td><td>목록 행 클릭 시 이동</td></tr>
   </tbody>
 </table>
 

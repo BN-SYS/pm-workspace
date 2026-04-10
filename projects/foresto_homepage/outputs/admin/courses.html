@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -131,39 +131,7 @@
               <th style="width:9%">등록일</th>
             </tr>
           </thead>
-          <tbody>
-            <tr onclick="location.href='course-detail.html?id=1001'">
-              <td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="1001" onchange="syncDeleteBtn()"></td>
-              <td class="td-muted">3</td>
-              <td class="center" style="font-size:13px">55기</td>
-              <td style="font-weight:500;text-align:center">제55기 숲해설가 전문가과정</td>
-              <td class="cell-datetime">2026-04-01</td>
-              <td class="period-cell">2026-03-01 09:00 ~ 2026-03-25 18:00</td>
-              <td><span class="badge badge-green">접수중</span></td>
-              <td class="td-muted cell-datetime">2026-02-10 14:23:05</td>
-            </tr>
-            <tr onclick="location.href='course-detail.html?id=1002'">
-              <td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="1002" onchange="syncDeleteBtn()"></td>
-              <td class="td-muted">2</td>
-              <td class="center" style="font-size:13px">—</td>
-              <td style="font-weight:500;text-align:center">봄 숲 이야기 — 시민아카데미</td>
-              <td class="cell-datetime">2026-04-15</td>
-              <td class="period-cell">2026-03-10 09:00 ~ 2026-04-10 18:00</td>
-              <td><span class="badge badge-green">접수중</span></td>
-              <td class="td-muted cell-datetime">2026-02-20 09:41:18</td>
-            </tr>
-            <tr onclick="location.href='course-detail.html?id=1003'">
-              <td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="1003" onchange="syncDeleteBtn()"></td>
-              <td class="td-muted">1</td>
-              <td class="center" style="font-size:13px">—</td>
-              <td style="font-weight:500;text-align:center">숲해설 심화 — 생태 스토리텔링</td>
-              <td class="cell-datetime">2026-05-10</td>
-              <td class="period-cell">2026-04-01 09:00 ~ 2026-04-30 18:00</td>
-              <td><span class="badge badge-gray">준비중</span></td>
-              <td class="td-muted cell-datetime">2026-03-05 11:00:44</td>
-            </tr>
-            <!-- 데이터 없을 때: <tr><td colspan="8" class="td-empty">등록된 강좌가 없습니다.</td></tr> -->
-          </tbody>
+          <tbody id="tableBody"><!-- JS render --></tbody>
         </table>
       </div>
 
@@ -183,6 +151,33 @@
   <script src="../assets/js/components/header.js"></script>
   <script src="../assets/js/pages/admin.js"></script>
   <script>
+    const SAMPLE_DATA = [
+      { id: 1001, no: 3, cohort: '55기', title: '제55기 숲해설가 전문가과정', startDate: '2026-04-01', period: '2026-03-01 09:00 ~ 2026-03-25 18:00', status: '접수중', statusBadge: 'badge-green', regDate: '2026-02-10 14:23:05' },
+      { id: 1002, no: 2, cohort: '—', title: '봄 숲 이야기 — 시민아카데미', startDate: '2026-04-15', period: '2026-03-10 09:00 ~ 2026-04-10 18:00', status: '접수중', statusBadge: 'badge-green', regDate: '2026-02-20 09:41:18' },
+      { id: 1003, no: 1, cohort: '—', title: '숲해설 심화 — 생태 스토리텔링', startDate: '2026-05-10', period: '2026-04-01 09:00 ~ 2026-04-30 18:00', status: '준비중', statusBadge: 'badge-gray', regDate: '2026-03-05 11:00:44' },
+    ];
+
+    function renderTable(data) {
+      const tbody = document.getElementById('tableBody');
+      if (!tbody) return;
+      if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="8" class="td-empty">등록된 강좌가 없습니다.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(d => `<tr onclick="location.href='course-detail.html?id=${d.id}'">
+        <td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="${d.id}" onchange="syncDeleteBtn()"></td>
+        <td class="td-muted">${d.no}</td>
+        <td class="center" style="font-size:13px">${d.cohort}</td>
+        <td style="font-weight:500;text-align:center">${d.title}</td>
+        <td class="cell-datetime">${d.startDate}</td>
+        <td class="period-cell">${d.period}</td>
+        <td><span class="badge ${d.statusBadge}">${d.status}</span></td>
+        <td class="td-muted cell-datetime">${d.regDate}</td>
+      </tr>`).join('');
+    }
+
+    renderTable(SAMPLE_DATA);
+
     /* URL 파라미터 기반 타입/탭 처리 */
     const COURSE_CONFIG = {
       basic:   { key: 'course-basic',   label: '기초과정 관리' },
@@ -202,17 +197,22 @@
     const activeTab = type === 'academy' ? (params.get('tab') || 'lecture') : null;
 
     document.title = config.label + ' | 관리자 | 한국숲해설가협회';
-    document.getElementById('pageTitle').textContent = config.label;
+    const pageTitle = document.getElementById('pageTitle');
+    if (pageTitle) pageTitle.textContent = config.label;
     AdminSidebar.mount(config.key);
 
     if (type === 'academy') {
       const tabBar = document.getElementById('academyTabBar');
-      tabBar.style.display = 'flex';
-      document.getElementById('adminTopbarCourses').classList.add('has-tabs');
-      document.getElementById('academyTabs').innerHTML = ACADEMY_TABS.map(t =>
-        `<button class="academy-tab ${t.key === activeTab ? 'active' : ''}"
-          onclick="location.href='courses.html?type=academy&tab=${t.key}'">${t.label}</button>`
-      ).join('');
+      if (tabBar) tabBar.style.display = 'flex';
+      const topbar = document.getElementById('adminTopbarCourses');
+      if (topbar) topbar.classList.add('has-tabs');
+      const academyTabs = document.getElementById('academyTabs');
+      if (academyTabs) {
+        academyTabs.innerHTML = ACADEMY_TABS.map(t =>
+          `<button class="academy-tab ${t.key === activeTab ? 'active' : ''}"
+            onclick="location.href='courses.html?type=academy&tab=${t.key}'">${t.label}</button>`
+        ).join('');
+      }
     }
 
     function goCreate() {

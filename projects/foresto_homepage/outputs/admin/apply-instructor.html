@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -159,42 +159,7 @@
               <th style="width:11%">관리자 메모</th>
             </tr>
           </thead>
-          <tbody>
-            <tr class="applicant-row" onclick="location.href='apply-instructor-detail.html?id=1'">
-              <td style="text-align:center">3</td>
-              <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">INS-2026-00001</td>
-              <td style="font-size:12px;color:#4a7c59">2026-03-15 토요일 오전 9시 — 도봉산</td>
-              <td style="font-weight:600">김민준<span style="color:#5a7a5a;font-size:12px">(ins5001)</span></td>
-              <td style="text-align:center;font-size:13px">서울</td>
-              <td style="text-align:center;font-size:13px" class="cell-datetime">010-1234-5678</td>
-              <td style="font-size:13px">kim@example.com</td>
-              <td style="text-align:center;font-size:13px" class="cell-datetime">2026-01-10 09:07</td>
-              <td style="text-align:center"><span style="color:#ccc;font-size:12px">—</span></td>
-            </tr>
-            <tr class="applicant-row" onclick="location.href='apply-instructor-detail.html?id=2'">
-              <td style="text-align:center">2</td>
-              <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">INS-2026-00002</td>
-              <td style="font-size:12px;color:#4a7c59">2026-04-05 일요일 오전 10시 — 수락산</td>
-              <td style="font-weight:600">이서연<span style="color:#5a7a5a;font-size:12px">(ins5002)</span></td>
-              <td style="text-align:center;font-size:13px">경기</td>
-              <td style="text-align:center;font-size:13px" class="cell-datetime">010-2345-6789</td>
-              <td style="font-size:13px">lee@example.com</td>
-              <td style="text-align:center;font-size:13px" class="cell-datetime">2026-02-05 14:23</td>
-              <td style="text-align:center"><span style="font-size:12px;color:#5a7a5a">경력증명서 요청</span></td>
-            </tr>
-            <tr class="applicant-row" onclick="location.href='apply-instructor-detail.html?id=3'">
-              <td style="text-align:center">1</td>
-              <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">INS-2026-00003</td>
-              <td style="font-size:12px;color:#4a7c59">2026-04-20 토요일 오전 9시 — 불암산</td>
-              <td style="font-weight:600">박지훈<span style="color:#5a7a5a;font-size:12px">(ins5003)</span></td>
-              <td style="text-align:center;font-size:13px">인천</td>
-              <td style="text-align:center;font-size:13px" class="cell-datetime">010-3456-7890</td>
-              <td style="font-size:13px">park@example.com</td>
-              <td style="text-align:center;font-size:13px" class="cell-datetime">2026-03-01 11:15</td>
-              <td style="text-align:center"><span style="color:#ccc;font-size:12px">—</span></td>
-            </tr>
-            <!-- 데이터 없을 때: <tr><td colspan="9" class="td-empty">내역이 없습니다.</td></tr> -->
-          </tbody>
+          <tbody id="tableBody"><!-- JS render --></tbody>
         </table>
       </div>
 
@@ -213,6 +178,35 @@
   <script src="../assets/js/pages/admin.js"></script>
   <script>
   'use strict';
+
+  const SAMPLE_DATA = [
+    { id: 1, no: 3, appNo: 'INS-2026-00001', schedule: '2026-03-15 토요일 오전 9시 — 도봉산',  name: '김민준', userId: 'ins5001', region: '서울', phone: '010-1234-5678', email: 'kim@example.com', applyDate: '2026-01-10 09:07', memo: '—' },
+    { id: 2, no: 2, appNo: 'INS-2026-00002', schedule: '2026-04-05 일요일 오전 10시 — 수락산', name: '이서연', userId: 'ins5002', region: '경기', phone: '010-2345-6789', email: 'lee@example.com', applyDate: '2026-02-05 14:23', memo: '경력증명서 요청' },
+    { id: 3, no: 1, appNo: 'INS-2026-00003', schedule: '2026-04-20 토요일 오전 9시 — 불암산',  name: '박지훈', userId: 'ins5003', region: '인천', phone: '010-3456-7890', email: 'park@example.com', applyDate: '2026-03-01 11:15', memo: '—' },
+  ];
+
+  function renderTable(data) {
+    const tbody = document.getElementById('tableBody');
+    if (!tbody) return;
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="9" class="td-empty">내역이 없습니다.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(d => `<tr class="applicant-row" onclick="location.href='apply-instructor-detail.html?id=${d.id}'">
+      <td style="text-align:center">${d.no}</td>
+      <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">${d.appNo}</td>
+      <td style="font-size:12px;color:#4a7c59">${d.schedule}</td>
+      <td style="font-weight:600">${d.name}<span style="color:#5a7a5a;font-size:12px">(${d.userId})</span></td>
+      <td style="text-align:center;font-size:13px">${d.region}</td>
+      <td style="text-align:center;font-size:13px" class="cell-datetime">${d.phone}</td>
+      <td style="font-size:13px">${d.email}</td>
+      <td style="text-align:center;font-size:13px" class="cell-datetime">${d.applyDate}</td>
+      <td style="text-align:center"><span style="${d.memo === '—' ? 'color:#ccc;font-size:12px' : 'font-size:12px;color:#5a7a5a'}">${d.memo}</span></td>
+    </tr>`).join('');
+  }
+
+  renderTable(SAMPLE_DATA);
+
   AdminSidebar.mount('apply-instructor');
   </script>
 </body>

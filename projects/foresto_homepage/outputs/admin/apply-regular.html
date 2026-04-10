@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -43,11 +43,11 @@
                 <input type="date" id="filterDateTo">
               </div>
               <div class="date-preset-group">
-                <button class="date-preset-btn" onclick="setDatePreset('today')">오늘</button>
-                <button class="date-preset-btn" onclick="setDatePreset(7)">7일</button>
-                <button class="date-preset-btn" onclick="setDatePreset(30)">30일</button>
-                <button class="date-preset-btn" onclick="setDatePreset(90)">3개월</button>
-                <button class="date-preset-btn" onclick="setDatePreset(180)">6개월</button>
+                <button class="date-preset-btn">오늘</button>
+                <button class="date-preset-btn">7일</button>
+                <button class="date-preset-btn">30일</button>
+                <button class="date-preset-btn">3개월</button>
+                <button class="date-preset-btn">6개월</button>
               </div>
             </div>
           </div>
@@ -89,8 +89,7 @@
                   <option value="phone">연락처</option>
                 </select>
                 <div class="kw-input-wrap">
-                  <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요"
-                    onkeydown="">
+                  <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요">
                 </div>
               </div>
             </div>
@@ -100,7 +99,7 @@
         <div class="filter-footer">
           <button class="btn btn-outline btn-sm" onclick="alert('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.')">엑셀 다운로드</button>
           <button class="btn btn-gray btn-sm" onclick="location.reload()">초기화</button>
-          <button class="btn btn-primary btn-sm" onclick="">검색</button>
+          <button class="btn btn-primary btn-sm">검색</button>
         </div>
       </div>
 
@@ -131,42 +130,7 @@
               <th style="width:12%">관리자 메모</th>
             </tr>
           </thead>
-          <tbody>
-            <tr onclick="location.href='apply-regular-detail.html?id=3001'">
-              <td class="td-muted">3</td>
-              <td class="td-muted">REG-2026-00001</td>
-              <td><strong>김숲해설</strong></td>
-              <td class="center"><span class="badge badge-blue">회원</span></td>
-              <td class="center">활동 중</td>
-              <td class="td-muted">010-1000-2000</td>
-              <td class="td-muted">user3001@example.com</td>
-              <td class="td-muted cell-datetime">2026-01-05 09:00:00</td>
-              <td class="td-muted"></td>
-            </tr>
-            <tr onclick="location.href='apply-regular-detail.html?id=3002'">
-              <td class="td-muted">2</td>
-              <td class="td-muted">REG-2026-00002</td>
-              <td><strong>이초록</strong></td>
-              <td class="center"><span class="badge badge-gray">비회원</span></td>
-              <td class="center">활동 예정</td>
-              <td class="td-muted">010-1001-2001</td>
-              <td class="td-muted">user3002@example.com</td>
-              <td class="td-muted cell-datetime">2026-02-01 14:21:00</td>
-              <td class="td-muted">추가 서류 요청 필요</td>
-            </tr>
-            <tr onclick="location.href='apply-regular-detail.html?id=3003'">
-              <td class="td-muted">1</td>
-              <td class="td-muted">REG-2026-00003</td>
-              <td><strong>박자연</strong></td>
-              <td class="center"><span class="badge badge-blue">회원</span></td>
-              <td class="center">미활동</td>
-              <td class="td-muted">010-1002-2002</td>
-              <td class="td-muted">user3003@example.com</td>
-              <td class="td-muted cell-datetime">2026-03-10 11:05:00</td>
-              <td class="td-muted">전화 확인 완료</td>
-            </tr>
-            <!-- 데이터 없을 때: <tr><td colspan="9" class="td-empty">신청 내역이 없습니다.</td></tr> -->
-          </tbody>
+          <tbody id="tableBody"><!-- JS render --></tbody>
         </table>
       </div>
 
@@ -185,6 +149,35 @@
   <script src="../assets/js/pages/admin.js"></script>
   <script>
   'use strict';
+
+  const SAMPLE_DATA = [
+    { id: 3001, no: 3, appNo: 'REG-2026-00001', name: '김숲해설', memberType: '회원', memberBadge: 'badge-blue', actStatus: '활동 중',  phone: '010-1000-2000', email: 'user3001@example.com', applyDate: '2026-01-05 09:00:00', memo: '' },
+    { id: 3002, no: 2, appNo: 'REG-2026-00002', name: '이초록',   memberType: '비회원', memberBadge: 'badge-gray', actStatus: '활동 예정', phone: '010-1001-2001', email: 'user3002@example.com', applyDate: '2026-02-01 14:21:00', memo: '추가 서류 요청 필요' },
+    { id: 3003, no: 1, appNo: 'REG-2026-00003', name: '박자연',   memberType: '회원', memberBadge: 'badge-blue', actStatus: '미활동',  phone: '010-1002-2002', email: 'user3003@example.com', applyDate: '2026-03-10 11:05:00', memo: '전화 확인 완료' },
+  ];
+
+  function renderTable(data) {
+    const tbody = document.getElementById('tableBody');
+    if (!tbody) return;
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="9" class="td-empty">신청 내역이 없습니다.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(d => `<tr onclick="location.href='apply-regular-detail.html?id=${d.id}'">
+      <td class="td-muted">${d.no}</td>
+      <td class="td-muted">${d.appNo}</td>
+      <td><strong>${d.name}</strong></td>
+      <td class="center"><span class="badge ${d.memberBadge}">${d.memberType}</span></td>
+      <td class="center">${d.actStatus}</td>
+      <td class="td-muted">${d.phone}</td>
+      <td class="td-muted">${d.email}</td>
+      <td class="td-muted cell-datetime">${d.applyDate}</td>
+      <td class="td-muted">${d.memo}</td>
+    </tr>`).join('');
+  }
+
+  renderTable(SAMPLE_DATA);
+
   AdminSidebar.mount('apply-regular');
   </script>
 </body>

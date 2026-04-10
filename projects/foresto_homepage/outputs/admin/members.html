@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 
 <head>
@@ -138,48 +138,7 @@
               <th style="width:6%">상태</th>
             </tr>
           </thead>
-          <tbody>
-            <tr onclick="location.href='member-detail.html?id=1'">
-              <td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="1" onchange="syncDeleteBtn()"></td>
-              <td class="col-no">3</td>
-              <td class="center"><span class="badge badge-green">정회원</span></td>
-              <td>forest001</td>
-              <td><strong>김숲해</strong></td>
-              <td class="center td-muted">여</td>
-              <td class="center td-muted">1985-04-12</td>
-              <td class="center td-muted">010-1234-5678</td>
-              <td class="td-muted">forest001@foresto.or.kr</td>
-              <td class="center cell-datetime">2026-03-15 09:23:41</td>
-              <td class="center"><span class="badge badge-green">정상</span></td>
-            </tr>
-            <tr onclick="location.href='member-detail.html?id=2'">
-              <td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="2" onchange="syncDeleteBtn()"></td>
-              <td class="col-no">2</td>
-              <td class="center"><span class="badge badge-blue">일반회원</span></td>
-              <td>forest002</td>
-              <td><strong>이정회</strong></td>
-              <td class="center td-muted">남</td>
-              <td class="center td-muted">1991-08-27</td>
-              <td class="center td-muted">010-2345-6789</td>
-              <td class="td-muted">forest002@foresto.or.kr</td>
-              <td class="center cell-datetime">2026-03-20 14:05:17</td>
-              <td class="center"><span class="badge badge-green">정상</span></td>
-            </tr>
-            <tr onclick="location.href='member-detail.html?id=3'">
-              <td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="3" onchange="syncDeleteBtn()"></td>
-              <td class="col-no">1</td>
-              <td class="center"><span class="badge badge-blue">일반회원</span></td>
-              <td>forest003</td>
-              <td><strong>박초록</strong></td>
-              <td class="center td-muted">여</td>
-              <td class="center td-muted">1978-12-03</td>
-              <td class="center td-muted">010-3456-7890</td>
-              <td class="td-muted">forest003@foresto.or.kr</td>
-              <td class="center cell-datetime">2026-04-01 11:48:33</td>
-              <td class="center"><span class="badge badge-blocked">차단</span></td>
-            </tr>
-            <!-- 데이터 없을 때: <tr><td colspan="11" class="td-empty">조회된 회원이 없습니다.</td></tr> -->
-          </tbody>
+          <tbody id="tableBody"><!-- JS render --></tbody>
         </table>
       </div>
 
@@ -199,6 +158,36 @@
   <script src="../assets/js/components/header.js"></script>
   <script src="../assets/js/pages/admin.js"></script>
   <script>
+    const SAMPLE_DATA = [
+      { id: 1, no: 3, grade: '정회원', gradeBadge: 'badge-green', userId: 'forest001', name: '김숲해', gender: '여', dob: '1985-04-12', phone: '010-1234-5678', email: 'forest001@foresto.or.kr', joinDate: '2026-03-15 09:23:41', status: '정상', statusBadge: 'badge-green' },
+      { id: 2, no: 2, grade: '일반회원', gradeBadge: 'badge-blue', userId: 'forest002', name: '이정회', gender: '남', dob: '1991-08-27', phone: '010-2345-6789', email: 'forest002@foresto.or.kr', joinDate: '2026-03-20 14:05:17', status: '정상', statusBadge: 'badge-green' },
+      { id: 3, no: 1, grade: '일반회원', gradeBadge: 'badge-blue', userId: 'forest003', name: '박초록', gender: '여', dob: '1978-12-03', phone: '010-3456-7890', email: 'forest003@foresto.or.kr', joinDate: '2026-04-01 11:48:33', status: '차단', statusBadge: 'badge-blocked' },
+    ];
+
+    function renderTable(data) {
+      const tbody = document.getElementById('tableBody');
+      if (!tbody) return;
+      if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="11" class="td-empty">조회된 회원이 없습니다.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(d => `<tr onclick="location.href='member-detail.html?id=${d.id}'">
+        <td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="${d.id}" onchange="syncDeleteBtn()"></td>
+        <td class="col-no">${d.no}</td>
+        <td class="center"><span class="badge ${d.gradeBadge}">${d.grade}</span></td>
+        <td>${d.userId}</td>
+        <td><strong>${d.name}</strong></td>
+        <td class="center td-muted">${d.gender}</td>
+        <td class="center td-muted">${d.dob}</td>
+        <td class="center td-muted">${d.phone}</td>
+        <td class="td-muted">${d.email}</td>
+        <td class="center cell-datetime">${d.joinDate}</td>
+        <td class="center"><span class="badge ${d.statusBadge}">${d.status}</span></td>
+      </tr>`).join('');
+    }
+
+    renderTable(SAMPLE_DATA);
+
     AdminSidebar.mount('members');
 
     function toggleAll(checked) {

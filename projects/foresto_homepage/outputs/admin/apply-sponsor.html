@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -150,45 +150,7 @@
               <th style="width:11%">관리자 메모</th>
             </tr>
           </thead>
-          <tbody>
-            <tr onclick="location.href='apply-sponsor-detail.html?id=1'">
-              <td style="text-align:center">3</td>
-              <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">SPN-2026-00001</td>
-              <td style="font-weight:600">홍길동<span style="color:#5a7a5a;font-size:12px">(spn3001)</span></td>
-              <td style="text-align:center"><span class="badge badge-green">회원</span></td>
-              <td style="text-align:center"><span class="badge-regular">정기</span></td>
-              <td style="text-align:center" class="amount-val">30,000원</td>
-              <td style="text-align:center;font-size:13px">교육 프로그램 지원</td>
-              <td style="text-align:center;font-size:13px" class="cell-datetime">010-0001-1001</td>
-              <td style="text-align:center;font-size:13px" class="cell-datetime">2026-01-05 09:00</td>
-              <td style="text-align:center"><span style="color:#ccc;font-size:12px">—</span></td>
-            </tr>
-            <tr onclick="location.href='apply-sponsor-detail.html?id=2'">
-              <td style="text-align:center">2</td>
-              <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">SPN-2026-00002</td>
-              <td style="font-weight:600">김영희</td>
-              <td style="text-align:center"><span class="badge badge-gray">비회원</span></td>
-              <td style="text-align:center"><span class="badge-once">일시</span></td>
-              <td style="text-align:center" class="amount-val">50,000원</td>
-              <td style="text-align:center;font-size:13px">사회공헌 활동 지원</td>
-              <td style="text-align:center;font-size:13px" class="cell-datetime">010-0002-1002</td>
-              <td style="text-align:center;font-size:13px" class="cell-datetime">2026-02-10 14:30</td>
-              <td style="text-align:center"><span style="font-size:12px;color:#5a7a5a">은행 계좌 재확인</span></td>
-            </tr>
-            <tr onclick="location.href='apply-sponsor-detail.html?id=3'">
-              <td style="text-align:center">1</td>
-              <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">SPN-2026-00003</td>
-              <td style="font-weight:600">이철수<span style="color:#5a7a5a;font-size:12px">(spn3003)</span></td>
-              <td style="text-align:center"><span class="badge badge-green">회원</span></td>
-              <td style="text-align:center"><span class="badge-regular">정기</span></td>
-              <td style="text-align:center" class="amount-val">100,000원</td>
-              <td style="text-align:center;font-size:13px">자유 사용 (지정 없음)</td>
-              <td style="text-align:center;font-size:13px" class="cell-datetime">010-0003-1003</td>
-              <td style="text-align:center;font-size:13px" class="cell-datetime">2026-03-05 11:15</td>
-              <td style="text-align:center"><span style="color:#ccc;font-size:12px">—</span></td>
-            </tr>
-            <!-- 데이터 없을 때: <tr><td colspan="10" class="td-empty">내역이 없습니다.</td></tr> -->
-          </tbody>
+          <tbody id="tableBody"><!-- JS render --></tbody>
         </table>
       </div>
 
@@ -207,6 +169,36 @@
   <script src="../assets/js/pages/admin.js"></script>
   <script>
   'use strict';
+
+  const SAMPLE_DATA = [
+    { id: 1, no: 3, appNo: 'SPN-2026-00001', name: '홍길동', userId: 'spn3001', memberType: '회원',  memberBadge: 'badge-green', sponsorType: '정기', sponsorBadge: 'badge-regular', amount: '30,000원', purpose: '교육 프로그램 지원',  phone: '010-0001-1001', applyDate: '2026-01-05 09:00', memo: '—' },
+    { id: 2, no: 2, appNo: 'SPN-2026-00002', name: '김영희', userId: '',        memberType: '비회원', memberBadge: 'badge-gray',  sponsorType: '일시', sponsorBadge: 'badge-once',    amount: '50,000원', purpose: '사회공헌 활동 지원', phone: '010-0002-1002', applyDate: '2026-02-10 14:30', memo: '은행 계좌 재확인' },
+    { id: 3, no: 1, appNo: 'SPN-2026-00003', name: '이철수', userId: 'spn3003', memberType: '회원',  memberBadge: 'badge-green', sponsorType: '정기', sponsorBadge: 'badge-regular', amount: '100,000원', purpose: '자유 사용 (지정 없음)', phone: '010-0003-1003', applyDate: '2026-03-05 11:15', memo: '—' },
+  ];
+
+  function renderTable(data) {
+    const tbody = document.getElementById('tableBody');
+    if (!tbody) return;
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="10" class="td-empty">내역이 없습니다.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(d => `<tr onclick="location.href='apply-sponsor-detail.html?id=${d.id}'">
+      <td style="text-align:center">${d.no}</td>
+      <td style="text-align:center;font-size:12px;font-weight:600;color:#2e5c2e">${d.appNo}</td>
+      <td style="font-weight:600">${d.name}${d.userId ? `<span style="color:#5a7a5a;font-size:12px">(${d.userId})</span>` : ''}</td>
+      <td style="text-align:center"><span class="badge ${d.memberBadge}">${d.memberType}</span></td>
+      <td style="text-align:center"><span class="${d.sponsorBadge}">${d.sponsorType}</span></td>
+      <td style="text-align:center" class="amount-val">${d.amount}</td>
+      <td style="text-align:center;font-size:13px">${d.purpose}</td>
+      <td style="text-align:center;font-size:13px" class="cell-datetime">${d.phone}</td>
+      <td style="text-align:center;font-size:13px" class="cell-datetime">${d.applyDate}</td>
+      <td style="text-align:center"><span style="${d.memo === '—' ? 'color:#ccc;font-size:12px' : 'font-size:12px;color:#5a7a5a'}">${d.memo}</span></td>
+    </tr>`).join('');
+  }
+
+  renderTable(SAMPLE_DATA);
+
   AdminSidebar.mount('apply-sponsor');
   </script>
 </body>

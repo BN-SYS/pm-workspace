@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -117,56 +117,7 @@
               <th>조회수</th>
             </tr>
           </thead>
-          <tbody>
-            <!-- 고정글 -->
-            <tr class="row-pinned">
-              <td class="col-chk"><input type="checkbox" class="row-chk" data-id="5001" onchange="BoardAdmin._syncBtns()"></td>
-              <td><span class="pin-badge">고정</span></td>
-              <td class="col-thumb">
-                <!-- PHP: 에디터 첫 번째 이미지 경로를 src에 삽입. 없으면 thumb-none 노출 -->
-                <span class="thumb-img"></span>
-              </td>
-              <td style="text-align:center"><a class="post-title-link" href="board-detail.html?type=notice&id=5001">2026년 상반기 협회 공지사항</a></td>
-              <td>관리자A</td>
-              <td class="cell-mono">2026-03-15</td>
-              <td class="cell-mono">142</td>
-            </tr>
-            <!-- 일반글 -->
-            <tr>
-              <td class="col-chk"><input type="checkbox" class="row-chk" data-id="5002" onchange="BoardAdmin._syncBtns()"></td>
-              <td>3</td>
-              <td class="col-thumb">
-                <span class="thumb-img"></span>
-              </td>
-              <td style="text-align:center"><a class="post-title-link" href="board-detail.html?type=notice&id=5002">회원증 갱신 안내</a></td>
-              <td>관리자B</td>
-              <td class="cell-mono">2026-03-10</td>
-              <td class="cell-mono">87</td>
-            </tr>
-            <tr>
-              <td class="col-chk"><input type="checkbox" class="row-chk" data-id="5003" onchange="BoardAdmin._syncBtns()"></td>
-              <td>2</td>
-              <td class="col-thumb">
-                <span class="thumb-none">-</span><!-- 이미지 없는 경우 -->
-              </td>
-              <td style="text-align:center"><a class="post-title-link" href="board-detail.html?type=notice&id=5003">사무국 이전 안내</a></td>
-              <td>관리자A</td>
-              <td class="cell-mono">2026-02-28</td>
-              <td class="cell-mono">65</td>
-            </tr>
-            <tr>
-              <td class="col-chk"><input type="checkbox" class="row-chk" data-id="5004" onchange="BoardAdmin._syncBtns()"></td>
-              <td>1</td>
-              <td class="col-thumb">
-                <span class="thumb-img"></span>
-              </td>
-              <td style="text-align:center"><a class="post-title-link" href="board-detail.html?type=notice&id=5004">개인정보처리방침 개정 안내</a></td>
-              <td>관리자A</td>
-              <td class="cell-mono">2026-02-15</td>
-              <td class="cell-mono">53</td>
-            </tr>
-            <!-- 데이터 없을 때: <tr><td colspan="7" class="td-empty">등록된 게시글이 없습니다.</td></tr> -->
-          </tbody>
+          <tbody id="tableBody"><!-- JS render --></tbody>
         </table>
       </div>
 
@@ -203,6 +154,34 @@
   const BTYPE   = new URLSearchParams(location.search).get('type') || 'notice';
   const BCONFIG = BOARD_CONFIG[BTYPE] || BOARD_CONFIG.notice;
 
+  const SAMPLE_DATA = [
+    { id: 5001, no: '고정', pinned: true, thumb: false, title: '2026년 상반기 협회 공지사항', author: '관리자A', regDate: '2026-03-15', views: 142 },
+    { id: 5002, no: 3,      pinned: false, thumb: false, title: '회원증 갱신 안내',           author: '관리자B', regDate: '2026-03-10', views: 87 },
+    { id: 5003, no: 2,      pinned: false, thumb: true,  title: '사무국 이전 안내',           author: '관리자A', regDate: '2026-02-28', views: 65 },
+  ];
+
+  function renderTable(data) {
+    const tbody = document.getElementById('tableBody');
+    if (!tbody) return;
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="td-empty">등록된 게시글이 없습니다.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(d => `<tr class="${d.pinned ? 'row-pinned' : ''}">
+      <td class="col-chk"><input type="checkbox" class="row-chk" data-id="${d.id}" onchange="BoardAdmin._syncBtns()"></td>
+      <td>${d.pinned ? '<span class="pin-badge">고정</span>' : d.no}</td>
+      <td class="col-thumb">
+        ${BCONFIG.thumb
+          ? (d.thumb ? '<span class="thumb-img"></span>' : '<span class="thumb-none">-</span>')
+          : '<span class="thumb-img"></span>'}
+      </td>
+      <td style="text-align:center"><a class="post-title-link" href="board-detail.html?type=${BTYPE}&id=${d.id}">${d.title}</a></td>
+      <td>${d.author}</td>
+      <td class="cell-mono">${d.regDate}</td>
+      <td class="cell-mono">${d.views}</td>
+    </tr>`).join('');
+  }
+
   /* 페이지 타이틀 설정 */
   const pageTitle = document.getElementById('pageTitle');
   if (pageTitle) pageTitle.textContent = BCONFIG.title;
@@ -210,6 +189,8 @@
 
   const btnCreate = document.getElementById('btnCreate');
   if (btnCreate) btnCreate.onclick = () => { location.href = 'board-edit.html?type=' + BTYPE; };
+
+  renderTable(SAMPLE_DATA);
 
   /* 썸네일 컬럼: 해당 게시판 타입이 아니면 숨김 */
   if (!BCONFIG.thumb) {

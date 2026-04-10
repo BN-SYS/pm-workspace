@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -44,10 +44,10 @@
                   <input type="date" id="filterDateTo">
                 </div>
                 <div class="date-preset-group">
-                  <button class="date-preset-btn" onclick="">오늘</button>
-                  <button class="date-preset-btn" onclick=""7)">7일</button>
-                  <button class="date-preset-btn" onclick=""30)">30일</button>
-                  <button class="date-preset-btn" onclick=""90)">3개월</button>
+                  <button class="date-preset-btn">오늘</button>
+                  <button class="date-preset-btn">7일</button>
+                  <button class="date-preset-btn">30일</button>
+                  <button class="date-preset-btn">3개월</button>
                 </div>
               </div>
             </div>
@@ -75,8 +75,7 @@
                   <option value="phone">연락처</option>
                 </select>
                 <div class="kw-input-wrap">
-                  <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요"
-                    onkeydown="">
+                  <input type="text" id="filterKeyword" placeholder="검색어를 입력하세요">
                 </div>
               </div>
             </div>
@@ -86,7 +85,7 @@
         <div class="filter-footer">
           <button class="btn btn-outline btn-sm" onclick="alert('엑셀 다운로드 — 실제 구현 시 서버 API와 연동됩니다.')">엑셀 다운로드</button>
           <button class="btn btn-gray btn-sm" onclick="location.reload()">초기화</button>
-          <button class="btn btn-primary btn-sm" onclick="">검색</button>
+          <button class="btn btn-primary btn-sm">검색</button>
         </div>
       </div>
 
@@ -116,39 +115,7 @@
               <th style="width:12%">관리자 메모</th>
             </tr>
           </thead>
-          <tbody>
-            <tr onclick="location.href='apply-forest-detail.html?id=5001'">
-              <td class="td-muted">3</td>
-              <td class="td-muted">FST-2026-00001</td>
-              <td style="font-weight:500">도봉초등학교</td>
-              <td>김민수</td>
-              <td class="td-muted">02-1000-3000</td>
-              <td class="td-muted">2026-03-15</td>
-              <td class="td-muted cell-datetime">2026-01-05 09:00:00</td>
-              <td class="td-muted"></td>
-            </tr>
-            <tr onclick="location.href='apply-forest-detail.html?id=5002'">
-              <td class="td-muted">2</td>
-              <td class="td-muted">FST-2026-00002</td>
-              <td style="font-weight:500">서울시 북부장애인복지관</td>
-              <td>이영희</td>
-              <td class="td-muted">031-1001-3001</td>
-              <td class="td-muted">2026-04-10</td>
-              <td class="td-muted cell-datetime">2026-02-10 14:30:00</td>
-              <td class="td-muted">방문 경로 안내 전송</td>
-            </tr>
-            <tr onclick="location.href='apply-forest-detail.html?id=5003'">
-              <td class="td-muted">1</td>
-              <td class="td-muted">FST-2026-00003</td>
-              <td style="font-weight:500">노원구청</td>
-              <td>박철호</td>
-              <td class="td-muted">02-1002-3002</td>
-              <td class="td-muted">2026-04-22</td>
-              <td class="td-muted cell-datetime">2026-03-05 11:15:00</td>
-              <td class="td-muted">참가 인원 재확인 요청</td>
-            </tr>
-            <!-- 데이터 없을 때: <tr><td colspan="8" class="td-empty">신청 내역이 없습니다.</td></tr> -->
-          </tbody>
+          <tbody id="tableBody"><!-- JS render --></tbody>
         </table>
       </div>
 
@@ -167,6 +134,34 @@
   <script src="../assets/js/pages/admin.js"></script>
   <script>
   'use strict';
+
+  const SAMPLE_DATA = [
+    { id: 5001, no: 3, appNo: 'FST-2026-00001', orgName: '도봉초등학교',         contact: '김민수', phone: '02-1000-3000',  visitDate: '2026-03-15', applyDate: '2026-01-05 09:00:00', memo: '' },
+    { id: 5002, no: 2, appNo: 'FST-2026-00002', orgName: '서울시 북부장애인복지관', contact: '이영희', phone: '031-1001-3001', visitDate: '2026-04-10', applyDate: '2026-02-10 14:30:00', memo: '방문 경로 안내 전송' },
+    { id: 5003, no: 1, appNo: 'FST-2026-00003', orgName: '노원구청',              contact: '박철호', phone: '02-1002-3002',  visitDate: '2026-04-22', applyDate: '2026-03-05 11:15:00', memo: '참가 인원 재확인 요청' },
+  ];
+
+  function renderTable(data) {
+    const tbody = document.getElementById('tableBody');
+    if (!tbody) return;
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="8" class="td-empty">신청 내역이 없습니다.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(d => `<tr onclick="location.href='apply-forest-detail.html?id=${d.id}'">
+      <td class="td-muted">${d.no}</td>
+      <td class="td-muted">${d.appNo}</td>
+      <td style="font-weight:500">${d.orgName}</td>
+      <td>${d.contact}</td>
+      <td class="td-muted">${d.phone}</td>
+      <td class="td-muted">${d.visitDate}</td>
+      <td class="td-muted cell-datetime">${d.applyDate}</td>
+      <td class="td-muted">${d.memo}</td>
+    </tr>`).join('');
+  }
+
+  renderTable(SAMPLE_DATA);
+
   AdminSidebar.mount('apply-forest');
   </script>
 </body>
