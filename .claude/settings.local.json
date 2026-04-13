@@ -64,7 +64,8 @@
       "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\story_board\\\\capture.ps1\")",
       "Bash(pwsh --version)",
       "Bash(cmd /c \"for %i in \\(\\\\\"c:\\\\Users\\\\BN659\\\\Desktop\\\\배은아\\\\기획PM\\\\projects\\\\foresto_homepage\\\\story_board\\\\\"\\) do @echo %~si\")",
-      "Bash(powershell -Command ':*)"
+      "Bash(powershell -Command ':*)",
+      "Bash(grep -E \"^/|\\\\.html$|\\\\.js$|\\\\.css$\")"
     ]
   }
 }

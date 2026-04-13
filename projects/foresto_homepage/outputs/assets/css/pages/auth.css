@@ -3,11 +3,15 @@
    (login.html / register.html / find.html)
    ============================================= */
 
-/* ── body 레이아웃: 헤더·본문·푸터를 한 화면에 */
+/* ── body 레이아웃: 헤더·본문·푸터를 한 화면에
+   common.css body { padding-top: var(--header-h); } 이 content-box 기준으로
+   body 총 높이를 100vh + header높이로 늘려 footer 아래 공백을 만듦.
+   auth 페이지는 padding-top을 0으로 덮어쓰고, 헤더 여백을 auth-bg 내부로 이동. */
 body.auth-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  padding-top: 0 !important;
 }
 
 /* ── 배경 래퍼 */
@@ -18,15 +22,15 @@ body.auth-page {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 32px 16px;
-  /* ★ variables.css의 큰 폰트 스케일 차단 */
-  font-size: 16px;
+  /* 상단: 고정 헤더 높이 + 여유 간격 / 나머지 3방향: 기존 유지 */
+  padding: calc(var(--header-h) + 32px) 16px 32px;
+  /* font-size는 html/body에 적용된 App.fontSize 기준을 상속 */
 }
 
 /* register는 상단 정렬 */
 .auth-bg.auth-bg--top {
   justify-content: flex-start;
-  padding-top: 32px;
+  padding-top: calc(var(--header-h) + 32px);
 }
 
 /* ── 인증 영역 전체 폰트 리셋 */
@@ -45,13 +49,13 @@ body.auth-page {
   padding: 40px 40px 32px;
 }
 .auth-card-title {
-  font-size: 22px;
+  font-size: var(--text-xl);
   font-weight: 800;
   color: var(--gray-dark);
   margin-bottom: 6px;
 }
 .auth-card-desc {
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: var(--gray-mid);
   margin-bottom: 28px;
   line-height: 1.6;
@@ -64,12 +68,12 @@ body.auth-page {
   padding: 20px 28px;
 }
 .auth-card-header h2 {
-  font-size: 18px;
+  font-size: var(--text-base);
   font-weight: 800;
   margin-bottom: 4px;
 }
 .auth-card-header p {
-  font-size: 13px;
+  font-size: var(--text-xs);
   opacity: .85;
 }
 .auth-card-body {
@@ -81,7 +85,7 @@ body.auth-page {
 
 .auth-label {
   display: block;
-  font-size: 13px;
+  font-size: var(--text-xs);
   font-weight: 700;
   color: var(--gray-dark);
   margin-bottom: 6px;
@@ -96,7 +100,7 @@ body.auth-page {
   padding: 0 40px 0 14px;
   border: 1.5px solid var(--gray-light);
   border-radius: var(--radius);
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-family: inherit;
   background: var(--white);
   color: var(--gray-dark);
@@ -124,7 +128,7 @@ body.auth-page {
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 16px;
+  font-size: var(--text-md);
   color: var(--gray-mid);
   cursor: pointer;
   user-select: none;
@@ -149,7 +153,7 @@ body.auth-page {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 13px;
+  font-size: var(--text-xs);
   color: var(--gray-dark);
   cursor: pointer;
 }
@@ -158,7 +162,7 @@ body.auth-page {
   accent-color: var(--green-main);
 }
 .auth-link {
-  font-size: 13px;
+  font-size: var(--text-xs);
   color: var(--green-main);
   text-decoration: none;
   font-weight: 600;
@@ -171,7 +175,7 @@ body.auth-page {
   height: 46px;
   border: none;
   border-radius: var(--radius);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;
@@ -211,7 +215,7 @@ body.auth-page {
   gap: 12px;
   margin: 18px 0;
   color: var(--gray-mid);
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .auth-divider::before,
 .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--gray-light); }
@@ -223,7 +227,7 @@ body.auth-page {
   justify-content: center;
   gap: 6px;
   margin-top: 18px;
-  font-size: 13px;
+  font-size: var(--text-xs);
   color: var(--gray-mid);
   flex-wrap: wrap;
 }
@@ -238,7 +242,7 @@ body.auth-page {
   background: var(--green-pale);
   border-radius: var(--radius);
   padding: 12px 16px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--green-dark);
   display: flex;
   align-items: flex-start;
@@ -251,7 +255,7 @@ body.auth-page {
 .auth-alert {
   border-radius: var(--radius);
   padding: 11px 13px;
-  font-size: 13px;
+  font-size: var(--text-xs);
   margin-bottom: 14px;
   display: none;
   align-items: flex-start;
@@ -290,7 +294,7 @@ body.auth-page {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: var(--text-xs);
   font-weight: 700;
   border: 2px solid var(--gray-light);
   background: var(--white);
@@ -302,7 +306,7 @@ body.auth-page {
 .reg-step-item.active .reg-step-circle { background: var(--green-dark); border-color: var(--green-dark); color: #fff; box-shadow: 0 0 0 4px rgba(45,106,79,.15); }
 
 .reg-step-label {
-  font-size: 11px;
+  font-size: var(--text-xs);
   font-weight: 600;
   color: var(--gray-mid);
   white-space: nowrap; /* ★ 줄바꿈 방지 */
@@ -334,7 +338,7 @@ body.auth-page {
   margin-bottom: 8px;
 }
 .auth-verify-box p {
-  font-size: 13px;
+  font-size: var(--text-xs);
   color: var(--green-dark);
   line-height: 1.65;
   margin-bottom: 12px;
@@ -346,7 +350,7 @@ body.auth-page {
   background: var(--white);
   border-radius: var(--radius);
   padding: 10px 14px;
-  font-size: 13px;
+  font-size: var(--text-xs);
   font-weight: 600;
   color: var(--green-dark);
   border: 1.5px solid var(--green-main);
@@ -366,7 +370,7 @@ body.auth-page {
   border: 1px solid var(--gray-light);
   border-radius: var(--radius);
   padding: 11px 13px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--gray-dark);
   line-height: 1.75;
   max-height: 90px;
@@ -385,7 +389,7 @@ body.auth-page {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: var(--text-xs);
   color: var(--gray-dark);
   cursor: pointer;
 }
@@ -400,7 +404,7 @@ body.auth-page {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 700;
   color: var(--green-dark);
   cursor: pointer;
@@ -410,7 +414,7 @@ body.auth-page {
 /* ── 가입 완료 */
 .reg-done       { text-align: center; padding: 16px 0 8px; }
 .reg-done-icon  { width: 72px; height: 72px; background: linear-gradient(135deg,var(--green-dark),var(--green-main)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 18px; box-shadow: var(--shadow-md); }
-.reg-done-title { font-size: 20px; font-weight: 800; color: var(--green-dark); margin-bottom: 10px; }
+.reg-done-title { font-size: var(--text-lg); font-weight: 800; color: var(--green-dark); margin-bottom: 10px; }
 .reg-done-desc  { font-size: 14px; color: var(--gray-dark); line-height: 1.9; margin-bottom: 20px; word-break: keep-all; }
 
 /* ── 하단 버튼 행 */
@@ -429,7 +433,7 @@ body.auth-page {
 .find-tab-btn {
   padding: 15px;
   text-align: center;
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 700;
   cursor: pointer;
   border: none;
@@ -454,8 +458,8 @@ body.auth-page {
   margin-bottom: 16px;
 }
 .find-result.show  { display: block; }
-.find-result-label { font-size: 11px; font-weight: 700; color: var(--green-main); letter-spacing: 1px; margin-bottom: 6px; }
-.find-result-value { font-size: 17px; font-weight: 800; color: var(--green-dark); }
+.find-result-label { font-size: var(--text-xs); font-weight: 700; color: var(--green-main); letter-spacing: 1px; margin-bottom: 6px; }
+.find-result-value { font-size: var(--text-base); font-weight: 800; color: var(--green-dark); }
 .find-result-sub   { font-size: 12px; color: var(--gray-mid); margin-top: 4px; }
 
 .reset-form      { display: none; }
@@ -475,7 +479,7 @@ body.auth-page {
   .find-body        { padding: 20px 18px; }
   .form-row-2       { grid-template-columns: 1fr; }
 
-  .reg-step-label  { font-size: 10px; }
+  .reg-step-label  { font-size: var(--text-2xs); }
   .reg-step-circle { width: 28px; height: 28px; font-size: 11px; }
   .reg-step-line   { margin-top: 14px; min-width: 8px; }
 }

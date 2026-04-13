@@ -391,7 +391,7 @@
   justify-content: space-between;
   align-items: center;
   font-weight: 700;
-  font-size: 16px;
+  font-size: var(--text-md);
 }
 
 .cal-nav button {
@@ -421,7 +421,7 @@
 
 .cal-dh {
   text-align: center;
-  font-size: 16px;
+  font-size: var(--text-md);
   font-weight: 500;
   padding: 6px 2px;
   background: #e1e3e0;
@@ -437,7 +437,7 @@
   position: relative;
   text-align: center;
   padding: 8px 2px;
-  font-size: 18px;
+  font-size: var(--text-base);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -524,7 +524,7 @@
 }
 
 .cal-schedule-empty {
-  font-size: 18px;
+  font-size: var(--text-base);
   line-height: 1.4;
   cursor: default;
   pointer-events: none;

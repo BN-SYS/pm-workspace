@@ -89,34 +89,42 @@ const ALL_COURSES_RAW = [
   })),
 ];
 
-/* ── 이달 접수 중인 더미 데이터: to를 월말로 연장 (프로토타입 시연용) */
-(function() {
-  const today     = new Date().toISOString().slice(0, 10);  // 'YYYY-MM-DD'
-  const thisMonth = today.slice(0, 7);                       // 'YYYY-MM'
-  const lastDay   = new Date(new Date(today).getFullYear(), new Date(today).getMonth() + 1, 0)
-                      .toISOString().slice(0, 10);            // 'YYYY-MM-DD' (월말)
-  ALL_COURSES_RAW.forEach(c => {
-    if (c.from.startsWith(thisMonth) && c.to < today) {
-      c.to = lastDay;
-    }
-  });
+/* ── 이번달 기준 시연용 날짜 자동 설정
+ *  타입별 3개 항목을 [마감(-1개월), 접수중(이번달), 준비중(+1개월)] 으로 배치
+ *  → 언제 열어도 준비중·접수중·마감이 한 번에 보임
+ */
+(function _setDemoDates() {
+  const now = new Date();
+  const y   = now.getFullYear();
+  const m   = now.getMonth(); // 0-indexed
 
-  /* ── 접수중 항목 보장: 전문과정·회원강좌·강사활동에서 접수중이 없으면 첫 항목을 오늘 기준으로 조정 */
-  ['전문과정', '회원강좌', '강사활동'].forEach(function(type) {
-    const hasOpen = ALL_COURSES_RAW.some(function(c) {
-      return c.type === type && c.from <= today && c.to >= today;
-    });
-    if (!hasOpen) {
-      const target = ALL_COURSES_RAW.find(function(c) { return c.type === type; });
-      if (target) {
-        const d    = new Date(today);
-        const from = new Date(d); from.setDate(d.getDate() - 7);
-        const to   = new Date(d); to.setDate(d.getDate() + 14);
-        target.from = from.toISOString().slice(0, 10);
-        target.to   = to.toISOString().slice(0, 10);
-        target.date = today + ' 10:00:00';
-      }
-    }
+  /* offset 기준 월의 from·to·date 반환 */
+  function monthBounds(offset) {
+    const d    = new Date(y, m + offset, 1);
+    const fy   = d.getFullYear();
+    const fm   = d.getMonth();
+    const mm   = String(fm + 1).padStart(2, '0');
+    const last = new Date(fy, fm + 1, 0).getDate();
+    return {
+      from: `${fy}-${mm}-01`,
+      to:   `${fy}-${mm}-${String(last).padStart(2, '0')}`,
+      date: `${fy}-${mm}-10 10:00:00`,
+    };
+  }
+
+  /* 타입별 base id → 항목 index 0·1·2 를 [전월·이번달·다음달] 로 설정 */
+  const TYPE_BASE = [1000, 2000, 3000, 4000, 5000, 6000, 7000];
+  const OFFSETS   = [-1, 0, 1]; // [마감, 접수중, 준비중]
+
+  ALL_COURSES_RAW.forEach(c => {
+    const base = TYPE_BASE.find(b => c.id >= b && c.id < b + 100);
+    if (base == null) return;
+    const idx = c.id - base;            // 0·1·2
+    const off = OFFSETS[idx] ?? 0;
+    const { from, to, date } = monthBounds(off);
+    c.from = from;
+    c.to   = to;
+    c.date = date;
   });
 })();
 

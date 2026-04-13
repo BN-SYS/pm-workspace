@@ -48,123 +48,6 @@ const REGIONS_DATA = [
                     <li><a href="#" target="_blank" style="color: #007bff; text-decoration: underline;">홈페이지 바로가기</a></li>
                   </ul>`,
     },
-    {
-        id: 4, name: '인천협회',
-        link: 'https://incheon.forestguide.or.kr',
-        content: `<img src="https://picsum.photos/seed/incheon/800/400" alt="인천협회" style="width:800px;border-radius:8px;margin-bottom:16px;display:block; margin:50px auto">
-                  <p>인천협회는 인천광역시 전역을 활동 권역으로 하며, 142명의 회원이 활동하고 있습니다.</p>
-                  <p>인천대공원, 계양산, 문학산 등 시내 산림 공원을 중심으로 해설 활동을 전개합니다.</p>
-                  <ul>
-                    <li>설립: 2005년</li>
-                    <li>회장: 을지문덕</li>
-                    <li>연락처: 032-000-1004</li><br>
-                    <li><a href="#" target="_blank" style="color: #007bff; text-decoration: underline;">홈페이지 바로가기</a></li>
-                  </ul>`,
-    },
-    {
-        id: 5, name: '강원협회',
-        link: 'https://gangwon.forestguide.or.kr',
-        content: `<img src="https://picsum.photos/seed/gangwon/800/400" alt="강원협회" style="width:800px;border-radius:8px;margin-bottom:16px;display:block; margin:50px auto">
-                  <p>강원협회는 강원도 전역을 활동 권역으로 하며, 국내 최고의 산림 환경을 배경으로 활동합니다.</p>
-                  <p>98명의 회원이 설악산, 오대산, 태백산 등 강원도 주요 산림지에서 해설 활동을 전개합니다.</p>
-                  <ul>
-                    <li>설립: 2006년</li>
-                    <li>회장: 세종대왕</li>
-                    <li>연락처: 033-000-1005</li><br>
-                    <li><a href="#" target="_blank" style="color: #007bff; text-decoration: underline;">홈페이지 바로가기</a></li>
-                  </ul>`,
-    },
-    {
-        id: 6, name: '충북협회',
-        link: 'https://chungbuk.forestguide.or.kr',
-        content: `<img src="https://picsum.photos/seed/chungbuk/800/400" alt="충북협회" style="width:800px;border-radius:8px;margin-bottom:16px;display:block; margin:50px auto">
-                  <p>충북협회는 충청북도 전역을 활동 권역으로 하며, 청주, 충주, 제천 등을 중심으로 활동합니다.</p>
-                  <p>87명의 회원이 속리산, 월악산 등 국립공원 인근 산림에서 해설 프로그램을 운영합니다.</p>
-                  <ul>
-                    <li>설립: 2007년</li>
-                    <li>회장: 김유신</li>
-                    <li>연락처: 043-000-1006</li><br>
-                    <li><a href="#" target="_blank" style="color: #007bff; text-decoration: underline;">홈페이지 바로가기</a></li>
-                  </ul>`,
-    },
-    {
-        id: 7, name: '충남협회',
-        link: 'https://chungnam.forestguide.or.kr',
-        content: `<img src="https://picsum.photos/seed/chungnam/800/400" alt="충남협회" style="width:800px;border-radius:8px;margin-bottom:16px;display:block; margin:50px auto">
-                  <p>충남협회는 충청남도와 대전광역시를 활동 권역으로 합니다.</p>
-                  <p>103명의 회원이 계룡산, 태안해안국립공원 등 다양한 산림 환경에서 활동합니다.</p>
-                  <ul>
-                    <li>설립: 2007년</li>
-                    <li>회장: 장보고</li>
-                    <li>연락처: 041-000-1007</li><br>
-                    <li><a href="#" target="_blank" style="color: #007bff; text-decoration: underline;">홈페이지 바로가기</a></li>
-                  </ul>`,
-    },
-    {
-        id: 8, name: '전북협회',
-        link: 'https://jeonbuk.forestguide.or.kr',
-        content: `<img src="https://picsum.photos/seed/jeonbuk/800/400" alt="전북협회" style="width:800px;border-radius:8px;margin-bottom:16px;display:block; margin:50px auto">
-                  <p>전북협회는 전라북도 전역을 활동 권역으로 하며, 전주, 군산, 익산 등을 중심으로 활동합니다.</p>
-                  <p>95명의 회원이 지리산, 덕유산 등 전북 산림지에서 해설 활동을 전개합니다.</p>
-                  <ul>
-                    <li>설립: 2008년</li>
-                    <li>회장: 신사임당</li>
-                    <li>연락처: 063-000-1008</li><br>
-                    <li><a href="#" target="_blank" style="color: #007bff; text-decoration: underline;">홈페이지 바로가기</a></li>
-                  </ul>`,
-    },
-    {
-        id: 9, name: '전남협회',
-        link: 'https://jeonnam.forestguide.or.kr',
-        content: `<img src="https://picsum.photos/seed/jeonnam/800/400" alt="전남협회" style="width:800px;border-radius:8px;margin-bottom:16px;display:block; margin:50px auto">
-                  <p>전남협회는 전라남도와 광주광역시를 활동 권역으로 합니다.</p>
-                  <p>112명의 회원이 무등산, 다도해 해상국립공원 일원에서 해설 활동을 전개합니다.</p>
-                  <ul>
-                    <li>설립: 2008년</li>
-                    <li>회장: 이성계</li>
-                    <li>연락처: 061-000-1009</li><br>
-                    <li><a href="#" target="_blank" style="color: #007bff; text-decoration: underline;">홈페이지 바로가기</a></li>
-                  </ul>`,
-    },
-    {
-        id: 10, name: '경북협회',
-        link: 'https://gyeongbuk.forestguide.or.kr',
-        content: `<img src="https://picsum.photos/seed/gyeongbuk/800/400" alt="경북협회" style="width:800px;border-radius:8px;margin-bottom:16px;display:block; margin:50px auto">
-                  <p>경북협회는 경상북도와 대구광역시를 활동 권역으로 합니다.</p>
-                  <p>88명의 회원이 주왕산, 소백산 등 경북 주요 산림지에서 활동합니다.</p>
-                  <ul>
-                    <li>설립: 2009년</li>
-                    <li>회장: 박혁거세</li>
-                    <li>연락처: 053-000-1010</li><br>
-                    <li><a href="#" target="_blank" style="color: #007bff; text-decoration: underline;">홈페이지 바로가기</a></li>
-                  </ul>`,
-    },
-    {
-        id: 11, name: '경남협회',
-        link: 'https://gyeongnam.forestguide.or.kr',
-        content: `<img src="https://picsum.photos/seed/gyeongnam/800/400" alt="경남협회" style="width:800px;border-radius:8px;margin-bottom:16px;display:block; margin:50px auto">
-                  <p>경남협회는 경상남도, 부산광역시, 울산광역시를 활동 권역으로 합니다.</p>
-                  <p>134명의 회원이 지리산, 가야산, 금정산 등 다양한 산림지에서 해설 활동을 전개합니다.</p>
-                  <ul>
-                    <li>설립: 2009년</li>
-                    <li>회장: 허준</li>
-                    <li>연락처: 055-000-1011</li><br>
-                    <li><a href="#" target="_blank" style="color: #007bff; text-decoration: underline;">홈페이지 바로가기</a></li>
-                  </ul>`,
-    },
-    {
-        id: 12, name: '제주협회',
-        link: 'https://jeju.forestguide.or.kr',
-        content: `<img src="https://picsum.photos/seed/jeju/800/400" alt="제주협회" style="width:800px;;border-radius:8px;margin-bottom:16px;display:block; margin:50px auto">
-                  <p>제주협회는 제주특별자치도를 활동 권역으로 하며, 한라산과 오름 등 제주 고유 생태계를 배경으로 활동합니다.</p>
-                  <p>64명의 회원이 한라산국립공원, 곶자왈 등에서 특색 있는 숲 해설 프로그램을 운영합니다.</p>
-                  <ul>
-                    <li>설립: 2012년</li>
-                    <li>회장: 김만덕</li>
-                    <li>연락처: 064-000-1012</li><br>
-                    <li><a href="#" target="_blank" style="color: #007bff; text-decoration: underline;">홈페이지 바로가기</a></li>
-                  </ul>`,
-    },
 ];
 
 
@@ -411,63 +294,6 @@ const HISTORY_DATA = [
         ],
     },
     {
-        year: 2023,
-        items: [
-            { month: '10', text: '창립 25주년 기념행사 및 심포지엄 개최', img: null },
-            { month: '06', text: '사회공헌단 확대 개편, 전국 12개 권역 운영 체계 구축', img: null },
-            { month: '03', text: '숲 동아리단 공식 출범, 전국 15개 동아리 등록', img: null },
-        ],
-    },
-    {
-        year: 2021,
-        items: [
-            { month: '09', text: '디지털 전환 추진 — 온라인 강좌 시스템 구축', img: null },
-            { month: '05', text: '장애인복지관·노인복지관 숲 체험 사회공헌 프로그램 전국 확대', img: null },
-        ],
-    },
-    {
-        year: 2019,
-        items: [
-            { month: '11', text: '누적 양성 숲해설가 4,000명 돌파', img: null },
-            { month: '04', text: '해외 산림 교육 기관 교류 협약 체결 (일본 삼림인스트럭터협회)', img: null },
-        ],
-    },
-    {
-        year: 2017,
-        items: [
-            { month: '07', text: '산림청 지정 숲해설가 교육기관 재선정', img: null },
-            { month: '03', text: '시민 아카데미 프로그램 신설, 연간 정기 운영 체계 확립', img: null },
-        ],
-    },
-    {
-        year: 2015,
-        items: [
-            { month: '10', text: '협회 사무국 이전 (서울 성북구 → 현 소재지)', img: null },
-            { month: '06', text: '멘토링 숲학교 프로그램 출범', img: null },
-        ],
-    },
-    {
-        year: 2012,
-        items: [
-            { month: '09', text: '누적 양성 숲해설가 2,000명 돌파', img: null },
-            { month: '04', text: '전국 지역협회 네트워크 구성 (8개 지역)', img: null },
-        ],
-    },
-    {
-        year: 2008,
-        items: [
-            { month: '05', text: '숲해설가 자격증 제도 도입, 인증 체계 구축', img: null },
-            { month: '03', text: '산림청 지정 산림교육 전문기관 선정', img: null },
-        ],
-    },
-    {
-        year: 2000,
-        items: [
-            { month: '06', text: '(사)한국숲해설가협회로 명칭 변경, 산림청 사단법인 등록', img: null },
-            { month: '03', text: '협회 공식 출범, 초대 이사진 구성', img: null },
-        ],
-    },
-    {
         year: 1998,
         items: [
             { month: '10', text: '\'자연환경 안내자 협회\' 창립, 제1회 숲해설가 양성과정 개설', img: null },
@@ -501,11 +327,8 @@ const HistoryCtrl = {
     _ICONS:  ['🌲','🌿','🍃','🌱','🌳','🍀','🌾','🌵'],
 
     _LABELS: {
-        2026:'2026년 사업',    2025:'2025년 주요활동',
-        2023:'창립 25주년',    2021:'디지털 전환기',
-        2019:'성장의 도약',    2017:'제도적 기반',
-        2015:'사무국 확장',    2012:'전국 네트워크',
-        2008:'자격 제도 도입', 2000:'사단법인 등록',
+        2026:'2026년 사업',
+        2025:'2025년 주요활동',
         1998:'협회 창립',
     },
 

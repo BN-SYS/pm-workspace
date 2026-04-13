@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verihum — 인증 리포트 프로토타입</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f6fa;
+  --surface: #ffffff;
+  --accent: #0f5fff;
+  --accent-light: #e8f0ff;
+  --text-main: #2d3748;
+  --text-heading: #0a0f1e;
+  --text-muted: #64748b;
+  --border: #e2e6ed;
+
+  --green: #10b981;
+  --green-bg: #d1fae5;
+  --green-bg-hover: #a7f3d0;
+  --blue: #3b82f6;
+  --blue-bg: #dbeafe;
+  --blue-bg-hover: #bfdbfe;
+  --yellow: #f59e0b;
+  --yellow-bg: #fef3c7;
+  --yellow-bg-hover: #fde68a;
+  --red: #ef4444;
+  --red-bg: #fee2e2;
+  --red-bg-hover: #fecaca;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', 'Noto Sans KR', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ── Top Header ── */
+.top-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.top-header .logo {
+  font-weight: 800;
+  font-size: 17px;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+.top-header .logo span { color: var(--text-heading); }
+.top-header nav { display: flex; gap: 8px; }
+.top-header nav a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all .15s;
+}
+.top-header nav a:hover { background: var(--accent-light); color: var(--accent); }
+.top-header nav a.active { background: var(--accent); color: #fff; }
+
+/* ── Summary Bar ── */
+.summary-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 32px;
+}
+.summary-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.summary-meta h1 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 6px;
+}
+.summary-meta .meta-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.summary-meta .meta-row span { white-space: nowrap; }
+.summary-meta .meta-row strong { color: var(--text-heading); font-weight: 600; }
+
+.summary-result {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.result-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 15px;
+}
+.result-badge.verified { background: var(--green-bg); color: #065f46; }
+.result-badge.warning { background: var(--yellow-bg); color: #92400e; }
+.result-badge.inconclusive { background: #f1f5f9; color: #64748b; }
+.result-badge .icon { font-size: 20px; }
+
+.score-box {
+  text-align: center;
+}
+.score-box .score-num {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-heading);
+}
+.score-box .score-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Color ratio bar */
+.ratio-section {
+  margin-top: 18px;
+}
+.ratio-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.ratio-bar div { transition: width .4s ease; }
+.ratio-bar .r-green { background: var(--green); }
+.ratio-bar .r-blue { background: var(--blue); }
+.ratio-bar .r-yellow { background: var(--yellow); }
+.ratio-bar .r-red { background: var(--red); }
+
+.ratio-legend {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.ratio-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background .15s;
+}
+.ratio-legend span:hover { background: #f1f5f9; }
+.ratio-legend .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Main Layout ── */
+.main-wrap {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: calc(100vh - 200px);
+}
+
+/* ── Left: Document Panel ── */
+.doc-panel {
+  padding: 32px;
+  overflow-y: auto;
+}
+.doc-panel .toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  font-size: 12px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all .15s;
+  font-family: inherit;
+}
+.filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+.filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.doc-body {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 32px;
+  font-size: 15px;
+  line-height: 2;
+  box-shadow: 0 1px 4px rgba(0,0,0,.04);
+}
+
+/* Highlight spans */
+.hl {
+  padding: 2px 0;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all .15s;
+  position: relative;
+}
+.hl-green { background: var(--green-bg); border-bottom: 2px solid var(--green); }
+.hl-green:hover, .hl-green.active { background: var(--green-bg-hover); }
+.hl-blue { background: var(--blue-bg); border-bottom: 2px solid var(--blue); }
+.hl-blue:hover, .hl-blue.active { background: var(--blue-bg-hover); }
+.hl-yellow { background: var(--yellow-bg); border-bottom: 2px solid var(--yellow); }
+.hl-yellow:hover, .hl-yellow.active { background: var(--yellow-bg-hover); }
+.hl-red { background: var(--red-bg); border-bottom: 2px solid var(--red); }
+.hl-red:hover, .hl-red.active { background: var(--red-bg-hover); }
+
+.hl .seg-num {
+  position: absolute;
+  top: -8px;
+  left: -2px;
+  background: var(--text-heading);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .15s;
+  pointer-events: none;
+}
+.hl:hover .seg-num, .hl.active .seg-num { opacity: 1; }
+
+.paragraph { margin-bottom: 20px; }
+
+/* dimmed state for filter */
+.hl.dimmed {
+  background: transparent !important;
+  border-bottom-color: transparent !important;
+  color: #b0b8c9;
+}
+
+/* ── Right: Detail Panel ── */
+.detail-panel {
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 53px;
+  height: calc(100vh - 53px);
+  overflow-y: auto;
+}
+.detail-panel .panel-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-heading);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Empty state */
+.detail-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  padding: 40px;
+  text-align: center;
+}
+.detail-empty .icon { font-size: 48px; margin-bottom: 16px; opacity: .4; }
+.detail-empty p { font-size: 13px; line-height: 1.6; }
+
+/* Detail content */
+.detail-content {
+  padding: 24px;
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+}
+.detail-content.show { display: flex; }
+
+.detail-section {
+  padding-bottom: 18px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.detail-section:last-child { border-bottom: none; }
+
+.detail-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+.detail-value {
+  font-size: 14px;
+  color: var(--text-heading);
+  font-weight: 500;
+}
+
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.type-badge.t-green { background: var(--green-bg); color: #065f46; }
+.type-badge.t-blue { background: var(--blue-bg); color: #1e40af; }
+.type-badge.t-yellow { background: var(--yellow-bg); color: #92400e; }
+.type-badge.t-red { background: var(--red-bg); color: #991b1b; }
+
+.mod-bar-wrap {
+  margin-top: 4px;
+}
+.mod-bar {
+  height: 6px;
+  background: #f1f5f9;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.mod-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width .4s ease;
+}
+.mod-bar-text {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.ai-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ai-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+}
+.ai-step .step-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.ai-step .step-text { color: var(--text-main); line-height: 1.5; }
+.ai-step .step-text strong { color: var(--text-heading); }
+
+.replay-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s;
+  width: 100%;
+  justify-content: center;
+}
+.replay-btn:hover { background: #0b4fd4; }
+
+.context-quote {
+  background: #f8f9fc;
+  border-left: 3px solid var(--border);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+  border-radius: 0 6px 6px 0;
+  line-height: 1.6;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* ── Replay Modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--surface);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 760px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: #f1f5f9;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: all .15s;
+}
+.modal-close:hover { background: #e2e8f0; }
+.modal-body {
+  padding: 24px;
+  flex: 1;
+  overflow-y: auto;
+}
+.replay-viewer {
+  background: #fafbfd;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-height: 240px;
+  padding: 24px;
+  font-size: 15px;
+  line-height: 2;
+  margin-bottom: 20px;
+  position: relative;
+}
+.replay-viewer .cursor-blink {
+  display: inline-block;
+  width: 2px;
+  height: 18px;
+  background: var(--accent);
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.replay-diff-add {
+  background: #d1fae5;
+  border-radius: 2px;
+  padding: 0 2px;
+}
+.replay-diff-del {
+  background: #fee2e2;
+  text-decoration: line-through;
+  border-radius: 2px;
+  padding: 0 2px;
+  color: #b0b8c9;
+}
+
+.replay-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.play-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.play-btn:hover { background: #0b4fd4; }
+.timeline-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  outline: none;
+}
+.timeline-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.2);
+}
+.speed-btn {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  color: var(--text-muted);
+  font-family: inherit;
+  transition: all .15s;
+}
+.speed-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.time-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.replay-snapshot-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #f8f9fc;
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.snapshot-badge {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .main-wrap { grid-template-columns: 1fr; }
+  .detail-panel {
+    position: fixed;
+    right: -420px;
+    top: 0;
+    width: 400px;
+    height: 100vh;
+    z-index: 200;
+    transition: right .3s ease;
+    box-shadow: -4px 0 20px rgba(0,0,0,.1);
+  }
+  .detail-panel.open { right: 0; }
+  .mobile-back {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+  }
+}
+@media (min-width: 1025px) {
+  .mobile-back { display: none !important; }
+}
+@media (max-width: 640px) {
+  .summary-top { flex-direction: column; }
+  .summary-result { width: 100%; }
+  .doc-panel { padding: 20px 16px; }
+  .doc-body { padding: 20px; font-size: 14px; }
+  .detail-panel { width: 100%; right: -100%; }
+  .top-header { padding: 12px 16px; }
+  .summary-bar { padding: 16px; }
+  .modal { width: 96%; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP HEADER -->
+<header class="top-header">
+  <div class="logo">Veri<span>hum</span></div>
+  <nav>
+    <a href="#">과제 목록</a>
+    <a href="#" class="active">리포트</a>
+    <a href="#">설정</a>
+  </nav>
+</header>
+
+<!-- SUMMARY BAR -->
+<section class="summary-bar">
+  <div class="summary-top">
+    <div class="summary-meta">
+      <h1>광개토대왕의 주요 업적과 역사적 의의</h1>
+      <div class="meta-row">
+        <span><strong>과제:</strong> 한국사 2주차 서술형 과제</span>
+        <span><strong>학생:</strong> 김지민</span>
+        <span><strong>제출:</strong> 2026-04-10 14:32</span>
+        <span><strong>글자 수:</strong> 1,247자</span>
+      </div>
+    </div>
+    <div class="summary-result">
+      <div class="score-box">
+        <div class="score-num">78</div>
+        <div class="score-label">과정 점수</div>
+      </div>
+      <div class="result-badge verified">
+        <span class="icon">✓</span>
+        직접 작성 인증
+      </div>
+    </div>
+  </div>
+
+  <div class="ratio-section">
+    <div class="ratio-bar">
+      <div class="r-green" style="width:55%"></div>
+      <div class="r-blue" style="width:22%"></div>
+      <div class="r-yellow" style="width:15%"></div>
+      <div class="r-red" style="width:8%"></div>
+    </div>
+    <div class="ratio-legend">
+      <span data-filter="green"><span class="dot" style="background:var(--green)"></span> 자기주도 작성 55%</span>
+      <span data-filter="blue"><span class="dot" style="background:var(--blue)"></span> AI 참고 후 재작성 22%</span>
+      <span data-filter="yellow"><span class="dot" style="background:var(--yellow)"></span> 추가 확인 권장 15%</span>
+      <span data-filter="red"><span class="dot" style="background:var(--red)"></span> 작성 과정 미확인 8%</span>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN LAYOUT -->
+<div class="main-wrap">
+
+  <!-- LEFT: Document -->
+  <div class="doc-panel">
+    <div class="toolbar">
+      <button class="filter-btn active" data-filter="all">전체 보기</button>
+      <button class="filter-btn" data-filter="yellow">⚠ 주의 구간만</button>
+      <button class="filter-btn" data-filter="red">🔴 검토 필요만</button>
+      <button class="filter-btn" data-filter="blue">🔵 AI 활용 구간</button>
+    </div>
+
+    <div class="doc-body" id="docBody">
+      <div class="paragraph">
+        <span class="hl hl-green" data-seg="1">
+          <span class="seg-num">1</span>
+          고구려의 역사에서 가장 큰 업적을 세운 왕으로 광개토대왕이 있다. 광개토대왕(재위 391~413년)은 고구려의 제19대 왕으로서, 고구려의 영토를 대대적으로 확장하고 국가의 기틀을 다지는 등 여러 중요한 업적을 남겼다.
+        </span>
+        <span class="hl hl-green" data-seg="2">
+          <span class="seg-num">2</span>
+          다음은 그의 대표적인 업적 다섯 가지를 자세히 기술한 내용이다.
+        </span>
+      </div>
+
+      <div class="paragraph">
+        <span class="hl hl-green" data-seg="3">
+          <span class="seg-num">3</span>
+          첫째, 영토 확장이다. 광개토대왕은 북쪽으로는 만주 일대, 남쪽으로는 한반도 중부까지 영토를 확장하였다.
+        </span>
+        <span class="hl hl-blue" data-seg="4">
+          <span class="seg-num">4</span>
+          특히 백제와의 전투에서 승리하여 한성(현 서울)을 공격하고 점령하였으며, 한강 이북 지역을 고구려의 영토로 편입시켰다. 이를 통해 고구려는 한반도 중부까지 지배권을 확립하였다.
+        </span>
+      </div>
+
+      <div class="paragraph">
+        <span class="hl hl-yellow" data-seg="5">
+          <span class="seg-num">5</span>
+          광개토대왕은 먼저 4만의 군사로 백제를 공격하여 임진강 일대를 차지하였다. 이어 북쪽의 거란을 원정하여 많은 촌락을 파괴하고 가축을 빼앗았다. 그것은 후연을 공략하기 전에 그 배후의 거란을 차단하기 위해서였다.
+        </span>
+      </div>
+
+      <div class="paragraph">
+        <span class="hl hl-red" data-seg="6">
+          <span class="seg-num">6</span>
+          백제를 다시 공격하여 여러 성을 함락한 후, 한강을 건너 백제의 수도에 육박하였다. 이에 백제가 굴복하고 일시적이나마 고구려에 복속하기를 맹세하여 고구려는 한강 이남 지역까지 영향력을 확대하였다.
+        </span>
+      </div>
+
+      <div class="paragraph">
+        <span class="hl hl-green" data-seg="7">
+          <span class="seg-num">7</span>
+          둘째, 신라 구원이다. 400년 왜가 신라를 침공했을 때, 광개토대왕은 5만 대군을 보내 신라를 구원하였다.
+        </span>
+        <span class="hl hl-blue" data-seg="8">
+          <span class="seg-num">8</span>
+          이 사건은 고구려가 한반도 남부에 대한 영향력을 확대하는 계기가 되었으며, 신라와의 동맹 관계를 더욱 공고히 하는 결과를 가져왔다. 또한 왜의 한반도 진출을 저지하는 중요한 군사적 성과이기도 했다.
+        </span>
+      </div>
+
+      <div class="paragraph">
+        <span class="hl hl-green" data-seg="9">
+          <span class="seg-num">9</span>
+          셋째, 북방 민족 정복이다. 광개토대왕은 북쪽으로 거란, 숙신 등 북방 민족을 정복하여 고구려의 북방 영토를 크게 확장하였다. 이러한 북방 정복은 고구려의 국경을 안정시키고, 북방으로부터의 위협을 제거하는 데 기여하였다.
+        </span>
+      </div>
+
+      <div class="paragraph">
+        <span class="hl hl-blue" data-seg="10">
+          <span class="seg-num">10</span>
+          넷째, 광개토대왕릉비의 건립이다. 아들 장수왕이 아버지의 업적을 기리기 위해 세운 이 비석은 높이 약 6.39미터에 달하며, 1,800여 자의 한문으로 광개토대왕의 업적을 기록하고 있다.
+        </span>
+        <span class="hl hl-yellow" data-seg="11">
+          <span class="seg-num">11</span>
+          이 비석은 고구려사 연구의 핵심 사료로, 특히 고구려의 건국 신화, 영토 확장 과정, 그리고 당시 동아시아 국제 관계를 이해하는 데 매우 중요한 자료이다.
+        </span>
+      </div>
+
+      <div class="paragraph">
+        <span class="hl hl-green" data-seg="12">
+          <span class="seg-num">12</span>
+          다섯째, 연호 제정이다. 광개토대왕은 '영락'이라는 독자적인 연호를 사용하였는데, 이는 고구려가 중국과 대등한 독립국가임을 천하에 선포한 것이었다. 이를 통해 고구려의 국제적 위상이 크게 높아졌다.
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Detail Panel -->
+  <div class="detail-panel" id="detailPanel">
+    <div class="panel-header">
+      <span>구간 분석 상세</span>
+      <button class="mobile-back" onclick="closeDetail()">← 닫기</button>
+    </div>
+
+    <!-- Empty State -->
+    <div class="detail-empty" id="detailEmpty">
+      <div class="icon">👈</div>
+      <p>왼쪽 본문에서 하이라이트된<br>구간을 클릭하면<br>작성 과정 분석을 확인할 수 있습니다.</p>
+    </div>
+
+    <!-- Detail: Segment 1 (green) -->
+    <div class="detail-content" id="detail-1">
+      <div class="detail-section">
+        <div class="detail-label">구간 #1 · 작성 유형</div>
+        <div class="type-badge t-green">✓ 자기주도 작성</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">원문 발췌</div>
+        <div class="context-quote">고구려의 역사에서 가장 큰 업적을 세운 왕으로 광개토대왕이 있다…</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">수정 활동 수준</div>
+        <div class="mod-bar-wrap">
+          <div class="mod-bar"><div class="mod-bar-fill" style="width:82%;background:var(--green)"></div></div>
+          <div class="mod-bar-text">활발한 수정 — 초안 대비 다수의 수정·삭제·재작성이 관찰됨</div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">과정 요약</div>
+        <div class="detail-value">직접 타이핑으로 작성을 시작했으며, 문장 구조를 3차례 이상 수정한 이력이 확인됩니다. 외부 붙여넣기나 AI 활용 기록은 없습니다.</div>
+      </div>
+      <button class="replay-btn" onclick="openReplay(1)">▶ &nbsp;이 구간 리플레이 보기</button>
+    </div>
+
+    <!-- Detail: Segment 4 (blue) -->
+    <div class="detail-content" id="detail-4">
+      <div class="detail-section">
+        <div class="detail-label">구간 #4 · 작성 유형</div>
+        <div class="type-badge t-blue">◐ AI 참고 후 재작성</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">원문 발췌</div>
+        <div class="context-quote">특히 백제와의 전투에서 승리하여 한성(현 서울)을 공격하고…</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">수정 활동 수준</div>
+        <div class="mod-bar-wrap">
+          <div class="mod-bar"><div class="mod-bar-fill" style="width:65%;background:var(--blue)"></div></div>
+          <div class="mod-bar-text">보통 수정 — AI 제안 대비 상당 부분을 자신의 표현으로 변환함</div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">AI 활용 이력</div>
+        <div class="ai-timeline">
+          <div class="ai-step">
+            <div class="step-icon">Q</div>
+            <div class="step-text"><strong>학생 질문:</strong> "백제와의 전쟁에서 한성 점령 과정을 알려줘"</div>
+          </div>
+          <div class="ai-step">
+            <div class="step-icon">A</div>
+            <div class="step-text"><strong>AI 제안:</strong> 전투 과정에 대한 3문장 설명 제공</div>
+          </div>
+          <div class="ai-step">
+            <div class="step-icon">✎</div>
+            <div class="step-text"><strong>학생 선택:</strong> <span style="color:var(--blue);font-weight:600;">수정 후 반영</span> — 문장 구조를 변경하고 자신의 표현으로 재작성함</div>
+          </div>
+        </div>
+      </div>
+      <button class="replay-btn" onclick="openReplay(4)">▶ &nbsp;이 구간 리플레이 보기</button>
+    </div>
+
+    <!-- Detail: Segment 5 (yellow) -->
+    <div class="detail-content" id="detail-5">
+      <div class="detail-section">
+        <div class="detail-label">구간 #5 · 작성 유형</div>
+        <div class="type-badge t-yellow">△ 추가 확인 권장</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">원문 발췌</div>
+        <div class="context-quote">광개토대왕은 먼저 4만의 군사로 백제를 공격하여 임진강 일대를…</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">수정 활동 수준</div>
+        <div class="mod-bar-wrap">
+          <div class="mod-bar"><div class="mod-bar-fill" style="width:20%;background:var(--yellow)"></div></div>
+          <div class="mod-bar-text">경미한 수정 — 붙여넣기 이후 소폭의 편집만 감지됨</div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">과정 요약</div>
+        <div class="detail-value">외부에서 복사한 텍스트가 붙여넣기된 후, 일부 조사와 어미만 수정된 것으로 보입니다. 원문 출처 또는 참고 자료 확인이 필요할 수 있습니다.</div>
+      </div>
+      <button class="replay-btn" onclick="openReplay(5)">▶ &nbsp;이 구간 리플레이 보기</button>
+    </div>
+
+    <!-- Detail: Segment 6 (red) -->
+    <div class="detail-content" id="detail-6">
+      <div class="detail-section">
+        <div class="detail-label">구간 #6 · 작성 유형</div>
+        <div class="type-badge t-red">✕ 작성 과정 미확인</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">원문 발췌</div>
+        <div class="context-quote">백제를 다시 공격하여 여러 성을 함락한 후, 한강을 건너…</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">수정 활동 수준</div>
+        <div class="mod-bar-wrap">
+          <div class="mod-bar"><div class="mod-bar-fill" style="width:5%;background:var(--red)"></div></div>
+          <div class="mod-bar-text">수정 없음 — 대량 텍스트 붙여넣기 후 편집 이력이 거의 없음</div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">과정 요약</div>
+        <div class="detail-value">해당 구간은 한 번의 붙여넣기 동작으로 입력되었으며, 이후 수정이나 삭제 이력이 기록되지 않았습니다. 작성 과정을 통한 판단이 어려운 구간입니다.</div>
+      </div>
+      <div style="background:#fef2f2;border-radius:8px;padding:12px 14px;font-size:13px;color:#991b1b;">
+        💡 <strong>교사 참고:</strong> 이 구간은 리플레이를 통해 실제 작성 맥락을 직접 확인하시는 것을 권장합니다.
+      </div>
+      <button class="replay-btn" onclick="openReplay(6)">▶ &nbsp;이 구간 리플레이 보기</button>
+    </div>
+
+    <!-- Detail: Segment 8 (blue) -->
+    <div class="detail-content" id="detail-8">
+      <div class="detail-section">
+        <div class="detail-label">구간 #8 · 작성 유형</div>
+        <div class="type-badge t-blue">◐ AI 참고 후 재작성</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">원문 발췌</div>
+        <div class="context-quote">이 사건은 고구려가 한반도 남부에 대한 영향력을 확대하는 계기가…</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">수정 활동 수준</div>
+        <div class="mod-bar-wrap">
+          <div class="mod-bar"><div class="mod-bar-fill" style="width:75%;background:var(--blue)"></div></div>
+          <div class="mod-bar-text">활발한 수정 — AI 제안을 상당히 재해석하여 자기 표현으로 전환함</div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">AI 활용 이력</div>
+        <div class="ai-timeline">
+          <div class="ai-step">
+            <div class="step-icon">Q</div>
+            <div class="step-text"><strong>학생 질문:</strong> "신라 구원이 고구려에 어떤 의미가 있었어?"</div>
+          </div>
+          <div class="ai-step">
+            <div class="step-icon">A</div>
+            <div class="step-text"><strong>AI 제안:</strong> 외교적·군사적 의의에 대한 설명 제공</div>
+          </div>
+          <div class="ai-step">
+            <div class="step-icon">✎</div>
+            <div class="step-text"><strong>학생 선택:</strong> <span style="color:var(--blue);font-weight:600;">수정 후 반영</span> — 핵심 키워드만 참고하고 문장 전체를 새로 작성함</div>
+          </div>
+        </div>
+      </div>
+      <button class="replay-btn" onclick="openReplay(8)">▶ &nbsp;이 구간 리플레이 보기</button>
+    </div>
+
+    <!-- Detail: Segment 10 (blue) -->
+    <div class="detail-content" id="detail-10">
+      <div class="detail-section">
+        <div class="detail-label">구간 #10 · 작성 유형</div>
+        <div class="type-badge t-blue">◐ AI 참고 후 재작성</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">원문 발췌</div>
+        <div class="context-quote">넷째, 광개토대왕릉비의 건립이다. 아들 장수왕이…</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">수정 활동 수준</div>
+        <div class="mod-bar-wrap">
+          <div class="mod-bar"><div class="mod-bar-fill" style="width:55%;background:var(--blue)"></div></div>
+          <div class="mod-bar-text">보통 수정 — AI 제안의 수치 정보를 참고하되 서술은 자체 작성</div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">AI 활용 이력</div>
+        <div class="ai-timeline">
+          <div class="ai-step">
+            <div class="step-icon">Q</div>
+            <div class="step-text"><strong>학생 질문:</strong> "광개토대왕릉비 크기랑 글자수가 어떻게 돼?"</div>
+          </div>
+          <div class="ai-step">
+            <div class="step-icon">A</div>
+            <div class="step-text"><strong>AI 제안:</strong> 비석 규격 및 글자 수 정보 제공</div>
+          </div>
+          <div class="ai-step">
+            <div class="step-icon">✓</div>
+            <div class="step-text"><strong>학생 선택:</strong> <span style="color:var(--blue);font-weight:600;">사실 정보만 발췌</span> — 수치 데이터를 참고하고 문장은 직접 구성</div>
+          </div>
+        </div>
+      </div>
+      <button class="replay-btn" onclick="openReplay(10)">▶ &nbsp;이 구간 리플레이 보기</button>
+    </div>
+
+    <!-- Detail: Segment 11 (yellow) -->
+    <div class="detail-content" id="detail-11">
+      <div class="detail-section">
+        <div class="detail-label">구간 #11 · 작성 유형</div>
+        <div class="type-badge t-yellow">△ 추가 확인 권장</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">원문 발췌</div>
+        <div class="context-quote">이 비석은 고구려사 연구의 핵심 사료로, 특히 고구려의 건국 신화…</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">수정 활동 수준</div>
+        <div class="mod-bar-wrap">
+          <div class="mod-bar"><div class="mod-bar-fill" style="width:25%;background:var(--yellow)"></div></div>
+          <div class="mod-bar-text">경미한 수정 — AI 제안을 대부분 수용하고 일부만 조정함</div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">AI 활용 이력</div>
+        <div class="ai-timeline">
+          <div class="ai-step">
+            <div class="step-icon">A</div>
+            <div class="step-text"><strong>AI 제안:</strong> 광개토대왕릉비의 사료적 가치에 대한 서술 제공</div>
+          </div>
+          <div class="ai-step">
+            <div class="step-icon">≈</div>
+            <div class="step-text"><strong>학생 선택:</strong> <span style="color:var(--yellow);font-weight:600;">최소 수정 후 수락</span> — 조사, 어미 등 경미한 수정만 수행</div>
+          </div>
+        </div>
+      </div>
+      <button class="replay-btn" onclick="openReplay(11)">▶ &nbsp;이 구간 리플레이 보기</button>
+    </div>
+
+    <!-- Fallback for segments without dedicated detail -->
+    <div class="detail-content" id="detail-generic">
+      <div class="detail-section">
+        <div class="detail-label">구간 분석</div>
+        <div class="type-badge t-green">✓ 자기주도 작성</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">수정 활동 수준</div>
+        <div class="mod-bar-wrap">
+          <div class="mod-bar"><div class="mod-bar-fill" style="width:70%;background:var(--green)"></div></div>
+          <div class="mod-bar-text">활발한 수정 — 자연스러운 작성 흐름이 관찰됨</div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">과정 요약</div>
+        <div class="detail-value">직접 타이핑으로 작성된 구간입니다. 자연스러운 입력과 수정 패턴이 기록되어 있습니다.</div>
+      </div>
+      <button class="replay-btn" onclick="openReplay(0)">▶ &nbsp;이 구간 리플레이 보기</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- REPLAY MODAL -->
+<div class="modal-overlay" id="replayModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>📹 작성 과정 리플레이 — <span id="replaySegLabel">구간 #1</span></h2>
+      <button class="modal-close" onclick="closeReplay()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="replay-viewer" id="replayViewer">
+        <span id="replayText"></span><span class="cursor-blink"></span>
+      </div>
+      <div class="replay-controls">
+        <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+        <input type="range" class="timeline-slider" id="timelineSlider" min="0" max="100" value="0">
+        <span class="time-label" id="timeLabel">0:00 / 0:42</span>
+        <button class="speed-btn active" data-speed="1">1x</button>
+        <button class="speed-btn" data-speed="2">2x</button>
+      </div>
+      <div class="replay-snapshot-info">
+        <span class="snapshot-badge" style="background:var(--green-bg);color:#065f46;">스냅샷 1/8</span>
+        <span>직접 입력 중 — 문장 구조 수정 발생</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Segment click → show detail ──
+const allHl = document.querySelectorAll('.hl');
+const detailPanel = document.getElementById('detailPanel');
+const detailEmpty = document.getElementById('detailEmpty');
+const allDetails = document.querySelectorAll('.detail-content');
+const dedicatedDetails = ['1','4','5','6','8','10','11'];
+
+allHl.forEach(el => {
+  el.addEventListener('click', () => {
+    // remove previous active
+    allHl.forEach(h => h.classList.remove('active'));
+    el.classList.add('active');
+
+    const seg = el.dataset.seg;
+    detailEmpty.style.display = 'none';
+    allDetails.forEach(d => d.classList.remove('show'));
+
+    if (dedicatedDetails.includes(seg)) {
+      document.getElementById('detail-' + seg).classList.add('show');
+    } else {
+      document.getElementById('detail-generic').classList.add('show');
+    }
+
+    // mobile: open panel
+    detailPanel.classList.add('open');
+  });
+});
+
+function closeDetail() {
+  detailPanel.classList.remove('open');
+}
+
+// ── Filter buttons ──
+const filterBtns = document.querySelectorAll('.filter-btn');
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+
+    allHl.forEach(el => {
+      if (filter === 'all') {
+        el.classList.remove('dimmed');
+      } else {
+        el.classList.toggle('dimmed', !el.classList.contains('hl-' + filter));
+      }
+    });
+  });
+});
+
+// ── Replay modal ──
+const replaySnapshots = {
+  1: [
+    { text: '고구려의 역사에서', diff: null },
+    { text: '고구려의 역사에서 가장 큰', diff: '가장 큰' },
+    { text: '고구려의 역사에서 가장 큰 업적을 세운 왕으로', diff: '업적을 세운 왕으로' },
+    { text: '고구려의 역사에서 가장 큰 업적을 세운 왕으로 광개토대왕이 있다.', diff: '광개토대왕이 있다.' },
+    { text: '고구려의 역사에서 가장 큰 업적을 세운 왕으로 광개토대왕이 있다. 광개토대왕(재위 391~413년)은', diff: '광개토대왕(재위 391~413년)은' },
+    { text: '고구려의 역사에서 가장 큰 업적을 세운 왕으로 광개토대왕이 있다. 광개토대왕(재위 391~413년)은 고구려의 제19대 왕으로서, 고구려의 영토를 대대적으로 확장하고', diff: '고구려의 제19대 왕으로서, 고구려의 영토를 대대적으로 확장하고' },
+    { text: '고구려의 역사에서 가장 큰 업적을 세운 왕으로 광개토대왕이 있다. 광개토대왕(재위 391~413년)은 고구려의 제19대 왕으로서, 고구려의 영토를 대대적으로 확장하고 국가의 기틀을 다지는 등 여러 중요한 업적을 남겼다.', diff: '국가의 기틀을 다지는 등 여러 중요한 업적을 남겼다.' },
+  ],
+  default: [
+    { text: '텍스트 작성이 시작되었습니다...', diff: null },
+    { text: '텍스트 작성이 시작되었습니다... 내용이 추가되고 있습니다.', diff: '내용이 추가되고 있습니다.' },
+    { text: '텍스트 작성이 시작되었습니다... 내용이 추가되고 수정되었습니다.', diff: '수정되었습니다.' },
+  ]
+};
+
+let playInterval = null;
+let currentSnap = 0;
+let isPlaying = false;
+
+function openReplay(seg) {
+  document.getElementById('replayModal').classList.add('show');
+  document.getElementById('replaySegLabel').textContent = '구간 #' + seg;
+  currentSnap = 0;
+  isPlaying = false;
+  document.getElementById('playBtn').textContent = '▶';
+
+  const snaps = replaySnapshots[seg] || replaySnapshots.default;
+  const slider = document.getElementById('timelineSlider');
+  slider.max = snaps.length - 1;
+  slider.value = 0;
+  renderSnapshot(snaps, 0);
+}
+
+function renderSnapshot(snaps, idx) {
+  const viewer = document.getElementById('replayText');
+  const snap = snaps[idx];
+  if (snap.diff) {
+    const base = snap.text.substring(0, snap.text.length - snap.diff.length);
+    viewer.innerHTML = base + '<span class="replay-diff-add">' + snap.diff + '</span>';
+  } else {
+    viewer.textContent = snap.text;
+  }
+  document.querySelector('.snapshot-badge').textContent = '스냅샷 ' + (idx+1) + '/' + snaps.length;
+  const totalSec = snaps.length * 5;
+  const curSec = (idx + 1) * 5;
+  document.getElementById('timeLabel').textContent =
+    '0:' + String(curSec).padStart(2,'0') + ' / 0:' + String(totalSec).padStart(2,'0');
+}
+
+function togglePlay() {
+  if (isPlaying) {
+    clearInterval(playInterval);
+    isPlaying = false;
+    document.getElementById('playBtn').textContent = '▶';
+    return;
+  }
+  isPlaying = true;
+  document.getElementById('playBtn').textContent = '⏸';
+  const seg = document.getElementById('replaySegLabel').textContent.replace('구간 #','');
+  const snaps = replaySnapshots[parseInt(seg)] || replaySnapshots.default;
+  const slider = document.getElementById('timelineSlider');
+
+  playInterval = setInterval(() => {
+    currentSnap++;
+    if (currentSnap >= snaps.length) {
+      clearInterval(playInterval);
+      isPlaying = false;
+      document.getElementById('playBtn').textContent = '▶';
+      currentSnap = snaps.length - 1;
+      return;
+    }
+    slider.value = currentSnap;
+    renderSnapshot(snaps, currentSnap);
+  }, 800);
+}
+
+document.getElementById('timelineSlider').addEventListener('input', function() {
+  const seg = document.getElementById('replaySegLabel').textContent.replace('구간 #','');
+  const snaps = replaySnapshots[parseInt(seg)] || replaySnapshots.default;
+  currentSnap = parseInt(this.value);
+  renderSnapshot(snaps, currentSnap);
+});
+
+document.querySelectorAll('.speed-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+function closeReplay() {
+  document.getElementById('replayModal').classList.add('show');
+  clearInterval(playInterval);
+  isPlaying = false;
+  document.getElementById('replayModal').classList.remove('show');
+}
+
+document.getElementById('replayModal').addEventListener('click', function(e) {
+  if (e.target === this) closeReplay();
+});
+</script>
+
+</body>
+</html>

@@ -530,6 +530,7 @@ const RELATED_ORGS = [
   { label: '산림복지진흥원', href: 'https://www.fowi.or.kr' },
   { label: '숲해설가 자격', href: '#' },
   { label: '녹색연합', href: 'https://www.greenkorea.org' },
+  { label: '숲교육포탈', href: 'https://edu.forest.go.kr/' },
 ];
 
 const Footer = {
@@ -603,7 +604,7 @@ const Footer = {
               </a>
             </div>
             <!-- 구 홈페이지 링크 -->
-            <a href="https://www.foresto.org" target="_blank" rel="noopener noreferrer"
+            <a href="http://www.foresto.org/?r=home" target="_blank" rel="noopener noreferrer"
                class="footer-old-site">
               구 홈페이지 바로가기
             </a>

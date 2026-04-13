@@ -6,7 +6,7 @@
 
 /* ── 섹션 타이틀 */
 .list-section-title {
-  font-size: 20px;
+  font-size: var(--text-lg);
   font-weight: 700;
   color: var(--gray-dark);
   padding-bottom: 16px;
@@ -45,7 +45,7 @@
   border: 1px solid #e0ddd7;
   border-radius: 6px;
   padding: 0 32px 0 12px;
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: var(--gray-dark);
   background: #fff;
   outline: none;
@@ -69,7 +69,7 @@
   border: 1px solid #e0ddd7;
   border-radius: 6px;
   padding: 0 12px;
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: var(--gray-dark);
   background: #fff;
   outline: none;
@@ -82,7 +82,7 @@
   width: auto;
 }
 .list-filter-sep {
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: var(--gray-mid);
   flex-shrink: 0;
 }
@@ -130,7 +130,7 @@
 
 /* ── 반응형 (≤ 768px) */
 @media (max-width: 768px) {
-  .list-section-title { font-size: 17px; }
+  .list-section-title { font-size: var(--text-base); }
   .list-filter-box    { padding: 14px 16px; }
   .list-filter-row    { flex-wrap: wrap; gap: 12px; }
   .list-filter-item   { flex: 1 1 100%; min-width: 0; }

@@ -208,7 +208,7 @@
   }
 
   /* 사이드바 nav 모바일: 아바타 영역 콤팩트 */
-  .my-avatar { width: 52px; height: 52px; font-size: 22px; }
+  .my-avatar { width: 52px; height: 52px; font-size: var(--text-xl); }
   .my-name { font-size: var(--text-md); }
 }
 

@@ -33,8 +33,8 @@
         <!-- 섹션 타이틀 + 짧은 개요 -->
         <h2 class="list-section-title">회원아카데미 특강</h2>
         <p style="font-size:var(--text-md);color:var(--gray-mid);line-height:1.8;margin-bottom:24px;">
-          현직 숲해설가 회원의 전문성 향상을 위한 특강·워크숍·세미나를 운영합니다.
-          정회원은 대부분의 강좌를 무료 또는 실비로 수강할 수 있습니다.
+          정기 특강을 통해 숲해설가의 배움과 성장을 지원하고, 지속적인 교육으로 회원님들의 전문성과 가치를 높이고자 합니다. 매월 첫째·마지막 수요일 오후 7시, 나눔특강과 심화특강으로 현장 경험과 전문성을
+          함께 키워갑니다.
         </p>
 
         <!-- 필터 박스 -->
@@ -102,14 +102,14 @@
       .sort((a, b) => b.date.localeCompare(a.date));
 
     window._ctrl = new CourseListController('역량강화', 'competencyBody', 'competencyPagination', '', 'competency-detail.html');
-    window._ctrl.courses  = merged;
+    window._ctrl.courses = merged;
     window._ctrl.filtered = [...merged];
     window._ctrl.render();
 
     function doSearch() {
       const status = document.getElementById('filterStatus').value;
-      const from   = document.getElementById('dateFrom').value;
-      const to     = document.getElementById('dateTo').value;
+      const from = document.getElementById('dateFrom').value;
+      const to = document.getElementById('dateTo').value;
       window._ctrl.courses = merged;
       window._ctrl.filter(status, from, to);
     }

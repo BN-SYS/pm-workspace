@@ -325,7 +325,7 @@
   }
 
   .footer-info-text {
-    font-size: 13px;
+    font-size: var(--text-xs);
   }
 
   /* 오른쪽 영역 → 왼쪽 정렬 + 세로 */
@@ -367,7 +367,7 @@
   /* 유관기관 카드 */
   .org-band-card {
     width: 140px;
-    font-size: 12px;
+    font-size: var(--text-12);
   }
 }
 

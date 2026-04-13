@@ -19,5 +19,13 @@
 - 팝업 HTML 주석 처리 상태 — 관련 JS null-check 처리됨
 - SB 어노테이션: 번호는 설명 대상 요소의 좌측 앞 배치 (x≈13%)
 
+## 최근 작업 (2026-04-13)
+- 사용자 페이지 개발 전달 최적화 완료
+  - app.js: USER_API + UserHttp 추가 (JS FETCH 패턴)
+  - education.js: 강좌 상태 이번달 기준 자동 계산 (_setDemoDates)
+  - 샘플 데이터 최대 3건으로 통일 (index, reviews, members, about, mypage, community-media)
+  - CSS 모든 font-size px → CSS 변수 전환 (9개 파일, 글자크기 조절 버튼 대응)
+  - outputs/00_DEV_HANDOFF.md 생성 (사용자 페이지 PHP 연동 가이드)
+
 ## 다음 액션
 SB 어노테이션 사용자(U) + 문서(D) 섹션 완료 → git push

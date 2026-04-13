@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verihum MVP 프로토타입 v5</title>
+<style>
+  :root {
+    --green:#22c55e;--green-bg:#dcfce7;
+    --blue:#3b82f6;--blue-bg:#dbeafe;
+    --yellow:#eab308;--yellow-bg:#fef9c3;
+    --red:#ef4444;--red-bg:#fee2e2;
+    --gray:#6b7280;--gray-bg:#f3f4f6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f8fafc;color:#1e293b;}
+  .tab-bar{display:flex;background:#1e293b;}
+  .tab-btn{padding:12px 28px;color:#94a3b8;background:none;border:none;cursor:pointer;font-size:15px;font-weight:600;border-bottom:3px solid transparent;transition:all .2s;}
+  .tab-btn.active{color:#fff;border-bottom-color:#3b82f6;}
+  .tab-content{display:none;}.tab-content.active{display:block;}
+  .editor-wrap{max-width:900px;margin:24px auto;padding:0 20px;}
+  .editor-header{background:#fff;border:1px solid #e2e8f0;border-radius:12px 12px 0 0;padding:20px 24px;}
+  .editor-header h2{font-size:18px;margin-bottom:4px;}
+  .editor-header p{font-size:13px;color:#64748b;}
+  .editor-box{border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;background:#fff;min-height:320px;padding:20px 24px;font-size:15px;line-height:1.8;outline:none;white-space:pre-wrap;}
+  .editor-box:empty::before{content:attr(data-placeholder);color:#94a3b8;}
+  .editor-toolbar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+  .editor-toolbar button{padding:8px 16px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:13px;transition:all .2s;}
+  .editor-toolbar button:hover{background:#f1f5f9;}
+  .editor-toolbar button.primary{background:#3b82f6;color:#fff;border-color:#3b82f6;}
+  .editor-toolbar button.submit-btn{background:#22c55e;color:#fff;border-color:#22c55e;}
+  .ai-panel{margin-top:16px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:16px 20px;display:none;}
+  .ai-panel.show{display:block;}
+  .ai-panel h4{font-size:14px;color:#0369a1;margin-bottom:8px;}
+  .ai-suggestion{background:#fff;border:1px solid #e0f2fe;border-radius:8px;padding:12px 16px;font-size:14px;line-height:1.7;margin-bottom:12px;}
+  .ai-actions{display:flex;gap:8px;}
+  .ai-actions button{padding:6px 14px;border-radius:6px;border:none;cursor:pointer;font-size:13px;font-weight:600;}
+  .ai-actions .accept{background:#22c55e;color:#fff;}
+  .ai-actions .modify{background:#3b82f6;color:#fff;}
+  .ai-actions .reject{background:#ef4444;color:#fff;}
+  .status-bar{max-width:900px;margin:0 auto;padding:8px 20px;}
+  .status-bar .stats{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:#64748b;}
+  .status-bar .stats span{background:#f1f5f9;padding:4px 10px;border-radius:6px;}
+  .report-wrap{max-width:1100px;margin:24px auto;padding:0 20px;}
+  .report-summary{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:20px;}
+  .report-summary h2{font-size:20px;margin-bottom:16px;}
+  .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;}
+  .summary-card{background:#f8fafc;border-radius:10px;padding:16px;text-align:center;}
+  .summary-card .label{font-size:12px;color:#64748b;margin-bottom:4px;}
+  .summary-card .value{font-size:24px;font-weight:700;}
+  .ratio-bar{height:32px;border-radius:8px;overflow:hidden;display:flex;margin-bottom:8px;}
+  .ratio-bar div{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;transition:width .5s;}
+  .ratio-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;}
+  .ratio-legend span{display:flex;align-items:center;gap:4px;}
+  .ratio-legend .dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+  .report-body{display:grid;grid-template-columns:1fr 380px;gap:20px;}
+  @media(max-width:860px){.report-body{grid-template-columns:1fr;}}
+  .doc-panel{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;max-height:70vh;overflow-y:auto;}
+  .doc-panel h3{font-size:16px;margin-bottom:16px;}
+  .doc-text{font-size:15px;line-height:2;}
+  .doc-text .seg{padding:2px 4px;border-radius:4px;cursor:pointer;transition:all .15s;}
+  .doc-text .seg:hover{filter:brightness(.92);}
+  .doc-text .seg.green{background:var(--green-bg);border-bottom:2px solid var(--green);}
+  .doc-text .seg.blue{background:var(--blue-bg);border-bottom:2px solid var(--blue);}
+  .doc-text .seg.yellow{background:var(--yellow-bg);border-bottom:2px solid var(--yellow);}
+  .doc-text .seg.red{background:var(--red-bg);border-bottom:2px solid var(--red);}
+  .detail-panel{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;max-height:70vh;overflow-y:auto;}
+  .detail-panel h3{font-size:16px;margin-bottom:16px;}
+  .detail-placeholder{color:#94a3b8;font-size:14px;text-align:center;padding:40px 0;}
+  .detail-card{font-size:14px;}
+  .detail-card .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;color:#fff;margin-bottom:12px;}
+  .detail-card .badge.green{background:var(--green);}
+  .detail-card .badge.blue{background:var(--blue);}
+  .detail-card .badge.yellow{background:var(--yellow);}
+  .detail-card .badge.red{background:var(--red);}
+  .detail-card .info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9;}
+  .detail-card .info-row .k{color:#64748b;}
+  .detail-card .excerpt{background:#f8fafc;border-radius:8px;padding:12px;margin:12px 0;font-size:13px;line-height:1.7;white-space:pre-wrap;}
+  .diff-view{margin:12px 0;padding:12px;background:#f8fafc;border-radius:8px;font-size:13px;line-height:1.7;}
+  .diff-view .diff-add{background:#dcfce7;color:#166534;}
+  .diff-view .diff-del{background:#fee2e2;color:#991b1b;text-decoration:line-through;}
+  .diff-view .diff-same{color:#475569;}
+  .filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+  .filter-btn{padding:6px 14px;border-radius:20px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:12px;transition:all .2s;}
+  .filter-btn.active{background:#1e293b;color:#fff;border-color:#1e293b;}
+  .replay-section{margin-top:20px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;}
+  .replay-section h3{font-size:16px;margin-bottom:16px;}
+  .replay-viewer{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px;min-height:120px;font-size:14px;line-height:1.8;white-space:pre-wrap;margin-bottom:12px;}
+  .replay-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .replay-controls button{padding:6px 14px;border-radius:6px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:13px;}
+  .replay-controls button.active{background:#1e293b;color:#fff;}
+  .replay-controls input[type=range]{flex:1;min-width:120px;}
+  .replay-info{font-size:12px;color:#64748b;margin-top:8px;}
+  .replay-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;margin-left:8px;}
+  .replay-badge.paste{background:var(--red);}
+  .replay-badge.ai{background:var(--blue);}
+</style>
+</head>
+<body>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('student')">학생 - 과제 작성</button>
+  <button class="tab-btn" onclick="switchTab('report')">교사 - 분석 리포트</button>
+</div>
+
+<!-- STUDENT TAB -->
+<div id="tab-student" class="tab-content active">
+  <div class="editor-wrap">
+    <div class="editor-header">
+      <h2>한국사 서술형 과제</h2>
+      <p>주제: 광개토대왕의 업적과 고구려 전성기에 대해 서술하시오 (500자 이상)</p>
+    </div>
+    <div id="editor" class="editor-box" contenteditable="true" data-placeholder="여기에 과제를 작성하세요..."></div>
+    <div class="editor-toolbar">
+      <button class="primary" onclick="toggleAI()">AI 도우미</button>
+      <button onclick="showGuide()">작성 가이드</button>
+      <button class="submit-btn" onclick="submitAssignment()">과제 제출</button>
+    </div>
+    <div id="ai-panel" class="ai-panel">
+      <h4>AI 학습 도우미</h4>
+      <div id="ai-suggestion" class="ai-suggestion">질문을 입력하면 AI가 참고 자료를 제안합니다.</div>
+      <div style="margin-bottom:12px;">
+        <input id="ai-input" type="text" placeholder="예: 광개토대왕의 영토 확장에 대해 알려줘" style="width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;">
+        <button onclick="askAI()" style="margin-top:8px;padding:6px 14px;border-radius:6px;border:none;background:#0369a1;color:#fff;cursor:pointer;font-size:13px;">질문하기</button>
+      </div>
+      <div id="ai-actions" class="ai-actions" style="display:none;">
+        <button class="accept" onclick="aiAction('accept')">그대로 사용</button>
+        <button class="modify" onclick="aiAction('modify')">수정해서 사용</button>
+        <button class="reject" onclick="aiAction('reject')">사용 안함</button>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar">
+    <div class="stats" id="stats">
+      <span>글자수: 0</span><span>스냅샷: 0</span><span>붙여넣기: 0</span><span>AI 사용: 0</span>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT TAB -->
+<div id="tab-report" class="tab-content">
+  <div class="report-wrap" id="report-area">
+    <div style="text-align:center;padding:80px 0;color:#94a3b8;">
+      <p style="font-size:18px;">아직 제출된 과제가 없습니다</p>
+      <p style="font-size:14px;margin-top:8px;">학생 탭에서 과제를 작성하고 제출해주세요</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  DATA STORE
+// ============================================================
+const DATA = {
+  snapshots: [],        // {text, ts, trigger}
+  pasteEvents: [],      // {text, ts, snapshotIdx}
+  aiInteractions: [],   // {type, text, original, ts, snapshotIdx}
+  startTime: Date.now(),
+  submitted: false,
+  finalText: ''
+};
+
+let lastSnapText = '';
+let snapshotTimer = null;
+
+// ============================================================
+//  TABS
+// ============================================================
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  if(name==='student'){
+    document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    document.getElementById('tab-student').classList.add('active');
+  } else {
+    document.querySelectorAll('.tab-btn')[1].classList.add('active');
+    document.getElementById('tab-report').classList.add('active');
+  }
+}
+
+// ============================================================
+//  NORMALIZE
+// ============================================================
+function norm(t){
+  return t.replace(/\r\n/g,'\n').replace(/\n{2,}/g,'\n').replace(/[ \t]+/g,' ').trim();
+}
+
+// ============================================================
+//  SNAPSHOT ENGINE (핵심: 모든 분석의 기초)
+// ============================================================
+function takeSnapshot(trigger){
+  const text = editor.innerText;
+  if(text === lastSnapText && trigger === 'timer') return;
+  DATA.snapshots.push({ text, ts:Date.now(), trigger });
+  lastSnapText = text;
+  updateStats();
+}
+
+function startSnapshots(){
+  snapshotTimer = setInterval(()=>{
+    if(!DATA.submitted) takeSnapshot('timer');
+  }, 5000);
+}
+
+// ============================================================
+//  EDITOR EVENTS
+// ============================================================
+const editor = document.getElementById('editor');
+
+// Paste: 즉시 전후 스냅샷 + 붙여넣기 텍스트 기록
+editor.addEventListener('paste', e => {
+  if(DATA.submitted) return;
+  const pasted = (e.clipboardData||window.clipboardData).getData('text');
+  if(!pasted) return;
+
+  // 붙여넣기 직전 스냅샷
+  takeSnapshot('before_paste');
+  const beforeIdx = DATA.snapshots.length - 1;
+
+  DATA.pasteEvents.push({ text:pasted, ts:Date.now(), beforeSnapshotIdx:beforeIdx, len:pasted.length });
+
+  // 붙여넣기 직후 스냅샷 (브라우저 반영 대기)
+  setTimeout(()=>{
+    takeSnapshot('after_paste');
+    updateStats();
+  }, 100);
+});
+
+// Focus / Blur
+editor.addEventListener('blur', ()=>{ takeSnapshot('blur'); });
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='hidden') takeSnapshot('tab_away');
+  else takeSnapshot('tab_back');
+});
+
+startSnapshots();
+
+// ============================================================
+//  AI ASSISTANT
+// ============================================================
+const AI_KB = {
+  '광개토':'광개토대왕(374~412)은 고구려 제19대 왕으로, 재위 기간(391~412) 동안 만주와 한반도 북부의 광대한 영토를 정복하였습니다. 백제를 공격하여 한강 이북 지역을 확보하고, 신라에 침입한 왜구를 격퇴하였으며, 후연과의 전쟁에서도 승리하여 요동 지역을 장악했습니다.',
+  '업적':'광개토대왕의 주요 업적으로는 백제 공략(396년, 58성 700촌 확보), 신라 구원(400년, 왜구 격퇴), 후연 격파(요동성 점령), 동부여 복속, 숙신 정벌 등이 있습니다.',
+  '영토':'광개토대왕 시기 고구려의 영토는 서쪽으로 요하, 북쪽으로 송화강 유역, 남쪽으로 한강 이북, 동쪽으로 연해주 일대까지 확장되었습니다.',
+  '비석':'광개토대왕릉비(414년 건립)는 장수왕이 부왕의 업적을 기리기 위해 세운 것으로, 높이 약 6.39m의 거대한 비석입니다. 총 1,802자의 한자가 새겨져 있습니다.',
+  '전성기':'고구려의 전성기는 광개토대왕과 그의 아들 장수왕 시기(391~491)에 이루어졌습니다. 광개토대왕이 영토를 확장하고, 장수왕이 평양 천도(427년)와 한강 유역 확보(475년)를 이루면서 약 100년간 동북아 최강의 국가로 군림했습니다.',
+  '신라':'400년 광개토대왕은 신라의 요청을 받아 5만 대군을 파견하여 신라에 침입한 왜구를 격퇴했습니다.',
+  '백제':'396년 광개토대왕은 직접 수군을 이끌고 백제를 공격하여 58개 성과 700개 촌을 함락시켰습니다. 백제 아신왕은 항복하여 영원한 노객이 될 것을 맹세했습니다.'
+};
+
+let currentAISuggestion = '';
+
+function toggleAI(){ document.getElementById('ai-panel').classList.toggle('show'); }
+
+function askAI(){
+  const q = document.getElementById('ai-input').value.trim();
+  if(!q) return;
+  let answer = '해당 주제에 대한 구체적인 자료를 찾지 못했습니다. 다른 키워드로 질문해 보세요.';
+  for(const[key,val] of Object.entries(AI_KB)){
+    if(q.includes(key)){ answer=val; break; }
+  }
+  currentAISuggestion = answer;
+  document.getElementById('ai-suggestion').innerText = answer;
+  document.getElementById('ai-actions').style.display = 'flex';
+  DATA.aiInteractions.push({ type:'query', question:q, answer, ts:Date.now() });
+}
+
+function aiAction(action){
+  takeSnapshot('before_ai_'+action);
+  const beforeIdx = DATA.snapshots.length - 1;
+  const ts = Date.now();
+
+  if(action==='accept'){
+    const prefix = editor.innerText.length > 0 ? '\n\n' : '';
+    editor.innerText += prefix + currentAISuggestion;
+    DATA.aiInteractions.push({ type:'accept', text:currentAISuggestion, ts, beforeSnapshotIdx:beforeIdx });
+  } else if(action==='modify'){
+    const modified = currentAISuggestion.substring(0, Math.floor(currentAISuggestion.length*0.6)) + ' (수정됨)';
+    const prefix = editor.innerText.length > 0 ? '\n\n' : '';
+    editor.innerText += prefix + modified;
+    DATA.aiInteractions.push({ type:'modify', original:currentAISuggestion, modified, ts, beforeSnapshotIdx:beforeIdx });
+  } else {
+    DATA.aiInteractions.push({ type:'reject', text:currentAISuggestion, ts, beforeSnapshotIdx:beforeIdx });
+  }
+
+  setTimeout(()=>{ takeSnapshot('after_ai_'+action); }, 100);
+  document.getElementById('ai-actions').style.display='none';
+  currentAISuggestion='';
+  updateStats();
+}
+
+// ============================================================
+//  STATS
+// ============================================================
+function updateStats(){
+  document.getElementById('stats').innerHTML = `
+    <span>글자수: ${editor.innerText.length}</span>
+    <span>스냅샷: ${DATA.snapshots.length}</span>
+    <span>붙여넣기: ${DATA.pasteEvents.length}</span>
+    <span>AI 사용: ${DATA.aiInteractions.filter(a=>a.type!=='query').length}</span>
+  `;
+}
+
+// ============================================================
+//  SUBMIT
+// ============================================================
+function submitAssignment(){
+  const text = editor.innerText.trim();
+  if(text.length<10){ alert('과제 내용이 너무 짧습니다.'); return; }
+  if(!confirm('과제를 제출하시겠습니까?\n제출 후에는 수정할 수 없습니다.')) return;
+  DATA.submitted=true;
+  DATA.finalText=text;
+  DATA.submitTime=Date.now();
+  takeSnapshot('submit');
+  editor.setAttribute('contenteditable','false');
+  editor.style.opacity='0.7';
+  buildReport();
+  switchTab('report');
+}
+
+// ============================================================
+//  DIFF ENGINE
+// ============================================================
+function charLCS(a,b){
+  // Character-level LCS for precise diff
+  const m=a.length, n=b.length;
+  if(m>2000||n>2000) return charLCS_fast(a,b);
+  const dp=[];
+  for(let i=0;i<=m;i++){ dp[i]=new Uint16Array(n+1); }
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++){
+    dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1]+1 : Math.max(dp[i-1][j], dp[i][j-1]);
+  }
+  const parts=[];
+  let i=m,j=n;
+  const stk=[];
+  while(i>0&&j>0){
+    if(a[i-1]===b[j-1]){ stk.push({t:'s',c:a[i-1]}); i--;j--; }
+    else if(dp[i-1][j]>=dp[i][j-1]){ stk.push({t:'d',c:a[i-1]}); i--; }
+    else { stk.push({t:'a',c:b[j-1]}); j--; }
+  }
+  while(i>0){ stk.push({t:'d',c:a[i-1]}); i--; }
+  while(j>0){ stk.push({t:'a',c:b[j-1]}); j--; }
+  stk.reverse();
+  // merge
+  for(const s of stk){
+    if(parts.length>0 && parts[parts.length-1].type===s.t) parts[parts.length-1].text+=s.c;
+    else parts.push({type:s.t, text:s.c});
+  }
+  return parts.map(p=>({type:p.type==='s'?'same':p.type==='d'?'del':'add', text:p.text}));
+}
+
+function charLCS_fast(a,b){
+  // prefix-suffix fallback for long text
+  let pre=0;
+  while(pre<a.length&&pre<b.length&&a[pre]===b[pre]) pre++;
+  let sa=a.length-1, sb=b.length-1, suf=0;
+  while(sa>pre&&sb>pre&&a[sa]===b[sb]){ sa--;sb--;suf++; }
+  const r=[];
+  if(pre>0) r.push({type:'same',text:a.substring(0,pre)});
+  const midA=a.substring(pre,a.length-suf);
+  const midB=b.substring(pre,b.length-suf);
+  if(midA) r.push({type:'del',text:midA});
+  if(midB) r.push({type:'add',text:midB});
+  if(suf>0) r.push({type:'same',text:a.substring(a.length-suf)});
+  return r;
+}
+
+function changeRate(original, edited){
+  const nO=norm(original), nE=norm(edited);
+  if(!nO) return nE.length>0?100:0;
+  if(nO===nE) return 0;
+  const parts=charLCS(nO,nE);
+  const same=parts.filter(p=>p.type==='same').reduce((s,p)=>s+p.text.length,0);
+  return Math.min(100, Math.round((1-same/nO.length)*100));
+}
+
+// ============================================================
+//  ANALYSIS ENGINE v5 (스냅샷 diff 기반)
+// ============================================================
+function analyzeV5(){
+  const snaps = DATA.snapshots;
+  const finalText = DATA.finalText;
+  if(snaps.length < 2) return fallbackAnalysis(finalText);
+
+  // 1. 스냅샷 간 diff를 돌면서 각 구간에 태그를 매김
+  //    핵심: "어떤 텍스트가 어떤 이벤트(paste/ai/typing)와 함께 등장했는가"
+  const regions = []; // {text, source, originalRef, addedAt}
+
+  for(let i=1; i<snaps.length; i++){
+    const prev = snaps[i-1];
+    const cur = snaps[i];
+    const prevNorm = norm(prev.text);
+    const curNorm = norm(cur.text);
+    if(prevNorm === curNorm) continue;
+
+    const parts = charLCS(prevNorm, curNorm);
+    const addedText = parts.filter(p=>p.type==='add').map(p=>p.text).join('');
+    if(!addedText) continue;
+
+    // 이 추가분이 어떤 이벤트인지 판별
+    let source = 'typed';
+    let originalRef = null;
+    const timeDelta = (cur.ts - prev.ts)/1000;
+    const addedLen = addedText.length;
+
+    // Check paste events
+    for(const pe of DATA.pasteEvents){
+      if(pe.beforeSnapshotIdx === i-1 || Math.abs(pe.ts - cur.ts) < 2000){
+        const pasteNorm = norm(pe.text);
+        // 추가된 텍스트가 붙여넣기 텍스트를 포함하거나 유사한지 확인
+        if(addedText.includes(pasteNorm.substring(0,Math.min(20,pasteNorm.length))) ||
+           pasteNorm.includes(addedText.substring(0,Math.min(20,addedText.length)))){
+          source = 'paste';
+          originalRef = pe.text;
+          break;
+        }
+      }
+    }
+
+    // Check AI events
+    if(source==='typed'){
+      for(const ai of DATA.aiInteractions){
+        if(ai.type==='query'||ai.type==='reject') continue;
+        if(ai.beforeSnapshotIdx === i-1 || Math.abs(ai.ts - cur.ts) < 2000){
+          const aiText = norm(ai.type==='accept' ? ai.text : ai.modified);
+          if(addedText.includes(aiText.substring(0,Math.min(20,aiText.length))) ||
+             aiText.includes(addedText.substring(0,Math.min(20,addedText.length)))){
+            source = ai.type==='accept' ? 'ai_accept' : 'ai_modify';
+            originalRef = ai.type==='accept' ? ai.text : ai.original;
+            break;
+          }
+        }
+      }
+    }
+
+    // 속도 기반 보조 판별: 5초 이내 30자 이상 → paste 의심
+    if(source==='typed' && addedLen > 30 && timeDelta <= 6){
+      source = 'paste_suspected';
+    }
+
+    regions.push({ text:addedText, source, originalRef, snapshotIdx:i, ts:cur.ts });
+  }
+
+  // 2. 최종 텍스트에서 각 region을 위치 매핑
+  const finalNorm = norm(finalText);
+  const segments = [];
+  let covered = new Array(finalText.length).fill(false);
+
+  // region을 최종 텍스트에서 찾아서 마킹
+  for(const reg of regions){
+    if(reg.source === 'typed') continue; // typed는 나머지로 처리
+    const regNorm = norm(reg.text);
+    const idx = finalText.indexOf(reg.text);
+    const idxNorm = finalNorm.indexOf(regNorm);
+    const startPos = idx >= 0 ? idx : (idxNorm >= 0 ? idxNorm : -1);
+
+    if(startPos >= 0){
+      const endPos = startPos + reg.text.length;
+      // 겹침 방지
+      let alreadyCovered = false;
+      for(let k=startPos;k<endPos&&k<covered.length;k++){
+        if(covered[k]){ alreadyCovered=true; break; }
+      }
+      if(!alreadyCovered){
+        for(let k=startPos;k<endPos&&k<covered.length;k++) covered[k]=true;
+        segments.push({
+          start:startPos, end:endPos,
+          text:finalText.substring(startPos,endPos),
+          source:reg.source, originalRef:reg.originalRef
+        });
+      }
+    }
+  }
+
+  // 나머지 = typed
+  let runStart = -1;
+  for(let i=0; i<=finalText.length; i++){
+    if(i<finalText.length && !covered[i]){
+      if(runStart<0) runStart=i;
+    } else {
+      if(runStart>=0){
+        const t = finalText.substring(runStart, i);
+        if(t.trim()) segments.push({ start:runStart, end:i, text:t, source:'typed', originalRef:null });
+        runStart=-1;
+      }
+    }
+  }
+
+  // 정렬
+  segments.sort((a,b)=>a.start-b.start);
+
+  // 3. 색상·라벨 부여
+  const enriched = segments.map(seg => {
+    let color, label, modLevel, summary;
+    const cr = seg.originalRef ? changeRate(seg.originalRef, seg.text) : null;
+
+    switch(seg.source){
+      case 'typed':
+        color='green'; label='자기주도 작성'; modLevel='active';
+        summary='직접 타이핑하여 작성한 내용입니다.';
+        break;
+      case 'paste':
+        if(cr!==null && cr>30){ color='yellow'; label='외부 참고 후 수정'; modLevel='moderate'; summary=`붙여넣기 후 약 ${cr}% 수정했습니다.`; }
+        else if(cr!==null && cr>5){ color='yellow'; label='외부 참고 (소폭 수정)'; modLevel='low'; summary=`붙여넣기 후 약 ${cr}% 수정했습니다.`; }
+        else { color='red'; label='외부 붙여넣기'; modLevel='none'; summary='외부에서 붙여넣기한 내용으로, 수정이 거의 없습니다.'; }
+        break;
+      case 'paste_suspected':
+        color='red'; label='붙여넣기 의심'; modLevel='none';
+        summary='짧은 시간에 대량의 텍스트가 추가되었습니다. (5초 이내 30자 이상)';
+        break;
+      case 'ai_accept':
+        color='red'; label='AI 제안 그대로 사용'; modLevel='none';
+        summary='AI 제안을 수정 없이 그대로 사용했습니다.';
+        break;
+      case 'ai_modify':
+        if(cr!==null && cr>30){ color='blue'; label='AI 참고 후 재작성'; modLevel='active'; summary=`AI 제안을 참고하여 약 ${cr}% 수정했습니다.`; }
+        else { color='yellow'; label='AI 참고 (소폭 수정)'; modLevel='low'; summary=`AI 제안을 소폭 수정했습니다 (약 ${cr||0}%).`; }
+        break;
+      default:
+        color='green'; label='자기주도 작성'; modLevel='active'; summary='직접 작성한 내용입니다.';
+    }
+    return { ...seg, color, label, modLevel, summary, changeRate:cr };
+  });
+
+  // 4. 통계
+  const total = finalText.length;
+  const st = {green:0,blue:0,yellow:0,red:0};
+  enriched.forEach(s=>{ st[s.color]=(st[s.color]||0)+s.text.length; });
+  const pct={};
+  for(const c of['green','blue','yellow','red']) pct[c]=total>0?Math.round(st[c]/total*100):0;
+  const adj=100-(pct.green+pct.blue+pct.yellow+pct.red);
+  pct.green+=adj;
+  const score=Math.round(pct.green*1.0+pct.blue*0.7+pct.yellow*0.3+pct.red*0.0);
+
+  return { segments:enriched, stats:pct, score, totalChars:total };
+}
+
+function fallbackAnalysis(text){
+  return {
+    segments:[{start:0,end:text.length,text,source:'typed',color:'green',label:'자기주도 작성',modLevel:'active',summary:'스냅샷 부족으로 전체를 자기주도 작성으로 분류합니다.',changeRate:null,originalRef:null}],
+    stats:{green:100,blue:0,yellow:0,red:0}, score:100, totalChars:text.length
+  };
+}
+
+// ============================================================
+//  BUILD REPORT
+// ============================================================
+function buildReport(){
+  const analysis = analyzeV5();
+  const area = document.getElementById('report-area');
+  const elapsed = Math.round((DATA.submitTime-DATA.startTime)/60000);
+
+  area.innerHTML = `
+    <div class="report-summary">
+      <h2>작성 과정 분석 리포트</h2>
+      <div class="summary-grid">
+        <div class="summary-card"><div class="label">과제</div><div class="value" style="font-size:14px;">광개토대왕의 업적</div></div>
+        <div class="summary-card"><div class="label">제출 시간</div><div class="value" style="font-size:14px;">${new Date(DATA.submitTime).toLocaleString('ko-KR')}</div></div>
+        <div class="summary-card"><div class="label">작성 소요</div><div class="value">${elapsed}분</div></div>
+        <div class="summary-card"><div class="label">글자수</div><div class="value">${analysis.totalChars}</div></div>
+        <div class="summary-card"><div class="label">작성 과정 점수</div><div class="value" style="color:${analysis.score>=70?'var(--green)':analysis.score>=40?'var(--yellow)':'var(--red)'}">${analysis.score}<span style="font-size:14px;color:#94a3b8;">/100</span></div></div>
+        <div class="summary-card"><div class="label">스냅샷 수</div><div class="value">${DATA.snapshots.length}</div></div>
+      </div>
+      <div class="ratio-bar">
+        <div style="width:${analysis.stats.green}%;background:var(--green);">${analysis.stats.green>5?analysis.stats.green+'%':''}</div>
+        <div style="width:${analysis.stats.blue}%;background:var(--blue);">${analysis.stats.blue>5?analysis.stats.blue+'%':''}</div>
+        <div style="width:${analysis.stats.yellow}%;background:var(--yellow);">${analysis.stats.yellow>5?analysis.stats.yellow+'%':''}</div>
+        <div style="width:${analysis.stats.red}%;background:var(--red);">${analysis.stats.red>5?analysis.stats.red+'%':''}</div>
+      </div>
+      <div class="ratio-legend">
+        <span><span class="dot" style="background:var(--green);"></span> 자기주도 작성 ${analysis.stats.green}%</span>
+        <span><span class="dot" style="background:var(--blue);"></span> AI 참고 후 재작성 ${analysis.stats.blue}%</span>
+        <span><span class="dot" style="background:var(--yellow);"></span> 검토 필요 ${analysis.stats.yellow}%</span>
+        <span><span class="dot" style="background:var(--red);"></span> 높은 주의 ${analysis.stats.red}%</span>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterSegs('all',this)">전체 보기</button>
+      <button class="filter-btn" onclick="filterSegs('yellow',this)">검토 필요</button>
+      <button class="filter-btn" onclick="filterSegs('red',this)">높은 주의</button>
+      <button class="filter-btn" onclick="filterSegs('blue',this)">AI 활용</button>
+      <button class="filter-btn" onclick="filterSegs('green',this)">자기주도</button>
+    </div>
+    <div class="report-body">
+      <div class="doc-panel"><h3>제출 과제</h3><div class="doc-text" id="doc-text"></div></div>
+      <div class="detail-panel"><h3>구간 상세 분석</h3><div id="detail-content" class="detail-placeholder">하이라이트된 구간을 클릭하면 상세 정보가 표시됩니다.</div></div>
+    </div>
+    <div class="replay-section">
+      <h3>작성 과정 리플레이</h3>
+      <div id="replay-viewer" class="replay-viewer"></div>
+      <div class="replay-controls">
+        <button id="replay-play" onclick="toggleReplay()">재생</button>
+        <input type="range" id="replay-slider" min="0" max="${Math.max(0,DATA.snapshots.length-1)}" value="0" oninput="seekReplay(this.value)">
+        <span id="replay-counter" style="font-size:12px;color:#64748b;">0 / ${DATA.snapshots.length}</span>
+        <button onclick="setSpeed(1)" class="active" id="sp-1">1x</button>
+        <button onclick="setSpeed(2)" id="sp-2">2x</button>
+        <button onclick="setSpeed(4)" id="sp-4">4x</button>
+      </div>
+      <div class="replay-info" id="replay-info"></div>
+    </div>
+  `;
+
+  const docEl = document.getElementById('doc-text');
+  window._segs = analysis.segments;
+  analysis.segments.forEach((seg,idx)=>{
+    const span = document.createElement('span');
+    span.className = `seg ${seg.color}`;
+    span.dataset.idx = idx;
+    span.textContent = seg.text;
+    span.onclick = ()=>showDetail(idx);
+    docEl.appendChild(span);
+  });
+}
+
+// ============================================================
+//  SEGMENT DETAIL
+// ============================================================
+function showDetail(idx){
+  const seg = window._segs[idx];
+  const dc = document.getElementById('detail-content');
+
+  let diffHtml='';
+  if(seg.originalRef){
+    const parts = charLCS(norm(seg.originalRef), norm(seg.text));
+    diffHtml = `<div class="diff-view"><strong>원본 대비 변경:</strong><br>`+
+      parts.map(p=>{
+        if(p.type==='same') return `<span class="diff-same">${esc(p.text)}</span>`;
+        if(p.type==='del') return `<span class="diff-del">${esc(p.text)}</span>`;
+        return `<span class="diff-add">${esc(p.text)}</span>`;
+      }).join('')+`</div>`;
+  }
+
+  dc.innerHTML=`
+    <div class="detail-card">
+      <span class="badge ${seg.color}">${seg.label}</span>
+      <div class="info-row"><span class="k">구간 위치</span><span>${seg.start} ~ ${seg.end} (${seg.text.length}자)</span></div>
+      <div class="info-row"><span class="k">수정 수준</span><span>${({active:'활발한 수정',moderate:'보통 수정',low:'소폭 수정',none:'수정 없음'})[seg.modLevel]}</span></div>
+      ${seg.changeRate!==null?`<div class="info-row"><span class="k">내용 변경률</span><span>${seg.changeRate}%</span></div>`:''}
+      <div class="excerpt">${esc(seg.text.substring(0,300))}${seg.text.length>300?'...':''}</div>
+      <p style="font-size:13px;color:#64748b;margin:8px 0;">${seg.summary}</p>
+      ${diffHtml}
+    </div>
+  `;
+  document.querySelectorAll('.seg').forEach(s=>s.style.outline='none');
+  document.querySelector(`.seg[data-idx="${idx}"]`).style.outline='2px solid #1e293b';
+}
+
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ============================================================
+//  FILTER
+// ============================================================
+function filterSegs(color,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.seg').forEach(s=>{
+    s.style.opacity = (color==='all'||s.classList.contains(color)) ? '1' : '0.15';
+  });
+}
+
+// ============================================================
+//  REPLAY (v5: charLCS diff 기반)
+// ============================================================
+let rIdx=0, rPlaying=false, rTimer=null, rSpeed=1;
+
+function toggleReplay(){
+  rPlaying=!rPlaying;
+  document.getElementById('replay-play').textContent=rPlaying?'일시정지':'재생';
+  if(rPlaying) runR(); else clearTimeout(rTimer);
+}
+function runR(){
+  if(!rPlaying||rIdx>=DATA.snapshots.length-1){ rPlaying=false; document.getElementById('replay-play').textContent='재생'; return; }
+  rIdx++; renderR(rIdx);
+  document.getElementById('replay-slider').value=rIdx;
+  rTimer=setTimeout(runR, 1000/rSpeed);
+}
+function seekReplay(v){ rIdx=parseInt(v); renderR(rIdx); }
+function setSpeed(s){
+  rSpeed=s;
+  [1,2,4].forEach(v=>document.getElementById('sp-'+v).classList.toggle('active',v===s));
+}
+
+function renderR(idx){
+  const snap=DATA.snapshots[idx];
+  const prev=idx>0?DATA.snapshots[idx-1]:{text:''};
+  const viewer=document.getElementById('replay-viewer');
+
+  const parts=charLCS(prev.text, snap.text);
+  viewer.innerHTML = parts.map(p=>{
+    if(p.type==='same') return `<span class="diff-same">${esc(p.text)}</span>`;
+    if(p.type==='del') return `<span class="diff-del">${esc(p.text)}</span>`;
+    return `<span class="diff-add">${esc(p.text)}</span>`;
+  }).join('');
+
+  const addedLen = parts.filter(p=>p.type==='add').reduce((s,p)=>s+p.text.length,0);
+  const timeDelta = idx>0 ? (snap.ts-prev.ts)/1000 : 999;
+  let badge='';
+  if(snap.trigger&&snap.trigger.includes('paste')) badge=`<span class="replay-badge paste">붙여넣기</span>`;
+  else if(snap.trigger&&snap.trigger.includes('ai')) badge=`<span class="replay-badge ai">AI 사용</span>`;
+  else if(addedLen>30&&timeDelta<=6) badge=`<span class="replay-badge paste">대량 추가 감지</span>`;
+
+  document.getElementById('replay-counter').textContent=`${idx+1} / ${DATA.snapshots.length}`;
+  const elapsed=Math.round((snap.ts-DATA.startTime)/1000);
+  document.getElementById('replay-info').innerHTML=
+    `시간: ${elapsed}초 | 글자수: ${snap.text.length} | 변경: +${addedLen}자 | 트리거: ${snap.trigger||'timer'} ${badge}`;
+}
+
+// ============================================================
+//  GUIDE
+// ============================================================
+function showGuide(){
+  alert(
+    `[Verihum 프로토타입 v5 테스트 가이드]\n\n`+
+    `1. 직접 타이핑으로 2~3문장 작성\n`+
+    `2. 외부에서 텍스트를 복사해 붙여넣기\n`+
+    `3. 붙여넣기 후 일부를 수정해보기\n`+
+    `4. AI 도우미 사용 (수락/수정/거부)\n`+
+    `5. 문단 나누기, 띄어쓰기 변경 시도\n`+
+    `6. 과제 제출 후 리포트 확인\n\n`+
+    `[v5 핵심 변경]\n`+
+    `- charOrigin 배열 제거 → 스냅샷 diff 기반 분석\n`+
+    `- 붙여넣기 전후 즉시 스냅샷 촬영\n`+
+    `- 정규화 적용으로 포맷 변경 오탐 해결\n`+
+    `- 글자 단위 LCS diff로 정확한 변경률 산출\n\n`+
+    `* 모든 데이터는 브라우저 메모리에만 저장됩니다.`
+  );
+}
+</script>
+</body>
+</html>

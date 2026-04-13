@@ -269,6 +269,161 @@ const App = {
 };
 
 
+/* ══════════════════════════════════════════════
+   USER_API — 사용자 페이지 엔드포인트 상수
+   [개발자 연동 가이드]
+   1. base URL을 실제 서버 경로로 수정
+   2. UserHttp 메서드의 TODO 위치에서 fetch() 호출
+   3. 샘플 데이터(SAMPLE_*)는 실제 API 응답으로 교체
+══════════════════════════════════════════════ */
+const USER_API = {
+  base: '/api',
+
+  /* 강좌·교육 */
+  courses:           '/api/courses',
+  courseDetail:      '/api/courses/:id',
+  courseApply:       '/api/courses/:id/apply',
+
+  /* 커뮤니티 */
+  notices:           '/api/board/notice',
+  gallery:           '/api/board/gallery',
+  newsletter:        '/api/board/newsletter',
+  archive:           '/api/board/archive',
+  press:             '/api/board/press',
+  calendar:          '/api/calendar',
+
+  /* 회원 인증 */
+  login:             '/api/auth/login',
+  logout:            '/api/auth/logout',
+  register:          '/api/auth/register',
+  findId:            '/api/auth/find-id',
+  findPw:            '/api/auth/find-pw',
+
+  /* 회원활동 */
+  clubs:             '/api/member/clubs',
+  sagongdan:         '/api/member/sagongdan',
+  instructors:       '/api/member/instructors',
+  mentoring:         '/api/member/mentoring',
+  forestWork:        '/api/member/forest-work',
+  competency:        '/api/member/competency',
+
+  /* 신청 */
+  applyRegular:      '/api/apply/regular',
+  applyInstructor:   '/api/apply/instructor',
+  applyForest:       '/api/apply/forest',
+  applyDonate:       '/api/apply/donate',
+
+  /* 마이페이지 */
+  myProfile:         '/api/my/profile',
+  myApply:           '/api/my/apply',
+  myCert:            '/api/my/certificates',
+  myPwChange:        '/api/my/password',
+
+  /**
+   * :id 치환 헬퍼
+   * 사용 예: USER_API.url('courseDetail', 5) → '/api/courses/5'
+   */
+  url(key, id, suffix = '') {
+    return `${this[key].replace(':id', id)}${suffix ? '/' + suffix : ''}`;
+  },
+};
+
+
+/* ══════════════════════════════════════════════
+   UserHttp — fetch 공통 래퍼 (AdminHttp 대응)
+   [개발자] 아래 메서드들이 실제 API 호출 진입점
+   현재는 프로토타입이므로 Promise.resolve()로 반환
+══════════════════════════════════════════════ */
+const UserHttp = {
+
+  _csrf() {
+    return document.querySelector('meta[name="csrf-token"]')?.content || '';
+  },
+
+  _headers(isJson = true) {
+    const h = { 'X-CSRF-TOKEN': this._csrf() };
+    if (isJson) h['Content-Type'] = 'application/json';
+    return h;
+  },
+
+  /**
+   * GET 요청
+   * [개발자 연동]
+   *   return fetch(`${url}?${new URLSearchParams(params)}`, {
+   *     headers: this._headers(false), credentials: 'same-origin'
+   *   }).then(r => this._handle(r));
+   */
+  get(url, params = {}) {
+    // TODO: 실제 fetch 요청으로 교체
+    console.log('[UserHttp.get]', url, params);
+    return Promise.resolve({ success: true, total: 0, items: [] });
+  },
+
+  /**
+   * POST 요청 (JSON body)
+   * [개발자 연동]
+   *   return fetch(url, {
+   *     method: 'POST', headers: this._headers(),
+   *     credentials: 'same-origin',
+   *     body: JSON.stringify(body)
+   *   }).then(r => this._handle(r));
+   */
+  post(url, body = {}) {
+    // TODO: 실제 fetch 요청으로 교체
+    console.log('[UserHttp.post]', url, body);
+    return Promise.resolve({ success: true });
+  },
+
+  /**
+   * PUT 요청 (수정)
+   * [개발자 연동]
+   *   return fetch(url, {
+   *     method: 'PUT', headers: this._headers(),
+   *     credentials: 'same-origin',
+   *     body: JSON.stringify(body)
+   *   }).then(r => this._handle(r));
+   */
+  put(url, body = {}) {
+    // TODO: 실제 fetch 요청으로 교체
+    console.log('[UserHttp.put]', url, body);
+    return Promise.resolve({ success: true });
+  },
+
+  /**
+   * DELETE 요청
+   * [개발자 연동]
+   *   return fetch(url, {
+   *     method: 'DELETE', headers: this._headers(),
+   *     credentials: 'same-origin'
+   *   }).then(r => this._handle(r));
+   */
+  delete(url) {
+    // TODO: 실제 fetch 요청으로 교체
+    console.log('[UserHttp.delete]', url);
+    return Promise.resolve({ success: true });
+  },
+
+  /**
+   * POST 요청 (FormData — 파일 업로드)
+   * [개발자 연동]
+   *   return fetch(url, {
+   *     method: 'POST', headers: { 'X-CSRF-TOKEN': this._csrf() },
+   *     credentials: 'same-origin', body: formData
+   *   }).then(r => this._handle(r));
+   */
+  upload(url, formData) {
+    // TODO: 실제 fetch 요청으로 교체
+    console.log('[UserHttp.upload]', url);
+    return Promise.resolve({ success: true });
+  },
+
+  /* 응답 처리 헬퍼 — 개발자 연동 후 사용
+   * _handle(res) {
+   *   if (!res.ok) return res.json().then(e => Promise.reject(e));
+   *   return res.json();
+   * },
+   */
+};
 
 
 /* ── 페이지 진입 시 세션 자동 복원 */

@@ -9,25 +9,15 @@ const MyPage = {
      통합 신청 데이터 (교육 + 강사활동)
   ───────────────────────────────────────── */
   ALL_APPLY: [
-    /* 교육 */
-    { id:1,  category:'edu', title:'숲해설가 전문과정 1기',         type:'전문과정',    date:'2026-03-01', hours:40, status:'done',       cert:true,  reviewed:true  },
-    { id:2,  category:'edu', title:'식물생태 심화 특강',             type:'시민아카데미', date:'2024-05-10', hours:8,  status:'done',       cert:true,  reviewed:false },
-    { id:3,  category:'edu', title:'숲치유 전문가 과정',             type:'직무교육',    date:'2024-07-20', hours:16, status:'done',       cert:true,  reviewed:false },
-    { id:4,  category:'edu', title:'생태 해설 기법 워크숍',          type:'역량강화',    date:'2024-09-05', hours:8,  status:'done',       cert:false, reviewed:false },
-    { id:5,  category:'edu', title:'산림교육 전문가 특강',           type:'전문과정',    date:'2024-11-01', hours:24, status:'done',       cert:true,  reviewed:false },
-    { id:6,  category:'edu', title:'조류 생태 관찰 실습',            type:'시민아카데미', date:'2025-01-15', hours:6,  status:'done',       cert:false, reviewed:false },
-    { id:7,  category:'edu', title:'2025 숲해설 직무역량 강화',      type:'직무교육',    date:'2025-03-10', hours:16, status:'progress',   cert:false, reviewed:false },
-    { id:8,  category:'edu', title:'곤충 생태계 해설 워크숍',        type:'역량강화',    date:'2025-04-01', hours:8,  status:'applied',    cert:false, reviewed:false },
-    { id:9,  category:'edu', title:'숲 환경 교육 지도사 과정',       type:'전문과정',    date:'2025-05-15', hours:32, status:'applied',    cert:false, reviewed:false },
-    { id:10, category:'edu', title:'맹그로브 해설 기법 특강',        type:'시민아카데미', date:'2024-02-20', hours:4,  status:'cancel',     cert:false, reviewed:false },
-    { id:11, category:'edu', title:'산림치유지도사 전문과정',         type:'전문과정',    date:'2023-09-01', hours:40, status:'done',       cert:true,  reviewed:false },
-    { id:12, category:'edu', title:'식용식물 해설 실습',             type:'역량강화',    date:'2023-06-15', hours:8,  status:'done',       cert:false, reviewed:false },
+    /* 교육 — 상태 다양성 유지 (완료·수강중·신청) */
+    { id:1, category:'edu', title:'숲해설가 전문과정 55기',    type:'전문과정',    date:'2026-03-01', hours:40, status:'done',     cert:true,  reviewed:true  },
+    { id:2, category:'edu', title:'2026 숲해설 직무역량 강화', type:'직무교육',    date:'2026-04-10', hours:16, status:'progress', cert:false, reviewed:false },
+    { id:3, category:'edu', title:'봄꽃 산책 — 시민아카데미',  type:'시민아카데미', date:'2026-05-15', hours:6,  status:'applied',  cert:false, reviewed:false },
 
-    /* 강사활동 */
+    /* 강사활동 — 상태 다양성 유지 (완료·신청·미선정) */
     { id:101, category:'instructor', title:'도봉구 초등학교 숲 체험 교육',   type:'강사활동', date:'2026-03-18', hours:4, status:'done',       cert:true,  reviewed:false },
-    { id:102, category:'instructor', title:'노원구 복지관 자연치유 프로그램', type:'강사활동', date:'2026-03-28', hours:3, status:'applied',    cert:false, reviewed:false },
-    { id:103, category:'instructor', title:'은평구 초등학교 숲 생태 교육',   type:'강사활동', date:'2026-04-10', hours:4, status:'unselected', cert:false, reviewed:false },
-    { id:104, category:'instructor', title:'마포구 시민 숲해설 프로그램',    type:'강사활동', date:'2025-11-05', hours:5, status:'cancel',     cert:false, reviewed:false },
+    { id:102, category:'instructor', title:'노원구 복지관 자연치유 프로그램', type:'강사활동', date:'2026-04-28', hours:3, status:'applied',    cert:false, reviewed:false },
+    { id:103, category:'instructor', title:'은평구 초등학교 숲 생태 교육',   type:'강사활동', date:'2026-05-10', hours:4, status:'unselected', cert:false, reviewed:false },
   ],
 
   /* 상태 배지 */
