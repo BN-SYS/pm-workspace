@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verihum — 서비스 프로토타입</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --surface2: #f0efe9;
+  --border: #e0ddd5;
+  --accent: #1a3fcc;
+  --accent-light: #eef1ff;
+  --text: #1a1a1a;
+  --text-muted: #888680;
+  --text-dim: #bbb9b3;
+  --green: #0d9f6e;
+  --orange: #e07a20;
+  --red: #d63b3b;
+  --purple: #7c3aed;
+  --c-self:    #0d9f6e;
+  --c-ai-good: #e07a20;
+  --c-ai-raw:  #d63b3b;
+  --c-paste:   #7c3aed;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── SCREEN SYSTEM ── */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ── FLOW INDICATOR ── */
+#flow-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: var(--accent);
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  font-size: 11px;
+  font-weight: 600;
+  overflow-x: auto;
+}
+.flow-step {
+  color: rgba(255,255,255,0.4);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  cursor: default;
+  transition: color 0.3s;
+}
+.flow-step:first-child { padding-left: 0; }
+.flow-step.done { color: rgba(255,255,255,0.7); cursor: pointer; }
+.flow-step.done:hover { color: #fff; }
+.flow-step.active { color: #fff; }
+.flow-arrow { color: rgba(255,255,255,0.25); }
+.flow-num {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(255,255,255,0.15);
+  flex-shrink: 0;
+}
+.flow-step.active .flow-num { background: #fff; color: var(--accent); }
+.flow-step.done .flow-num { background: rgba(255,255,255,0.4); color: #fff; }
+
+/* ── SHARED COMPONENTS ── */
+.page-wrap {
+  flex: 1;
+  padding: 40px 32px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 40px;
+}
+.page-header {
+  margin-bottom: 32px;
+}
+.page-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.page-sub { font-size: 13.5px; color: var(--text-muted); }
+
+.logo-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 40px;
+  z-index: 100;
+  margin-top: 40px;
+}
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+}
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.av-teacher { background: var(--accent); }
+.av-student { background: var(--green); }
+.av-admin   { background: var(--orange); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #1232a0; }
+.btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--border); }
+.btn-green { background: var(--green); color: #fff; }
+.btn-green:hover { background: #0a7d56; }
+.btn-sm { padding: 6px 14px; font-size: 12.5px; }
+.btn-lg { padding: 13px 28px; font-size: 15px; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.badge-green { background: #dcfce7; color: #166534; }
+.badge-blue  { background: var(--accent-light); color: var(--accent); }
+.badge-orange{ background: #fff7ed; color: #9a3412; }
+.badge-gray  { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
+.badge-red   { background: #fef2f2; color: #b91c1c; }
+
+input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="datetime-local"], textarea, select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--text);
+  background: var(--surface);
+  outline: none;
+  transition: border-color 0.15s;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+textarea { resize: vertical; }
+.form-group { margin-bottom: 18px; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.form-hint  { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* role selector */
+.role-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.role-option {
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.role-option:hover { border-color: var(--accent); background: var(--accent-light); }
+.role-option.selected { border-color: var(--accent); background: var(--accent-light); }
+.role-option .role-icon { font-size: 24px; margin-bottom: 6px; }
+.role-option .role-name { font-weight: 700; font-size: 14px; }
+.role-option .role-desc { font-size: 12px; color: var(--text-muted); }
+
+/* table */
+.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.tbl th { background: var(--surface2); padding: 10px 16px; text-align: left; font-size: 12px; font-weight: 700; color: var(--text-muted); border-bottom: 2px solid var(--border); white-space: nowrap; }
+.tbl td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: var(--surface2); cursor: pointer; }
+
+/* divider */
+.divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+/* notice box */
+.notice { background: var(--accent-light); border: 1px solid #c7d3fc; border-radius: 8px; padding: 14px 18px; font-size: 13px; color: var(--accent); margin-bottom: 20px; }
+.notice-warn { background: #fff7ed; border-color: #fed7aa; color: #9a3412; }
+.notice-success { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+
+/* ════════════════════════════
+   SCREEN 1: 로그인
+════════════════════════════ */
+#s-login {
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f4f0 60%, #eef1ff 100%);
+}
+.login-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.07);
+  margin-top: 48px;
+}
+.login-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  margin-bottom: 4px;
+}
+.login-tagline { font-size: 13px; color: var(--text-muted); margin-bottom: 32px; }
+.demo-accounts {
+  margin-top: 20px;
+  padding: 14px;
+  background: var(--surface2);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.demo-accounts strong { display: block; margin-bottom: 8px; font-size: 12.5px; color: var(--text); }
+.demo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  margin: 3px 3px 0 0;
+  transition: all 0.15s;
+  font-weight: 600;
+}
+.demo-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ════════════════════════════
+   SCREEN 2: 교사 — 과제 목록
+════════════════════════════ */
+.assignment-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.assignment-card:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(26,63,204,0.08); transform: translateY(-1px); }
+.assignment-card .ac-main { flex: 1 }
+.assignment-card .ac-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.assignment-card .ac-meta { font-size: 12.5px; color: var(--text-muted); display: flex; gap: 14px; flex-wrap: wrap; }
+.assignment-card .ac-stat { text-align: right; flex-shrink: 0; }
+.progress-mini { width: 80px; height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; margin-top: 6px; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+
+/* ════════════════════════════
+   SCREEN 3: 교사 — 과제 등록
+════════════════════════════ */
+
+/* ════════════════════════════
+   SCREEN 4: 교사 — 제출 현황
+════════════════════════════ */
+.submit-status {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; font-weight: 600;
+}
+.status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+/* ════════════════════════════
+   SCREEN 5: 학생 — 과제 목록
+════════════════════════════ */
+
+/* ════════════════════════════
+   SCREEN 6: 학생 — 에디터
+════════════════════════════ */
+#s-editor { flex-direction: column; }
+.editor-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 40px;
+  position: sticky;
+  top: 40px;
+  z-index: 100;
+}
+.editor-info { display: flex; flex-direction: column; gap: 2px; }
+.editor-assignment-title { font-size: 15px; font-weight: 700; }
+.editor-deadline { font-size: 12px; color: var(--text-muted); }
+.editor-controls { display: flex; align-items: center; gap: 10px; }
+.char-count { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-muted); padding: 6px 12px; background: var(--surface2); border-radius: 5px; }
+
+.editor-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  overflow: hidden;
+  height: calc(100vh - 120px);
+}
+.editor-main { display: flex; flex-direction: column; overflow: hidden; }
+.editor-toolbar {
+  padding: 8px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface);
+}
+.toolbar-btn {
+  width: 30px; height: 30px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'Noto Sans KR', sans-serif;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+  transition: all 0.1s;
+  font-weight: 700;
+}
+.toolbar-btn:hover { background: var(--surface2); color: var(--text); }
+.toolbar-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.editor-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 32px;
+  font-size: 15px;
+  line-height: 2;
+  outline: none;
+  background: var(--surface);
+  word-break: keep-all;
+}
+.editor-area:focus { outline: none; }
+.editor-area[data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  color: var(--text-dim);
+  pointer-events: none;
+}
+
+.editor-sidebar {
+  border-left: 1px solid var(--border);
+  background: var(--surface2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sidebar-tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-tab {
+  flex: 1;
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: all 0.15s;
+  border-bottom: 2px solid transparent;
+}
+.sidebar-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--surface); }
+.sidebar-content { flex: 1; overflow-y: auto; padding: 16px; }
+
+/* AI assistant */
+.ai-panel { display: none; flex-direction: column; height: 100%; }
+.ai-panel.active { display: flex; }
+.assign-panel { display: none; flex-direction: column; }
+.assign-panel.active { display: flex; }
+
+.ai-chat-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-bottom: 12px; }
+.ai-msg {
+  padding: 10px 13px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.ai-msg-user { background: var(--accent); color: #fff; align-self: flex-end; max-width: 90%; border-bottom-right-radius: 3px; }
+.ai-msg-ai   { background: var(--surface); border: 1px solid var(--border); align-self: flex-start; max-width: 95%; border-bottom-left-radius: 3px; }
+.ai-msg-ai .ai-suggestion-actions { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+.ai-suggestion-text { background: #f8f8f6; border-left: 3px solid var(--accent); padding: 8px 10px; border-radius: 3px; font-size: 12.5px; margin: 8px 0; color: var(--text); }
+.ai-input-row { display: flex; gap: 6px; margin-top: 10px; }
+.ai-input-row input { font-size: 12.5px; padding: 8px 10px; }
+.ai-send-btn { padding: 8px 12px; background: var(--accent); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; flex-shrink: 0; transition: background 0.15s; }
+.ai-send-btn:hover { background: #1232a0; }
+
+/* submit modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+.modal-box {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+.modal-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+.modal-body { font-size: 13.5px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+/* ════════════════════════════
+   SCREEN 7: 학생 — 제출 완료
+════════════════════════════ */
+#s-submitted {
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0fdf4 60%, #f5f4f0 100%);
+}
+.submitted-box {
+  text-align: center;
+  padding: 60px 40px;
+  max-width: 480px;
+}
+.submitted-icon {
+  width: 72px; height: 72px;
+  background: var(--green);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 24px;
+  box-shadow: 0 8px 24px rgba(13,159,110,0.25);
+}
+
+/* ════════════════════════════
+   SCREEN 8: 교사 — 리포트
+════════════════════════════ */
+.report-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  flex: 1;
+  overflow: hidden;
+}
+.report-left { display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid var(--border); }
+.report-right { overflow-y: auto; background: var(--surface2); }
+
+.score-row {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+.score-cell {
+  flex: 1; min-width: 110px;
+  padding: 14px 18px;
+  border-right: 1px solid var(--border);
+}
+.score-cell:last-child { border-right: none; }
+.score-cell .sc-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px; }
+.score-cell .sc-val { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; line-height: 1.2; }
+.score-cell .sc-bar { height: 3px; background: var(--surface2); border-radius: 2px; margin-top: 5px; overflow: hidden; }
+.score-cell .sc-fill { height: 100%; border-radius: 2px; }
+
+.tl-section {
+  padding: 16px 24px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.tl-row {
+  height: 28px;
+  background: var(--surface2);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  cursor: pointer;
+}
+.tl-block {
+  height: 100%;
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+.tl-block:hover { opacity: 0.75; }
+
+.hm-row { display: flex; gap: 2px; margin-top: 6px; }
+.hm-cell { flex: 1; height: 5px; border-radius: 1px; background: var(--border); cursor: pointer; }
+
+.legend-row { display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+.leg-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted); }
+.leg-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+.text-review {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 32px;
+  font-size: 15px;
+  line-height: 2.1;
+  background: var(--surface);
+  word-break: keep-all;
+}
+
+.hl { border-radius: 3px; padding: 1px 0; cursor: pointer; transition: filter 0.15s; }
+.hl:hover { filter: brightness(0.9); }
+.hl.hl-active { outline: 2px solid var(--accent); outline-offset: 2px; }
+.hl-self    { background: rgba(13,159,110,0.13); border-bottom: 2px solid var(--c-self); }
+.hl-ai-good { background: rgba(224,122,32,0.13);  border-bottom: 2px solid var(--c-ai-good); }
+.hl-ai-raw  { background: rgba(214,59,59,0.13);   border-bottom: 2px solid var(--c-ai-raw); }
+.hl-paste   { background: rgba(124,58,237,0.13);  border-bottom: 2px solid var(--c-paste); }
+
+/* detail panel */
+.detail-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 100%; color: var(--text-dim); text-align: center; padding: 32px; gap: 10px; font-size: 13px;
+}
+.detail-content { padding: 20px 18px; display: none; animation: fadeup 0.2s ease; }
+.detail-content.vis { display: block; }
+@keyframes fadeup { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+.dt-type-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 99px; font-size: 12px; font-weight: 700;
+  margin-bottom: 14px; width: fit-content;
+}
+.dt-quote {
+  border-radius: 6px; padding: 12px 14px;
+  font-size: 13px; line-height: 1.8; margin-bottom: 16px;
+  border: 1px solid var(--border); background: var(--surface);
+}
+.dt-section { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-muted); margin: 16px 0 8px; }
+.ev-item { display: flex; gap: 10px; padding: 9px 11px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 7px; font-size: 12.5px; }
+.ev-time { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-muted); white-space: nowrap; margin-top: 1px; flex-shrink: 0; }
+.ai-row { display: flex; gap: 8px; align-items: flex-start; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; font-size: 12.5px; }
+.ai-result { font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; margin-left: auto; }
+.r-mod  { background: rgba(224,122,32,0.12); color: var(--c-ai-good); }
+.r-acc  { background: rgba(214,59,59,0.10);  color: var(--c-ai-raw); }
+.r-rej  { background: rgba(13,159,110,0.12); color: var(--c-self); }
+.paste-box {
+  background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.25);
+  border-radius: 7px; padding: 12px 14px; margin-top: 12px; font-size: 12.5px; color: #5b21b6; line-height: 1.6;
+}
+.paste-box strong { display: block; margin-bottom: 4px; font-size: 13px; }
+.metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.metric-c { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 10px 13px; }
+.metric-c .mc-label { font-size: 10.5px; color: var(--text-muted); margin-bottom: 3px; }
+.metric-c .mc-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; }
+
+/* verdict */
+.verdict-strip {
+  display: flex; align-items: center; gap: 12px;
+  background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;
+  padding: 14px 18px; margin-bottom: 20px;
+}
+.verdict-icon { font-size: 22px; }
+.verdict-label { font-weight: 700; font-size: 14px; color: #166534; }
+.verdict-sub { font-size: 12px; color: #4ade80; }
+</style>
+</head>
+<body>
+
+<!-- FLOW BAR -->
+<div id="flow-bar">
+  <div class="flow-step active" id="fp-1"><span class="flow-num">1</span> 로그인</div>
+  <span class="flow-arrow">›</span>
+  <div class="flow-step" id="fp-2"><span class="flow-num">2</span> 교사: 과제 목록</div>
+  <span class="flow-arrow">›</span>
+  <div class="flow-step" id="fp-3"><span class="flow-num">3</span> 과제 등록</div>
+  <span class="flow-arrow">›</span>
+  <div class="flow-step" id="fp-4"><span class="flow-num">4</span> 학생: 에디터</div>
+  <span class="flow-arrow">›</span>
+  <div class="flow-step" id="fp-5"><span class="flow-num">5</span> 제출 완료</div>
+  <span class="flow-arrow">›</span>
+  <div class="flow-step" id="fp-6"><span class="flow-num">6</span> 교사: 제출 현황</div>
+  <span class="flow-arrow">›</span>
+  <div class="flow-step" id="fp-7"><span class="flow-num">7</span> 리포트</div>
+</div>
+
+<!-- ════ SCREEN 1: 로그인 ════ -->
+<div class="screen active" id="s-login">
+  <div class="login-box">
+    <div class="login-logo">Verihum</div>
+    <div class="login-tagline">작성 과정으로 증명하는 진정성</div>
+
+    <div class="form-group">
+      <label class="form-label">이메일</label>
+      <input type="email" id="login-email" placeholder="이메일 입력" value="teacher@school.kr">
+    </div>
+    <div class="form-group">
+      <label class="form-label">비밀번호</label>
+      <input type="password" id="login-pw" placeholder="비밀번호 입력" value="••••••">
+    </div>
+    <button class="btn btn-primary btn-lg" style="width:100%" onclick="doLogin()">로그인</button>
+
+    <div class="demo-accounts">
+      <strong>🧪 데모 계정으로 빠르게 체험</strong>
+      <button class="demo-btn" onclick="quickLogin('teacher')"><span style="color:var(--accent)">●</span> 교사로 로그인</button>
+      <button class="demo-btn" onclick="quickLogin('student')"><span style="color:var(--green)">●</span> 학생으로 로그인</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 2: 교사 — 과제 목록 ════ -->
+<div class="screen" id="s-teacher-list">
+  <div class="logo-bar">
+    <div class="logo">Verihum</div>
+    <div class="user-chip"><div class="avatar av-teacher">이</div> 이수진 선생님 <span class="badge badge-blue" style="font-size:11px">TEACHER</span></div>
+  </div>
+  <div class="page-wrap">
+    <div class="page-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <div>
+        <div class="page-title">내 과제 목록</div>
+        <div class="page-sub">등록한 과제와 제출 현황을 확인합니다</div>
+      </div>
+      <button class="btn btn-primary" onclick="go('s-new-assignment', 3)">+ 새 과제 등록</button>
+    </div>
+
+    <div class="notice">📌 <strong>김지우 학생</strong>이 <strong>AI 시대의 비판적 사고</strong> 과제를 방금 제출했습니다. 리포트를 확인해보세요.</div>
+
+    <!-- 과제 카드들 -->
+    <div class="assignment-card" onclick="go('s-submissions', 6)">
+      <div class="ac-main">
+        <div class="ac-title">AI 시대의 비판적 사고</div>
+        <div class="ac-meta">
+          <span>📚 정보와 사회</span>
+          <span>🗓 2026-04-07 ~ 04-13</span>
+          <span>제출 기간 종료</span>
+        </div>
+      </div>
+      <div class="ac-stat">
+        <div style="font-size:20px; font-weight:700; font-family:'DM Mono',monospace;">3<span style="font-size:13px;color:var(--text-muted)">/5</span></div>
+        <div style="font-size:11px; color:var(--text-muted);">제출완료</div>
+        <div class="progress-mini"><div class="progress-fill" style="width:60%"></div></div>
+      </div>
+    </div>
+
+    <div class="assignment-card">
+      <div class="ac-main">
+        <div class="ac-title">기후 변화와 개인의 실천</div>
+        <div class="ac-meta">
+          <span>📚 환경과 생태</span>
+          <span>🗓 2026-04-15 ~ 04-25</span>
+          <span class="badge badge-green" style="font-size:11px">진행중</span>
+        </div>
+      </div>
+      <div class="ac-stat">
+        <div style="font-size:20px; font-weight:700; font-family:'DM Mono',monospace;">1<span style="font-size:13px;color:var(--text-muted)">/5</span></div>
+        <div style="font-size:11px; color:var(--text-muted);">제출완료</div>
+        <div class="progress-mini"><div class="progress-fill" style="width:20%"></div></div>
+      </div>
+    </div>
+
+    <div class="assignment-card">
+      <div class="ac-main">
+        <div class="ac-title">나의 꿈과 진로 탐색</div>
+        <div class="ac-meta">
+          <span>📚 진로와 직업</span>
+          <span>🗓 2026-03-20 ~ 03-30</span>
+          <span class="badge badge-gray" style="font-size:11px">종료</span>
+        </div>
+      </div>
+      <div class="ac-stat">
+        <div style="font-size:20px; font-weight:700; font-family:'DM Mono',monospace;">5<span style="font-size:13px;color:var(--text-muted)">/5</span></div>
+        <div style="font-size:11px; color:var(--text-muted);">제출완료</div>
+        <div class="progress-mini"><div class="progress-fill" style="width:100%"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 3: 과제 등록 ════ -->
+<div class="screen" id="s-new-assignment">
+  <div class="logo-bar">
+    <div class="logo">Verihum</div>
+    <div class="user-chip"><div class="avatar av-teacher">이</div> 이수진 선생님</div>
+  </div>
+  <div class="page-wrap">
+    <div class="page-header" style="display:flex; align-items:center; gap:14px; margin-bottom:24px;">
+      <button class="btn btn-secondary btn-sm" onclick="go('s-teacher-list', 2)">← 뒤로</button>
+      <div>
+        <div class="page-title">새 과제 등록</div>
+        <div class="page-sub">학생에게 배정할 글쓰기 과제를 등록합니다</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">과제명 <span style="color:var(--red)">*</span></label>
+        <input type="text" id="new-title" value="AI 시대의 비판적 사고" placeholder="과제 제목을 입력하세요 (최대 100자)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">과목</label>
+        <input type="text" id="new-subject" value="정보와 사회" placeholder="예: 국어, 사회, 도덕…">
+      </div>
+      <div class="form-group">
+        <label class="form-label">과제 안내문</label>
+        <textarea id="new-desc" rows="4" placeholder="학생에게 전달할 과제 지시사항을 입력하세요">AI가 보편화된 시대, 우리는 어떻게 비판적으로 사고해야 할까요? AI를 활용하되, 자신만의 관점으로 500자 이상 작성하세요.</textarea>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div class="form-group">
+          <label class="form-label">제출 시작일</label>
+          <input type="date" id="new-start" value="2026-04-07">
+        </div>
+        <div class="form-group">
+          <label class="form-label">제출 마감일</label>
+          <input type="date" id="new-end" value="2026-04-13">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">학생 배정 방식</label>
+        <div style="background:var(--accent-light); border:1px solid #c7d3fc; border-radius:8px; padding:14px 16px;">
+          <div style="font-weight:600; font-size:13.5px; color:var(--accent);">🔗 링크 공유 방식 (MVP)</div>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:4px;">과제 등록 후 발급되는 링크를 학생에게 공유하면, 링크를 통해 과제에 참여할 수 있습니다.</div>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px;">
+        <button class="btn btn-secondary" onclick="go('s-teacher-list', 2)">취소</button>
+        <button class="btn btn-primary" onclick="registerAssignment()">과제 등록 완료</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 3b: 등록 완료 / 링크 발급 ════ -->
+<div class="screen" id="s-link-issued">
+  <div class="logo-bar">
+    <div class="logo">Verihum</div>
+    <div class="user-chip"><div class="avatar av-teacher">이</div> 이수진 선생님</div>
+  </div>
+  <div class="page-wrap" style="max-width:520px;">
+    <div class="notice notice-success" style="font-size:15px; font-weight:700;">✅ 과제가 등록되었습니다!</div>
+    <div class="card" style="text-align:center; padding:36px 32px;">
+      <div style="font-size:40px; margin-bottom:16px;">🔗</div>
+      <div style="font-size:17px; font-weight:700; margin-bottom:8px;">학생 초대 링크가 발급되었습니다</div>
+      <div style="font-size:13px; color:var(--text-muted); margin-bottom:24px;">아래 링크를 학생에게 공유하세요. 링크를 클릭하면 로그인 후 과제가 자동으로 배정됩니다.</div>
+      <div style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:14px 16px; font-family:'DM Mono',monospace; font-size:13px; color:var(--accent); word-break:break-all; margin-bottom:20px;">
+        https://verihum.io/join/<strong>asg_k4m9p2</strong>
+      </div>
+      <button class="btn btn-secondary btn-sm" style="margin-bottom:24px;" onclick="copyLink()">📋 링크 복사</button>
+      <div class="divider"></div>
+      <div style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">지금 학생 입장에서 직접 과제를 체험해볼 수 있습니다</div>
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="go('s-editor', 4)">🎓 학생 화면으로 이동</button>
+        <button class="btn btn-secondary" onclick="go('s-teacher-list', 2)">과제 목록으로</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 4: 학생 — 에디터 ════ -->
+<div class="screen" id="s-editor">
+  <div class="editor-header">
+    <div class="editor-info">
+      <div class="editor-assignment-title">AI 시대의 비판적 사고</div>
+      <div class="editor-deadline">📅 마감 2026-04-13 23:59 · <span style="color:var(--red); font-weight:600;">D-3</span></div>
+    </div>
+    <div class="editor-controls">
+      <div class="char-count" id="charCountDisplay">0자</div>
+      <button class="btn btn-secondary btn-sm">임시저장</button>
+      <button class="btn btn-green" onclick="openSubmitModal()">제출하기</button>
+    </div>
+  </div>
+
+  <div class="editor-body">
+    <div class="editor-main">
+      <div class="editor-toolbar">
+        <button class="toolbar-btn" onclick="fmt('bold')"><b>B</b></button>
+        <button class="toolbar-btn" onclick="fmt('italic')"><i>I</i></button>
+        <button class="toolbar-btn" onclick="fmt('underline')"><u>U</u></button>
+        <div class="toolbar-sep"></div>
+        <span style="font-size:11px; color:var(--text-muted); padding: 0 6px;">작성 로그 자동 수집 중 🔴</span>
+      </div>
+      <div class="editor-area"
+        id="editorArea"
+        contenteditable="true"
+        data-placeholder="여기에 과제를 작성하세요. AI 어시스턴트를 활용하려면 오른쪽 패널을 이용하세요."
+        oninput="onEditorInput()"
+        onpaste="onEditorPaste(event)">
+      </div>
+    </div>
+
+    <div class="editor-sidebar">
+      <div class="sidebar-tab-bar">
+        <button class="sidebar-tab active" id="tab-assign" onclick="switchTab('assign')">📋 과제 안내</button>
+        <button class="sidebar-tab" id="tab-ai" onclick="switchTab('ai')">✨ AI 도움</button>
+      </div>
+      <div class="sidebar-content">
+        <!-- 과제 안내 -->
+        <div class="assign-panel active" id="panel-assign">
+          <div style="font-size:13px; font-weight:700; margin-bottom:8px;">AI 시대의 비판적 사고</div>
+          <div style="font-size:13px; color:var(--text-muted); line-height:1.7; margin-bottom:16px;">AI가 보편화된 시대, 우리는 어떻게 비판적으로 사고해야 할까요? AI를 활용하되, 자신만의 관점으로 500자 이상 작성하세요.</div>
+          <div class="notice" style="font-size:12px;">
+            💡 AI 어시스턴트를 사용해도 괜찮습니다. 단, AI 제안을 그대로 복사하지 말고 자신의 언어로 재해석하세요. 과정이 모두 기록됩니다.
+          </div>
+          <div class="divider"></div>
+          <div style="font-size:12px; color:var(--text-muted);">
+            <div style="font-weight:600; color:var(--text); margin-bottom:6px;">제출 조건</div>
+            <div>· 최소 500자 이상</div>
+            <div>· 본인의 관점이 담겨야 함</div>
+            <div>· 마감: 2026-04-13 23:59</div>
+          </div>
+        </div>
+
+        <!-- AI 패널 -->
+        <div class="ai-panel" id="panel-ai">
+          <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px; line-height:1.5;">
+            AI에게 질문하고, 제안을 수락·수정·거부할 수 있습니다. 모든 상호작용이 기록됩니다.
+          </div>
+          <div class="ai-chat-area" id="aiChatArea">
+            <div class="ai-msg ai-msg-ai">안녕하세요! 과제 작성에 도움이 필요하면 질문해주세요. AI 제안을 그대로 쓰기보다 자신의 언어로 재해석하는 것을 추천합니다. 😊</div>
+          </div>
+          <div class="ai-input-row">
+            <input type="text" id="aiInput" placeholder="AI에게 질문하기…" onkeydown="if(event.key==='Enter')sendAI()">
+            <button class="ai-send-btn" onclick="sendAI()">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 제출 확인 모달 -->
+<div class="modal-overlay" id="submitModal">
+  <div class="modal-box">
+    <div class="modal-title">📤 과제를 제출할까요?</div>
+    <div class="modal-body">
+      제출 후에는 수정이 불가합니다.<br>
+      현재까지 작성한 내용 (<span id="modalCharCount">0</span>자)을 최종 제출합니다.
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">취소</button>
+      <button class="btn btn-green" onclick="doSubmit()">제출하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 5: 제출 완료 ════ -->
+<div class="screen" id="s-submitted">
+  <div class="submitted-box">
+    <div class="submitted-icon">✓</div>
+    <div style="font-family:'Syne',sans-serif; font-size:28px; font-weight:800; margin-bottom:12px; color:var(--green);">제출 완료!</div>
+    <div style="font-size:14px; color:var(--text-muted); line-height:1.7; margin-bottom:8px;">
+      <strong>AI 시대의 비판적 사고</strong> 과제가<br>정상적으로 제출되었습니다.
+    </div>
+    <div style="font-family:'DM Mono',monospace; font-size:12px; color:var(--text-dim); margin-bottom:32px;">제출일시: 2026-04-10 14:32:07</div>
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px 20px; margin-bottom:28px; text-align:left;">
+      <div style="font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.06em;">📊 작성 요약</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div><div style="font-size:11px; color:var(--text-muted);">총 작성 시간</div><div style="font-family:'DM Mono',monospace; font-weight:600;">42분 17초</div></div>
+        <div><div style="font-size:11px; color:var(--text-muted);">최종 글자 수</div><div style="font-family:'DM Mono',monospace; font-weight:600;" id="submittedChars">0자</div></div>
+        <div><div style="font-size:11px; color:var(--text-muted);">AI 활용 횟수</div><div style="font-family:'DM Mono',monospace; font-weight:600;" id="aiUsageCount">0회</div></div>
+        <div><div style="font-size:11px; color:var(--text-muted);">수정 횟수</div><div style="font-family:'DM Mono',monospace; font-weight:600;">18회</div></div>
+      </div>
+    </div>
+    <div style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">교사가 리포트를 확인합니다. 교사 화면으로 이동하여 결과를 확인해보세요.</div>
+    <button class="btn btn-primary btn-lg" onclick="go('s-submissions', 6)">📋 교사: 제출 현황 보기</button>
+  </div>
+</div>
+
+<!-- ════ SCREEN 6: 교사 — 제출 현황 ════ -->
+<div class="screen" id="s-submissions">
+  <div class="logo-bar">
+    <div class="logo">Verihum</div>
+    <div class="user-chip"><div class="avatar av-teacher">이</div> 이수진 선생님</div>
+  </div>
+  <div class="page-wrap">
+    <div class="page-header" style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
+      <button class="btn btn-secondary btn-sm" onclick="go('s-teacher-list', 2)">← 과제 목록</button>
+      <div>
+        <div class="page-title">AI 시대의 비판적 사고</div>
+        <div class="page-sub">정보와 사회 · 2026-04-07 ~ 04-13 · 제출 현황</div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px;">
+      <div class="card" style="text-align:center; padding:16px;">
+        <div style="font-family:'DM Mono',monospace; font-size:26px; font-weight:500;">5</div>
+        <div style="font-size:11.5px; color:var(--text-muted);">전체 학생</div>
+      </div>
+      <div class="card" style="text-align:center; padding:16px;">
+        <div style="font-family:'DM Mono',monospace; font-size:26px; font-weight:500; color:var(--green);">3</div>
+        <div style="font-size:11.5px; color:var(--text-muted);">제출 완료</div>
+      </div>
+      <div class="card" style="text-align:center; padding:16px;">
+        <div style="font-family:'DM Mono',monospace; font-size:26px; font-weight:500; color:var(--text-dim);">2</div>
+        <div style="font-size:11.5px; color:var(--text-muted);">미제출</div>
+      </div>
+      <div class="card" style="text-align:center; padding:16px;">
+        <div style="font-family:'DM Mono',monospace; font-size:26px; font-weight:500; color:var(--accent);">2</div>
+        <div style="font-size:11.5px; color:var(--text-muted);">분석 완료</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>학생명</th>
+            <th>제출일시</th>
+            <th>글자수</th>
+            <th>AI 분석</th>
+            <th>인증 결과</th>
+            <th>리포트</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr onclick="go('s-report', 7)">
+            <td><strong>김지우</strong></td>
+            <td style="font-family:'DM Mono',monospace; font-size:12.5px;">04-10 14:32</td>
+            <td style="font-family:'DM Mono',monospace;">487자</td>
+            <td><span class="badge badge-green">분석 완료</span></td>
+            <td><span class="badge badge-green">직접 작성 인증</span></td>
+            <td><button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); go('s-report',7)">열람</button></td>
+          </tr>
+          <tr>
+            <td><strong>박서준</strong></td>
+            <td style="font-family:'DM Mono',monospace; font-size:12.5px;">04-09 21:14</td>
+            <td style="font-family:'DM Mono',monospace;">612자</td>
+            <td><span class="badge badge-green">분석 완료</span></td>
+            <td><span class="badge badge-orange">주의 필요</span></td>
+            <td><button class="btn btn-secondary btn-sm">열람</button></td>
+          </tr>
+          <tr>
+            <td><strong>최예린</strong></td>
+            <td style="font-family:'DM Mono',monospace; font-size:12.5px;">04-11 09:55</td>
+            <td style="font-family:'DM Mono',monospace;">523자</td>
+            <td><span class="badge badge-blue" style="animation: none;">분석 중…</span></td>
+            <td><span class="badge badge-gray">대기</span></td>
+            <td><button class="btn btn-secondary btn-sm" disabled>대기</button></td>
+          </tr>
+          <tr onclick="(()=>{})()">
+            <td style="color:var(--text-muted);">이준혁</td>
+            <td style="color:var(--text-dim);">—</td>
+            <td style="color:var(--text-dim);">—</td>
+            <td><span class="badge badge-gray">미제출</span></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td style="color:var(--text-muted);">한소영</td>
+            <td style="color:var(--text-dim);">—</td>
+            <td style="color:var(--text-dim);">—</td>
+            <td><span class="badge badge-gray">미제출</span></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 7: 리포트 ════ -->
+<div class="screen" id="s-report">
+  <div class="logo-bar">
+    <div class="logo">Verihum</div>
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <button class="btn btn-secondary btn-sm" onclick="go('s-submissions', 6)">← 제출 현황</button>
+      <div class="user-chip"><div class="avatar av-teacher">이</div> 이수진 선생님</div>
+    </div>
+  </div>
+
+  <div class="report-layout" style="flex:1; margin-top:0;">
+    <div class="report-left">
+      <!-- 점수 -->
+      <div class="score-row">
+        <div class="score-cell">
+          <div class="sc-label">과정 점수</div>
+          <div class="sc-val">78</div>
+          <div class="sc-bar"><div class="sc-fill" style="width:78%; background:var(--accent)"></div></div>
+        </div>
+        <div class="score-cell">
+          <div class="sc-label">자기주도</div>
+          <div class="sc-val" style="color:var(--c-self)">64%</div>
+          <div class="sc-bar"><div class="sc-fill" style="width:64%; background:var(--c-self)"></div></div>
+        </div>
+        <div class="score-cell">
+          <div class="sc-label">AI 비판적 활용</div>
+          <div class="sc-val" style="color:var(--c-ai-good)">21%</div>
+          <div class="sc-bar"><div class="sc-fill" style="width:21%; background:var(--c-ai-good)"></div></div>
+        </div>
+        <div class="score-cell">
+          <div class="sc-label">AI 단순 수락</div>
+          <div class="sc-val" style="color:var(--c-ai-raw)">8%</div>
+          <div class="sc-bar"><div class="sc-fill" style="width:8%; background:var(--c-ai-raw)"></div></div>
+        </div>
+        <div class="score-cell">
+          <div class="sc-label">외부 붙여넣기</div>
+          <div class="sc-val" style="color:var(--c-paste)">7%</div>
+          <div class="sc-bar"><div class="sc-fill" style="width:7%; background:var(--c-paste)"></div></div>
+        </div>
+      </div>
+
+      <!-- 타임라인 -->
+      <div class="tl-section">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted);">작성 타임라인</span>
+          <span style="font-family:'DM Mono',monospace; font-size:11px; color:var(--text-muted);">총 42분 17초</span>
+        </div>
+        <div class="tl-row" id="tlRow"></div>
+        <div class="hm-row" id="hmRow"></div>
+        <div class="legend-row">
+          <div class="leg-item"><div class="leg-dot" style="background:var(--c-self)"></div>자기주도</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--c-ai-good)"></div>AI 수정 반영</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--c-ai-raw)"></div>AI 단순 수락</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--c-paste)"></div>외부 붙여넣기</div>
+        </div>
+      </div>
+
+      <!-- 텍스트 뷰어 -->
+      <div class="text-review" id="textReview"></div>
+    </div>
+
+    <!-- 우측 상세 -->
+    <div class="report-right" id="reportRight">
+      <div class="detail-empty" id="detailEmpty">
+        <span style="font-size:32px;">🔍</span>
+        <span>텍스트 구간 또는<br>타임라인을 클릭하면<br>작성 과정 상세가 표시됩니다</span>
+      </div>
+      <div class="detail-content" id="detailContent"></div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* ─── STATE ─── */
+let currentRole = 'teacher';
+let editorContent = '';
+let aiUseCount = 0;
+const reportSegments = [
+  { id:'r1', type:'self', text:'인공지능이 보편화된 오늘날, 학생들은 더 이상 단순 정보 검색 이상의 도구를 손에 쥐게 되었습니다. ', start:0, end:5,
+    events:[{t:'01:12',d:'초기 2문장 작성 후 전체 삭제 → 재작성'},{t:'03:44',d:'42자 연속 입력, 타이핑 속도 안정'}]},
+  { id:'r2', type:'ai-good', text:'이 변화는 교육 현장에서도 예외가 아닙니다. AI가 제시하는 답변은 종종 정확하고 논리적이지만, ', start:5, end:12,
+    events:[{t:'07:20',d:'AI 어시스턴트 질문 입력'},{t:'10:33',d:'AI 제안 부분 수락 후 31자 재작성'}],
+    ai:[{q:'"AI가 교육에 미치는 영향"',action:'MODIFIED',desc:'AI 제안 중 핵심 개념만 차용, 나머지 직접 서술'}]},
+  { id:'r3', type:'self', text:'그것이 학생 자신의 사고를 대체할 수 있는가에 대한 물음은 여전히 열려 있습니다. 진정한 이해는 정보의 수용이 아니라, 비판적으로 검토하고 재해석하는 과정에서 비롯됩니다. ', start:12, end:20,
+    events:[{t:'13:01',d:'빠른 타이핑 구간, 분당 입력량 최고치'},{t:'17:22',d:'마지막 문장 3회 수정 후 확정'}]},
+  { id:'r4', type:'paste', text:'유네스코(UNESCO)는 2023년 보고서에서 AI 리터러시를 21세기 핵심 역량으로 규정하며 각국 교육 정책에 통합을 권고하였다. ', start:20, end:23,
+    events:[{t:'20:14',d:'78자 일괄 붙여넣기 이벤트 감지 (clipboardData)'},{t:'20:17',d:'2자 수정 후 유지'}],
+    paste:{chars:78, retention:'92%', note:'출처 인용으로 추정. 참고 자료 표기 여부 확인 권장.'}},
+  { id:'r5', type:'ai-raw', text:'따라서 교사와 학생 모두가 AI 도구를 올바르게 이해하고 활용하는 디지털 리터러시 교육이 필요하다. ', start:23, end:27,
+    events:[{t:'23:50',d:'AI 어시스턴트에 요약 요청'},{t:'24:12',d:'AI 제안 전문 수락 (무수정)'}],
+    ai:[{q:'"AI 리터러시 교육 필요성" 요약 요청',action:'ACCEPTED',desc:'제안 문장 수정 없이 그대로 수락'}]},
+  { id:'r6', type:'ai-good', text:'중요한 것은 AI를 사용했는가의 여부가 아니라, AI와의 대화 속에서 자신만의 관점을 형성했는가입니다. ', start:27, end:34,
+    events:[{t:'28:30',d:'AI 어시스턴트 2번째 질문'},{t:'33:02',d:'최종 문장 확정'}],
+    ai:[{q:'"AI 활용 vs 자기 사고" 대조 문장',action:'MODIFIED',desc:'"자신만의 관점 형성"으로 완전 재해석'}]},
+  { id:'r7', type:'self', text:'Verihum이 기록하는 것은 바로 그 과정입니다. 결과물이 아닌, 사고의 흔적.', start:34, end:42.3,
+    events:[{t:'40:12',d:'"그 여정"→"그 과정" 수정'},{t:'42:17',d:'제출 버튼 클릭'}]},
+];
+const TOTAL = 42.3;
+const TYPE_COLOR = { 'self':'var(--c-self)', 'ai-good':'var(--c-ai-good)', 'ai-raw':'var(--c-ai-raw)', 'paste':'var(--c-paste)' };
+const TYPE_LABEL = { 'self':'✍️ 자기주도 타이핑', 'ai-good':'🔄 AI 검토·수정 반영', 'ai-raw':'⚠️ AI 단순 수락', 'paste':'📋 외부 붙여넣기' };
+const TYPE_HL   = { 'self':'hl-self', 'ai-good':'hl-ai-good', 'ai-raw':'hl-ai-raw', 'paste':'hl-paste' };
+
+/* ─── NAVIGATION ─── */
+const SCREEN_IDS = ['s-login','s-teacher-list','s-new-assignment','s-link-issued','s-editor','s-submitted','s-submissions','s-report'];
+const STEP_IDS = [null,'fp-1','fp-2','fp-3','fp-4','fp-5','fp-6','fp-7'];
+let doneSteps = new Set([1]);
+
+function go(screenId, step) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+  // update flow bar
+  document.querySelectorAll('.flow-step').forEach(el => el.classList.remove('active','done'));
+  doneSteps.add(step);
+  doneSteps.forEach(s => {
+    const el = document.getElementById('fp-'+s);
+    if(el) el.classList.add('done');
+  });
+  const activeEl = document.getElementById('fp-'+step);
+  if(activeEl) { activeEl.classList.remove('done'); activeEl.classList.add('active'); }
+  // init screens
+  if(screenId === 's-report') initReport();
+  window.scrollTo(0,0);
+}
+
+/* ─── LOGIN ─── */
+function quickLogin(role) {
+  currentRole = role;
+  if(role === 'teacher') {
+    document.getElementById('login-email').value = 'teacher@school.kr';
+    go('s-teacher-list', 2);
+  } else {
+    document.getElementById('login-email').value = 'student@school.kr';
+    go('s-editor', 4);
+  }
+}
+function doLogin() {
+  const email = document.getElementById('login-email').value;
+  if(email.includes('student')) { go('s-editor', 4); }
+  else { go('s-teacher-list', 2); }
+}
+
+/* ─── ASSIGNMENT REGISTER ─── */
+function registerAssignment() {
+  const title = document.getElementById('new-title').value.trim();
+  if(!title) { alert('과제명을 입력하세요.'); return; }
+  go('s-link-issued', 3);
+}
+function copyLink() {
+  const el = document.createElement('textarea');
+  el.value = 'https://verihum.io/join/asg_k4m9p2';
+  document.body.appendChild(el); el.select();
+  try { document.execCommand('copy'); alert('링크가 복사되었습니다!'); } catch(e) {}
+  document.body.removeChild(el);
+}
+
+/* ─── EDITOR ─── */
+function fmt(cmd) {
+  document.execCommand(cmd);
+  document.getElementById('editorArea').focus();
+}
+function onEditorInput() {
+  const text = document.getElementById('editorArea').innerText || '';
+  editorContent = text;
+  document.getElementById('charCountDisplay').textContent = text.replace(/\s/g,'').length + '자';
+}
+function onEditorPaste(e) {
+  setTimeout(() => {
+    const area = document.getElementById('aiChatArea');
+    const msg = document.createElement('div');
+    msg.className = 'ai-msg ai-msg-ai';
+    msg.style.background = 'rgba(124,58,237,0.07)';
+    msg.style.borderColor = 'rgba(124,58,237,0.3)';
+    msg.style.color = '#5b21b6';
+    msg.innerHTML = '📋 <strong>외부 붙여넣기 감지</strong><br><span style="font-size:12px;">텍스트가 에디터 외부에서 붙여넣기되었습니다. 자신의 언어로 재해석하는 것을 권장합니다.</span>';
+    area.appendChild(msg);
+    area.scrollTop = area.scrollHeight;
+    switchTab('ai');
+  }, 100);
+}
+function switchTab(tab) {
+  document.getElementById('tab-assign').classList.toggle('active', tab==='assign');
+  document.getElementById('tab-ai').classList.toggle('active', tab==='ai');
+  document.getElementById('panel-assign').classList.toggle('active', tab==='assign');
+  document.getElementById('panel-ai').classList.toggle('active', tab==='ai');
+}
+function openSubmitModal() {
+  const chars = (editorContent || '').replace(/\s/g,'').length;
+  document.getElementById('modalCharCount').textContent = chars;
+  document.getElementById('submitModal').classList.add('active');
+}
+function closeModal() {
+  document.getElementById('submitModal').classList.remove('active');
+}
+function doSubmit() {
+  closeModal();
+  const chars = (editorContent || '').replace(/\s/g,'').length || 487;
+  document.getElementById('submittedChars').textContent = chars + '자';
+  document.getElementById('aiUsageCount').textContent = aiUseCount + '회';
+  go('s-submitted', 5);
+}
+
+/* ─── AI ASSISTANT ─── */
+const AI_RESPONSES = [
+  { trigger: ['비판', '사고', '생각'], response: 'AI 시대에 비판적 사고란 정보를 수동적으로 수용하는 것이 아니라, 근거의 신뢰성을 검토하고 다양한 관점을 비교하는 능력입니다.', hasSuggestion: true, suggestion: 'AI가 제공하는 정보는 편리하지만, 그것을 비판 없이 수용할 때 사고력은 퇴화합니다.' },
+  { trigger: ['AI', '인공지능', '활용'], response: 'AI를 올바르게 활용하려면 AI가 제시한 내용을 그대로 쓰기보다 자신의 맥락에 맞게 재해석하는 것이 중요합니다.', hasSuggestion: true, suggestion: 'AI는 도구입니다. 망치를 사용할 때 못이 어디에 필요한지 판단하는 것은 사람의 몫이듯, AI를 어디에 어떻게 쓸지 결정하는 것도 사람의 역할입니다.' },
+  { trigger: ['교육', '학교', '학습'], response: '교육에서 AI의 역할에 대해 쓰시는군요. 학생이 AI를 통해 더 깊이 배울 수 있는 방향과, AI가 학습을 대체하는 문제점을 대조하면 좋은 글이 됩니다.', hasSuggestion: false },
+  { trigger: [], response: '질문을 조금 더 구체적으로 적어주시면 더 도움이 될 것 같아요. 어떤 부분을 작성하는 데 막히셨나요?', hasSuggestion: false },
+];
+function sendAI() {
+  const input = document.getElementById('aiInput');
+  const q = input.value.trim();
+  if(!q) return;
+  input.value = '';
+  aiUseCount++;
+  const area = document.getElementById('aiChatArea');
+  // user msg
+  const um = document.createElement('div');
+  um.className = 'ai-msg ai-msg-user';
+  um.textContent = q;
+  area.appendChild(um);
+  area.scrollTop = area.scrollHeight;
+  // find response
+  const resp = AI_RESPONSES.find(r => r.trigger.some(t => q.includes(t))) || AI_RESPONSES[AI_RESPONSES.length-1];
+  setTimeout(() => {
+    const am = document.createElement('div');
+    am.className = 'ai-msg ai-msg-ai';
+    let html = resp.response;
+    if(resp.hasSuggestion) {
+      html += `<div class="ai-suggestion-text">"${resp.suggestion}"</div>`;
+      html += `<div class="ai-suggestion-actions">
+        <button class="btn btn-sm" style="background:#dcfce7; color:#166534; border:none; font-size:11.5px;" onclick="acceptAI(this, '${resp.suggestion.replace(/'/g,"\\'")}')">✓ 수락</button>
+        <button class="btn btn-sm" style="background:#fffbeb; color:#92400e; border:none; font-size:11.5px;" onclick="this.closest('.ai-suggestion-actions').innerHTML='✏️ 수정해서 반영 (직접 에디터에 입력하세요)'">✏️ 수정 후 반영</button>
+        <button class="btn btn-sm" style="background:var(--surface2); color:var(--text-muted); border:1px solid var(--border); font-size:11.5px;" onclick="this.closest('.ai-suggestion-actions').innerHTML='🚫 거부됨'">✕ 거부</button>
+      </div>`;
+    }
+    am.innerHTML = html;
+    area.appendChild(am);
+    area.scrollTop = area.scrollHeight;
+  }, 600);
+}
+function acceptAI(btn, suggestion) {
+  const editorArea = document.getElementById('editorArea');
+  editorArea.focus();
+  const textNode = document.createTextNode(' ' + suggestion + ' ');
+  const sel = window.getSelection();
+  if(sel && sel.rangeCount > 0) {
+    const range = sel.getRangeAt(0);
+    range.collapse(false);
+    range.insertNode(textNode);
+    range.setStartAfter(textNode);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } else {
+    editorArea.appendChild(textNode);
+  }
+  onEditorInput();
+  btn.closest('.ai-suggestion-actions').innerHTML = '✅ 수락됨 — 에디터에 반영되었습니다';
+}
+
+/* ─── REPORT ─── */
+function initReport() {
+  buildTimeline();
+  buildTextReview();
+}
+function buildTimeline() {
+  const tl = document.getElementById('tlRow');
+  const hm = document.getElementById('hmRow');
+  if(!tl || tl.children.length > 0) return;
+  reportSegments.forEach(seg => {
+    const pct = ((seg.end - seg.start) / TOTAL * 100).toFixed(2);
+    const b = document.createElement('div');
+    b.className = 'tl-block';
+    b.style.width = pct + '%';
+    b.style.background = TYPE_COLOR[seg.type];
+    b.style.opacity = '0.75';
+    b.title = TYPE_LABEL[seg.type];
+    b.onclick = () => showDetail(seg.id);
+    tl.appendChild(b);
+  });
+  const CELLS = 60;
+  for(let i = 0; i < CELLS; i++) {
+    const cellMin = (i / CELLS) * TOTAL;
+    const seg = reportSegments.find(s => s.start <= cellMin && cellMin < s.end);
+    const c = document.createElement('div');
+    c.className = 'hm-cell';
+    if(seg) { c.style.background = TYPE_COLOR[seg.type]; c.style.opacity = '0.5'; c.onclick = () => showDetail(seg.id); }
+    hm.appendChild(c);
+  }
+}
+function buildTextReview() {
+  const rv = document.getElementById('textReview');
+  if(!rv || rv.children.length > 0) return;
+  reportSegments.forEach(seg => {
+    const sp = document.createElement('span');
+    sp.className = 'hl ' + TYPE_HL[seg.type];
+    sp.textContent = seg.text;
+    sp.dataset.id = seg.id;
+    sp.onclick = () => showDetail(seg.id);
+    rv.appendChild(sp);
+  });
+}
+function showDetail(id) {
+  document.querySelectorAll('.hl').forEach(el => el.classList.remove('hl-active'));
+  document.querySelectorAll(`[data-id="${id}"]`).forEach(el => el.classList.add('hl-active'));
+  const seg = reportSegments.find(s => s.id === id);
+  if(!seg) return;
+  const empty = document.getElementById('detailEmpty');
+  const content = document.getElementById('detailContent');
+  empty.style.display = 'none';
+  content.classList.add('vis');
+  const color = TYPE_COLOR[seg.type];
+  const label = TYPE_LABEL[seg.type];
+  let html = `
+    <div class="dt-type-badge" style="background:${color}18; color:${color}; border:1px solid ${color}44;">${label}</div>
+    <div class="dt-quote" style="border-left:3px solid ${color}; color:${color}cc;">"${seg.text.trim()}"</div>
+    <div class="dt-section">작성 구간</div>
+    <div style="font-family:'DM Mono',monospace; font-size:12.5px; color:var(--text-muted); margin-bottom:4px;">
+      ${fmtMin(seg.start)} → ${fmtMin(seg.end)} (${(seg.end-seg.start).toFixed(1)}분)
+    </div>
+  `;
+  if(seg.events?.length) {
+    html += `<div class="dt-section">이벤트 로그</div>`;
+    seg.events.forEach(ev => {
+      html += `<div class="ev-item"><span class="ev-time">${ev.t}</span><span>${ev.d}</span></div>`;
+    });
+  }
+  if(seg.ai?.length) {
+    html += `<div class="dt-section">AI 어시스턴트 상호작용</div>`;
+    const MAP = { MODIFIED:['🔄','수정 반영','r-mod'], ACCEPTED:['⚠️','단순 수락','r-acc'], REJECTED:['✅','거부','r-rej'] };
+    seg.ai.forEach(a => {
+      const [icon,lbl,cls] = MAP[a.action] || ['?','?',''];
+      html += `<div class="ai-row">
+        <span style="font-size:16px; flex-shrink:0;">${icon}</span>
+        <div style="flex:1"><div style="font-size:12.5px;"><strong>Q.</strong> ${a.q}</div><div style="font-size:11.5px; color:var(--text-muted); margin-top:3px;">${a.desc}</div></div>
+        <span class="ai-result ${cls}">${lbl}</span>
+      </div>`;
+    });
+  }
+  if(seg.paste) {
+    const p = seg.paste;
+    html += `<div class="paste-box"><strong>📋 외부 붙여넣기 감지</strong>글자 수: ${p.chars}자 · 원문 유지율: ${p.retention}<br><br>${p.note}</div>`;
+    html += `<div class="metrics-grid">
+      <div class="metric-c"><div class="mc-label">원문 유지율</div><div class="mc-val" style="color:var(--c-paste)">${p.retention}</div></div>
+      <div class="metric-c"><div class="mc-label">붙여넣기 글자</div><div class="mc-val">${p.chars}<span style="font-size:12px; color:var(--text-muted)">자</span></div></div>
+    </div>`;
+  }
+  content.innerHTML = html;
+  document.getElementById('reportRight').scrollTop = 0;
+}
+function fmtMin(m) {
+  const min = Math.floor(m), sec = Math.round((m - min) * 60);
+  return String(min).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+}
+</script>
+</body>
+</html>

@@ -627,6 +627,27 @@
 .info-value a { color: var(--green-main); text-decoration: none; }
 .info-value a:hover { text-decoration: underline; }
 
+/* ── 주요사업 인트로 */
+.project-intro {
+  background: linear-gradient(135deg, #f0f7f2 0%, #e8f4ec 100%);
+  border-left: 4px solid var(--green-main);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin-bottom: 40px;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--gray-700);
+  word-break: keep-all;
+}
+.project-intro strong,
+.project-intro::before {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--green-main);
+  margin-bottom: 8px;
+}
+
 /* ── 주요사업 (project.html) */
 .project-grid {
   display: grid;

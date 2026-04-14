@@ -64,9 +64,13 @@ const App = {
     return '../'.repeat(depth);
   },
 
-  /* ── 토스트 알림
-       배경색은 CSS 변수 기반 클래스로 제어 (components.css의 .toast-* 참조) */
+  /* ── 알림 */
   toast(msg, type = 'success') {
+    alert(msg);
+  },
+
+  /* ── 토스트 UI (글자크기 조정 전용) */
+  toastUI(msg, type = 'info') {
     let el = document.getElementById('toast');
     if (!el) {
       el = document.createElement('div');
@@ -74,7 +78,6 @@ const App = {
       document.body.appendChild(el);
     }
     el.textContent = msg;
-    /* type 클래스로 색상 제어: toast-success / toast-error / toast-warning / toast-info */
     el.className = `toast-${type}`;
     el.classList.add('show');
     clearTimeout(el._t);
@@ -200,7 +203,7 @@ const App = {
 
     up() {
       if (this._step >= this._max) {
-        App.toast('최대 글자 크기입니다.', 'info');
+        App.toastUI('최대 글자 크기입니다.', 'info');
         return;
       }
       this._step++;
@@ -210,7 +213,7 @@ const App = {
 
     down() {
       if (this._step <= this._min) {
-        App.toast('최소 글자 크기입니다.', 'info');
+        App.toastUI('최소 글자 크기입니다.', 'info');
         return;
       }
       this._step--;
@@ -222,7 +225,7 @@ const App = {
       this._step = 0;
       this._apply();
       this._save();
-      App.toast('글자 크기를 기본으로 되돌렸습니다.', 'info');
+      App.toastUI('글자 크기를 기본으로 되돌렸습니다.', 'info');
     },
 
     _apply() {
