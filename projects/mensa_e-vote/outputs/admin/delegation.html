@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>위임 관리 — 전자투표시스템</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="nav-inner">
+    <a href="assemblies.html" class="nav-logo">전자투표 관리</a>
+    <div class="nav-links">
+      <a href="assemblies.html">총회 목록</a>
+      <a href="attendance.html">출석 현황</a>
+      <a href="delegation.html" style="color:var(--primary);font-weight:700;">위임 관리</a>
+      <a href="index.html" class="nav-logout" onclick="adminLogout()">로그아웃</a>
+    </div>
+  </div>
+</nav>
+
+<main class="main-content" id="app"></main>
+
+<footer class="site-footer"><p>&copy; 2026 전자투표시스템 — 프로토타입</p></footer>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+  if (!requireAdmin()) {}
+
+  const dels = SAMPLE_DATA.delegations;
+  const active = dels.filter(d => d.status === 'active');
+  const cancelled = dels.filter(d => d.status === 'cancelled');
+
+  let rows = '';
+  dels.forEach(d => {
+    const delegator = getTicket(d.delegator_id);
+    const delegate = getTicket(d.delegate_id);
+    rows += `
+      <tr>
+        <td>${delegator ? h(delegator.name) : '-'}</td>
+        <td>${delegator ? h(delegator.phone) : '-'}</td>
+        <td>${delegate ? h(delegate.name) : '-'}</td>
+        <td>${delegate ? h(delegate.phone) : '-'}</td>
+        <td><span class="badge ${d.status === 'active' ? 'badge-delegation' : 'status-closed'}">${d.status === 'active' ? '유효' : '취소'}</span></td>
+      </tr>
+    `;
+  });
+
+  document.getElementById('app').innerHTML = `
+    <div class="page-header">
+      <h1>위임 관리</h1>
+      <p>구글 스프레드시트 기반 위임 데이터</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value">${dels.length}</div><div class="stat-label">전체 위임</div></div>
+      <div class="stat-card"><div class="stat-value" style="color:var(--warning)">${active.length}</div><div class="stat-label">유효</div></div>
+      <div class="stat-card"><div class="stat-value" style="color:var(--gray-400)">${cancelled.length}</div><div class="stat-label">취소</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>위임 목록</h2>
+        <button class="btn btn-outline btn-sm" onclick="alert('구글 스프레드시트에서 위임 데이터를 동기화합니다. (프로토타입)')">위임 데이터 동기화</button>
+      </div>
+      <div class="alert alert-info" style="font-size:13px;">
+        위임인의 검표 시각이 총회 "투표 진행중" 전환 시각 이전이면 위임이 자동 취소됩니다.
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>위임인</th><th>위임인 연락처</th><th>위임자(대리인)</th><th>위임자 연락처</th><th>상태</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+</script>
+</body>
+</html>

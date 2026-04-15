@@ -1,0 +1,32 @@
+{
+  "project_name": "mensa_e-vote",
+  "version": "1.0",
+  "created": "2026-04-15",
+  "status": "prototype",
+  "current_module": "04_storyboard",
+  "modules": {
+    "01_rfp": "pending",
+    "02_planning": "pending",
+    "03_requirements": "pending",
+    "04_storyboard": "in_progress",
+    "05_dev_handoff": "pending",
+    "06_qa": "pending",
+    "07_delivery": "pending",
+    "08_feedback": "pending",
+    "09_comms": "pending"
+  },
+  "overview": "멘사코리아 전자투표 시스템. 총회 안건별 온라인 투표, 위임 관리, 출석 확인 기능 포함. 관리자(어드민)와 일반 투표자(회원) 2개 역할.",
+  "pages": [
+    { "id": "root", "file": "outputs/index.html", "title": "역할 선택 (루트)" },
+    { "id": "A-01", "file": "outputs/admin/index.html", "title": "관리자 로그인" },
+    { "id": "A-02", "file": "outputs/admin/assemblies.html", "title": "총회 목록" },
+    { "id": "A-03", "file": "outputs/admin/assembly-form.html", "title": "총회 등록/수정" },
+    { "id": "A-04", "file": "outputs/admin/assembly-detail.html", "title": "총회 상세 (안건+상태제어)" },
+    { "id": "A-05", "file": "outputs/admin/agenda-form.html", "title": "안건 등록/수정" },
+    { "id": "A-06", "file": "outputs/admin/result.html", "title": "투표 결과" },
+    { "id": "A-07", "file": "outputs/admin/attendance.html", "title": "출석 현황" },
+    { "id": "A-08", "file": "outputs/admin/delegation.html", "title": "위임 관리" },
+    { "id": "U-01", "file": "outputs/voter/index.html", "title": "본인 인증" },
+    { "id": "U-02", "file": "outputs/voter/vote.html", "title": "투표 화면" }
+  ]
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>총회 상세 — 전자투표시스템</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="nav-inner">
+    <a href="assemblies.html" class="nav-logo">전자투표 관리</a>
+    <div class="nav-links">
+      <a href="assemblies.html">총회 목록</a>
+      <a href="attendance.html">출석 현황</a>
+      <a href="delegation.html">위임 관리</a>
+      <a href="index.html" class="nav-logout" onclick="adminLogout()">로그아웃</a>
+    </div>
+  </div>
+</nav>
+
+<main class="main-content" id="app"></main>
+
+<footer class="site-footer"><p>&copy; 2026 전자투표시스템 — 프로토타입</p></footer>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+  if (!requireAdmin()) {}
+
+  const params = new URLSearchParams(location.search);
+  const assemblyId = Number(params.get('id')) || 1;
+  const assembly = getAssembly(assemblyId);
+  const agendaList = getAgendasByAssembly(assemblyId);
+  const totalTickets = SAMPLE_DATA.tickets.length;
+  const attended = SAMPLE_DATA.tickets.filter(t => t.attended).length;
+  const totalDelegations = SAMPLE_DATA.delegations.filter(d => d.status === 'active').length;
+
+  const app = document.getElementById('app');
+
+  // 상태 버튼
+  let statusBtns = '';
+  if (assembly.status === 'ready') {
+    statusBtns = `<button class="btn btn-success btn-sm" onclick="startVoting()">투표 시작</button>`;
+  } else if (assembly.status === 'voting') {
+    statusBtns = `<button class="btn btn-danger btn-sm" onclick="closeAssembly()">총회 종료</button>`;
+  } else {
+    statusBtns = `<span style="font-size:13px;color:var(--gray-400);">종료된 총회</span>`;
+  }
+
+  let votingTimeInfo = '';
+  if (assembly.voting_started_at) {
+    votingTimeInfo = `<span style="margin-left:8px;font-size:12px;color:var(--gray-500);">투표 시작: ${assembly.voting_started_at}</span>`;
+  }
+
+  // 안건 리스트
+  let agendaHTML = '';
+  agendaList.forEach(ag => {
+    const isOpen = ag.status === 'open';
+    agendaHTML += `
+      <div class="agenda-row">
+        <div class="agenda-info">
+          <div class="num">${ag.number}</div>
+          <div class="title">${h(ag.title)}</div>
+        </div>
+        <div class="actions">
+          <div class="toggle-wrap">
+            <button class="toggle ${isOpen ? 'active' : ''}" onclick="toggleAgenda(${ag.id})"></button>
+            <span class="toggle-label badge ${isOpen ? 'status-open' : 'status-closed'}">${statusLabel(ag.status)}</span>
+          </div>
+          <a href="result.html?agenda_id=${ag.id}" class="btn btn-outline btn-sm">결과</a>
+          <a href="agenda-form.html?id=${ag.id}&assembly_id=${assemblyId}" class="btn btn-outline btn-sm">수정</a>
+        </div>
+      </div>
+    `;
+  });
+
+  app.innerHTML = `
+    <div class="page-header">
+      <h1>${h(assembly.name)}</h1>
+      <p>${h(assembly.datetime)} · 의장: ${h(assembly.chairman_name)}</p>
+    </div>
+
+    <div class="status-control">
+      <div class="current-status">
+        현재 상태: <span class="badge ${statusClass(assembly.status)}" style="font-size:13px;">${statusLabel(assembly.status)}</span>
+        ${votingTimeInfo}
+      </div>
+      <div class="status-buttons">${statusBtns}</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value">${totalTickets}</div><div class="stat-label">전체 구매자</div></div>
+      <div class="stat-card"><div class="stat-value">${attended}</div><div class="stat-label">출석(검표)</div></div>
+      <div class="stat-card"><div class="stat-value">${totalDelegations}</div><div class="stat-label">위임</div></div>
+      <div class="stat-card"><div class="stat-value">${agendaList.length}</div><div class="stat-label">총 안건</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>안건 관리</h2>
+        <a href="agenda-form.html?assembly_id=${assemblyId}" class="btn btn-accent btn-sm">+ 안건 추가</a>
+      </div>
+      ${agendaHTML}
+    </div>
+  `;
+
+  function startVoting() {
+    if (confirm('총회 상태를 [투표 진행중]으로 전환합니다.\\n이 시점이 투표 시작 시각으로 기록됩니다.\\n\\n전환하시겠습니까?')) {
+      // → PHP: UPDATE assemblies SET status='voting', voting_started_at=NOW()
+      assembly.status = 'voting';
+      assembly.voting_started_at = new Date().toLocaleString('ko-KR');
+      location.reload();
+    }
+  }
+
+  function closeAssembly() {
+    if (confirm('총회를 종료합니다.\\n모든 안건의 투표가 마감됩니다.\\n\\n종료하시겠습니까?')) {
+      // → PHP: UPDATE assemblies SET status='closed'
+      assembly.status = 'closed';
+      location.reload();
+    }
+  }
+
+  function toggleAgenda(agendaId) {
+    // → PHP: UPDATE agendas SET status=... WHERE id=...
+    const ag = SAMPLE_DATA.agendas.find(a => a.id === agendaId);
+    if (ag) {
+      ag.status = ag.status === 'open' ? 'closed' : 'open';
+      location.reload();
+    }
+  }
+</script>
+</body>
+</html>

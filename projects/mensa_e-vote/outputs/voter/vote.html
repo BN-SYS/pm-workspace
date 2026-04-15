@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>투표 — 전자투표</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<nav class="voter-nav">
+  <div class="nav-inner">
+    <span class="nav-logo">전자투표</span>
+    <a href="index.html" style="font-size:13px;color:var(--gray-500);" onclick="clearVoterSession()">로그아웃</a>
+  </div>
+</nav>
+
+<main class="main-content voter-main" id="app">
+</main>
+
+<footer class="site-footer"><p>&copy; 2026 전자투표시스템</p></footer>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+  const voter = getVoterSession();
+  if (!voter) { window.location.href = 'index.html'; }
+
+  const assembly = SAMPLE_DATA.assemblies[0];
+  const agendas = getAgendasByAssembly(assembly.id);
+
+  // 위임받은 목록
+  const myDelegations = getDelegationsForDelegate(voter.id);
+
+  // 투표 주체 목록: 본인 + 위임받은 사람들
+  const votingTargets = [
+    { ticketId: voter.id, label: '본인 투표', name: voter.name }
+  ];
+  myDelegations.forEach(d => {
+    const delegator = getTicket(d.delegator_id);
+    if (delegator) {
+      votingTargets.push({ ticketId: delegator.id, label: `${delegator.name} 님 위임`, name: delegator.name });
+    }
+  });
+
+  let currentTarget = 0; // index in votingTargets
+
+  function getProgress(targetTicketId) {
+    let voted = 0;
+    agendas.forEach(ag => {
+      if (getVote(ag.id, targetTicketId)) voted++;
+    });
+    return voted;
+  }
+
+  function render() {
+    const target = votingTargets[currentTarget];
+    const app = document.getElementById('app');
+
+    // 드롭다운 (위임 있을 때만)
+    let selectorHTML = '';
+    if (votingTargets.length > 1) {
+      let optionsHTML = '';
+      votingTargets.forEach((vt, i) => {
+        const progress = getProgress(vt.ticketId);
+        const total = agendas.length;
+        const done = progress === total ? ' ✅' : '';
+        const selected = i === currentTarget ? ' selected' : '';
+        optionsHTML += `<option value="${i}"${selected}>${vt.label}  (${progress}/${total})${done}</option>`;
+      });
+
+      selectorHTML = `
+        <div class="voter-selector">
+          <label>투표 주체 선택</label>
+          <select id="target-select" onchange="switchTarget(this.value)">
+            ${optionsHTML}
+          </select>
+          <div class="current-voting">현재: ${h(target.label)}</div>
+        </div>
+      `;
+    }
+
+    // 안건 카드들
+    let agendasHTML = '';
+    agendas.forEach(ag => {
+      const vote = getVote(ag.id, target.ticketId);
+      const isOpen = ag.status === 'open';
+      const isVoted = !!vote;
+
+      let cardClass = 'agenda-card';
+      if (isVoted) cardClass += ' is-voted';
+      else if (isOpen) cardClass += ' is-open';
+      else cardClass += ' is-closed';
+
+      let bodyHTML = '';
+
+      if (!isOpen && !isVoted) {
+        // 닫힘 + 미투표
+        bodyHTML = `<div class="agenda-status-msg">투표 준비 중</div>`;
+      } else if (!isOpen && isVoted) {
+        // 닫힘 + 투표완료
+        bodyHTML = buildOptions(ag, vote, true) + `
+          <div class="vote-actions">
+            <div class="voted-indicator">투표 완료</div>
+            <span style="font-size:12px;color:var(--gray-400);margin-left:auto;">투표가 마감되었습니다</span>
+          </div>
+        `;
+      } else if (isOpen && !isVoted) {
+        // 열림 + 미투표
+        bodyHTML = buildOptions(ag, null, false) + `
+          <div class="vote-actions">
+            <button class="btn btn-accent btn-sm" onclick="submitVote(${ag.id}, ${target.ticketId})">제출</button>
+          </div>
+        `;
+      } else if (isOpen && isVoted) {
+        // 열림 + 투표완료
+        bodyHTML = buildOptions(ag, vote, true) + `
+          <div class="vote-actions">
+            <div class="voted-indicator">투표 완료</div>
+            <button class="btn btn-outline btn-sm" style="margin-left:auto;" onclick="editVote(${ag.id}, ${target.ticketId})">수정</button>
+          </div>
+        `;
+      }
+
+      agendasHTML += `
+        <div class="${cardClass}">
+          <div class="agenda-number">제${ag.number}호 안건</div>
+          <div class="agenda-title">${h(ag.title)}</div>
+          ${ag.description ? `<div class="agenda-desc">${h(ag.description)}</div>` : ''}
+          <div id="agenda-body-${ag.id}">${bodyHTML}</div>
+        </div>
+      `;
+    });
+
+    app.innerHTML = `
+      <div class="vote-header">
+        <div class="assembly-name">${h(assembly.name)}</div>
+        <div class="meta">
+          <span>${h(voter.name)} 님</span>
+          <span>전체 ${agendas.length}건</span>
+        </div>
+      </div>
+      ${selectorHTML}
+      ${agendasHTML}
+    `;
+  }
+
+  function buildOptions(agenda, vote, disabled) {
+    let html = '<div class="option-list">';
+    agenda.options.forEach(opt => {
+      const checked = vote && vote.option_id === opt.id;
+      const disabledClass = disabled ? ' disabled' : '';
+      const selectedClass = checked ? ' selected' : '';
+      const name = `agenda_${agenda.id}_${votingTargets[currentTarget].ticketId}`;
+      html += `
+        <div class="option-item${disabledClass}${selectedClass}" onclick="${disabled ? '' : `selectOption(this, '${name}', ${opt.id})`}">
+          <input type="radio" name="${name}" value="${opt.id}" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}>
+          <label>${h(opt.label)}</label>
+        </div>
+      `;
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function selectOption(el, name, optionId) {
+    // UI 업데이트
+    el.closest('.option-list').querySelectorAll('.option-item').forEach(item => {
+      item.classList.remove('selected');
+    });
+    el.classList.add('selected');
+    el.querySelector('input[type="radio"]').checked = true;
+  }
+
+  function submitVote(agendaId, ticketId) {
+    const target = votingTargets[currentTarget];
+    const name = `agenda_${agendaId}_${ticketId}`;
+    const selected = document.querySelector(`input[name="${name}"]:checked`);
+    if (!selected) {
+      alert('선택지를 선택해주세요.');
+      return;
+    }
+    if (!confirm('제출하시겠습니까?')) return;
+
+    const onBehalfOf = target.ticketId === voter.id ? null : target.ticketId;
+    // → PHP: INSERT INTO votes ...
+    saveVote(agendaId, ticketId, Number(selected.value), voter.id, onBehalfOf);
+    render();
+  }
+
+  function editVote(agendaId, ticketId) {
+    // 수정 모드 — 해당 안건만 re-render with disabled=false
+    const agenda = getAgenda(agendaId);
+    const vote = getVote(agendaId, ticketId);
+    const body = document.getElementById(`agenda-body-${agendaId}`);
+
+    body.innerHTML = buildOptions(agenda, vote, false) + `
+      <div class="vote-actions">
+        <button class="btn btn-accent btn-sm" onclick="submitVote(${agendaId}, ${ticketId})">제출</button>
+        <button class="btn btn-outline btn-sm" onclick="render()">취소</button>
+      </div>
+    `;
+  }
+
+  function switchTarget(index) {
+    currentTarget = Number(index);
+    render();
+  }
+
+  render();
+</script>
+</body>
+</html>

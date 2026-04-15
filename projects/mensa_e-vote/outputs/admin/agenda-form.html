@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>안건 등록 — 전자투표시스템</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="nav-inner">
+    <a href="assemblies.html" class="nav-logo">전자투표 관리</a>
+    <div class="nav-links">
+      <a href="assemblies.html">총회 목록</a>
+      <a href="index.html" class="nav-logout" onclick="adminLogout()">로그아웃</a>
+    </div>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="page-header">
+    <h1 id="page-title">안건 등록</h1>
+    <p><a href="#" id="back-link">&larr; 총회 상세로 돌아가기</a></p>
+  </div>
+
+  <div class="card" style="max-width:600px;">
+    <form id="agenda-form">
+      <div class="form-group">
+        <label>안건 번호</label>
+        <input type="number" id="f-number" class="form-control" placeholder="자동 부여 (수동 변경 가능)">
+      </div>
+      <div class="form-group">
+        <label>안건명 <span class="req">*</span></label>
+        <input type="text" id="f-title" class="form-control" placeholder="안건 제목 입력" required>
+      </div>
+      <div class="form-group">
+        <label>안건 설명</label>
+        <textarea id="f-desc" class="form-control" placeholder="부가 설명 (선택)"></textarea>
+      </div>
+
+      <div style="border-top:1px solid var(--gray-200);margin:20px 0;padding-top:20px;">
+        <h3 style="font-size:15px;color:var(--primary);margin-bottom:12px;">보기 (선택지)</h3>
+        <p class="form-hint" style="margin-bottom:12px;">최소 2개 이상 입력해주세요.</p>
+
+        <div id="options-list"></div>
+        <button type="button" class="btn btn-outline btn-sm" onclick="addOption()">+ 보기 추가</button>
+      </div>
+
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px;">
+        <a href="#" id="cancel-link" class="btn btn-outline">취소</a>
+        <button type="submit" class="btn btn-primary" id="submit-btn">등록</button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<footer class="site-footer"><p>&copy; 2026 전자투표시스템 — 프로토타입</p></footer>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+  if (!requireAdmin()) {}
+
+  const params = new URLSearchParams(location.search);
+  const assemblyId = params.get('assembly_id') || 1;
+  const editId = params.get('id');
+
+  document.getElementById('back-link').href = `assembly-detail.html?id=${assemblyId}`;
+  document.getElementById('cancel-link').href = `assembly-detail.html?id=${assemblyId}`;
+
+  let options = ['', ''];
+
+  if (editId) {
+    const ag = getAgenda(Number(editId));
+    if (ag) {
+      document.getElementById('page-title').textContent = '안건 수정';
+      document.getElementById('submit-btn').textContent = '수정';
+      document.getElementById('f-number').value = ag.number;
+      document.getElementById('f-title').value = ag.title;
+      document.getElementById('f-desc').value = ag.description;
+      options = ag.options.map(o => o.label);
+    }
+  }
+
+  function renderOptions() {
+    const list = document.getElementById('options-list');
+    list.innerHTML = '';
+    options.forEach((opt, i) => {
+      list.innerHTML += `
+        <div class="form-group" style="display:flex;gap:8px;align-items:center;">
+          <span style="font-size:13px;color:var(--gray-400);width:20px;">${i+1}</span>
+          <input type="text" class="form-control option-input" value="${h(opt)}" placeholder="보기 입력" required>
+          ${i >= 2 ? `<button type="button" class="btn btn-outline btn-sm" style="color:var(--danger);flex-shrink:0;" onclick="removeOption(${i})">삭제</button>` : ''}
+        </div>
+      `;
+    });
+  }
+
+  function addOption() {
+    options.push('');
+    renderOptions();
+  }
+
+  function removeOption(index) {
+    options.splice(index, 1);
+    renderOptions();
+  }
+
+  renderOptions();
+
+  document.getElementById('agenda-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // → PHP: INSERT/UPDATE agendas ...
+    alert('저장되었습니다. (프로토타입 — 실제 저장 없음)');
+    window.location.href = `assembly-detail.html?id=${assemblyId}`;
+  });
+</script>
+</body>
+</html>

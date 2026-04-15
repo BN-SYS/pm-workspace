@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>출석 현황 — 전자투표시스템</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="nav-inner">
+    <a href="assemblies.html" class="nav-logo">전자투표 관리</a>
+    <div class="nav-links">
+      <a href="assemblies.html">총회 목록</a>
+      <a href="attendance.html" style="color:var(--primary);font-weight:700;">출석 현황</a>
+      <a href="delegation.html">위임 관리</a>
+      <a href="index.html" class="nav-logout" onclick="adminLogout()">로그아웃</a>
+    </div>
+  </div>
+</nav>
+
+<main class="main-content" id="app"></main>
+
+<footer class="site-footer"><p>&copy; 2026 전자투표시스템 — 프로토타입</p></footer>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+  if (!requireAdmin()) {}
+
+  const tickets = SAMPLE_DATA.tickets;
+  const attended = tickets.filter(t => t.attended);
+  const notAttended = tickets.filter(t => !t.attended);
+
+  let rows = '';
+  tickets.forEach(t => {
+    rows += `
+      <tr>
+        <td>${h(t.name)}</td>
+        <td>${h(t.phone)}</td>
+        <td>${h(t.order_number)}</td>
+        <td><span style="color:${t.attended ? 'var(--success)' : 'var(--gray-400)'}; font-weight:600;">${t.attended ? '출석' : '미출석'}</span></td>
+        <td>${t.attended_at || '-'}</td>
+      </tr>
+    `;
+  });
+
+  document.getElementById('app').innerHTML = `
+    <div class="page-header">
+      <h1>출석 현황</h1>
+      <p>쇼핑몰 검표 데이터 기반</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value">${tickets.length}</div><div class="stat-label">전체 구매자</div></div>
+      <div class="stat-card"><div class="stat-value" style="color:var(--success)">${attended.length}</div><div class="stat-label">출석 완료</div></div>
+      <div class="stat-card"><div class="stat-value" style="color:var(--gray-400)">${notAttended.length}</div><div class="stat-label">미출석</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>출석자 명단</h2>
+        <button class="btn btn-outline btn-sm" onclick="alert('쇼핑몰 DB와 동기화합니다. (프로토타입)')">수동 동기화</button>
+      </div>
+      <p style="font-size:12px;color:var(--gray-400);margin-bottom:12px;">최종 동기화: 2026-04-25 14:15:00</p>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>이름</th><th>전화번호</th><th>주문번호</th><th>출석여부</th><th>검표시각</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+</script>
+</body>
+</html>
