@@ -321,9 +321,10 @@
 
 ---
 
-## 7. 데이터 모델
+## 7. 데이터 모델 (프로토타입 제작용)
 
 ### 7-1. Assembly (총회)
+
 | 컬럼 | 타입 | 설명 |
 |---|---|---|
 | id | INT, PK | 총회 고유 ID |
@@ -336,6 +337,7 @@
 | last_sync_at | DATETIME, NULL | 마지막 성공 동기화 시각 |
 
 ### 7-2. Agenda (안건)
+
 | 컬럼 | 타입 | 설명 |
 |---|---|---|
 | id | INT, PK | 안건 고유 ID |
@@ -345,6 +347,7 @@
 | status | ENUM | draft / open / closed |
 
 ### 7-3. AgendaOption (안건 보기)
+
 | 컬럼 | 타입 | 설명 |
 |---|---|---|
 | id | INT, PK | 보기 고유 ID |
@@ -353,6 +356,7 @@
 | sort_order | INT | 표시 순서 |
 
 ### 7-4. Delegation (위임)
+
 | 컬럼 | 타입 | 설명 |
 |---|---|---|
 | id | INT, PK | 위임 고유 ID |
@@ -371,6 +375,7 @@
 > **인덱스:** (assembly_id, delegatee_member_id), (assembly_id, delegator_member_id)
 
 ### 7-5. Vote (투표)
+
 | 컬럼 | 타입 | 설명 |
 |---|---|---|
 | id | INT, PK | 투표 고유 ID |
@@ -383,6 +388,7 @@
 > **저장 방식:** UNIQUE(agenda_id, voter_member_id). 최초 INSERT, 수정 시 UPDATE (open 상태에서만). closed이면 INSERT/UPDATE 모두 차단. 동시 제출 시 먼저 도착한 것이 INSERT, 나중 것은 UPDATE.
 
 ### 7-6. Admin (관리자)
+
 | 컬럼 | 타입 | 설명 |
 |---|---|---|
 | id | INT, PK | 관리자 고유 ID |
