@@ -202,6 +202,101 @@ function enableEdit(btn, groupName, hiddenId) {
   card.classList.add('is-open');
 }
 
+// ── 안건 인라인 등록/수정 폼 ──────────────────────────────────
+
+/**
+ * 안건 인라인 폼 열기
+ * @param {Object} [data]  수정 시 { id, title, options[] } 전달. 없으면 등록 모드.
+ */
+function openAgendaForm(data) {
+  var wrap = document.getElementById('agenda-inline-form');
+  if (!wrap) return;
+
+  var titleEl   = document.getElementById('agenda-form-label');
+  var submitBtn = document.getElementById('agenda-form-submit');
+  var editId    = document.getElementById('agenda-edit-id');
+  var titleInput= document.getElementById('agenda-title-input');
+  var optWrap   = document.getElementById('inline-options-wrap');
+
+  // 초기화
+  editId.value = '';
+  titleInput.value = '';
+  titleEl.textContent = '안건 등록';
+  submitBtn.textContent = '등록';
+
+  // 보기 행 초기화 (첫 2개 유지, 나머지 삭제, 값 비움)
+  var rows = optWrap.querySelectorAll('[data-option-row]');
+  rows.forEach(function (row, i) { if (i >= 2) row.remove(); });
+  optWrap.querySelectorAll('input[name="options[]"]').forEach(function (inp) { inp.value = ''; });
+
+  if (data) {
+    // 수정 모드
+    editId.value = data.id;
+    titleInput.value = data.title || '';
+    titleEl.textContent = '안건 수정';
+    submitBtn.textContent = '수정';
+    if (data.options) {
+      var inputs = optWrap.querySelectorAll('input[name="options[]"]');
+      data.options.forEach(function (opt, i) {
+        if (i < 2) { if (inputs[i]) inputs[i].value = opt; }
+        else { addInlineOptionRow(opt); }
+      });
+    }
+  }
+
+  wrap.style.display = 'block';
+  wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  titleInput.focus();
+}
+
+/** 안건 인라인 폼 닫기 */
+function closeAgendaForm() {
+  var wrap = document.getElementById('agenda-inline-form');
+  if (wrap) wrap.style.display = 'none';
+}
+
+/** 인라인 폼 보기 행 추가 */
+function addInlineOptionRow(value) {
+  var optWrap = document.getElementById('inline-options-wrap');
+  if (!optWrap) return;
+  var num = optWrap.querySelectorAll('[data-option-row]').length + 1;
+  var div = document.createElement('div');
+  div.className = 'form-group';
+  div.style.cssText = 'display:flex;gap:8px;align-items:center;';
+  div.setAttribute('data-option-row', '');
+  div.innerHTML =
+    '<span style="font-size:13px;color:var(--gray-400);width:20px;">' + num + '</span>' +
+    '<input type="text" name="options[]" class="form-control" placeholder="보기 입력" value="' + (value || '') + '">' +
+    '<button type="button" class="btn btn-outline btn-sm" style="color:var(--danger);flex-shrink:0;"' +
+      ' onclick="this.closest(\'[data-option-row]\').remove();renumberInlineOptions();">삭제</button>';
+  optWrap.appendChild(div);
+  renumberInlineOptions();
+}
+
+/** 인라인 폼 보기 번호 재정렬 */
+function renumberInlineOptions() {
+  var optWrap = document.getElementById('inline-options-wrap');
+  if (!optWrap) return;
+  optWrap.querySelectorAll('[data-option-row]').forEach(function (row, i) {
+    var span = row.querySelector('span');
+    if (span) span.textContent = i + 1;
+  });
+}
+
+/**
+ * 안건 인라인 결과 아코디언
+ * @param {HTMLButtonElement} btn  "결과 ▾" 버튼
+ */
+function toggleResult(btn) {
+  var wrap = btn.closest('.agenda-item-wrap');
+  var result = wrap ? wrap.querySelector('.agenda-result-inline') : null;
+  if (!result) return;
+  var open = result.style.display !== 'none';
+  result.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? '결과 ▾' : '결과 ▴';
+  if (wrap) wrap.classList.toggle('is-open', !open);
+}
+
 /**
  * 수임인 드롭다운 전환 (PHP SSR: URL 파라미터로 리로드)
  * @param {string} memberId  선택한 명의 회원번호

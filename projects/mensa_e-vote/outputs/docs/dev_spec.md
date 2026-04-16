@@ -1,5 +1,5 @@
 # 개발자 전달 스펙 — 전자투표시스템 MVP
-> 버전 1.1 · 2026-04-16 · 백엔드 개발자 전달용
+> 버전 1.2 · 2026-04-16 · 백엔드 개발자 전달용
 
 ---
 
@@ -31,8 +31,8 @@ evote/
 │   ├── index.php           (A-01 로그인)
 │   ├── assemblies.php      (A-02 총회 목록)
 │   ├── assembly-form.php   (총회 등록/수정)
-│   ├── assembly-detail.php (A-03 총회 상세)
-│   ├── agenda-form.php     (A-04 안건 등록/수정)
+│   ├── assembly-detail.php (A-03 총회 상세 + 안건 인라인 등록·수정)
+│   │                       ← A-04 안건 등록/수정 기능 통합. agenda-form.php 불필요.
 │   ├── attendance.php      (A-05 출석 관리)
 │   ├── delegation.php      (A-06 위임 관리)
 │   ├── vote-status.php     (A-07 투표 현황)
@@ -90,7 +90,27 @@ $_SESSION['assembly_id']      // 현재 투표 중인 총회 ID (int)
 
 ## 3. POST 처리 파일 스펙
 
-### 3-1. `process/admin_login.php`
+### 3-1. `process/assembly_create.php` / `process/assembly_update.php`
+```
+POST title, scheduled_at (create) / id, title, scheduled_at (update)
+→ INSERT 또는 UPDATE assemblies
+→ 성공: assembly-detail.php?id=... 리다이렉트  ← 총회 목록이 아닌 총회 상세로 이동
+→ 실패: assembly-form.php?error=1 리다이렉트
+```
+
+### 3-2. `process/agenda_save.php` (신규)
+```
+POST assembly_id, id(수정 시), title, options[]
+- id 없으면 INSERT (등록 모드)
+- id 있으면 UPDATE (수정 모드, preparing 상태에서만)
+- 안건 INSERT 시 sort_order = MAX(sort_order)+1
+- 보기(options[]): AgendaOption 전체 교체 (DELETE + INSERT)
+  단, 해당 안건이 한 번이라도 open 된 적 있으면 보기 수정 차단
+→ assembly-detail.php?id=... 리다이렉트
+```
+> **주의:** agenda-form.php 는 구현하지 않음. 안건 CRUD는 assembly-detail.php 인라인 폼 + agenda_save.php 로 처리.
+
+### 3-3. `process/admin_login.php`
 ```
 POST name=login_id, password
 → Admin 테이블에서 password_hash 검증 (password_verify)
@@ -214,6 +234,16 @@ POST name, phone, order_last5
 //    (현재 선택 명의 기준)
 // 5. 미완료 명의 여부: 모든 명의에서 open 안건 미투표 건이 있으면
 //    <body data-has-incomplete="true"> → JS이탈 경고 활성화
+```
+
+### `admin/assembly-detail.php` — 안건 인라인 폼
+```php
+// 안건 등록·수정 폼이 assembly-detail.php 내에 인라인으로 포함됨
+// POST 처리: process/agenda_save.php
+// 인라인 폼은 항상 렌더링하되 style="display:none" 으로 초기 숨김
+// JS openAgendaForm(data) 로 열기 / closeAgendaForm() 로 닫기
+// 수정 모드: 버튼에 data-* 없이 onclick="openAgendaForm({id:N, title:'...', options:[...]})"
+//   → PHP에서 echo <button onclick="openAgendaForm(...)"> 로 렌더링
 ```
 
 ### `admin/vote-status.php`
@@ -365,17 +395,22 @@ draft ──[열기]──► open ──[닫기]──► closed
 |---|---|---|---|
 | A-01 | admin/index.html | admin/index.php | 로그인 |
 | A-02 | admin/assemblies.html | admin/assemblies.php | 총회 목록 |
-| — | admin/assembly-form.html | admin/assembly-form.php | 총회 등록/수정 |
-| A-03 | admin/assembly-detail.html | admin/assembly-detail.php | 총회 상세 + 상태 |
-| A-04 | admin/agenda-form.html | admin/agenda-form.php | 안건 등록/수정 |
+| — | admin/assembly-form.html | admin/assembly-form.php | 총회 등록/수정. 완료 후 → assembly-detail.php?id=... |
+| A-03 | admin/assembly-detail.html | admin/assembly-detail.php | 총회 상세 + 상태 + **안건 인라인 폼 포함** |
+| ~~A-04~~ | ~~admin/agenda-form.html~~ | ~~admin/agenda-form.php~~ | **A-03에 통합. 별도 구현 불필요.** process/agenda_save.php 로 POST 처리. |
 | A-05 | admin/attendance.html | admin/attendance.php | 출석 현황 |
 | A-06 | admin/delegation.html | admin/delegation.php | 위임 관리 |
-| **A-07** | **admin/vote-status.html** | admin/vote-status.php | **신규 — 투표 현황** |
-| A-08 | admin/result.html | admin/result.php | 결과 조회 |
-| **A-09** | **admin/bulk-vote.html** | admin/bulk-vote.php | **신규 — 의장 일괄** |
+| A-07 | admin/vote-status.html | admin/vote-status.php | 투표 현황 |
+| A-08 | admin/result.html | admin/result.php | 결과 조회 (안건별 상세 + 참여 현황) |
+| A-09 | admin/bulk-vote.html | admin/bulk-vote.php | 의장 일괄 투표 |
 | V-01 | voter/index.html | voter/index.php | 본인 인증 |
 | V-02 | voter/vote.html | voter/vote.php | 투표 화면 |
 
+> **관리자 네비 구조 (총회 서브페이지 공통):**  
+> 1행: 로고 + "총회 목록" 브레드크럼 + 로그아웃  
+> 2행 서브탭: 총회 상세 / 투표 현황 / 위임 관리 / 출석 현황 / 의장 일괄  
+> PHP 구현 시 현재 페이지 탭에 `class="active"` 부여.
+
 ---
 
-*전자투표시스템 MVP v1.1 · 개발자 전달 스펙 · 2026-04-16*
+*전자투표시스템 MVP v1.2 · 개발자 전달 스펙 · 2026-04-16*

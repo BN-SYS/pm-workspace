@@ -35,7 +35,7 @@
     <!-- [PHP] 신규: action="process/assembly_create.php" / 수정: action="process/assembly_update.php" -->
     <form method="POST" action="../process/assembly_create.php"
           id="assembly-form"
-          data-proto-redirect="assemblies.html">
+          data-proto-redirect="assembly-detail.html?id=3"><!-- [PHP] 신규: 생성된 id / 수정: 기존 id -->
       <!-- [PHP] 수정 모드일 때: <input type="hidden" name="id" value="<?= $assembly['id'] ?>"> -->
 
       <div class="form-group">

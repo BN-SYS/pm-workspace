@@ -10,10 +10,40 @@
 
 <nav class="admin-nav">
   <div class="nav-inner">
-    <a href="assemblies.html" class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표 관리</a>
+    <div class="nav-left">
+      <a href="assemblies.html" class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표 관리</a>
+      <span class="nav-sep">›</span>
+      <a href="assemblies.html" class="nav-breadcrumb">총회 목록</a>
+    </div>
     <div class="nav-links">
-      <a href="assemblies.html">총회 목록</a>
       <a href="index.html" class="nav-logout">로그아웃</a>
+    </div>
+  </div>
+  <div class="nav-sub">
+    <div class="nav-sub-inner">
+      <div class="nav-sub-tabs">
+        <a href="assembly-detail.html?id=1">총회 상세</a><!-- [PHP] ?id=<?= $assembly_id ?> -->
+        <a href="vote-status.html?assembly_id=1">투표 현황</a>
+        <a href="delegation.html?assembly_id=1">위임 관리</a>
+        <a href="attendance.html?assembly_id=1">출석 현황</a>
+        <a href="bulk-vote.html?assembly_id=1">의장 일괄</a>
+      </div>
+      <!-- [PHP] assembly context -->
+      <div class="nav-assembly-ctx">
+        <span class="nav-ctx-name">2026년 정기총회</span><!-- [PHP] <?= h($assembly['title']) ?> -->
+        <span class="nav-ctx-date">2026-04-25 14:00</span><!-- [PHP] <?= h($assembly['scheduled_at']) ?> -->
+        <span class="badge status-closed">종료</span><!-- [PHP] status badge — result는 closed 이후 조회 -->
+        <span class="nav-ctx-dot">|</span>
+        <span class="nav-ctx-stats">
+          출석 <strong>4</strong><!-- [PHP] $stats['attended'] -->
+          <span class="nav-ctx-dot">·</span>
+          위임 <strong>1</strong><!-- [PHP] $stats['delegations'] -->
+          <span class="nav-ctx-dot">·</span>
+          모수 <strong>5</strong><!-- [PHP] $assembly['eligible_count'] -->
+          <span class="nav-ctx-dot">·</span>
+          안건 <strong>3</strong><!-- [PHP] count($agendas) -->
+        </span>
+      </div>
     </div>
   </div>
 </nav>

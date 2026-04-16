@@ -10,12 +10,33 @@
 
 <nav class="admin-nav">
   <div class="nav-inner">
-    <a href="assemblies.html" class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표 관리</a>
+    <div class="nav-left">
+      <a href="assemblies.html" class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표 관리</a>
+      <span class="nav-sep">›</span>
+      <a href="assemblies.html" class="nav-breadcrumb">총회 목록</a>
+    </div>
     <div class="nav-links">
-      <a href="assemblies.html">총회 목록</a>
-      <a href="attendance.html">출석 현황</a>
-      <a href="delegation.html">위임 관리</a>
       <a href="index.html" class="nav-logout">로그아웃</a>
+    </div>
+  </div>
+  <!-- 총회 하위 탭 -->
+  <div class="nav-sub">
+    <div class="nav-sub-inner">
+      <div class="nav-sub-tabs">
+        <a href="assembly-detail.html?id=1" class="active">총회 상세</a><!-- [PHP] ?id=<?= $assembly_id ?> -->
+        <a href="vote-status.html?assembly_id=1">투표 현황</a>
+        <a href="delegation.html?assembly_id=1">위임 관리</a>
+        <a href="attendance.html?assembly_id=1">출석 현황</a>
+        <!-- [PHP] if ($status === 'voting'): -->
+        <a href="bulk-vote.html?assembly_id=1">의장 일괄</a>
+        <!-- [PHP] endif -->
+      </div>
+      <!-- [PHP] assembly context — 총회 상세는 아래 sticky에서 stats 표시하므로 여기서는 이름+상태만 -->
+      <div class="nav-assembly-ctx">
+        <span class="nav-ctx-name">2026년 정기총회</span><!-- [PHP] <?= h($assembly['title']) ?> -->
+        <span class="nav-ctx-date">2026-04-25 14:00</span><!-- [PHP] <?= h($assembly['scheduled_at']) ?> -->
+        <span class="badge status-voting">투표 진행중</span><!-- [PHP] status badge -->
+      </div>
     </div>
   </div>
 </nav>
@@ -23,25 +44,40 @@
 <main class="main-content">
 
   <!-- [PHP] $assembly_id = $_GET['id']; SELECT * FROM assemblies WHERE id = ? -->
-  <div class="page-header">
-    <h1>2026년 정기총회</h1><!-- [PHP] <?= h($assembly['title']) ?> -->
-    <p>2026-04-25 14:00</p><!-- [PHP] <?= h($assembly['scheduled_at']) ?> -->
+
+  <!-- ── sticky 고정 영역: 총회명 + 상태 제어 + 요약 (항상 노출) ── -->
+  <div class="assembly-sticky" id="assembly-sticky">
+
+  <div class="assembly-sticky-title">
+    <div class="title-group">
+      <h1 class="assembly-sticky-h1">2026년 정기총회</h1><!-- [PHP] <?= h($assembly['title']) ?> -->
+      <span class="assembly-sticky-date">2026-04-25 14:00</span><!-- [PHP] <?= h($assembly['scheduled_at']) ?> -->
+    </div>
   </div>
 
-  <!-- 상태 제어 영역 -->
+  <!-- 상태 제어 + 통계 통합 -->
   <!-- [PHP] $status = $assembly['status']; // preparing | voting | closed -->
   <div class="status-control">
     <div class="current-status">
       현재 상태:
-      <!-- [PHP] status에 따라 badge 클래스 변경 -->
+      <!-- [PHP] status에 따라 badge 클래스: preparing=status-ready / voting=status-voting / closed=status-closed -->
       <span class="badge status-voting" style="font-size:13px;">투표 진행중</span>
       <span style="margin-left:8px;font-size:12px;color:var(--gray-500);">
         투표 시작: 2026-04-25 14:20:00<!-- [PHP] <?= h($assembly['voting_started_at']) ?> -->
       </span>
     </div>
+
+    <!-- 통계 요약 (우측 배치) -->
+    <!-- [PHP] 통계 상세는 vote-status.php 참조 -->
+    <div class="status-stats">
+      <span>출석 <strong>4</strong></span><!-- [PHP] <?= $stats['attended'] ?> -->
+      <span>위임 <strong>1</strong></span><!-- [PHP] <?= $stats['delegations'] ?> -->
+      <span>투표 모수 <strong>5</strong></span><!-- [PHP] <?= $stats['eligible_count'] ?> -->
+      <span>안건 <strong>3</strong></span><!-- [PHP] <?= count($agendas) ?> -->
+    </div>
+
     <div class="status-buttons">
 
-      <!-- ── preparing 상태일 때 ── -->
       <!-- [PHP] if ($status === 'preparing'): -->
       <form id="btn-start-voting" method="POST" action="../process/assembly_start_voting.php"
             data-proto-redirect="assembly-detail.html?id=1"
@@ -50,7 +86,6 @@
         <button type="submit" class="btn btn-success btn-sm" onclick="return confirmStartVoting()">투표 시작</button>
       </form>
 
-      <!-- ── voting 상태일 때 ── -->
       <!-- [PHP] elseif ($status === 'voting'): -->
       <form id="btn-close-assembly" method="POST" action="../process/assembly_close.php"
             data-proto-redirect="assemblies.html">
@@ -64,125 +99,226 @@
     </div>
   </div>
 
-  <!-- 요약 통계 -->
-  <!-- [PHP] 통계는 vote-status.php 에서 상세 표시. 여기는 요약만. -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-value">4</div><!-- [PHP] <?= $stats['attended'] ?> -->
-      <div class="stat-label">출석(검표)</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value">1</div><!-- [PHP] <?= $stats['delegations'] ?> -->
-      <div class="stat-label">유효 위임</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value">5</div><!-- [PHP] <?= $stats['eligible_count'] ?> -->
-      <div class="stat-label">투표 모수</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value">3</div><!-- [PHP] <?= count($agendas) ?> -->
-      <div class="stat-label">총 안건</div>
-    </div>
-  </div>
+  </div><!-- /assembly-sticky -->
 
-  <!-- 바로가기 링크 -->
-  <div style="display:flex;gap:8px;margin-bottom:20px;">
-    <a href="vote-status.html?assembly_id=1" class="btn btn-outline btn-sm">투표 현황 상세</a><!-- [PHP] ?assembly_id=<?= $assembly['id'] ?> -->
-    <a href="delegation.html?assembly_id=1" class="btn btn-outline btn-sm">위임 관리</a>
-    <a href="attendance.html?assembly_id=1" class="btn btn-outline btn-sm">출석 현황</a>
-    <!-- [PHP] if ($status === 'voting'): -->
-    <a href="bulk-vote.html?assembly_id=1" class="btn btn-outline btn-sm" style="color:var(--warning);">의장 일괄 투표</a>
-    <!-- [PHP] endif -->
-  </div>
-
-  <!-- 안건 목록 -->
+  <!-- 안건 관리 -->
   <div class="card">
     <div class="card-header">
       <h2>안건 관리</h2>
       <!-- [PHP] preparing 및 voting 상태일 때만 추가 가능 (closed 불가) -->
       <!-- [PHP] if ($status !== 'closed'): -->
-      <a href="agenda-form.html?assembly_id=1" class="btn btn-accent btn-sm">+ 안건 추가</a><!-- [PHP] ?assembly_id=<?= $assembly['id'] ?> -->
+      <button class="btn btn-accent btn-sm" onclick="openAgendaForm()">+ 안건 추가</button>
       <!-- [PHP] endif -->
     </div>
 
     <!-- [PHP] foreach ($agendas as $ag): -->
-    <!-- ── 제1호: open 상태 ── -->
     <!-- [PHP] $ag_status_class = ['draft'=>'status-ready','open'=>'status-open','closed'=>'status-closed'][$ag['status']] -->
-    <div class="agenda-row">
-      <div class="agenda-info">
-        <div class="num">1</div><!-- [PHP] <?= $ag['sort_order'] ?> -->
-        <div>
-          <div class="title">멘사코리아 회원 연회비를 다음과 같이 조정한다.</div><!-- [PHP] <?= h($ag['title']) ?> -->
-          <div style="font-size:12px;color:var(--gray-400);margin-top:2px;">
-            투표: 5명<!-- [PHP] <?= $ag['vote_count'] ?>명 -->
+
+    <!-- ── 제1호: open 상태 ── -->
+    <div class="agenda-item-wrap">
+      <div class="agenda-row">
+        <div class="agenda-info">
+          <div class="num">1</div><!-- [PHP] <?= $ag['sort_order'] ?> -->
+          <div class="agenda-body">
+            <div class="title">멘사코리아 회원 연회비를 다음과 같이 조정한다.</div><!-- [PHP] <?= h($ag['title']) ?> -->
+            <div class="agenda-meta">
+              <span class="badge status-open">열림</span><!-- [PHP] 상태에 따라 변경 -->
+              <span class="vote-meta">5명 투표</span><!-- [PHP] <?= $ag['vote_count'] ?>명 투표 -->
+            </div>
           </div>
         </div>
-      </div>
-      <div class="actions">
-        <div class="toggle-wrap">
-          <!-- [PHP] voting 상태일 때만 토글 활성화. preparing/closed 시 disabled -->
-          <!-- [PHP] ag['status'] === 'open' 이면 toggle active -->
-          <form method="POST" action="../process/agenda_toggle.php" style="display:contents;" data-proto-redirect="assembly-detail.html?id=1">
-            <input type="hidden" name="agenda_id" value="1"><!-- [PHP] value="<?= $ag['id'] ?>" -->
-            <input type="hidden" name="assembly_id" value="1">
-            <button type="submit" class="toggle active" title="클릭하여 닫기"
-              onclick="return confirmCloseAgenda(this)"></button>
-          </form>
-          <span class="toggle-label badge status-open">열림</span><!-- [PHP] 상태에 따라 변경 -->
+        <div class="actions">
+          <div class="toggle-wrap">
+            <!-- [PHP] voting 상태일 때만 토글 활성화. preparing/closed 시 disabled -->
+            <form method="POST" action="../process/agenda_toggle.php" style="display:contents;" data-proto-redirect="assembly-detail.html?id=1">
+              <input type="hidden" name="agenda_id" value="1"><!-- [PHP] value="<?= $ag['id'] ?>" -->
+              <input type="hidden" name="assembly_id" value="1">
+              <button type="submit" class="toggle active" onclick="return confirmCloseAgenda(this)"></button>
+            </form>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="toggleResult(this)">결과 ▾</button>
+          <!-- [PHP] if ($status === 'preparing'): -->
+          <button class="btn btn-outline btn-sm btn-edit-agenda" style="display:none;"
+            onclick="openAgendaForm({id:1,title:'멘사코리아 회원 연회비를 다음과 같이 조정한다.',options:['연 9만원','연 7만원','연 8만원','연 10만원']})">수정</button>
+          <!-- [PHP] endif -->
         </div>
-        <a href="result.html?agenda_id=1&assembly_id=1" class="btn btn-outline btn-sm">결과</a><!-- [PHP] ?agenda_id=<?= $ag['id'] ?> -->
-        <!-- [PHP] preparing 상태(또는 voting이지만 한번도 open 안 된 draft)일 때만 수정/삭제 -->
-        <!-- [PHP] if ($status === 'preparing'): -->
-        <a href="agenda-form.html?id=1&assembly_id=1" class="btn btn-outline btn-sm btn-edit-agenda" style="display:none;">수정</a>
-        <!-- [PHP] endif -->
+      </div>
+      <!-- 인라인 결과 (기본 숨김) -->
+      <!-- [PHP] $total_votes = SUM(counts); $eligible = $assembly['eligible_count']; $vote_rate = round($total/$eligible*100,1) -->
+      <div class="agenda-result-inline" style="display:none;">
+        <div class="result-summary">
+          투표 현황
+          <strong>5 / 5명 · 100%</strong><!-- [PHP] <?= $total_votes ?> / <?= $eligible ?>명 · <?= $vote_rate ?>% -->
+        </div>
+        <!-- [PHP] foreach ($ag['options'] as $opt): $cnt = ...; $pct = ...; -->
+        <div class="result-bar-wrap">
+          <div class="result-bar-label">
+            <span class="label-text">연 9만원</span><!-- [PHP] <?= h($opt['label']) ?> -->
+            <span class="label-value">60.0% · 3명</span><!-- [PHP] <?= $pct ?>% · <?= $cnt ?>명 -->
+          </div>
+          <div class="result-bar"><div class="result-bar-fill" style="width:60%;"></div></div>
+        </div>
+        <div class="result-bar-wrap">
+          <div class="result-bar-label">
+            <span class="label-text">연 7만원</span>
+            <span class="label-value">20.0% · 1명</span>
+          </div>
+          <div class="result-bar"><div class="result-bar-fill" style="width:20%;"></div></div>
+        </div>
+        <div class="result-bar-wrap">
+          <div class="result-bar-label">
+            <span class="label-text">연 8만원</span>
+            <span class="label-value">20.0% · 1명</span>
+          </div>
+          <div class="result-bar"><div class="result-bar-fill" style="width:20%;"></div></div>
+        </div>
+        <div class="result-bar-wrap">
+          <div class="result-bar-label">
+            <span class="label-text">연 10만원</span>
+            <span class="label-value">0.0% · 0명</span>
+          </div>
+          <div class="result-bar"><div class="result-bar-fill" style="width:0%;"></div></div>
+        </div>
+        <!-- [PHP] endforeach -->
+        <a href="result.html?agenda_id=1&assembly_id=1" class="result-detail-link">참여자 명단 상세 보기 →</a><!-- [PHP] ?agenda_id=<?= $ag['id'] ?> -->
       </div>
     </div>
 
     <!-- ── 제2호: open 상태 ── -->
-    <div class="agenda-row">
-      <div class="agenda-info">
-        <div class="num">2</div>
-        <div>
-          <div class="title">선출이사의 인수인계를 의무화하고, 연임 제한 조항을 2회로 신설한다.</div>
-          <div style="font-size:12px;color:var(--gray-400);margin-top:2px;">투표: 2명</div>
+    <div class="agenda-item-wrap">
+      <div class="agenda-row">
+        <div class="agenda-info">
+          <div class="num">2</div>
+          <div class="agenda-body">
+            <div class="title">선출이사의 인수인계를 의무화하고, 연임 제한 조항을 2회로 신설한다.</div>
+            <div class="agenda-meta">
+              <span class="badge status-open">열림</span>
+              <span class="vote-meta">2명 투표</span>
+            </div>
+          </div>
+        </div>
+        <div class="actions">
+          <div class="toggle-wrap">
+            <form method="POST" action="../process/agenda_toggle.php" style="display:contents;" data-proto-redirect="assembly-detail.html?id=1">
+              <input type="hidden" name="agenda_id" value="2">
+              <input type="hidden" name="assembly_id" value="1">
+              <button type="submit" class="toggle active" onclick="return confirmCloseAgenda(this)"></button>
+            </form>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="toggleResult(this)">결과 ▾</button>
         </div>
       </div>
-      <div class="actions">
-        <div class="toggle-wrap">
-          <form method="POST" action="../process/agenda_toggle.php" style="display:contents;" data-proto-redirect="assembly-detail.html?id=1">
-            <input type="hidden" name="agenda_id" value="2">
-            <input type="hidden" name="assembly_id" value="1">
-            <button type="submit" class="toggle active" onclick="return confirmCloseAgenda(this)"></button>
-          </form>
-          <span class="toggle-label badge status-open">열림</span>
+      <div class="agenda-result-inline" style="display:none;">
+        <div class="result-summary">
+          투표 현황
+          <strong>2 / 5명 · 40% (진행중)</strong>
         </div>
-        <a href="result.html?agenda_id=2&assembly_id=1" class="btn btn-outline btn-sm">결과</a>
+        <div class="result-bar-wrap">
+          <div class="result-bar-label"><span class="label-text">찬성</span><span class="label-value">100.0% · 2명</span></div>
+          <div class="result-bar"><div class="result-bar-fill" style="width:100%;"></div></div>
+        </div>
+        <div class="result-bar-wrap">
+          <div class="result-bar-label"><span class="label-text">반대</span><span class="label-value">0.0% · 0명</span></div>
+          <div class="result-bar"><div class="result-bar-fill" style="width:0%;"></div></div>
+        </div>
+        <div class="result-bar-wrap">
+          <div class="result-bar-label"><span class="label-text">기권</span><span class="label-value">0.0% · 0명</span></div>
+          <div class="result-bar"><div class="result-bar-fill" style="width:0%;"></div></div>
+        </div>
+        <a href="result.html?agenda_id=2&assembly_id=1" class="result-detail-link">참여자 명단 상세 보기 →</a>
       </div>
     </div>
 
     <!-- ── 제3호: closed 상태 ── -->
-    <div class="agenda-row">
-      <div class="agenda-info">
-        <div class="num">3</div>
-        <div>
-          <div class="title">2025년도 결산보고를 승인한다.</div>
-          <div style="font-size:12px;color:var(--gray-400);margin-top:2px;">투표: 5명 · 마감</div>
+    <div class="agenda-item-wrap">
+      <div class="agenda-row">
+        <div class="agenda-info">
+          <div class="num">3</div>
+          <div class="agenda-body">
+            <div class="title">2025년도 결산보고를 승인한다.</div>
+            <div class="agenda-meta">
+              <span class="badge status-closed">마감</span>
+              <span class="vote-meta">5명 투표</span>
+            </div>
+          </div>
+        </div>
+        <div class="actions">
+          <div class="toggle-wrap">
+            <form method="POST" action="../process/agenda_toggle.php" style="display:contents;" data-proto-redirect="assembly-detail.html?id=1">
+              <input type="hidden" name="agenda_id" value="3">
+              <input type="hidden" name="assembly_id" value="1">
+              <!-- [PHP] 재오픈 가능. 안건 닫기와 동일 엔드포인트에서 toggle -->
+              <button type="submit" class="toggle" onclick="return confirmReopenAgenda(this)"></button>
+            </form>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="toggleResult(this)">결과 ▾</button>
         </div>
       </div>
-      <div class="actions">
-        <div class="toggle-wrap">
-          <form method="POST" action="../process/agenda_toggle.php" style="display:contents;" data-proto-redirect="assembly-detail.html?id=1">
-            <input type="hidden" name="agenda_id" value="3">
-            <input type="hidden" name="assembly_id" value="1">
-            <!-- [PHP] 재오픈 가능. 안건 닫기와 동일 엔드포인트에서 toggle -->
-            <button type="submit" class="toggle" onclick="return confirmReopenAgenda(this)"></button>
-          </form>
-          <span class="toggle-label badge status-closed">마감</span>
+      <div class="agenda-result-inline" style="display:none;">
+        <div class="result-summary">
+          투표 현황
+          <strong>5 / 5명 · 100% (최종)</strong>
         </div>
-        <a href="result.html?agenda_id=3&assembly_id=1" class="btn btn-outline btn-sm">결과</a>
+        <div class="result-bar-wrap">
+          <div class="result-bar-label"><span class="label-text">찬성</span><span class="label-value">80.0% · 4명</span></div>
+          <div class="result-bar"><div class="result-bar-fill" style="width:80%;"></div></div>
+        </div>
+        <div class="result-bar-wrap">
+          <div class="result-bar-label"><span class="label-text">반대</span><span class="label-value">20.0% · 1명</span></div>
+          <div class="result-bar"><div class="result-bar-fill" style="width:20%;"></div></div>
+        </div>
+        <div class="result-bar-wrap">
+          <div class="result-bar-label"><span class="label-text">기권</span><span class="label-value">0.0% · 0명</span></div>
+          <div class="result-bar"><div class="result-bar-fill" style="width:0%;"></div></div>
+        </div>
+        <a href="result.html?agenda_id=3&assembly_id=1" class="result-detail-link">참여자 명단 상세 보기 →</a>
       </div>
     </div>
     <!-- [PHP] endforeach -->
+
+    <!-- ── 안건 인라인 등록/수정 폼 (기본 숨김) ── -->
+    <!-- [PHP] PHP 구현 시 agenda_save.php (POST, 신규/수정 공용) 로 전송 -->
+    <div id="agenda-inline-form" class="agenda-inline-form" style="display:none;">
+      <div class="agenda-inline-form-header">
+        <span id="agenda-form-label">안건 등록</span>
+        <button type="button" class="btn-close" onclick="closeAgendaForm()">✕</button>
+      </div>
+      <form method="POST" action="../process/agenda_save.php"
+            data-proto-redirect="assembly-detail.html?id=1">
+        <input type="hidden" name="assembly_id" value="1"><!-- [PHP] value="<?= $assembly_id ?>" -->
+        <input type="hidden" name="id" id="agenda-edit-id"><!-- 수정 모드에서만 값 세팅 -->
+
+        <div class="form-group">
+          <label>안건명 <span class="req">*</span></label>
+          <input type="text" name="title" id="agenda-title-input" class="form-control"
+            placeholder="안건 제목 입력" required>
+        </div>
+
+        <div style="margin-top:16px;">
+          <div class="options-header">
+            <label style="font-size:13px;font-weight:600;color:var(--primary);margin:0;">
+              보기 (선택지) <span style="font-size:12px;color:var(--gray-400);font-weight:400;">최소 2개</span>
+            </label>
+            <button type="button" class="btn btn-outline btn-sm" onclick="addInlineOptionRow()">+ 보기 추가</button>
+          </div>
+          <div id="inline-options-wrap">
+            <div class="form-group" style="display:flex;gap:8px;align-items:center;" data-option-row>
+              <span style="font-size:13px;color:var(--gray-400);width:20px;">1</span>
+              <input type="text" name="options[]" class="form-control" placeholder="보기 입력" required>
+            </div>
+            <div class="form-group" style="display:flex;gap:8px;align-items:center;" data-option-row>
+              <span style="font-size:13px;color:var(--gray-400);width:20px;">2</span>
+              <input type="text" name="options[]" class="form-control" placeholder="보기 입력" required>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+          <button type="button" class="btn btn-outline" onclick="closeAgendaForm()">취소</button>
+          <button type="submit" id="agenda-form-submit" class="btn btn-primary">등록</button>
+        </div>
+      </form>
+    </div>
 
   </div><!-- /card -->
 </main>
@@ -191,36 +327,52 @@
 
 <script src="../assets/js/ui.js"></script>
 <script>
+  /* sticky 스크롤 감지 — 그림자 토글 */
+  (function () {
+    var sticky = document.getElementById('assembly-sticky');
+    if (!sticky) return;
+    var observer = new IntersectionObserver(
+      function (entries) {
+        sticky.classList.toggle('is-stuck', !entries[0].isIntersecting);
+      },
+      { rootMargin: '-57px 0px 0px 0px', threshold: 0 }
+    );
+    /* sentinel: sticky 상단 바로 위에 1px 요소 */
+    var sentinel = document.createElement('div');
+    sentinel.style.cssText = 'height:1px;margin-top:-1px;pointer-events:none;';
+    sticky.parentNode.insertBefore(sentinel, sticky);
+    observer.observe(sentinel);
+  })();
+
   /* 프로토타입 전용 — 준비중 상태 시뮬레이션 (?id=3 일 때)
      PHP 구현 후 이 블록 전체 제거. PHP가 status 분기 처리. */
   (function () {
     if (new URLSearchParams(window.location.search).get('id') !== '3') return;
 
-    // 헤더 — 총회명 · 일시
-    document.querySelector('.page-header h1').textContent = '2026년 임시총회';
-    document.querySelector('.page-header p').textContent = '2026-06-15 10:00';
+    // 헤더
+    document.querySelector('.assembly-sticky-h1').textContent = '2026년 임시총회';
+    document.querySelector('.assembly-sticky-date').textContent = '2026-06-15 10:00';
 
     // 상태 뱃지
     var statusBadge = document.querySelector('.current-status .badge');
     statusBadge.className = 'badge status-ready';
     statusBadge.textContent = '준비중';
 
-    // "투표 시작:" 메타 정보 숨김
+    // "투표 시작:" 메타 숨김
     var votingMeta = document.querySelector('.current-status span[style]');
     if (votingMeta) votingMeta.style.display = 'none';
 
-    // 버튼: "투표 시작" 표시 / "총회 종료" 숨김
+    // 버튼 전환
     document.getElementById('btn-start-voting').style.display = '';
     document.getElementById('btn-close-assembly').style.display = 'none';
 
-    // 요약 통계 초기화 (준비중 — 출석/위임/모수 0)
-    var vals = document.querySelectorAll('.stat-value');
-    if (vals[0]) vals[0].textContent = '0';
-    if (vals[1]) vals[1].textContent = '0';
-    if (vals[2]) vals[2].textContent = '0';
-    // vals[3] = 안건 수는 그대로 유지
+    // 통계 초기화
+    var stats = document.querySelectorAll('.status-stats strong');
+    if (stats[0]) stats[0].textContent = '0';
+    if (stats[1]) stats[1].textContent = '0';
+    if (stats[2]) stats[2].textContent = '0';
 
-    // "의장 일괄 투표" 링크 숨김 (voting 상태 전용)
+    // "의장 일괄" 링크 숨김
     var bulkLink = document.querySelector('a[href*="bulk-vote"]');
     if (bulkLink) bulkLink.style.display = 'none';
 
@@ -231,13 +383,13 @@
         toggleBtn.disabled = true;
         toggleBtn.classList.remove('active');
       }
-      var toggleLabel = row.querySelector('.toggle-label');
-      if (toggleLabel) {
-        toggleLabel.className = 'toggle-label badge status-ready';
-        toggleLabel.textContent = '준비중';
+      var agendaBadge = row.querySelector('.agenda-meta .badge');
+      if (agendaBadge) {
+        agendaBadge.className = 'badge status-ready';
+        agendaBadge.textContent = '준비중';
       }
-      var countEl = row.querySelector('.agenda-info div > div:last-child');
-      if (countEl) countEl.textContent = '투표: 0명';
+      var voteMeta = row.querySelector('.vote-meta');
+      if (voteMeta) voteMeta.textContent = '투표 전';
       var editBtn = row.querySelector('.btn-edit-agenda');
       if (editBtn) editBtn.style.display = '';
     });
