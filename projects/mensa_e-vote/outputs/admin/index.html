@@ -8,48 +8,47 @@
 </head>
 <body>
 
-<div class="login-wrap">
-  <div class="login-card">
-    <h1>관리자 로그인</h1>
-    <p class="subtitle">전자투표시스템 관리자 페이지</p>
-
-    <div id="error-msg" class="alert alert-danger" style="display:none;"></div>
-
-    <form id="login-form">
-      <div class="form-group">
-        <label>아이디</label>
-        <input type="text" id="login-id" class="form-control" placeholder="admin" required autofocus>
-      </div>
-      <div class="form-group">
-        <label>비밀번호</label>
-        <input type="password" id="login-pw" class="form-control" placeholder="비밀번호 입력" required>
-      </div>
-      <button type="submit" class="btn btn-primary btn-block" style="margin-top:8px;padding:12px;">로그인</button>
-    </form>
-
-    <p style="margin-top:20px;font-size:12px;color:var(--gray-400);">프로토타입: admin / 1234</p>
+<nav class="admin-nav">
+  <div class="nav-inner">
+    <span class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표 관리</span>
   </div>
-</div>
+</nav>
 
-<script src="../assets/js/data.js"></script>
-<script src="../assets/js/app.js"></script>
-<script>
-  // → PHP 전환 시: form action을 서버로, 서버에서 세션 처리
-  if (isAdminLoggedIn()) { window.location.href = 'assemblies.html'; }
+<main class="main-content">
+  <div class="login-wrap">
+    <div class="login-card">
+      <h1>관리자 로그인</h1>
+      <p class="subtitle">의장 계정으로 로그인하세요</p>
 
-  document.getElementById('login-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const id = document.getElementById('login-id').value;
-    const pw = document.getElementById('login-pw').value;
-    if (id === SAMPLE_DATA.admin.id && pw === SAMPLE_DATA.admin.pw) {
-      adminLogin();
-      window.location.href = 'assemblies.html';
-    } else {
-      const el = document.getElementById('error-msg');
-      el.textContent = '아이디 또는 비밀번호가 일치하지 않습니다.';
-      el.style.display = 'block';
-    }
-  });
-</script>
+      <!-- [PHP] 로그인 실패 시 ?error=1 로 리다이렉트 → 아래 알림 표시 -->
+      <!-- <div class="alert alert-danger">아이디 또는 비밀번호가 일치하지 않습니다.</div> -->
+
+      <!-- [PHP] action="process/admin_login.php" -->
+      <form method="POST" action="../process/admin_login.php"
+            data-proto-redirect="assemblies.html">
+        <div class="form-group">
+          <label>아이디 <span class="req">*</span></label>
+          <input type="text" name="login_id" class="form-control"
+            placeholder="관리자 ID" required autofocus>
+        </div>
+        <div class="form-group">
+          <label>비밀번호 <span class="req">*</span></label>
+          <input type="password" name="password" class="form-control"
+            placeholder="비밀번호" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block"
+          style="padding:12px;margin-top:8px;">로그인</button>
+      </form>
+
+      <p style="margin-top:20px;font-size:12px;color:var(--gray-400);">
+        프로토타입 — 아무 값이나 입력 후 로그인 클릭
+      </p>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer"><p>&copy; 2026 전자투표시스템</p></footer>
+
+<script src="../assets/js/ui.js"></script>
 </body>
 </html>

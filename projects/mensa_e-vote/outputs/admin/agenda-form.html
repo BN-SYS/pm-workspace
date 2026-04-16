@@ -10,111 +10,121 @@
 
 <nav class="admin-nav">
   <div class="nav-inner">
-    <a href="assemblies.html" class="nav-logo">전자투표 관리</a>
+    <a href="assemblies.html" class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표 관리</a>
     <div class="nav-links">
       <a href="assemblies.html">총회 목록</a>
-      <a href="index.html" class="nav-logout" onclick="adminLogout()">로그아웃</a>
+      <a href="index.html" class="nav-logout">로그아웃</a>
     </div>
   </div>
 </nav>
 
 <main class="main-content">
+
+  <!-- [PHP] $edit_id = $_GET['id'] ?? null; $assembly_id = $_GET['assembly_id'];
+    수정 모드: SELECT agendas.*, agenda_options FROM agendas WHERE id=? → $agenda + $options[]
+    신규 모드: $agenda = ['title'=>'','sort_order'=>$next_order], $options = ['','']
+    수정 가능 조건: assembly.status === 'preparing' (또는 draft 안건이고 아직 open 전)
+    보기 수정 불가 조건: 한 번이라도 'open'이 됐던 안건
+  -->
+
   <div class="page-header">
-    <h1 id="page-title">안건 등록</h1>
-    <p><a href="#" id="back-link">&larr; 총회 상세로 돌아가기</a></p>
+    <h1>안건 등록</h1><!-- [PHP] $edit_id ? '안건 수정' : '안건 등록' -->
+    <p>
+      <!-- [PHP] <a href="assembly-detail.php?id=<?= $assembly_id ?>">&larr; 총회 상세로 돌아가기</a> -->
+      <a href="assembly-detail.html?id=1">&larr; 총회 상세로 돌아가기</a>
+    </p>
   </div>
 
   <div class="card" style="max-width:600px;">
-    <form id="agenda-form">
+    <!-- [PHP] action: process/agenda_save.php (신규/수정 공용) -->
+    <form method="POST" action="../process/agenda_save.php"
+          data-proto-redirect="assembly-detail.html?id=1">
+      <input type="hidden" name="assembly_id" value="1"><!-- [PHP] value="<?= $assembly_id ?>" -->
+      <!-- [PHP] 수정 모드: <input type="hidden" name="id" value="<?= $agenda['id'] ?>"> -->
+
       <div class="form-group">
-        <label>안건 번호</label>
-        <input type="number" id="f-number" class="form-control" placeholder="자동 부여 (수동 변경 가능)">
+        <label>표시 순서</label>
+        <!-- [PHP] value="<?= h($agenda['sort_order']) ?>" -->
+        <input type="number" name="sort_order" class="form-control"
+          placeholder="자동 부여 (수동 변경 가능)" value="1" min="1">
       </div>
+
       <div class="form-group">
         <label>안건명 <span class="req">*</span></label>
-        <input type="text" id="f-title" class="form-control" placeholder="안건 제목 입력" required>
-      </div>
-      <div class="form-group">
-        <label>안건 설명</label>
-        <textarea id="f-desc" class="form-control" placeholder="부가 설명 (선택)"></textarea>
+        <!-- [PHP] value="<?= h($agenda['title']) ?>" -->
+        <input type="text" name="title" class="form-control"
+          placeholder="안건 제목 입력" value="" required>
       </div>
 
       <div style="border-top:1px solid var(--gray-200);margin:20px 0;padding-top:20px;">
-        <h3 style="font-size:15px;color:var(--primary);margin-bottom:12px;">보기 (선택지)</h3>
-        <p class="form-hint" style="margin-bottom:12px;">최소 2개 이상 입력해주세요.</p>
+        <h3 style="font-size:15px;color:var(--primary);margin-bottom:4px;">보기 (선택지)</h3>
+        <p class="form-hint" style="margin-bottom:14px;">
+          최소 2개 이상 입력하세요.
+          <!-- [PHP] $agenda_was_opened = ($agenda['status'] !== 'draft') 한 번이라도 open 됐으면: -->
+          <!-- <span style="color:var(--danger);font-weight:600;">이 안건은 열린 적 있어 보기 수정/삭제가 불가합니다.</span> -->
+        </p>
 
-        <div id="options-list"></div>
-        <button type="button" class="btn btn-outline btn-sm" onclick="addOption()">+ 보기 추가</button>
+        <!-- [PHP] foreach ($options as $i => $opt): -->
+        <!-- 보기 1 (신규 모드 — 편집 가능) -->
+        <div class="form-group" style="display:flex;gap:8px;align-items:center;" data-option-row>
+          <span style="font-size:13px;color:var(--gray-400);width:20px;">1</span>
+          <!-- [PHP] $agenda_was_opened ? disabled : '' -->
+          <input type="text" name="options[]" class="form-control"
+            placeholder="보기 입력" value="" required>
+          <!-- 첫 2개는 삭제 버튼 없음 -->
+        </div>
+
+        <!-- 보기 2 -->
+        <div class="form-group" style="display:flex;gap:8px;align-items:center;" data-option-row>
+          <span style="font-size:13px;color:var(--gray-400);width:20px;">2</span>
+          <input type="text" name="options[]" class="form-control"
+            placeholder="보기 입력" value="" required>
+        </div>
+
+        <!-- 보기 3 이상: 삭제 버튼 있음 (JS로 추가/삭제) -->
+        <!-- [PHP] if ($i >= 2): -->
+        <div class="form-group" style="display:flex;gap:8px;align-items:center;" data-option-row>
+          <span style="font-size:13px;color:var(--gray-400);width:20px;">3</span>
+          <input type="text" name="options[]" class="form-control"
+            placeholder="보기 입력" value="">
+          <button type="button" class="btn btn-outline btn-sm"
+            style="color:var(--danger);flex-shrink:0;"
+            onclick="this.closest('[data-option-row]').remove(); renumberOptions();">삭제</button>
+        </div>
+        <!-- [PHP] endif; endforeach -->
+
+        <!-- [PHP] if ($agenda_was_opened): 한번이라도 open됐던 안건 수정 시 — 보기 locked 상태 예시 -->
+        <!--
+        <div class="form-group" style="display:flex;gap:8px;align-items:center;" data-option-row>
+          <span style="font-size:13px;color:var(--gray-400);width:20px;">1</span>
+          <input type="text" name="options[]" class="form-control" value="찬성" disabled
+            style="background:var(--gray-100);color:var(--gray-400);cursor:not-allowed;">
+        </div>
+        <div class="form-group" style="display:flex;gap:8px;align-items:center;" data-option-row>
+          <span style="font-size:13px;color:var(--gray-400);width:20px;">2</span>
+          <input type="text" name="options[]" class="form-control" value="반대" disabled
+            style="background:var(--gray-100);color:var(--gray-400);cursor:not-allowed;">
+        </div>
+        -->
+        <!-- [PHP] endif — open 됐던 안건이면 "+ 보기 추가" 버튼도 미표시 -->
+        <!-- [PHP] if (!$agenda_was_opened): -->
+        <button type="button" class="btn btn-outline btn-sm" id="add-option-btn" onclick="addOptionRow()">+ 보기 추가</button>
+        <!-- [PHP] endif -->
       </div>
 
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px;">
-        <a href="#" id="cancel-link" class="btn btn-outline">취소</a>
-        <button type="submit" class="btn btn-primary" id="submit-btn">등록</button>
+        <!-- [PHP] href="assembly-detail.php?id=<?= $assembly_id ?>" -->
+        <a href="assembly-detail.html?id=1" class="btn btn-outline">취소</a>
+        <!-- [PHP] $edit_id ? '수정' : '등록' -->
+        <button type="submit" class="btn btn-primary">등록</button>
       </div>
     </form>
   </div>
+
 </main>
 
-<footer class="site-footer"><p>&copy; 2026 전자투표시스템 — 프로토타입</p></footer>
+<footer class="site-footer"><p>&copy; 2026 전자투표시스템</p></footer>
 
-<script src="../assets/js/data.js"></script>
-<script src="../assets/js/app.js"></script>
-<script>
-  if (!requireAdmin()) {}
-
-  const params = new URLSearchParams(location.search);
-  const assemblyId = params.get('assembly_id') || 1;
-  const editId = params.get('id');
-
-  document.getElementById('back-link').href = `assembly-detail.html?id=${assemblyId}`;
-  document.getElementById('cancel-link').href = `assembly-detail.html?id=${assemblyId}`;
-
-  let options = ['', ''];
-
-  if (editId) {
-    const ag = getAgenda(Number(editId));
-    if (ag) {
-      document.getElementById('page-title').textContent = '안건 수정';
-      document.getElementById('submit-btn').textContent = '수정';
-      document.getElementById('f-number').value = ag.number;
-      document.getElementById('f-title').value = ag.title;
-      document.getElementById('f-desc').value = ag.description;
-      options = ag.options.map(o => o.label);
-    }
-  }
-
-  function renderOptions() {
-    const list = document.getElementById('options-list');
-    list.innerHTML = '';
-    options.forEach((opt, i) => {
-      list.innerHTML += `
-        <div class="form-group" style="display:flex;gap:8px;align-items:center;">
-          <span style="font-size:13px;color:var(--gray-400);width:20px;">${i+1}</span>
-          <input type="text" class="form-control option-input" value="${h(opt)}" placeholder="보기 입력" required>
-          ${i >= 2 ? `<button type="button" class="btn btn-outline btn-sm" style="color:var(--danger);flex-shrink:0;" onclick="removeOption(${i})">삭제</button>` : ''}
-        </div>
-      `;
-    });
-  }
-
-  function addOption() {
-    options.push('');
-    renderOptions();
-  }
-
-  function removeOption(index) {
-    options.splice(index, 1);
-    renderOptions();
-  }
-
-  renderOptions();
-
-  document.getElementById('agenda-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    // → PHP: INSERT/UPDATE agendas ...
-    alert('저장되었습니다. (프로토타입 — 실제 저장 없음)');
-    window.location.href = `assembly-detail.html?id=${assemblyId}`;
-  });
-</script>
+<script src="../assets/js/ui.js"></script>
 </body>
 </html>

@@ -10,72 +10,225 @@
 
 <nav class="admin-nav">
   <div class="nav-inner">
-    <a href="assemblies.html" class="nav-logo">전자투표 관리</a>
+    <a href="assemblies.html" class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표 관리</a>
     <div class="nav-links">
       <a href="assemblies.html">총회 목록</a>
       <a href="attendance.html">출석 현황</a>
       <a href="delegation.html" style="color:var(--primary);font-weight:700;">위임 관리</a>
-      <a href="index.html" class="nav-logout" onclick="adminLogout()">로그아웃</a>
+      <a href="index.html" class="nav-logout">로그아웃</a>
     </div>
   </div>
 </nav>
 
-<main class="main-content" id="app"></main>
+<main class="main-content">
 
-<footer class="site-footer"><p>&copy; 2026 전자투표시스템 — 프로토타입</p></footer>
+  <!-- [PHP] $assembly_id = $_GET['assembly_id']; SELECT * FROM assemblies WHERE id=? -->
+  <div class="page-header">
+    <h1>위임 관리</h1>
+    <p>
+      2026년 정기총회<!-- [PHP] <?= h($assembly['title']) ?> --> ·
+      구글 스프레드시트 연동
+    </p>
+  </div>
 
-<script src="../assets/js/data.js"></script>
-<script src="../assets/js/app.js"></script>
-<script>
-  if (!requireAdmin()) {}
+  <!-- 동기화 상태 알림 -->
+  <!-- [PHP] preparing 상태일 때만 동기화 가능 -->
+  <div class="alert alert-info" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+    <span>
+      마지막 동기화: 2026-04-25 14:19:55<!-- [PHP] <?= h($assembly['last_sync_at'] ?? '없음') ?> -->
+    </span>
+    <div style="display:flex;gap:8px;">
+      <!-- [PHP] if ($assembly['status'] === 'preparing'): -->
+      <form method="POST" action="../process/delegation_sync.php"
+            data-proto-redirect="delegation.html?assembly_id=1">
+        <input type="hidden" name="assembly_id" value="1"><!-- [PHP] value="<?= $assembly['id'] ?>" -->
+        <button type="submit" class="btn btn-accent btn-sm">스프레드시트 동기화</button>
+      </form>
+      <!-- CSV 업로드 (API 장애 시 백업) -->
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('csv-section').style.display='block';">CSV 업로드</button>
+      <!-- [PHP] elseif ($assembly['status'] === 'voting'): -->
+      <!-- <span style="font-size:13px;color:var(--gray-500);">투표 진행중 — 위임 데이터 변경 차단됨</span> -->
+      <!-- [PHP] endif -->
+    </div>
+  </div>
 
-  const dels = SAMPLE_DATA.delegations;
-  const active = dels.filter(d => d.status === 'active');
-  const cancelled = dels.filter(d => d.status === 'cancelled');
+  <!-- CSV 업로드 영역 (기본 숨김, preparing 상태에서만 표시) -->
+  <div id="csv-section" class="card" style="display:none;margin-bottom:16px;">
+    <div class="card-header"><h2>CSV 업로드 (API 장애 시 백업)</h2></div>
+    <p style="font-size:13px;color:var(--gray-600);margin-bottom:12px;">
+      스프레드시트에서 CSV로 다운로드 후 업로드하세요.<br>
+      컬럼 순서: A위임자명 / B위임자휴대폰 / C위임자회원번호 / D수임자명 / E수임자휴대폰 / F수임자회원번호 (UTF-8 CSV)
+    </p>
+    <!-- [PHP] action: process/delegation_csv.php → 기존 데이터 전체 교체(UPSERT) + 7개 검증 -->
+    <form method="POST" action="../process/delegation_csv.php" enctype="multipart/form-data"
+          data-proto-redirect="delegation.html?assembly_id=1">
+      <input type="hidden" name="assembly_id" value="1">
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="file" name="csv_file" accept=".csv" class="form-control" style="max-width:320px;">
+        <button type="submit" class="btn btn-primary btn-sm">업로드</button>
+      </div>
+    </form>
+  </div>
 
-  let rows = '';
-  dels.forEach(d => {
-    const delegator = getTicket(d.delegator_id);
-    const delegate = getTicket(d.delegate_id);
-    rows += `
-      <tr>
-        <td>${delegator ? h(delegator.name) : '-'}</td>
-        <td>${delegator ? h(delegator.phone) : '-'}</td>
-        <td>${delegate ? h(delegate.name) : '-'}</td>
-        <td>${delegate ? h(delegate.phone) : '-'}</td>
-        <td><span class="badge ${d.status === 'active' ? 'badge-delegation' : 'status-closed'}">${d.status === 'active' ? '유효' : '취소'}</span></td>
-      </tr>
-    `;
-  });
+  <!-- 요약 통계 -->
+  <!-- [PHP] SELECT COUNT(*), SUM(status='active'), SUM(delegatee_member_id IS NULL AND status='active') FROM delegations WHERE assembly_id=? -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value">3</div><!-- [PHP] <?= $stats['total'] ?> -->
+      <div class="stat-label">전체 위임 건</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--success);">2</div><!-- [PHP] <?= $stats['active'] ?> -->
+      <div class="stat-label">유효 (수임인 지정)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--warning);">1</div><!-- [PHP] <?= $stats['to_chairman'] ?> -->
+      <div class="stat-label">의장 귀속</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--gray-400);">0</div><!-- [PHP] <?= $stats['cancelled'] ?> -->
+      <div class="stat-label">취소</div>
+    </div>
+  </div>
 
-  document.getElementById('app').innerHTML = `
-    <div class="page-header">
-      <h1>위임 관리</h1>
-      <p>구글 스프레드시트 기반 위임 데이터</p>
+  <!-- 검증 오류 건 (있을 때만 표시) -->
+  <!-- [PHP] if ($invalid_rows): -->
+  <div class="alert alert-warning">
+    <strong>검증 실패 2건</strong> — 아래 목록을 확인하고 스프레드시트를 수정 후 재동기화하세요.<!-- [PHP] count($invalid_rows) -->
+  </div>
+  <!-- [PHP] endif -->
+
+  <!-- 위임 목록 -->
+  <div class="card">
+    <div class="card-header">
+      <h2>위임 목록</h2>
+    </div>
+    <div class="alert alert-info" style="font-size:13px;">
+      투표 시작 전환 시, 위임인의 검표 시각이 전환 시각 이전이면 위임이 자동 취소됩니다.
+    </div>
+    <div class="table-wrap table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>행</th>
+            <th>위임인</th>
+            <th>위임인 연락처</th>
+            <th>위임인 회원번호</th>
+            <th>수임인</th>
+            <th>수임인 연락처</th>
+            <th>상태</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- [PHP] foreach ($delegations as $d): -->
+
+          <!-- 유효: 수임인 지정 -->
+          <tr>
+            <td style="color:var(--gray-400);">2</td><!-- [PHP] <?= $d['sheet_row'] ?> -->
+            <td>최불참</td><!-- [PHP] <?= h($d['delegator_name']) ?> -->
+            <td>010-3456-7890</td><!-- [PHP] <?= h($d['delegator_phone']) ?> -->
+            <td>M00123</td><!-- [PHP] <?= h($d['delegator_member_id']) ?> -->
+            <td>박의장</td><!-- [PHP] <?= h($d['delegatee_name'] ?? '—') ?> -->
+            <td>010-9999-0000</td><!-- [PHP] <?= h($d['delegatee_phone'] ?? '—') ?> -->
+            <td><span class="badge badge-delegation">유효</span></td><!-- [PHP] status별 뱃지 -->
+            <td style="font-size:12px;color:var(--gray-400);">—</td>
+          </tr>
+
+          <!-- 의장 귀속 (D·E·F 공란) -->
+          <tr>
+            <td style="color:var(--gray-400);">3</td>
+            <td>김외부</td>
+            <td>010-7777-8888</td>
+            <td>M00456</td>
+            <td style="color:var(--warning);font-weight:600;">의장 귀속</td><!-- [PHP] delegatee_member_id가 NULL이면 '의장 귀속' 표시 -->
+            <td>—</td>
+            <td><span class="badge" style="background:var(--warning-light);color:var(--warning);">의장 귀속</span></td>
+            <td style="font-size:12px;color:var(--gray-400);">수임인 미지정</td>
+          </tr>
+
+          <!-- 취소 (검표 기준 자동 취소) -->
+          <tr style="opacity:0.6;">
+            <td style="color:var(--gray-400);">4</td>
+            <td>홍검표</td>
+            <td>010-1111-2222</td>
+            <td>M00789</td>
+            <td>이참석</td>
+            <td>010-2345-6789</td>
+            <td><span class="badge status-closed">취소</span></td>
+            <td style="font-size:12px;color:var(--gray-400);">위임인 검표 완료(투표 시작 전) → 자동 취소</td>
+          </tr>
+
+          <!-- 검증 실패: 위임인 자격 미달 -->
+          <tr style="background:#FEF2F2;">
+            <td style="color:var(--gray-400);">5</td>
+            <td>오류회원</td>
+            <td>010-0000-1111</td>
+            <td>M99999</td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="badge" style="background:var(--danger-light);color:var(--danger);">자격 미달</span></td><!-- [PHP] status=invalid_grade -->
+            <td style="font-size:12px;color:var(--danger);">위임인 정회원 미충족</td>
+          </tr>
+
+          <!-- 검증 실패: 회원번호 DB 매칭 실패 -->
+          <tr style="background:#FEF2F2;">
+            <td style="color:var(--gray-400);">6</td>
+            <td>존재없음</td>
+            <td>010-1234-0000</td>
+            <td>M00000</td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="badge" style="background:var(--danger-light);color:var(--danger);">매칭 실패</span></td><!-- [PHP] status=invalid_match -->
+            <td style="font-size:12px;color:var(--danger);">회원번호 DB 조회 실패</td>
+          </tr>
+
+          <!-- 검증 실패: 위임인 = 수임인 동일인 -->
+          <tr style="background:#FEF2F2;">
+            <td style="color:var(--gray-400);">7</td>
+            <td>박동일</td>
+            <td>010-2222-3333</td>
+            <td>M00111</td>
+            <td>박동일</td>
+            <td>010-2222-3333</td>
+            <td><span class="badge" style="background:var(--danger-light);color:var(--danger);">동일인</span></td><!-- [PHP] status=invalid_same -->
+            <td style="font-size:12px;color:var(--danger);">위임인 = 수임인 동일</td>
+          </tr>
+
+          <!-- 검증 실패: 동일 위임인 중복 등록 (이전 행 무효) -->
+          <tr style="background:#FEF2F2;opacity:0.7;">
+            <td style="color:var(--gray-400);">8</td>
+            <td>최불참</td><!-- [PHP] 동일 위임인 재등록 행 -->
+            <td>010-3456-7890</td>
+            <td>M00123</td>
+            <td>김중복</td>
+            <td>010-4444-5555</td>
+            <td><span class="badge" style="background:var(--danger-light);color:var(--danger);">중복</span></td><!-- [PHP] status=invalid_duplicate -->
+            <td style="font-size:12px;color:var(--danger);">동일 위임인 중복 — 2행(최불참)이 최신 유효</td>
+          </tr>
+
+          <!-- [PHP] endforeach -->
+          <!-- 데이터 없을 때 -->
+          <!-- <tr><td colspan="8" style="text-align:center;color:var(--gray-400);padding:24px;">위임 데이터가 없습니다. 동기화 후 확인하세요.</td></tr> -->
+        </tbody>
+      </table>
     </div>
 
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-value">${dels.length}</div><div class="stat-label">전체 위임</div></div>
-      <div class="stat-card"><div class="stat-value" style="color:var(--warning)">${active.length}</div><div class="stat-label">유효</div></div>
-      <div class="stat-card"><div class="stat-value" style="color:var(--gray-400)">${cancelled.length}</div><div class="stat-label">취소</div></div>
-    </div>
+    <!-- [PHP] status 컬럼 값 → 뱃지 매핑:
+         active           → '유효' (badge-delegation)
+         active+NULL 수임인 → '의장 귀속' (warning)
+         cancelled        → '취소' (status-closed)
+         invalid_match    → '매칭 실패' (danger)
+         invalid_same     → '동일인' (danger)
+         invalid_duplicate→ '중복' (danger)
+         invalid_grade    → '자격 미달' (danger)
+    -->
+  </div>
 
-    <div class="card">
-      <div class="card-header">
-        <h2>위임 목록</h2>
-        <button class="btn btn-outline btn-sm" onclick="alert('구글 스프레드시트에서 위임 데이터를 동기화합니다. (프로토타입)')">위임 데이터 동기화</button>
-      </div>
-      <div class="alert alert-info" style="font-size:13px;">
-        위임인의 검표 시각이 총회 "투표 진행중" 전환 시각 이전이면 위임이 자동 취소됩니다.
-      </div>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead><tr><th>위임인</th><th>위임인 연락처</th><th>위임자(대리인)</th><th>위임자 연락처</th><th>상태</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </div>
-    </div>
-  `;
-</script>
+</main>
+
+<footer class="site-footer"><p>&copy; 2026 전자투표시스템</p></footer>
+
+<script src="../assets/js/ui.js"></script>
 </body>
 </html>

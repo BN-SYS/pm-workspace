@@ -10,87 +10,79 @@
 
 <nav class="admin-nav">
   <div class="nav-inner">
-    <a href="assemblies.html" class="nav-logo">전자투표 관리</a>
+    <a href="assemblies.html" class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표 관리</a>
     <div class="nav-links">
       <a href="assemblies.html">총회 목록</a>
-      <a href="index.html" class="nav-logout" onclick="adminLogout()">로그아웃</a>
+      <a href="index.html" class="nav-logout">로그아웃</a>
     </div>
   </div>
 </nav>
 
 <main class="main-content">
+
+  <!-- [PHP] $edit_id = $_GET['id'] ?? null;
+    수정 모드: SELECT * FROM assemblies WHERE id=? → $assembly
+    신규 모드: $assembly = ['title'=>'', 'scheduled_at'=>'']
+    수정은 preparing 상태에서만 가능. 다른 상태면 assemblies.php 로 리다이렉트.
+  -->
+
   <div class="page-header">
-    <h1 id="page-title">총회 등록</h1>
+    <h1 id="form-title">총회 등록</h1><!-- [PHP] $edit_id ? '총회 수정' : '총회 등록' -->
+    <p><a href="assemblies.html">&larr; 총회 목록으로 돌아가기</a></p>
   </div>
 
-  <div class="card" style="max-width:600px;">
-    <form id="assembly-form">
+  <div class="card" style="max-width:560px;">
+    <!-- [PHP] 신규: action="process/assembly_create.php" / 수정: action="process/assembly_update.php" -->
+    <form method="POST" action="../process/assembly_create.php"
+          id="assembly-form"
+          data-proto-redirect="assemblies.html">
+      <!-- [PHP] 수정 모드일 때: <input type="hidden" name="id" value="<?= $assembly['id'] ?>"> -->
+
       <div class="form-group">
         <label>총회명 <span class="req">*</span></label>
-        <input type="text" id="f-name" class="form-control" placeholder="예: 2026년 정기총회" required>
-      </div>
-      <div class="form-group">
-        <label>총회일시 <span class="req">*</span></label>
-        <input type="datetime-local" id="f-datetime" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label>총회 설명</label>
-        <textarea id="f-desc" class="form-control" placeholder="관리용 메모 (선택)"></textarea>
+        <!-- [PHP] value="<?= h($assembly['title']) ?>" -->
+        <input type="text" name="title" id="field-title" class="form-control"
+          placeholder="예: 2026년 정기총회"
+          value=""
+          data-edit-value="2026년 임시총회"
+          required>
       </div>
 
-      <div style="border-top:1px solid var(--gray-200);margin:20px 0;padding-top:20px;">
-        <h3 style="font-size:15px;color:var(--primary);margin-bottom:12px;">의장 설정</h3>
-        <div class="alert alert-info" style="font-size:13px;">
-          위임장에서 수임자(위임자) 정보가 모두 공란인 경우, 해당 위임 건은 아래 의장에게 자동 귀속됩니다. 의장은 참석자(티켓구매자) 명단에 있어야 합니다.
-        </div>
-        <div class="form-group">
-          <label>의장 이름 <span class="req">*</span></label>
-          <input type="text" id="f-chairman-name" class="form-control" placeholder="의장 이름 입력" required>
-        </div>
-        <div class="form-group">
-          <label>의장 휴대폰번호 <span class="req">*</span></label>
-          <input type="tel" id="f-chairman-phone" class="form-control" placeholder="010-0000-0000" required>
-          <p class="form-hint">티켓구매자 명단과 매칭하여 유효성을 검증합니다.</p>
-        </div>
+      <div class="form-group">
+        <label>총회 일시 <span class="req">*</span></label>
+        <!-- [PHP] value="<?= h($assembly['scheduled_at']) ?>" -->
+        <input type="datetime-local" name="scheduled_at" id="field-date" class="form-control"
+          value=""
+          data-edit-value="2026-06-15T10:00"
+          required>
       </div>
 
-      <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px;">
         <a href="assemblies.html" class="btn btn-outline">취소</a>
+        <!-- [PHP] $edit_id ? '수정' : '등록' -->
         <button type="submit" class="btn btn-primary" id="submit-btn">등록</button>
       </div>
     </form>
   </div>
+
 </main>
 
-<footer class="site-footer"><p>&copy; 2026 전자투표시스템 — 프로토타입</p></footer>
+<footer class="site-footer"><p>&copy; 2026 전자투표시스템</p></footer>
 
-<script src="../assets/js/data.js"></script>
-<script src="../assets/js/app.js"></script>
+
+<script src="../assets/js/ui.js"></script>
 <script>
-  if (!requireAdmin()) {}
-
-  // 수정 모드 체크
-  const params = new URLSearchParams(location.search);
-  const editId = params.get('id');
-  if (editId) {
-    const a = getAssembly(Number(editId));
-    if (a) {
-      document.getElementById('page-title').textContent = '총회 수정';
-      document.getElementById('submit-btn').textContent = '수정';
-      document.getElementById('f-name').value = a.name;
-      document.getElementById('f-datetime').value = a.datetime.replace(' ', 'T');
-      document.getElementById('f-desc').value = a.description;
-      document.getElementById('f-chairman-name').value = a.chairman_name;
-      document.getElementById('f-chairman-phone').value = a.chairman_phone;
-    }
-  }
-
-  // → PHP 전환 시: form action="save_assembly.php" method="POST"
-  document.getElementById('assembly-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    alert('저장되었습니다. (프로토타입 — 실제 저장 없음)');
-    window.location.href = 'assemblies.html';
-  });
+  /* 프로토타입 전용 — 수정 모드 데이터 채우기 (?id 있을 때)
+     PHP 구현 후 이 블록 전체 제거. PHP가 value="" 직접 렌더링. */
+  (function () {
+    if (!new URLSearchParams(window.location.search).get('id')) return;
+    document.querySelectorAll('[data-edit-value]').forEach(function (el) {
+      el.value = el.dataset.editValue;
+    });
+    document.getElementById('form-title').textContent = '총회 수정';
+    document.getElementById('submit-btn').textContent = '수정';
+    document.getElementById('assembly-form').action = '../process/assembly_update.php';
+  })();
 </script>
 </body>
 </html>

@@ -10,7 +10,7 @@
 
 <nav class="voter-nav">
   <div class="nav-inner">
-    <span class="nav-logo">전자투표</span>
+    <span class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표</span>
   </div>
 </nav>
 
@@ -19,73 +19,76 @@
     <h1>본인 인증</h1>
     <p class="subtitle">투표 참여를 위해 정보를 입력해주세요</p>
 
-    <div id="error-msg" class="alert alert-danger" style="display:none;"></div>
+    <!-- [PHP] 인증 실패 시 process/voter_auth.php → ?error=1 로 리다이렉트 -->
+    <!-- [PHP] if (isset($_GET['error'])): -->
+    <div class="alert alert-danger" id="error-msg">
+      일치하는 정보가 없습니다.
+    </div>
+    <!-- [PHP] else: -->
+    <!-- <div id="error-msg" style="display:none;"></div> -->
+    <!-- [PHP] endif -->
 
-    <form id="auth-form">
+    <!-- [PHP] 인증 성공 시 process/voter_auth.php:
+      - 쇼핑몰 DB에서 name + phone + order_number 뒤 5자리 매칭
+      - 매칭 실패: ?error=1
+      - 매칭 성공: $_SESSION['voter_member_id'] = $member_id → vote.php 로 리다이렉트
+      - 이미 세션 있으면 vote.php 로 바로 리다이렉트 (페이지 상단 세션 체크)
+    -->
+    <form method="POST" action="../process/voter_auth.php"
+          data-proto-redirect="vote.html">
+
       <div class="form-group">
         <label>이름 <span class="req">*</span></label>
-        <input type="text" id="f-name" class="form-control" placeholder="티켓 구매 시 입력한 이름" required>
+        <input type="text" name="name" class="form-control"
+          placeholder="티켓 구매 시 입력한 이름"
+          required autocomplete="name">
       </div>
+
       <div class="form-group">
         <label>전화번호 <span class="req">*</span></label>
-        <input type="tel" id="f-phone" class="form-control" placeholder="010-0000-0000" required>
+        <input type="tel" name="phone" class="form-control"
+          placeholder="010-0000-0000"
+          required autocomplete="tel">
       </div>
+
       <div class="form-group">
         <label>주문번호 뒤 5자리 <span class="req">*</span></label>
-        <input type="text" id="f-order" class="form-control" maxlength="5" placeholder="예: 60001" required>
+        <input type="text" name="order_last5" class="form-control"
+          maxlength="5" pattern="[0-9]{5}"
+          placeholder="예: 60001"
+          required inputmode="numeric">
         <p class="form-hint">카카오 알림톡으로 전달받은 주문번호의 뒤 5자리</p>
       </div>
-      <button type="submit" class="btn btn-accent btn-block" style="padding:14px;margin-top:8px;">인증 후 투표하기</button>
+
+      <button type="submit" class="btn btn-accent btn-block" style="padding:14px;margin-top:8px;">
+        인증 후 투표하기
+      </button>
     </form>
   </div>
+
+  <!-- 총회 종료 안내 (총회 status === 'closed' 일 때 표시) -->
+  <!-- [PHP] if ($assembly_status === 'closed'): -->
+  <!--
+  <div class="alert alert-info" style="margin-top:16px;text-align:center;">
+    총회가 종료되었습니다. 투표에 참여해주셔서 감사합니다.
+  </div>
+  -->
+  <!-- [PHP] endif -->
+
+  <!-- 총회 준비중 안내 -->
+  <!-- [PHP] if ($assembly_status === 'preparing'): -->
+  <!--
+  <div class="alert alert-warning" style="margin-top:16px;text-align:center;">
+    현재 투표 준비 중입니다. 잠시 후 다시 시도해주세요.
+  </div>
+  -->
+  <!-- [PHP] endif -->
+
 </main>
 
 <footer class="site-footer"><p>&copy; 2026 전자투표시스템</p></footer>
 
-<script src="../assets/js/data.js"></script>
-<script src="../assets/js/app.js"></script>
-<script>
-  // 이미 인증된 경우
-  if (getVoterSession()) { window.location.href = 'vote.html'; }
 
-  document.getElementById('auth-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const name = document.getElementById('f-name').value.trim();
-    const phone = document.getElementById('f-phone').value.trim();
-    const order = document.getElementById('f-order').value.trim();
-    const errEl = document.getElementById('error-msg');
-
-    // → PHP 전환 시: POST to verify_auth.php → 서버에서 DB 조회
-    const ticket = getTicketByAuth(name, phone, order);
-
-    if (!ticket) {
-      errEl.textContent = '입력하신 정보가 일치하지 않습니다. 다시 확인해주세요.';
-      errEl.style.display = 'block';
-      return;
-    }
-
-    if (!ticket.attended) {
-      errEl.textContent = '현장 출석 확인이 필요합니다. QR 리더기에서 출석 확인 후 다시 시도해주세요.';
-      errEl.style.display = 'block';
-      return;
-    }
-
-    // 위임으로 인해 본인 투표 불가인 경우 체크
-    const asDelegator = SAMPLE_DATA.delegations.find(d => d.delegator_id === ticket.id && d.status === 'active');
-    if (asDelegator) {
-      // 위임 취소 조건 체크 (검표시각 < 투표시작시각)
-      const assembly = SAMPLE_DATA.assemblies[0];
-      if (assembly.voting_started_at && ticket.attended_at) {
-        if (ticket.attended_at < assembly.voting_started_at) {
-          // 위임 취소 — 본인 투표 가능
-          asDelegator.status = 'cancelled';
-        }
-      }
-    }
-
-    setVoterSession(ticket);
-    window.location.href = 'vote.html';
-  });
-</script>
+<script src="../assets/js/ui.js"></script>
 </body>
 </html>

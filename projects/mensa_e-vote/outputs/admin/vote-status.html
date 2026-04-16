@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>투표 현황 — 전자투표시스템</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-assembly-status="voting"><!-- [PHP] data-assembly-status="<?= h($assembly['status']) ?>" -->
+
+<nav class="admin-nav">
+  <div class="nav-inner">
+    <a href="assemblies.html" class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표 관리</a>
+    <div class="nav-links">
+      <a href="assemblies.html">총회 목록</a>
+      <a href="attendance.html">출석 현황</a>
+      <a href="delegation.html">위임 관리</a>
+      <a href="index.html" class="nav-logout">로그아웃</a>
+    </div>
+  </div>
+</nav>
+
+<main class="main-content">
+
+  <!-- [PHP] $assembly_id = $_GET['assembly_id']; SELECT assemblies.*, ... FROM assemblies WHERE id=? -->
+  <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between;">
+    <div>
+      <h1>투표 현황</h1>
+      <p>
+        <a href="assembly-detail.html?id=1">&larr; 2026년 정기총회</a><!-- [PHP] <?= h($assembly['title']) ?> -->
+      </p>
+    </div>
+    <!-- 10초 자동 갱신: PHP 에서 meta refresh 또는 JS setInterval로 구현 -->
+    <!-- [PHP] if ($assembly['status'] === 'voting'): -->
+    <p class="polling-note" id="polling-label">10초마다 자동 갱신</p>
+    <!-- [PHP] endif -->
+  </div>
+
+  <!-- ─── 모수 요약 ─── -->
+  <!-- [PHP]
+    $eligible    = $assembly['eligible_count'];    // 투표 시작 시 확정된 모수
+    $voted_count = 완료 수 (본인 + 수임인 + 의장 일괄 합산)
+    $rate        = $eligible > 0 ? round($voted_count / $eligible * 100, 1) : 0;
+  -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value">5</div><!-- [PHP] <?= $eligible ?> -->
+      <div class="stat-label">투표 모수</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--success);">4</div><!-- [PHP] <?= $voted_count ?> -->
+      <div class="stat-label">투표 완료</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--warning);">1</div><!-- [PHP] <?= $eligible - $voted_count ?> -->
+      <div class="stat-label">미투표</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--accent);">80.0%</div><!-- [PHP] <?= $rate ?>% -->
+      <div class="stat-label">투표율</div>
+    </div>
+  </div>
+
+  <!-- 전체 투표율 바 -->
+  <div class="card" style="padding:20px 24px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <span style="font-size:14px;font-weight:600;color:var(--primary);">전체 투표율</span>
+      <span style="font-size:14px;font-weight:700;color:var(--accent);">4 / 5명 (80.0%)</span><!-- [PHP] <?= $voted_count ?> / <?= $eligible ?>명 (<?= $rate ?>%) -->
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" style="width:80%;"></div><!-- [PHP] style="width:<?= $rate ?>%;" -->
+    </div>
+  </div>
+
+  <!-- ─── 모수 상세 분류 ─── -->
+  <div class="card">
+    <div class="card-header"><h2>모수 분류</h2></div>
+    <!-- [PHP]
+      $stats = [
+        'total_members'  => null,   // 전체 정회원 수 — 쇼핑몰 DB, 불가 시 null
+        'ticket_buyers'  => 5,      // 티켓 구매자 수
+        'attended_self'  => 3,      // 검표 완료 + 위임 X (본인 투표)
+        'delegated_designated' => 1, // 유효 위임 (수임인 지정)
+        'delegated_chairman'   => 1, // 의장 귀속 위임
+        'absent_no_delegation' => 0, // 불참 + 위임 없음 → 모수 제외
+      ]
+    -->
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>구분</th>
+          <th>인원</th>
+          <th>모수 포함</th>
+          <th>투표 주체</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>출석 본인 투표 (검표 완료 + 위임 X)</td>
+          <td>3</td><!-- [PHP] <?= $stats['attended_self'] ?> -->
+          <td><span class="badge" style="background:var(--success-light);color:var(--success);">포함</span></td>
+          <td>본인</td>
+        </tr>
+        <tr>
+          <td>유효 위임 (수임인 지정)</td>
+          <td>1</td><!-- [PHP] <?= $stats['delegated_designated'] ?> -->
+          <td><span class="badge" style="background:var(--success-light);color:var(--success);">포함</span></td>
+          <td>수임인</td>
+        </tr>
+        <tr>
+          <td>의장 귀속 위임 (수임인 공란)</td>
+          <td>1</td><!-- [PHP] <?= $stats['delegated_chairman'] ?> -->
+          <td><span class="badge" style="background:var(--success-light);color:var(--success);">포함</span></td>
+          <td>의장</td>
+        </tr>
+        <tr style="opacity:0.7;">
+          <td>불참 + 위임 없음 (권리 불행사)</td>
+          <td>0</td><!-- [PHP] <?= $stats['absent_no_delegation'] ?> -->
+          <td><span class="badge status-closed">제외</span></td>
+          <td>—</td>
+        </tr>
+        <tr style="font-weight:700;border-top:2px solid var(--gray-200);">
+          <td>합계 (모수)</td>
+          <td>5</td><!-- [PHP] <?= $eligible ?> -->
+          <td>—</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- [PHP] 전체 정회원 수 쿼리 가능하면 표시 -->
+    <p style="font-size:12px;color:var(--gray-400);margin-top:8px;">
+      * 전체 정회원 수: 미제공 (쇼핑몰 DB 쿼리 확인 후 표시)<!-- [PHP] $total_members ?? '미제공' -->
+    </p>
+  </div>
+
+  <!-- ─── 안건별 투표 현황 ─── -->
+  <div class="card">
+    <div class="card-header">
+      <h2>안건별 현황</h2>
+      <!-- [PHP] if ($assembly['status'] === 'voting'): -->
+      <span style="font-size:12px;color:var(--gray-400);" id="last-updated">
+        마지막 갱신: 방금<!-- [PHP] 서버 시각 -->
+      </span>
+      <!-- [PHP] endif -->
+    </div>
+
+    <!-- [PHP] foreach ($agendas as $ag): -->
+    <!-- [PHP] $ag_voted = 해당 안건 투표 완료 수 / $ag_rate = ... -->
+
+    <!-- 제1호: open, 투표 진행 중 -->
+    <div class="agenda-status-row">
+      <span class="badge status-open">열림</span>
+      <span class="agenda-title">제1호 · 멘사코리아 회원 연회비를 다음과 같이 조정한다.</span><!-- [PHP] 제<?= $ag['sort_order'] ?>호 · <?= h($ag['title']) ?> -->
+      <div style="text-align:right;min-width:140px;">
+        <div class="vote-count">5 / 5명</div><!-- [PHP] <?= $ag_voted ?> / <?= $eligible ?>명 -->
+        <div class="progress-wrap">
+          <div class="progress-track">
+            <div class="progress-fill" style="width:100%;"></div><!-- [PHP] width:<?= $ag_rate ?>% -->
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--success);">100% 완료</div><!-- [PHP] <?= $ag_rate ?>% -->
+      </div>
+    </div>
+
+    <!-- 제2호: open, 진행 중 -->
+    <div class="agenda-status-row">
+      <span class="badge status-open">열림</span>
+      <span class="agenda-title">제2호 · 선출이사의 인수인계를 의무화하고, 연임 제한 조항을 2회로 신설한다.</span>
+      <div style="text-align:right;min-width:140px;">
+        <div class="vote-count">2 / 5명</div>
+        <div class="progress-wrap">
+          <div class="progress-track">
+            <div class="progress-fill" style="width:40%;"></div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--warning);">40% 진행중</div>
+      </div>
+    </div>
+
+    <!-- 제3호: closed -->
+    <div class="agenda-status-row">
+      <span class="badge status-closed">마감</span>
+      <span class="agenda-title">제3호 · 2025년도 결산보고를 승인한다.</span>
+      <div style="text-align:right;min-width:140px;">
+        <div class="vote-count">5 / 5명</div>
+        <div class="progress-wrap">
+          <div class="progress-track">
+            <div class="progress-fill" style="width:100%;"></div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--gray-400);">마감</div>
+      </div>
+    </div>
+
+    <!-- [PHP] endforeach -->
+
+  </div>
+
+  <!-- 익명성 안내 -->
+  <div class="alert alert-info" style="font-size:13px;">
+    익명 투표 원칙: 투표 수 / 미투표 수만 표시합니다. 개별 선택 보기는 관리자 포함 모든 화면에서 미표시됩니다.
+  </div>
+
+</main>
+
+<footer class="site-footer"><p>&copy; 2026 전자투표시스템</p></footer>
+
+<script src="../assets/js/ui.js"></script>
+<script>
+  // [PHP] 투표 진행중 상태일 때만 폴링 활성화
+  // [PHP] body에 data-assembly-status="voting" 부여 → JS guard로 판단
+  // [개발자] meta refresh 방식: <meta http-equiv="refresh" content="10"> 도 가능
+  var assemblyStatus = document.body.dataset.assemblyStatus; // [PHP] <?= h($assembly['status']) ?>
+  if (assemblyStatus === 'voting') {
+    setInterval(function() { location.reload(); }, 10000);
+  }
+
+  // 폴링 카운트다운 표시
+  var countdown = 10;
+  var label = document.getElementById('polling-label');
+  if (label) {
+    setInterval(function() {
+      countdown--;
+      if (countdown <= 0) countdown = 10;
+      label.textContent = countdown + '초 후 갱신';
+    }, 1000);
+  }
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -8,206 +8,258 @@
 </head>
 <body>
 
+<!-- [PHP]
+  세션 체크: session_start(); if (empty($_SESSION['voter_member_id'])) → index.php 리다이렉트
+  총회 종료 체크: assembly.status === 'closed' → 종료 안내 페이지 표시 or 종료 메시지 삽입
+
+  $voter_member_id = $_SESSION['voter_member_id'];
+
+  // 현재 진행 중인 총회 조회
+  $assembly = SELECT * FROM assemblies WHERE status IN ('preparing','voting') LIMIT 1;
+
+  // 본인 + 위임받은 명의 목록 구성
+  // [본인] voter_member_id 자신
+  // [위임] SELECT * FROM delegations WHERE delegatee_member_id = ? AND status='active' AND assembly_id=?
+  //        → 의장 귀속 건(delegatee_member_id IS NULL)은 수임인 드롭다운에 미표시
+  $delegations = [...]; // 수임인으로서 받은 위임 목록
+
+  // 안건 목록 + 기존 투표 조회
+  $agendas = SELECT agendas.*, agenda_options FROM agendas WHERE assembly_id=? ORDER BY sort_order;
+  // 각 안건별: SELECT option_id FROM votes WHERE agenda_id=? AND voter_member_id=? (현재 선택된 명의 기준)
+-->
+
 <nav class="voter-nav">
   <div class="nav-inner">
-    <span class="nav-logo">전자투표</span>
-    <a href="index.html" style="font-size:13px;color:var(--gray-500);" onclick="clearVoterSession()">로그아웃</a>
+    <span class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표</span>
+    <!-- [PHP] action: process/voter_logout.php → session_destroy() → index.php -->
+    <a href="../process/voter_logout.php" style="font-size:13px;color:var(--gray-500);">로그아웃</a>
   </div>
 </nav>
 
-<main class="main-content voter-main" id="app">
+<main class="main-content voter-main">
+
+  <!-- 새로고침 안내 -->
+  <div class="alert alert-warning" style="font-size:12px;margin-bottom:12px;">
+    투표는 제출 후에만 저장됩니다. 새로고침 시 미제출 선택은 초기화됩니다.
+  </div>
+
+  <!-- 헤더 -->
+  <div class="vote-header">
+    <div class="assembly-name">2026년 정기총회</div><!-- [PHP] <?= h($assembly['title']) ?> -->
+    <div class="meta">
+      <span>김투표 님</span><!-- [PHP] <?= h($voter_name) ?> 님 -->
+      <span>전체 안건 4 건</span><!-- [PHP] <?= count($agendas) ?>건 -->
+    </div>
+  </div>
+
+  <!-- ─── 수임인 sticky 헤더 (위임받은 건이 있을 때만 표시) ─── -->
+  <!-- [PHP] if (count($delegations) > 0): -->
+  <!--
+    sticky 기준: nav 높이(56px) 바로 아래 고정
+    전체 진행 요약 + 드롭다운을 하나의 블록으로 묶어 상단 고정
+  -->
+  <div id="voter-sticky-header" class="voter-sticky">
+
+    <!-- 전체 진행 요약 -->
+    <!-- [PHP]
+      $total_slots  = count($voting_targets) × count($agendas)  // 전체 명의 × 전체 안건
+      $done_slots   = 완료된 (명의, 안건) 쌍 수
+      $incomplete_targets = 1건이라도 미완료인 명의 수
+    -->
+    <div style="font-size:13px;color:var(--gray-600);margin-bottom:8px;">
+      전체 진행:
+      <strong style="color:var(--primary);">2 / 6 완료</strong><!-- [PHP] <?= $done_slots ?> / <?= $total_slots ?> 완료 -->
+      &nbsp;·&nbsp;
+      <span style="color:var(--warning);font-weight:600;">2명 미완료</span><!-- [PHP] <?= $incomplete_targets ?>명 미완료 -->
+    </div>
+
+    <!-- 투표 주체 드롭다운 -->
+    <label style="font-size:12px;font-weight:600;color:var(--accent);display:block;margin-bottom:6px;">
+      투표 주체 선택
+    </label>
+    <!--
+      [PHP] 드롭다운 구성 규칙:
+      - 미완료 명의 → 완료 명의 순으로 정렬
+      - 각 항목: "{이름} ({관계}) — {완료 수}/{전체} 완료" 또는 "미완료"
+      - 선택 시 ?target=회원번호 로 PHP 리로드 → 해당 명의 데이터 렌더링
+    -->
+    <select id="target-select" onchange="switchVotingTarget(this.value)"
+      style="width:100%;padding:10px 14px;border:1.5px solid var(--gray-200);
+             border-radius:var(--radius-sm);font-size:14px;font-weight:600;
+             color:var(--primary);background:var(--gray-50);">
+      <!-- [PHP] foreach ($voting_targets as $vt): -->
+      <!-- [PHP] $done = 이 명의 완료 안건 수; $total = 전체 안건 수; -->
+      <!-- [PHP] $label = $done === $total ? "{$done}/{$total} 완료 ✓" : "{$done}/{$total} 미완료"; -->
+      <!-- [PHP] $done === $total ? "{$done}/{$total} 완료 ✓" : "{$done}/{$total} 미완료" -->
+      <option value="M00123">최불참 님 위임 — 0/3 미완료</option><!-- 미완료 먼저 -->
+      <option value="M00001" selected>김투표 (본인) — 2/3 미완료</option>
+      <!-- [PHP] endforeach -->
+    </select>
+
+  </div>
+  <!-- [PHP] endif -->
+
+  <!-- ─── 안건 카드 목록 ─── -->
+  <!-- [PHP] foreach ($agendas as $ag): -->
+  <!-- [PHP]
+    $vote = 현재 선택 명의 기준 기존 투표 조회
+    $is_open = $ag['status'] === 'open'
+    $is_voted = $vote !== null
+    카드 클래스: is-open / is-voted / is-closed
+  -->
+
+  <!-- ── 제1호: open + 투표완료 ── -->
+  <div class="agenda-card is-voted">
+    <div class="agenda-number">제1호 안건</div><!-- [PHP] 제<?= $ag['sort_order'] ?>호 안건 -->
+    <div class="agenda-title">멘사코리아 회원 연회비를 다음과 같이 조정한다.</div><!-- [PHP] <?= h($ag['title']) ?> -->
+
+    <!-- [PHP] if ($is_open && $is_voted): 열림 + 투표완료 (수정 가능) -->
+    <div class="option-list">
+      <!-- [PHP] foreach ($ag['options'] as $opt): -->
+      <!-- [PHP] $selected = $vote['option_id'] === $opt['id'] -->
+      <div class="option-item disabled selected">
+        <input type="radio" name="agenda_1" value="1" checked disabled><!-- [PHP] name="agenda_<?= $ag['id'] ?>" value="<?= $opt['id'] ?>" -->
+        <label>연 9만원</label><!-- [PHP] <?= h($opt['label']) ?> -->
+      </div>
+      <div class="option-item disabled">
+        <input type="radio" name="agenda_1" value="2" disabled>
+        <label>연 7만원</label>
+      </div>
+      <div class="option-item disabled">
+        <input type="radio" name="agenda_1" value="3" disabled>
+        <label>연 8만원</label>
+      </div>
+      <div class="option-item disabled">
+        <input type="radio" name="agenda_1" value="4" disabled>
+        <label>연 10만원</label>
+      </div>
+      <!-- [PHP] endforeach -->
+    </div>
+    <div class="vote-actions">
+      <span class="badge" style="background:var(--success-light);color:var(--success);">✓ 투표 완료</span>
+      <!-- 수정 버튼: JS로 해당 카드 enable 처리 (서버 미전송) -->
+      <button class="btn btn-outline btn-sm" style="margin-left:auto;"
+        onclick="enableEdit(this, 'agenda_1', 'hidden_option_1')">수정</button><!-- [PHP] agenda_<?= $ag['id'] ?> / hiddenId: hidden_option_{$ag['id']} -->
+    </div>
+    <!-- [PHP] elseif ($is_open && !$is_voted): 열림 + 미투표 -->
+    <!--
+    <div class="option-list">
+      [PHP 동일 옵션 루프, disabled 없음]
+      <div class="option-item" onclick="selectOption(this)"><input type="radio" name="agenda_1" value="1"><label>연 7만원</label></div>
+      ...
+    </div>
+    <div class="vote-actions">
+      [PHP] action: process/vote_submit.php
+      <form method="POST" action="../process/vote_submit.php" style="display:contents;"
+            onsubmit="return prepareSubmit(this,'agenda_1','hidden_option_1')"
+            data-proto-redirect="vote.php">
+        <input type="hidden" name="agenda_id" value="1">
+        <input type="hidden" name="voter_member_id" value="M00001">
+        <input type="hidden" name="option_id" id="hidden_option_1">
+        <button type="submit" class="btn btn-accent btn-sm">투표</button>
+      </form>
+    </div>
+    -->
+    <!-- [PHP] endif -->
+  </div>
+
+  <!-- ── 제2호: open + 미투표 ── -->
+  <div class="agenda-card is-open">
+    <div class="agenda-number">제2호 안건</div>
+    <div class="agenda-title">선출이사의 인수인계를 의무화하고, 연임 제한 조항을 2회로 신설한다.</div>
+    <div class="option-list">
+      <div class="option-item" onclick="selectOption(this)">
+        <input type="radio" name="agenda_2" value="5">
+        <label>찬성</label>
+      </div>
+      <div class="option-item" onclick="selectOption(this)">
+        <input type="radio" name="agenda_2" value="6">
+        <label>반대</label>
+      </div>
+      <div class="option-item" onclick="selectOption(this)">
+        <input type="radio" name="agenda_2" value="7">
+        <label>기권</label>
+      </div>
+    </div>
+    <div class="vote-actions">
+      <!-- [PHP] action: process/vote_submit.php -->
+      <form method="POST" action="../process/vote_submit.php" style="display:contents;"
+            onsubmit="return prepareSubmit(this,'agenda_2','hidden_2')"
+            data-proto-redirect="vote.html">
+        <input type="hidden" name="agenda_id" value="2">
+        <input type="hidden" name="voter_member_id" value="M00001"><!-- [PHP] value="<?= h($current_target_member_id) ?>" -->
+        <input type="hidden" name="option_id" id="hidden_2">
+        <button type="submit" class="btn btn-accent btn-sm">투표</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── 제3호: draft (준비중) — 보기 표시 + 비활성화 ── -->
+  <!-- [PHP] if ($ag['status'] === 'draft'): -->
+  <div class="agenda-card is-closed">
+    <div class="agenda-number">제3호 안건</div>
+    <div class="agenda-title">2025년도 결산보고를 승인한다.</div>
+    <div style="margin-bottom:10px;">
+      <span class="badge status-ready">예정</span>
+      <span style="font-size:12px;color:var(--gray-400);margin-left:8px;">투표 준비 중 — 보기(선택지)가 변경될 수 있습니다.</span>
+    </div>
+    <!-- [PHP] foreach ($ag['options'] as $opt): — 보기 표시, 투표 불가 -->
+    <div class="option-list">
+      <div class="option-item disabled">
+        <input type="radio" name="agenda_3" disabled>
+        <label>찬성</label><!-- [PHP] <?= h($opt['label']) ?> -->
+      </div>
+      <div class="option-item disabled">
+        <input type="radio" name="agenda_3" disabled>
+        <label>반대</label>
+      </div>
+      <div class="option-item disabled">
+        <input type="radio" name="agenda_3" disabled>
+        <label>기권</label>
+      </div>
+    </div>
+    <!-- [PHP] endforeach -->
+  </div>
+
+  <!-- ── 제4호: closed — 보기 + 선택 내역 표시, 비활성화 ── -->
+  <!-- [PHP] elseif ($ag['status'] === 'closed'): -->
+  <div class="agenda-card is-closed">
+    <div class="agenda-number">제4호 안건</div>
+    <div class="agenda-title">정관 제15조 2항 개정을 승인한다.</div>
+    <!-- [PHP] foreach ($ag['options'] as $opt): -->
+    <!-- [PHP] $selected = $vote && $vote['option_id'] === $opt['id'] -->
+    <div class="option-list">
+      <div class="option-item disabled selected"><!-- [PHP] $selected ? 'selected' : '' -->
+        <input type="radio" name="agenda_4" checked disabled><!-- [PHP] $selected ? 'checked' : '' -->
+        <label>찬성</label><!-- [PHP] <?= h($opt['label']) ?> -->
+      </div>
+      <div class="option-item disabled">
+        <input type="radio" name="agenda_4" disabled>
+        <label>반대</label>
+      </div>
+      <div class="option-item disabled">
+        <input type="radio" name="agenda_4" disabled>
+        <label>기권</label>
+      </div>
+    </div>
+    <!-- [PHP] endforeach -->
+    <div class="vote-actions">
+      <span class="badge status-closed">마감</span>
+      <!-- [PHP] if ($vote): -->
+      <span class="badge" style="background:var(--success-light);color:var(--success);">✓ 투표 완료</span>
+      <!-- [PHP] else: -->
+      <!-- <span style="font-size:12px;color:var(--gray-400);">미투표 (마감됨)</span> -->
+      <!-- [PHP] endif -->
+    </div>
+  </div>
+  <!-- [PHP] endif -->
+
+  <!-- [PHP] endforeach -->
+
 </main>
 
 <footer class="site-footer"><p>&copy; 2026 전자투표시스템</p></footer>
 
-<script src="../assets/js/data.js"></script>
-<script src="../assets/js/app.js"></script>
-<script>
-  const voter = getVoterSession();
-  if (!voter) { window.location.href = 'index.html'; }
-
-  const assembly = SAMPLE_DATA.assemblies[0];
-  const agendas = getAgendasByAssembly(assembly.id);
-
-  // 위임받은 목록
-  const myDelegations = getDelegationsForDelegate(voter.id);
-
-  // 투표 주체 목록: 본인 + 위임받은 사람들
-  const votingTargets = [
-    { ticketId: voter.id, label: '본인 투표', name: voter.name }
-  ];
-  myDelegations.forEach(d => {
-    const delegator = getTicket(d.delegator_id);
-    if (delegator) {
-      votingTargets.push({ ticketId: delegator.id, label: `${delegator.name} 님 위임`, name: delegator.name });
-    }
-  });
-
-  let currentTarget = 0; // index in votingTargets
-
-  function getProgress(targetTicketId) {
-    let voted = 0;
-    agendas.forEach(ag => {
-      if (getVote(ag.id, targetTicketId)) voted++;
-    });
-    return voted;
-  }
-
-  function render() {
-    const target = votingTargets[currentTarget];
-    const app = document.getElementById('app');
-
-    // 드롭다운 (위임 있을 때만)
-    let selectorHTML = '';
-    if (votingTargets.length > 1) {
-      let optionsHTML = '';
-      votingTargets.forEach((vt, i) => {
-        const progress = getProgress(vt.ticketId);
-        const total = agendas.length;
-        const done = progress === total ? ' ✅' : '';
-        const selected = i === currentTarget ? ' selected' : '';
-        optionsHTML += `<option value="${i}"${selected}>${vt.label}  (${progress}/${total})${done}</option>`;
-      });
-
-      selectorHTML = `
-        <div class="voter-selector">
-          <label>투표 주체 선택</label>
-          <select id="target-select" onchange="switchTarget(this.value)">
-            ${optionsHTML}
-          </select>
-          <div class="current-voting">현재: ${h(target.label)}</div>
-        </div>
-      `;
-    }
-
-    // 안건 카드들
-    let agendasHTML = '';
-    agendas.forEach(ag => {
-      const vote = getVote(ag.id, target.ticketId);
-      const isOpen = ag.status === 'open';
-      const isVoted = !!vote;
-
-      let cardClass = 'agenda-card';
-      if (isVoted) cardClass += ' is-voted';
-      else if (isOpen) cardClass += ' is-open';
-      else cardClass += ' is-closed';
-
-      let bodyHTML = '';
-
-      if (!isOpen && !isVoted) {
-        // 닫힘 + 미투표
-        bodyHTML = `<div class="agenda-status-msg">투표 준비 중</div>`;
-      } else if (!isOpen && isVoted) {
-        // 닫힘 + 투표완료
-        bodyHTML = buildOptions(ag, vote, true) + `
-          <div class="vote-actions">
-            <div class="voted-indicator">투표 완료</div>
-            <span style="font-size:12px;color:var(--gray-400);margin-left:auto;">투표가 마감되었습니다</span>
-          </div>
-        `;
-      } else if (isOpen && !isVoted) {
-        // 열림 + 미투표
-        bodyHTML = buildOptions(ag, null, false) + `
-          <div class="vote-actions">
-            <button class="btn btn-accent btn-sm" onclick="submitVote(${ag.id}, ${target.ticketId})">제출</button>
-          </div>
-        `;
-      } else if (isOpen && isVoted) {
-        // 열림 + 투표완료
-        bodyHTML = buildOptions(ag, vote, true) + `
-          <div class="vote-actions">
-            <div class="voted-indicator">투표 완료</div>
-            <button class="btn btn-outline btn-sm" style="margin-left:auto;" onclick="editVote(${ag.id}, ${target.ticketId})">수정</button>
-          </div>
-        `;
-      }
-
-      agendasHTML += `
-        <div class="${cardClass}">
-          <div class="agenda-number">제${ag.number}호 안건</div>
-          <div class="agenda-title">${h(ag.title)}</div>
-          ${ag.description ? `<div class="agenda-desc">${h(ag.description)}</div>` : ''}
-          <div id="agenda-body-${ag.id}">${bodyHTML}</div>
-        </div>
-      `;
-    });
-
-    app.innerHTML = `
-      <div class="vote-header">
-        <div class="assembly-name">${h(assembly.name)}</div>
-        <div class="meta">
-          <span>${h(voter.name)} 님</span>
-          <span>전체 ${agendas.length}건</span>
-        </div>
-      </div>
-      ${selectorHTML}
-      ${agendasHTML}
-    `;
-  }
-
-  function buildOptions(agenda, vote, disabled) {
-    let html = '<div class="option-list">';
-    agenda.options.forEach(opt => {
-      const checked = vote && vote.option_id === opt.id;
-      const disabledClass = disabled ? ' disabled' : '';
-      const selectedClass = checked ? ' selected' : '';
-      const name = `agenda_${agenda.id}_${votingTargets[currentTarget].ticketId}`;
-      html += `
-        <div class="option-item${disabledClass}${selectedClass}" onclick="${disabled ? '' : `selectOption(this, '${name}', ${opt.id})`}">
-          <input type="radio" name="${name}" value="${opt.id}" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}>
-          <label>${h(opt.label)}</label>
-        </div>
-      `;
-    });
-    html += '</div>';
-    return html;
-  }
-
-  function selectOption(el, name, optionId) {
-    // UI 업데이트
-    el.closest('.option-list').querySelectorAll('.option-item').forEach(item => {
-      item.classList.remove('selected');
-    });
-    el.classList.add('selected');
-    el.querySelector('input[type="radio"]').checked = true;
-  }
-
-  function submitVote(agendaId, ticketId) {
-    const target = votingTargets[currentTarget];
-    const name = `agenda_${agendaId}_${ticketId}`;
-    const selected = document.querySelector(`input[name="${name}"]:checked`);
-    if (!selected) {
-      alert('선택지를 선택해주세요.');
-      return;
-    }
-    if (!confirm('제출하시겠습니까?')) return;
-
-    const onBehalfOf = target.ticketId === voter.id ? null : target.ticketId;
-    // → PHP: INSERT INTO votes ...
-    saveVote(agendaId, ticketId, Number(selected.value), voter.id, onBehalfOf);
-    render();
-  }
-
-  function editVote(agendaId, ticketId) {
-    // 수정 모드 — 해당 안건만 re-render with disabled=false
-    const agenda = getAgenda(agendaId);
-    const vote = getVote(agendaId, ticketId);
-    const body = document.getElementById(`agenda-body-${agendaId}`);
-
-    body.innerHTML = buildOptions(agenda, vote, false) + `
-      <div class="vote-actions">
-        <button class="btn btn-accent btn-sm" onclick="submitVote(${agendaId}, ${ticketId})">제출</button>
-        <button class="btn btn-outline btn-sm" onclick="render()">취소</button>
-      </div>
-    `;
-  }
-
-  function switchTarget(index) {
-    currentTarget = Number(index);
-    render();
-  }
-
-  render();
-</script>
+<script src="../assets/js/ui.js"></script>
 </body>
 </html>

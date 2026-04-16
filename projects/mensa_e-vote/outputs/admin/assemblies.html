@@ -8,15 +8,15 @@
 </head>
 <body>
 
-<!-- Admin Nav -->
 <nav class="admin-nav">
   <div class="nav-inner">
-    <a href="assemblies.html" class="nav-logo">전자투표 관리</a>
+    <a href="assemblies.html" class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표 관리</a>
     <div class="nav-links">
-      <a href="assemblies.html">총회 목록</a>
+      <a href="assemblies.html" style="color:var(--primary);font-weight:700;">총회 목록</a>
       <a href="attendance.html">출석 현황</a>
       <a href="delegation.html">위임 관리</a>
-      <a href="index.html" class="nav-logout" onclick="adminLogout()">로그아웃</a>
+      <!-- [PHP] <a href="process/admin_logout.php" class="nav-logout">로그아웃</a> -->
+      <a href="index.html" class="nav-logout">로그아웃</a>
     </div>
   </div>
 </nav>
@@ -27,37 +27,80 @@
     <p>등록된 총회를 관리합니다.</p>
   </div>
 
-  <div style="margin-bottom:16px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
     <a href="assembly-form.html" class="btn btn-primary">+ 총회 등록</a>
+    <!-- [PHP] ?status=all|preparing|voting|closed → 서버사이드 필터. 프로토타입은 아래 JS show/hide로 대체. -->
+    <div style="display:flex;gap:6px;" id="status-filter">
+      <button class="btn btn-outline btn-sm filter-btn active" data-filter="all">전체</button>
+      <button class="btn btn-outline btn-sm filter-btn" data-filter="preparing">준비중</button>
+      <button class="btn btn-outline btn-sm filter-btn" data-filter="voting">진행중</button>
+      <button class="btn btn-outline btn-sm filter-btn" data-filter="closed">종료</button>
+    </div>
   </div>
 
-  <div id="assembly-list"></div>
+  <!-- [PHP] foreach ($assemblies as $a): -->
+  <!-- [PHP] data-status="<?= h($a['status']) ?>" — 프로토타입 JS 필터용, PHP 구현 후 서버사이드 필터로 교체 -->
+  <div class="assembly-item" data-status="voting">
+    <div class="info">
+      <h3>2026년 정기총회</h3><!-- [PHP] <?= h($a['title']) ?> -->
+      <p>2026-04-25 14:00</p><!-- [PHP] <?= h($a['scheduled_at']) ?> -->
+    </div>
+    <div class="actions">
+      <!-- [PHP] status 값에 따라 badge 클래스: preparing=status-ready / voting=status-voting / closed=status-closed -->
+      <span class="badge status-voting">투표 진행중</span>
+      <a href="assembly-detail.html?id=1" class="btn btn-accent btn-sm">관리</a><!-- [PHP] ?id=<?= $a['id'] ?> -->
+      <!-- [PHP] preparing 상태일 때만 수정 버튼 표시 -->
+      <!-- <a href="assembly-form.html?id=1" class="btn btn-outline btn-sm">수정</a> -->
+    </div>
+  </div>
+
+  <div class="assembly-item" data-status="preparing">
+    <div class="info">
+      <h3>2026년 임시총회</h3>
+      <p>2026-06-15 10:00</p>
+    </div>
+    <div class="actions">
+      <span class="badge status-ready">준비중</span>
+      <a href="assembly-detail.html?id=3" class="btn btn-accent btn-sm">관리</a>
+      <a href="assembly-form.html?id=3" class="btn btn-outline btn-sm">수정</a>
+    </div>
+  </div>
+
+  <div class="assembly-item" data-status="closed">
+    <div class="info">
+      <h3>2025년 임시총회</h3>
+      <p>2025-11-10 10:00</p>
+    </div>
+    <div class="actions">
+      <span class="badge status-closed">종료</span>
+      <a href="assembly-detail.html?id=2" class="btn btn-accent btn-sm">관리</a>
+    </div>
+  </div>
+  <!-- [PHP] endforeach -->
+
 </main>
 
-<footer class="site-footer"><p>&copy; 2026 전자투표시스템 — 프로토타입</p></footer>
+<footer class="site-footer"><p>&copy; 2026 전자투표시스템</p></footer>
 
-<script src="../assets/js/data.js"></script>
-<script src="../assets/js/app.js"></script>
+<!-- [개발자] PHP 구현 후 아래 스크립트 제거. 필터는 ?status= 서버사이드 쿼리로 교체. -->
+<script src="../assets/js/ui.js"></script>
 <script>
-  if (!requireAdmin()) {}
-
-  // → PHP 전환 시: 서버에서 $assemblies를 루프 돌려 HTML 생성
-  const list = document.getElementById('assembly-list');
-  SAMPLE_DATA.assemblies.forEach(a => {
-    list.innerHTML += `
-      <div class="assembly-item">
-        <div class="info">
-          <h3>${h(a.name)}</h3>
-          <p>${h(a.datetime)} · ${h(a.description)}</p>
-          <p style="margin-top:2px;">의장: ${h(a.chairman_name)} (${h(a.chairman_phone)})</p>
-        </div>
-        <div class="actions">
-          <span class="badge ${statusClass(a.status)}">${statusLabel(a.status)}</span>
-          <a href="assembly-detail.html?id=${a.id}" class="btn btn-outline btn-sm">관리</a>
-          <a href="assembly-form.html?id=${a.id}" class="btn btn-outline btn-sm">수정</a>
-        </div>
-      </div>
-    `;
+  var filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var filter = this.dataset.filter;
+      filterBtns.forEach(function(b) {
+        b.classList.remove('active');
+        b.style.color = '';
+        b.style.fontWeight = '';
+      });
+      this.classList.add('active');
+      this.style.color = 'var(--primary)';
+      this.style.fontWeight = '700';
+      document.querySelectorAll('.assembly-item').forEach(function(item) {
+        item.style.display = (filter === 'all' || item.dataset.status === filter) ? '' : 'none';
+      });
+    });
   });
 </script>
 </body>

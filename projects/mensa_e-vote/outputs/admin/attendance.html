@@ -10,68 +10,133 @@
 
 <nav class="admin-nav">
   <div class="nav-inner">
-    <a href="assemblies.html" class="nav-logo">전자투표 관리</a>
+    <a href="assemblies.html" class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표 관리</a>
     <div class="nav-links">
       <a href="assemblies.html">총회 목록</a>
       <a href="attendance.html" style="color:var(--primary);font-weight:700;">출석 현황</a>
       <a href="delegation.html">위임 관리</a>
-      <a href="index.html" class="nav-logout" onclick="adminLogout()">로그아웃</a>
+      <a href="index.html" class="nav-logout">로그아웃</a>
     </div>
   </div>
 </nav>
 
-<main class="main-content" id="app"></main>
+<main class="main-content">
 
-<footer class="site-footer"><p>&copy; 2026 전자투표시스템 — 프로토타입</p></footer>
+  <!-- [PHP] $assembly_id = $_GET['assembly_id'] ?? (현재 진행 중인 총회 ID); -->
+  <div class="page-header">
+    <h1>출석 현황</h1>
+    <p>
+      2026년 정기총회<!-- [PHP] <?= h($assembly['title']) ?> --> ·
+      쇼핑몰 DB 직접 조회 (페이지 로드 시 갱신)
+    </p>
+  </div>
 
-<script src="../assets/js/data.js"></script>
-<script src="../assets/js/app.js"></script>
-<script>
-  if (!requireAdmin()) {}
-
-  const tickets = SAMPLE_DATA.tickets;
-  const attended = tickets.filter(t => t.attended);
-  const notAttended = tickets.filter(t => !t.attended);
-
-  let rows = '';
-  tickets.forEach(t => {
-    rows += `
-      <tr>
-        <td>${h(t.name)}</td>
-        <td>${h(t.phone)}</td>
-        <td>${h(t.order_number)}</td>
-        <td><span style="color:${t.attended ? 'var(--success)' : 'var(--gray-400)'}; font-weight:600;">${t.attended ? '출석' : '미출석'}</span></td>
-        <td>${t.attended_at || '-'}</td>
-      </tr>
-    `;
-  });
-
-  document.getElementById('app').innerHTML = `
-    <div class="page-header">
-      <h1>출석 현황</h1>
-      <p>쇼핑몰 검표 데이터 기반</p>
+  <!-- 요약 통계 -->
+  <!-- [PHP] 쇼핑몰 DB 쿼리: SELECT COUNT(*), SUM(check_time IS NOT NULL) FROM tickets WHERE assembly_id=? -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value">5</div><!-- [PHP] <?= $stats['ticket_buyers'] ?> -->
+      <div class="stat-label">티켓 구매자</div>
     </div>
-
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-value">${tickets.length}</div><div class="stat-label">전체 구매자</div></div>
-      <div class="stat-card"><div class="stat-value" style="color:var(--success)">${attended.length}</div><div class="stat-label">출석 완료</div></div>
-      <div class="stat-card"><div class="stat-value" style="color:var(--gray-400)">${notAttended.length}</div><div class="stat-label">미출석</div></div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--success);">4</div><!-- [PHP] <?= $stats['attended'] ?> -->
+      <div class="stat-label">검표 완료</div>
     </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--gray-400);">1</div><!-- [PHP] <?= $stats['not_attended'] ?> -->
+      <div class="stat-label">미검표</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--warning);">1</div><!-- [PHP] <?= $stats['delegated'] ?> -->
+      <div class="stat-label">위임 제출</div>
+    </div>
+  </div>
 
-    <div class="card">
-      <div class="card-header">
-        <h2>출석자 명단</h2>
-        <button class="btn btn-outline btn-sm" onclick="alert('쇼핑몰 DB와 동기화합니다. (프로토타입)')">수동 동기화</button>
-      </div>
-      <p style="font-size:12px;color:var(--gray-400);margin-bottom:12px;">최종 동기화: 2026-04-25 14:15:00</p>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead><tr><th>이름</th><th>전화번호</th><th>주문번호</th><th>출석여부</th><th>검표시각</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
+  <div class="card">
+    <div class="card-header">
+      <h2>출석자 명단</h2>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span style="font-size:12px;color:var(--gray-400);">
+          최종 조회: 2026-04-25 14:15:00<!-- [PHP] <?= h($last_refreshed_at) ?> -->
+        </span>
+        <!-- 새로고침은 페이지 리로드로 처리 (쇼핑몰 DB 재조회) -->
+        <a href="attendance.html?assembly_id=1" class="btn btn-outline btn-sm">새로고침</a><!-- [PHP] ?assembly_id=<?= $assembly_id ?> -->
       </div>
     </div>
-  `;
-</script>
+
+    <div class="table-wrap table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>이름</th>
+            <th>전화번호</th>
+            <th>주문번호</th>
+            <th>검표 여부</th>
+            <th>검표 시각</th>
+            <th>위임 여부</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- [PHP] foreach ($tickets as $t): -->
+          <!-- [PHP] $delegation = 해당 티켓구매자의 위임 여부 조회 -->
+
+          <tr>
+            <td>김투표</td><!-- [PHP] <?= h($t['name']) ?> -->
+            <td>010-1234-5678</td><!-- [PHP] <?= h($t['phone']) ?> -->
+            <td>ORD-20260001</td><!-- [PHP] <?= h($t['order_number']) ?> -->
+            <td><span style="color:var(--success);font-weight:600;">출석</span></td>
+            <!-- [PHP] $t['check_time'] ? '출석' : '미출석', 색상 success/gray-400 -->
+            <td>2026-04-25 13:45</td><!-- [PHP] <?= h($t['check_time'] ?? '-') ?> -->
+            <td>—</td><!-- [PHP] 위임자면 '위임 제출' 뱃지, 수임인이면 '수임인 N건' -->
+          </tr>
+
+          <tr>
+            <td>이참석</td>
+            <td>010-2345-6789</td>
+            <td>ORD-20260002</td>
+            <td><span style="color:var(--success);font-weight:600;">출석</span></td>
+            <td>2026-04-25 14:05</td>
+            <td>—</td>
+          </tr>
+
+          <tr>
+            <td>최불참</td>
+            <td>010-3456-7890</td>
+            <td>ORD-20260003</td>
+            <td><span style="color:var(--gray-400);font-weight:600;">미검표</span></td>
+            <td>—</td>
+            <td><span class="badge badge-delegation">위임 제출</span></td>
+          </tr>
+
+          <tr>
+            <td>정기권</td>
+            <td>010-5678-9012</td>
+            <td>ORD-20260004</td>
+            <td><span style="color:var(--success);font-weight:600;">출석</span></td>
+            <td>2026-04-25 14:10</td>
+            <td>—</td>
+          </tr>
+
+          <tr>
+            <td>박의장</td>
+            <td>010-9999-0000</td>
+            <td>ORD-20260005</td>
+            <td><span style="color:var(--success);font-weight:600;">출석</span></td>
+            <td>2026-04-25 13:30</td>
+            <td><span class="badge" style="background:#EDE9FE;color:#6D28D9;">수임인 1건</span></td>
+          </tr>
+
+          <!-- [PHP] endforeach -->
+          <!-- 데이터 없을 때 -->
+          <!-- <tr><td colspan="6" style="text-align:center;color:var(--gray-400);padding:24px;">검표 데이터가 없습니다.</td></tr> -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer"><p>&copy; 2026 전자투표시스템</p></footer>
+
 </body>
 </html>

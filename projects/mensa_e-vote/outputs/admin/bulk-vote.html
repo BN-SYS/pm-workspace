@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>의장 일괄 투표 — 전자투표시스템</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="nav-inner">
+    <a href="assemblies.html" class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표 관리</a>
+    <div class="nav-links">
+      <a href="assemblies.html">총회 목록</a>
+      <a href="attendance.html">출석 현황</a>
+      <a href="delegation.html">위임 관리</a>
+      <a href="index.html" class="nav-logout">로그아웃</a>
+    </div>
+  </div>
+</nav>
+
+<main class="main-content">
+
+  <!-- [PHP] $assembly_id = $_GET['assembly_id'];
+    - status === 'voting' 이어야 진입 가능. 아니면 assembly-detail.php 로 리다이렉트.
+    - $chairman_delegations = SELECT * FROM delegations WHERE assembly_id=? AND delegatee_member_id IS NULL AND status='active'
+    - $agendas = SELECT * FROM agendas WHERE assembly_id=? ORDER BY sort_order
+    - 각 안건별로 의장 귀속 위임인들의 기존 투표 조회: SELECT voter_member_id FROM votes WHERE agenda_id=? AND voted_by=?
+  -->
+
+  <div class="page-header">
+    <h1>의장 일괄 투표</h1>
+    <p>
+      <a href="assembly-detail.html?id=1">&larr; 2026년 정기총회</a><!-- [PHP] <?= h($assembly['title']) ?> -->
+    </p>
+  </div>
+
+  <!-- 의장 귀속 위임인 목록 -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-header">
+      <h2>의장 귀속 위임인</h2>
+      <span style="font-size:13px;color:var(--warning);font-weight:600;">
+        총 2명<!-- [PHP] <?= count($chairman_delegations) ?>명 -->
+      </span>
+    </div>
+    <p style="font-size:13px;color:var(--gray-600);margin-bottom:8px;">
+      수임인이 지정되지 않아 의장에게 귀속된 위임 건입니다. 아래 안건별로 동일 보기를 일괄 적용합니다.
+    </p>
+    <!-- [PHP] foreach ($chairman_delegations as $d): -->
+    <div class="delegator-list">
+      <ul>
+        <li>김외부 (회원번호: M00456) — 위임 제출일: 2026-04-20</li><!-- [PHP] <?= h($d['delegator_name']) ?> -->
+        <li>나원격 (회원번호: M00789) — 위임 제출일: 2026-04-22</li>
+      </ul>
+    </div>
+    <!-- [PHP] endforeach -->
+  </div>
+
+  <!-- 안건별 일괄 투표 폼 -->
+  <!-- [PHP] foreach ($agendas as $ag): -->
+  <!-- [PHP] $is_open = $ag['status'] === 'open'; -->
+  <!-- [PHP] $already_voted = 이 안건에서 의장이 이미 일괄 투표한 option_id 조회 -->
+
+  <!-- ── 제1호: open, 미투표 ── -->
+  <div class="card bulk-section">
+    <div class="bulk-section-title">
+      제1호 안건<!-- [PHP] 제<?= $ag['sort_order'] ?>호 안건 -->
+      <span class="badge status-open" style="margin-left:8px;">열림</span><!-- [PHP] 상태 뱃지 -->
+    </div>
+    <p style="font-size:14px;color:var(--gray-700);margin-bottom:12px;">
+      멘사코리아 회원 연회비를 다음과 같이 조정한다.<!-- [PHP] <?= h($ag['title']) ?> -->
+    </p>
+
+    <!-- [PHP] if ($is_open): -->
+    <!-- [PHP] action: process/bulk_vote.php → 의장 귀속 건 전체에 동일 option 일괄 INSERT/UPDATE -->
+    <form method="POST" action="../process/bulk_vote.php" onsubmit="return confirmBulkVote(this)"
+          data-proto-redirect="bulk-vote.html?assembly_id=1">
+      <input type="hidden" name="assembly_id" value="1">
+      <input type="hidden" name="agenda_id" value="1"><!-- [PHP] value="<?= $ag['id'] ?>" -->
+
+      <div class="option-select-wrap">
+        <!-- [PHP] foreach ($ag['options'] as $opt): -->
+        <label class="option-radio-btn">
+          <input type="radio" name="option_id" value="1" required><!-- [PHP] value="<?= $opt['id'] ?>" -->
+          연 7만원<!-- [PHP] <?= h($opt['label']) ?> -->
+        </label>
+        <label class="option-radio-btn">
+          <input type="radio" name="option_id" value="2">
+          연 8만원
+        </label>
+        <label class="option-radio-btn">
+          <input type="radio" name="option_id" value="3">
+          연 9만원
+        </label>
+        <label class="option-radio-btn">
+          <input type="radio" name="option_id" value="4">
+          연 10만원
+        </label>
+        <!-- [PHP] endforeach -->
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;margin-top:4px;">
+        <button type="submit" class="btn btn-primary btn-sm">2명 일괄 투표</button><!-- [PHP] <?= count($chairman_delegations) ?>명 -->
+        <span style="font-size:12px;color:var(--gray-400);">
+          전체 귀속 건에 동일 보기가 적용됩니다. 안건이 열려 있는 동안 수정 가능합니다.
+        </span>
+      </div>
+    </form>
+    <!-- [PHP] else: -->
+    <!-- 닫힘 상태 -->
+    <!--
+    <div class="alert alert-info" style="font-size:13px;">
+      안건이 닫혀 있습니다. 안건을 열어야 투표할 수 있습니다.
+    </div>
+    -->
+    <!-- [PHP] endif -->
+  </div>
+
+  <!-- ── 제2호: open, 이미 투표됨 ── -->
+  <div class="card bulk-section">
+    <div class="bulk-section-title">
+      제2호 안건
+      <span class="badge status-open" style="margin-left:8px;">열림</span>
+    </div>
+    <p style="font-size:14px;color:var(--gray-700);margin-bottom:12px;">
+      선출이사의 인수인계를 의무화하고, 연임 제한 조항을 2회로 신설한다.
+    </p>
+
+    <!-- [PHP] if ($is_open && $already_voted): 기존 투표 있을 때 → 수정 가능 -->
+    <div class="voted-row" style="margin-bottom:8px;">
+      <span>✓ 투표 완료 — 선택: 찬성</span><!-- [PHP] $option_label -->
+    </div>
+    <form method="POST" action="../process/bulk_vote.php" onsubmit="return confirmBulkVote(this)"
+          data-proto-redirect="bulk-vote.html?assembly_id=1">
+      <input type="hidden" name="assembly_id" value="1">
+      <input type="hidden" name="agenda_id" value="2">
+      <div class="option-select-wrap">
+        <label class="option-radio-btn">
+          <input type="radio" name="option_id" value="5" checked>
+          찬성
+        </label>
+        <label class="option-radio-btn">
+          <input type="radio" name="option_id" value="6">
+          반대
+        </label>
+        <label class="option-radio-btn">
+          <input type="radio" name="option_id" value="7">
+          기권
+        </label>
+      </div>
+      <button type="submit" class="btn btn-outline btn-sm" style="margin-top:4px;">수정 저장</button>
+    </form>
+    <!-- [PHP] endif -->
+  </div>
+
+  <!-- ── 제3호: closed ── -->
+  <div class="card bulk-section" style="opacity:0.7;">
+    <div class="bulk-section-title">
+      제3호 안건
+      <span class="badge status-closed" style="margin-left:8px;">마감</span>
+    </div>
+    <p style="font-size:14px;color:var(--gray-700);margin-bottom:8px;">
+      2025년도 결산보고를 승인한다.
+    </p>
+    <div class="alert alert-info" style="font-size:13px;margin-bottom:0;">
+      안건이 마감되었습니다. 재오픈 후 수정 가능합니다.
+    </div>
+    <!-- [PHP] if ($already_voted): -->
+    <div class="voted-row" style="margin-top:8px;">
+      <span>✓ 투표 완료 (마감 전 저장됨) — 선택: 찬성</span>
+    </div>
+    <!-- [PHP] endif -->
+  </div>
+
+  <!-- [PHP] endforeach -->
+
+</main>
+
+<footer class="site-footer"><p>&copy; 2026 전자투표시스템</p></footer>
+
+<script src="../assets/js/ui.js"></script>
+</body>
+</html>

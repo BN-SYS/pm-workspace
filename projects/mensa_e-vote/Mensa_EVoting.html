@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>전자투표시스템 기획서 MVP v1.0</title>
+    <title>전자투표시스템 기획서 MVP v1.1</title>
     <style>
         :root {
             --primary: #001A2E;
@@ -26,7 +26,7 @@
 
         body {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            line-height: 1.7;
+            line-height: 1.8;
             color: #333;
             background: #fff;
             max-width: 960px;
@@ -35,16 +35,22 @@
         }
 
         h1 {
-            color: var(--primary);
             font-size: 28px;
+            color: var(--primary);
             border-bottom: 3px solid var(--primary);
             padding-bottom: 12px;
             margin-bottom: 8px;
         }
 
+        .subtitle {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
         h2 {
-            color: var(--primary);
             font-size: 22px;
+            color: var(--primary);
             margin-top: 48px;
             margin-bottom: 16px;
             padding-bottom: 8px;
@@ -52,15 +58,15 @@
         }
 
         h3 {
-            color: var(--primary);
             font-size: 18px;
+            color: var(--accent);
             margin-top: 32px;
             margin-bottom: 12px;
         }
 
         h4 {
-            color: var(--primary);
             font-size: 16px;
+            color: #444;
             margin-top: 24px;
             margin-bottom: 8px;
         }
@@ -72,7 +78,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 16px 0;
+            margin: 16px 0 24px;
             font-size: 14px;
         }
 
@@ -86,25 +92,31 @@
 
         th {
             background: var(--primary-light);
-            color: var(--primary);
             font-weight: 600;
             white-space: nowrap;
         }
 
-        blockquote {
+        tr:nth-child(even) {
             background: var(--light-gray);
-            border-left: 4px solid var(--accent);
-            padding: 12px 16px;
-            margin: 16px 0;
-            font-size: 14px;
         }
 
         code {
-            background: var(--primary-light);
+            background: #f0f0f0;
             padding: 2px 6px;
             border-radius: 3px;
             font-size: 13px;
-            color: var(--primary);
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent);
+            background: #f0f6ff;
+            padding: 16px 20px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        blockquote p:last-child {
+            margin-bottom: 0;
         }
 
         .badge {
@@ -115,121 +127,77 @@
             font-weight: 600;
         }
 
-        .badge-confirm {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffc107;
+        .badge-in {
+            background: #d4edda;
+            color: #155724;
         }
 
-        .badge-risk-high {
+        .badge-out {
             background: #f8d7da;
             color: #721c24;
         }
 
-        .badge-risk-mid {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .badge-risk-low {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .badge-resolved {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #28a745;
-        }
-
-        .subtitle {
-            color: var(--gray);
-            font-size: 14px;
+        .toc {
+            background: var(--light-gray);
+            padding: 24px 32px;
+            border-radius: 8px;
             margin-bottom: 32px;
         }
 
+        .toc ol {
+            padding-left: 20px;
+        }
+
+        .toc li {
+            margin-bottom: 4px;
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
         .btn-group {
-            margin: 24px 0;
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+            margin-bottom: 32px;
         }
 
         .btn {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 8px 20px;
+            border: none;
             border-radius: 6px;
             font-size: 14px;
             font-weight: 600;
-            text-decoration: none;
             cursor: pointer;
-            border: none;
+            text-decoration: none;
+            margin-right: 8px;
         }
 
         .btn-primary {
-            background: var(--primary);
+            background: var(--accent);
             color: #fff;
         }
 
-        .btn-outline {
-            background: #fff;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-
-        .flow-box {
-            background: var(--light-gray);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px;
-            margin: 16px 0;
-            font-family: monospace;
-            font-size: 13px;
-            line-height: 2;
-            white-space: pre-wrap;
-        }
-
-        .toc {
-            background: var(--light-gray);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px 24px;
-            margin: 24px 0;
-        }
-
-        .toc ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .toc li {
-            padding: 4px 0;
-            font-size: 14px;
-        }
-
-        .toc li a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .toc li a:hover {
-            text-decoration: underline;
-        }
-
-        .section-num {
-            display: inline-block;
-            width: 40px;
-            font-weight: 600;
-            color: var(--accent);
+        .btn-secondary {
+            background: var(--gray);
+            color: #fff;
         }
 
         @media print {
             body {
-                padding: 20px;
+                padding: 0;
             }
 
             .btn-group {
                 display: none;
+            }
+
+            h2 {
+                page-break-before: always;
             }
         }
     </style>
@@ -238,117 +206,83 @@
 <body>
 
     <h1>전자투표시스템 기획서</h1>
-    <p class="subtitle">MVP v1.0 | 작성일: 2026-04-15 | 최종 수정: 2026-04-15 | 목표 오픈: 2026-04-25</p>
+    <p class="subtitle">MVP v1.1 · 작성일 2026-04-15 · 최종 갱신 2026-04-16 · 목표 오픈 2026-04-25</p>
 
     <div class="btn-group">
-        <button class="btn btn-primary" onclick="downloadMD()">📥 MD 파일 다운로드</button>
-        <button class="btn btn-outline" onclick="window.print()">🖨️ PDF 인쇄</button>
+        <button class="btn btn-primary" onclick="downloadMD()">MD 다운로드</button>
+        <button class="btn btn-secondary" onclick="window.print()">PDF 인쇄</button>
     </div>
 
-    <!-- 목차 -->
     <div class="toc">
-        <h3 style="margin-top:0;">목차</h3>
-        <ul>
-            <li><a href="#s1"><span class="section-num">1.</span> 프로젝트 개요</a></li>
-            <li><a href="#s2"><span class="section-num">2.</span> 용어 정의</a></li>
-            <li><a href="#s3"><span class="section-num">3.</span> MVP 범위 정의</a></li>
-            <li><a href="#s4"><span class="section-num">4.</span> 시스템 흐름 및 데이터 연동</a></li>
-            <li><a href="#s5"><span class="section-num">5.</span> 관리자 기능 상세</a></li>
-            <li><a href="#s6"><span class="section-num">6.</span> 투표자 기능 상세</a></li>
-            <li><a href="#s7"><span class="section-num">7.</span> 데이터 모델</a></li>
-            <li><a href="#s8"><span class="section-num">8.</span> 비기능 요구사항</a></li>
-            <li><a href="#s9"><span class="section-num">9.</span> 화면 목록</a></li>
-            <li><a href="#s10"><span class="section-num">10.</span> 리스크 매트릭스</a></li>
-            <li><a href="#s11"><span class="section-num">11.</span> 일정 계획</a></li>
-            <li><a href="#s12"><span class="section-num">12.</span> v2 백로그</a></li>
-        </ul>
+        <h3 style="margin-top:0">목차</h3>
+        <ol>
+            <li><a href="#s1">프로젝트 개요</a></li>
+            <li><a href="#s2">용어 정의</a></li>
+            <li><a href="#s3">MVP 범위 정의</a></li>
+            <li><a href="#s4">시스템 흐름 · 데이터 연동</a></li>
+            <li><a href="#s5">관리자 기능 상세</a></li>
+            <li><a href="#s6">투표자 기능 상세</a></li>
+            <li><a href="#s7">데이터 모델</a></li>
+            <li><a href="#s8">비기능 요구사항</a></li>
+            <li><a href="#s9">화면 목록</a></li>
+            <li><a href="#s10">리스크 매트릭스</a></li>
+            <li><a href="#s11">일정 계획</a></li>
+            <li><a href="#s12">v2 백로그</a></li>
+            <li><a href="#s13">미확인 사항</a></li>
+        </ol>
     </div>
 
-    <!-- ===== 섹션 1 ===== -->
+    <!-- ===== 1. 프로젝트 개요 ===== -->
     <h2 id="s1">1. 프로젝트 개요</h2>
-
-    <h3>1-1. 목적</h3>
-    <p>총회 현장에서 안건별 단일선택 전자투표를 진행하고, 투표 종료 즉시 결과를 집계하여 관리자에게 제공하는 시스템을 구축한다. 시스템은 <strong>쇼핑몰 서버 내부에 구축</strong>하여 회원 DB
-        및 검표 데이터를 직접 조회한다.</p>
-
-    <h3>1-2. MVP 범위</h3>
-    <table>
-        <tr>
-            <th>포함 (MVP)</th>
-            <th>제외 (v2 이후)</th>
-        </tr>
-        <tr>
-            <td>
-                관리자: 총회 등록, 안건 CRUD, 투표 열기/닫기, 총회 상태 관리, 의장 일괄 투표<br>
-                투표자: 본인 인증 → 안건 목록 → 투표<br>
-                위임: 구글 스프레드시트 기반 위임장 연동, 의장(관리자) 자동 귀속<br>
-                출석: 쇼핑몰 검표 DB 직접 조회 (동일 서버)<br>
-                결과: 안건별 득표율, 참여자 명단(익명 투표 원칙 준수)
-            </td>
-            <td>
-                복수선택 투표<br>
-                자체 위임 등록 화면<br>
-                투표자용 별도 결과 화면<br>
-                카카오 알림톡 발송<br>
-                다중 관리자 권한<br>
-                의장 위임 건별 개별 선택 투표<br>
-                감사 로그(audit log)<br>
-                아카이브·과거 총회 조회
-            </td>
-        </tr>
-    </table>
-
-    <h3>1-3. 주요 수치</h3>
     <table>
         <tr>
             <th>항목</th>
-            <th>값</th>
+            <th>내용</th>
         </tr>
         <tr>
-            <td>예상 참여자 수</td>
+            <td>프로젝트명</td>
+            <td>정기총회 전자투표시스템</td>
+        </tr>
+        <tr>
+            <td>목적</td>
+            <td>정기총회 안건에 대해 현장 출석자 및 위임인의 전자 투표를 지원</td>
+        </tr>
+        <tr>
+            <td>대상 사용자</td>
+            <td>총회 관리자(의장), 현장 참석 정회원, 위임 수임인</td>
+        </tr>
+        <tr>
+            <td>예상 참여 인원</td>
             <td>100~130명</td>
         </tr>
         <tr>
             <td>투표 방식</td>
-            <td>안건별 단일선택</td>
+            <td>안건별 단일 선택 (MVP)</td>
         </tr>
         <tr>
-            <td>서버 환경</td>
-            <td>쇼핑몰 동일 서버 (PHP 백엔드, DB 직접 접근)</td>
+            <td>개발 기간</td>
+            <td>10일 (4/16~4/25)</td>
         </tr>
         <tr>
-            <td>목표 오픈</td>
+            <td>목표 오픈일</td>
             <td>2026-04-25</td>
+        </tr>
+        <tr>
+            <td>구축 환경</td>
+            <td>쇼핑몰 서버 내 구축 (서버 분리 없음). 쇼핑몰 DB 직접 참조 전제로 기획.</td>
         </tr>
     </table>
 
-    <!-- ===== 섹션 2 ===== -->
+    <!-- ===== 2. 용어 정의 ===== -->
     <h2 id="s2">2. 용어 정의</h2>
-
     <table>
         <tr>
-            <th style="width:140px;">용어</th>
+            <th>용어</th>
             <th>정의</th>
         </tr>
         <tr>
-            <td>총회 (Assembly)</td>
-            <td>투표가 진행되는 단위 행사. 상태: <code>준비중</code> → <code>투표 진행중</code> → <code>종료</code></td>
-        </tr>
-        <tr>
-            <td>안건 (Agenda)</td>
-            <td>총회 내 개별 투표 항목. 상태: <code>닫힘</code>(기본) ↔ <code>열림</code></td>
-        </tr>
-        <tr>
-            <td>보기 (Option)</td>
-            <td>안건 내 선택지. 개수 제한 없음.</td>
-        </tr>
-        <tr>
             <td>정회원</td>
-            <td>회원 등급이 정회원 이상인 회원. 총회 투표권의 대상자.</td>
-        </tr>
-        <tr>
-            <td>회원번호</td>
-            <td>정회원 고유 식별자. 위임 매칭 및 투표권 귀속의 기준 키.</td>
+            <td>쇼핑몰 회원 등급이 정회원 이상인 회원. 총회 투표권의 대상자.</td>
         </tr>
         <tr>
             <td>티켓구매자</td>
@@ -360,24 +294,27 @@
         </tr>
         <tr>
             <td>투표 행사권</td>
-            <td>투표권을 실제로 행사할 수 있는 자격.<br>① <strong>본인 행사</strong>: 티켓 구매자 본인이 현장 검표(출석 확인)를 완료한 경우<br>② <strong>위임
-                    행사</strong>: 위임장을 통해 수임인에게 행사권을 이전한 경우 (위임인 출석 불요)</td>
+            <td>투표권을 실제로 행사할 수 있는 상태. 출석(검표 완료) 시 본인에게, 위임 시 수임인에게 발생한다.</td>
         </tr>
         <tr>
             <td>위임인</td>
-            <td>투표 행사권을 타인에게 위임하는 티켓구매자</td>
+            <td>위임장을 제출하여 자신의 투표 행사권을 타인에게 이전하는 정회원. 티켓 미구매 회원도 가능.</td>
         </tr>
         <tr>
             <td>수임인</td>
-            <td>위임을 받아 대신 투표를 행사하는 회원. 수임인 본인의 출석(검표) 필요.</td>
+            <td>위임장을 통해 타인의 투표 행사권을 위임받아 대리 투표하는 정회원.</td>
         </tr>
         <tr>
             <td>의장</td>
-            <td>관리자 = 의장. 별도 회원번호 없음. 위임장에서 수임인이 공란인 경우 의장에게 자동 귀속되며, 관리자 페이지에서 일괄 투표를 행사한다.</td>
+            <td>총회를 주재하는 관리자. 시스템에서는 관리자 계정 = 의장이다. 수임인이 지정되지 않은 위임건은 의장에게 자동 귀속된다.</td>
+        </tr>
+        <tr>
+            <td>총회 상태</td>
+            <td>준비중 → 투표 진행중 → 종료. 각 전환은 관리자가 수동으로 진행한다.</td>
         </tr>
         <tr>
             <td>검표</td>
-            <td>현장 QR 스캔을 통한 출석 확인. 쇼핑몰 시스템에서 처리되며, 결과는 동일 DB에 기록된다.</td>
+            <td>현장에서 티켓 구매자의 출석을 확인하는 행위. 쇼핑몰 DB에 검표 시각(check_time)이 기록된다.</td>
         </tr>
     </table>
 
@@ -412,14 +349,28 @@
             <td>의장 (관리자 일괄 투표)</td>
         </tr>
         <tr>
-            <td>정회원 + 티켓 구매 + 위임 O (수임인 지정) + 투표 시작 전 검표</td>
+            <td>정회원 + 티켓 구매 + 미검표 + 위임 O (수임인 지정)</td>
             <td>있음</td>
-            <td>위임 취소 → 본인 복귀</td>
+            <td>수임인에게 이전</td>
+            <td><strong>포함</strong></td>
+            <td>수임인</td>
+        </tr>
+        <tr>
+            <td>정회원 + 티켓 구매 + 미검표 + 위임 O (수임인 공란)</td>
+            <td>있음</td>
+            <td>의장(관리자)에게 귀속</td>
+            <td><strong>포함</strong></td>
+            <td>의장 (관리자 일괄 투표)</td>
+        </tr>
+        <tr>
+            <td>정회원 + 위임 O + "투표 진행중" 전환 시점에 검표 완료 상태</td>
+            <td>있음</td>
+            <td>위임 자동 취소 → 본인 복귀</td>
             <td><strong>포함</strong></td>
             <td>본인</td>
         </tr>
         <tr>
-            <td>정회원 + 티켓 구매 + 위임 O + 투표 시작 후 검표</td>
+            <td>정회원 + 위임 O + "투표 진행중" 전환 이후 검표</td>
             <td>있음</td>
             <td>위임 유지</td>
             <td><strong>포함</strong> (수임인 기준)</td>
@@ -440,375 +391,336 @@
             <td>없음</td>
         </tr>
     </table>
-
     <blockquote>
-        <p><strong>모수 기준 원칙:</strong> 투표 행사 가능 수(모수) = 출석 본인 + 유효 위임(수임인 지정 + 의장 귀속). 이 외의 모든 경우(불참·무위임, 티켓 구매했지만
-            미출석·무위임)는 모수에서 제외한다.</p>
+        <p><strong>모수 기준 원칙:</strong> 투표 행사 가능 수(모수) = 출석 본인(검표 완료 + 위임 X) + 유효 위임(수임인 지정 + 의장 귀속). 이 외의 모든 경우는 모수에서 제외한다.</p>
+        <p><strong>운영 권장:</strong> "투표 진행중" 전환 시점 이전에 충분한 입장·검표 시간을 확보해 현장 참석자가 최대한 본인 투표를 할 수 있도록 한다.</p>
     </blockquote>
 
-
-    <!-- ===== 섹션 3 ===== -->
+    <!-- ===== 3. MVP 범위 정의 ===== -->
     <h2 id="s3">3. MVP 범위 정의</h2>
-
-    <h3>3-1. 기능 범위</h3>
     <table>
         <tr>
             <th>구분</th>
             <th>기능</th>
-            <th>MVP</th>
+            <th>포함 여부</th>
         </tr>
         <tr>
-            <td rowspan="7">관리자</td>
-            <td>로그인</td>
-            <td>✅</td>
+            <td>관리자</td>
+            <td>총회 생성·상태 관리</td>
+            <td><span class="badge badge-in">MVP 포함</span></td>
         </tr>
         <tr>
-            <td>총회 등록·수정</td>
-            <td>✅</td>
+            <td>관리자</td>
+            <td>안건 CRUD + 보기 등록</td>
+            <td><span class="badge badge-in">MVP 포함</span></td>
         </tr>
         <tr>
-            <td>총회 상태 관리 (준비중 → 투표 진행중 → 종료)</td>
-            <td>✅</td>
+            <td>관리자</td>
+            <td>출석 현황 조회 (쇼핑몰 DB 직접 참조)</td>
+            <td><span class="badge badge-in">MVP 포함</span></td>
         </tr>
         <tr>
-            <td>안건 CRUD (보기 무제한, 상태 토글)</td>
-            <td>✅</td>
+            <td>관리자</td>
+            <td>위임장 관리 (구글 스프레드시트 연동 + CSV 백업)</td>
+            <td><span class="badge badge-in">MVP 포함</span></td>
         </tr>
         <tr>
-            <td>투표 결과 조회 (득표율 + 참여자 명단)</td>
-            <td>✅</td>
+            <td>관리자</td>
+            <td>의장 귀속 위임건 일괄 투표</td>
+            <td><span class="badge badge-in">MVP 포함</span></td>
         </tr>
         <tr>
-            <td>출석 현황 / 위임 관리</td>
-            <td>✅</td>
+            <td>관리자</td>
+            <td>투표 현황·결과 조회</td>
+            <td><span class="badge badge-in">MVP 포함</span></td>
         </tr>
         <tr>
-            <td>의장 일괄 투표 (수임인 미지정 귀속 건)</td>
-            <td>✅</td>
-        </tr>
-        <tr>
-            <td rowspan="3">투표자</td>
+            <td>투표자</td>
             <td>본인 인증 (이름 + 전화번호 + 주문번호 뒤 5자리)</td>
-            <td>✅</td>
+            <td><span class="badge badge-in">MVP 포함</span></td>
         </tr>
         <tr>
-            <td>안건 목록 조회 + 투표 + 수정 (열림 상태에서)</td>
-            <td>✅</td>
+            <td>투표자</td>
+            <td>안건별 단일 선택 투표 (열림 상태에서 수정 가능)</td>
+            <td><span class="badge badge-in">MVP 포함</span></td>
         </tr>
         <tr>
-            <td>위임 투표 (드롭다운 방식, 최대 10건)</td>
-            <td>✅</td>
+            <td>투표자</td>
+            <td>수임인 위임 투표 (드롭다운 전환)</td>
+            <td><span class="badge badge-in">MVP 포함</span></td>
         </tr>
         <tr>
-            <td rowspan="2">연동</td>
-            <td>쇼핑몰 DB 직접 조회 (회원 정보 + 티켓 구매 + 검표 현황)</td>
-            <td>✅</td>
+            <td>관리자</td>
+            <td>복수선택 투표</td>
+            <td><span class="badge badge-out">v2</span></td>
         </tr>
         <tr>
-            <td>구글 스프레드시트 위임장 연동 (API)</td>
-            <td>✅</td>
-        </tr>
-    </table>
-
-    <!-- ===== 섹션 4 ===== -->
-    <h2 id="s4">4. 시스템 흐름 및 데이터 연동</h2>
-
-    <h3>4-1. 전체 시스템 흐름도</h3>
-    <div class="flow-box">
-        ┌──────────────────────────────────────────────────┐
-        │ 쇼핑몰 서버 (동일 서버) │
-        │ │
-        │ ┌──────────────┐ ┌──────────────┐ │
-        │ │ 회원 DB │ │ 주문/티켓 DB │ │
-        │ │ (회원번호, │ │ (주문번호, │ │
-        │ │ 이름, 전화) │ │ 검표상태, │ │
-        │ │ │ │ 검표시각) │ │
-        │ └──────┬───────┘ └──────┬───────┘ │
-        │ │ 직접 조회 │ 직접 조회 │
-        │ ▼ ▼ │
-        │ ┌─────────────────────────────────────┐ │
-        │ │ 전자투표 시스템 (신규 구축) │ │
-        │ │ │ │
-        │ │ ┌──────────┐ ┌────────┐ │ │
-        │ │ │ 위임 DB │ │ 투표DB │ │ │
-        │ │ └──────────┘ └────────┘ │ │
-        │ │ │ │
-        │ │ ┌──────────────┐ ┌──────────────┐ │ │
-        │ │ │ 관리자 페이지 │ │ 투표자 페이지│ │ │
-        │ │ │ (PC 반응형) │ │ (모바일 반응형)│ │ │
-        │ │ └──────────────┘ └──────────────┘ │ │
-        │ └─────────────────────────────────────┘ │
-        │ │
-        │ [현장 QR 리더기] → [쇼핑몰 검표 처리] → 주문/티켓 DB │
-        └──────────────────────────────────────────────────┘
-
-        ↕ Google Sheets API (준비중 상태에서만 통신)
-        ┌──────────────────────┐
-        │ 구글 스프레드시트 │
-        │ (시트명: "위임장") │
-        └──────────────────────┘
-    </div>
-
-    <h3>4-2. 데이터 연동</h3>
-
-    <h4>A. 쇼핑몰 DB 직접 조회</h4>
-    <p>동일 서버에 구축하므로 외부 API 없이 <strong>DB 직접 조회</strong>로 처리한다.</p>
-    <table>
-        <tr>
-            <th style="width:160px;">항목</th>
-            <th>내용</th>
+            <td>관리자</td>
+            <td>자체 위임 등록 화면</td>
+            <td><span class="badge badge-out">v2</span></td>
         </tr>
         <tr>
-            <td>조회 방식</td>
-            <td>동일 서버 DB 직접 SELECT (실시간)</td>
+            <td>관리자</td>
+            <td>의장 위임 건별 개별 선택</td>
+            <td><span class="badge badge-out">v2</span></td>
         </tr>
         <tr>
-            <td>회원 DB 조회 항목</td>
-            <td>회원번호, 이름, 전화번호</td>
+            <td>투표자</td>
+            <td>투표 결과 열람</td>
+            <td><span class="badge badge-out">v2</span></td>
         </tr>
         <tr>
-            <td>주문/티켓 DB 조회 항목</td>
-            <td>주문번호, 회원번호(FK), 검표 상태(Y/N), 검표 시각(timestamp)</td>
+            <td>시스템</td>
+            <td>카카오 알림톡</td>
+            <td><span class="badge badge-out">v2</span></td>
         </tr>
         <tr>
-            <td>현장 구매 대응</td>
-            <td>현장 판매분도 동일 DB에 즉시 반영되므로 별도 동기화 불필요</td>
+            <td>관리자</td>
+            <td>다중 관리자 권한</td>
+            <td><span class="badge badge-out">v2</span></td>
+        </tr>
+        <tr>
+            <td>시스템</td>
+            <td>투표 진행중 위임 취소</td>
+            <td><span class="badge badge-out">v2</span></td>
+        </tr>
+        <tr>
+            <td>시스템</td>
+            <td>총회 상태 롤백</td>
+            <td><span class="badge badge-out">v2</span></td>
         </tr>
     </table>
 
-    <h4>B. 위임 데이터 (구글 스프레드시트)</h4>
-    <p>위임장은 외부 시스템에서 수합하여 구글 스프레드시트에 정리한다. 관리자가 동기화 버튼으로 Google Sheets API를 통해 투표 DB에 반영한다. 수임인 정보(이름, 전화번호, 회원번호)가 모두
-        공란인 경우, <strong>의장(관리자)에게 자동 귀속</strong>된다.</p>
+    <!-- ===== 4. 시스템 흐름 · 데이터 연동 ===== -->
+    <h2 id="s4">4. 시스템 흐름 · 데이터 연동</h2>
 
+    <h3>4-1. 전체 흐름</h3>
     <table>
         <tr>
-            <th style="width:160px;">항목</th>
+            <th>단계</th>
+            <th>관리자 행위</th>
+            <th>시스템 동작</th>
+        </tr>
+        <tr>
+            <td>1. 총회 생성</td>
+            <td>총회명, 일시 입력</td>
+            <td>Assembly 레코드 생성, 상태 = 준비중</td>
+        </tr>
+        <tr>
+            <td>2. 안건 등록</td>
+            <td>안건명 + 보기(선택지) 입력</td>
+            <td>Agenda + AgendaOption 레코드 생성</td>
+        </tr>
+        <tr>
+            <td>3. 위임장 동기화</td>
+            <td>동기화 버튼 클릭</td>
+            <td>구글 스프레드시트 API → Delegation 테이블 UPSERT</td>
+        </tr>
+        <tr>
+            <td>4. 출석 현황 확인</td>
+            <td>출석 관리 화면 조회</td>
+            <td>쇼핑몰 DB 직접 참조 (티켓 + 검표 시각)</td>
+        </tr>
+        <tr>
+            <td>5. 투표 시작</td>
+            <td>"투표 진행중" 전환 (더블 컨펌)</td>
+            <td>① 강제 동기화 1회 실행 → ② 검표 시각 기준 위임 취소 판정 → ③ 모수 확정 → ④ 스프레드시트 연동 차단</td>
+        </tr>
+        <tr>
+            <td>6. 안건 열기</td>
+            <td>안건별 "열기" 클릭</td>
+            <td>해당 안건 투표 가능 상태로 전환</td>
+        </tr>
+        <tr>
+            <td>7. 투표 진행</td>
+            <td>현황 모니터링</td>
+            <td>투표자 화면에서 선택지 제출 → Vote 레코드 생성 (안건 열림 중 수정 가능)</td>
+        </tr>
+        <tr>
+            <td>8. 안건 닫기</td>
+            <td>안건별 "닫기" 클릭 (더블 컨펌)</td>
+            <td>해당 안건 투표 마감, 결과 집계</td>
+        </tr>
+        <tr>
+            <td>9. 총회 종료</td>
+            <td>"종료" 클릭 (더블 컨펌)</td>
+            <td>전체 투표 마감, 최종 결과 확정. 되돌릴 수 없음.</td>
+        </tr>
+    </table>
+    <blockquote>
+        <p><strong>투표자 인증 → 투표 흐름:</strong> 이름+전화번호+주문번호 뒤 5자리 입력 → 티켓 DB 매칭 → 성공 시 회원번호를 세션에 저장 → Delegation 테이블에서 delegatee_member_id로 위임 목록 조회 → 위임건이 있으면 수임인 드롭다운 구성 → 안건별 투표 진행.</p>
+    </blockquote>
+
+    <h3>4-2. 데이터 연동 구조</h3>
+
+    <h4>4-2-A. 출석 관리 (쇼핑몰 DB 직접 참조)</h4>
+    <table>
+        <tr>
+            <th>항목</th>
             <th>내용</th>
         </tr>
         <tr>
-            <td>시트명</td>
-            <td>"위임장"</td>
+            <td>연동 방식</td>
+            <td>같은 서버 내 쇼핑몰 DB 직접 쿼리 (별도 API 불필요)</td>
         </tr>
         <tr>
-            <td>시트 컬럼</td>
-            <td>
-                A: 위임자명<br>
-                B: 위임자휴대폰<br>
-                C: 위임자회원번호<br>
-                D: 수임자명<br>
-                E: 수임자휴대폰<br>
-                F: 수임자회원번호
-            </td>
+            <td>조회 대상</td>
+            <td>티켓 구매 테이블 + 검표 시각(check_time) 컬럼</td>
+        </tr>
+        <tr>
+            <td>데이터 갱신</td>
+            <td>관리자 화면에서 실시간 조회 (페이지 로드 또는 새로고침 시 DB 재조회)</td>
+        </tr>
+        <tr>
+            <td>표시 항목</td>
+            <td>구매자명, 전화번호, 주문번호, 검표 여부, 검표 시각</td>
+        </tr>
+    </table>
+
+    <h4>4-2-B. 위임장 관리 (구글 스프레드시트 연동)</h4>
+    <table>
+        <tr>
+            <th>항목</th>
+            <th>내용</th>
+        </tr>
+        <tr>
+            <td>연동 방식</td>
+            <td>Google Sheets API v4 + 서비스 계정 인증 (서버 사이드)</td>
+        </tr>
+        <tr>
+            <td>스프레드시트 컬럼</td>
+            <td>A: 위임자명 / B: 위임자휴대폰 / C: 위임자회원번호<br>D: 수임자명 / E: 수임자휴대폰 / F: 수임자회원번호</td>
         </tr>
         <tr>
             <td>매칭 기준</td>
-            <td>위임자: 회원번호(C열)로 <strong>회원 DB</strong> 매칭 (티켓 미구매 회원도 위임 가능)<br>수임자: 회원번호(F열)로 <strong>회원 DB</strong> 매칭
-            </td>
-        </tr>
-
-        <tr>
-            <td>수임자 공란 처리</td>
-            <td>D·E·F 모두 공란 → 의장(관리자)에게 자동 귀속</td>
+            <td>위임자: 회원번호(C열)로 <strong>회원 DB</strong> 매칭 (티켓 미구매 회원도 위임 가능)<br>수임자: 회원번호(F열)로 <strong>회원 DB</strong> 매칭</td>
         </tr>
         <tr>
             <td>동기화 방식</td>
-            <td>관리자 수동 동기화 버튼 (Google Sheets API v4)</td>
+            <td>준비중: 관리자가 수동으로 동기화 버튼 클릭 (반복 가능)<br>투표 진행중 전환 시: 강제 동기화 1회 자동 실행 → 이후 연동 차단<br>투표 진행중 / 종료: 스프레드시트 API 통신 차단, 동기화 버튼 비활성화</td>
+        </tr>
+        <tr>
+            <td>수임인 공란 처리</td>
+            <td>수임인 정보(D·E·F열)가 모두 공란이면 의장(관리자)에게 자동 귀속</td>
+        </tr>
+        <tr>
+            <td>보안</td>
+            <td>서비스 계정 JSON 키는 서버 환경변수에 보관. 프론트엔드 노출 금지.</td>
         </tr>
     </table>
 
-    <h4>스프레드시트 API 통신 관리</h4>
-    <table>
-        <tr>
-            <th>총회 상태</th>
-            <th>API 통신</th>
-            <th>비고</th>
-        </tr>
-        <tr>
-            <td><code>준비중</code></td>
-            <td>✅ 통신 허용</td>
-            <td>동기화 버튼 활성화, 최신 시트 반영 가능</td>
-        </tr>
-        <tr>
-            <td><code>투표 진행중</code></td>
-            <td>❌ <strong>통신 차단</strong></td>
-            <td>동기화 버튼 비활성화, API 호출 차단, 위임 데이터 동결</td>
-        </tr>
-        <tr>
-            <td><code>종료</code></td>
-            <td>❌ <strong>통신 차단</strong></td>
-            <td>변경 불가</td>
-        </tr>
-    </table>
-
-    <blockquote>
-        <p>"투표 진행중" 전환 직전에 실행되는 강제 동기화가 <strong>위임 데이터의 최종 반영 시점</strong>이다. 전환 이후에는 스프레드시트가 변경되더라도 시스템에 반영되지 않으며, API
-            통신 자체가 차단된다.</p>
-    </blockquote>
-
-    <!-- ===== 섹션 5 ===== -->
+    <!-- ===== 5. 관리자 기능 상세 ===== -->
     <h2 id="s5">5. 관리자 기능 상세</h2>
 
-    <h3>5-1. 로그인</h3>
+    <h3>5-1. 총회 관리</h3>
     <table>
         <tr>
-            <th style="width:140px;">항목</th>
-            <th>내용</th>
+            <th>기능</th>
+            <th>설명</th>
         </tr>
         <tr>
-            <td>인증 방식</td>
-            <td>ID / PW 별도 관리자 계정 (쇼핑몰 회원 계정과 분리)</td>
+            <td>총회 생성</td>
+            <td>총회명, 일시 입력. 생성 시 상태 = "준비중".</td>
         </tr>
         <tr>
-            <td>역할</td>
-            <td>관리자 = 의장 (별도 회원번호 없음)</td>
-        </tr>
-        <tr>
-            <td>세션 유지</td>
-            <td>브라우저 세션 기반</td>
+            <td>총회 목록</td>
+            <td>생성된 총회 목록 표시. 상태별 필터 가능.</td>
         </tr>
     </table>
 
-    <h3>5-2. 총회 등록·관리</h3>
+    <h3>5-2. 안건 관리</h3>
     <table>
         <tr>
-            <th style="width:140px;">항목</th>
-            <th>내용</th>
+            <th>기능</th>
+            <th>설명</th>
         </tr>
         <tr>
-            <td>총회명</td>
-            <td>필수 입력 (예: "2026년 정기총회")</td>
+            <td>안건 등록</td>
+            <td>안건명 입력 + 보기(선택지) 최소 2개 등록. <strong>"준비중" 및 "투표 진행중"</strong> 상태에서 가능. "종료" 후 불가.</td>
         </tr>
         <tr>
-            <td>일시</td>
-            <td>필수 입력</td>
+            <td>안건 수정·삭제</td>
+            <td><strong>"준비중"</strong> 상태에서만 가능. 투표 진행중 이후 수정·삭제 불가.</td>
         </tr>
         <tr>
-            <td>설명</td>
-            <td>선택 입력</td>
-        </tr>
-        <tr>
-            <td>상태</td>
-            <td>자동: <code>준비중</code> (등록 시 기본값)</td>
+            <td>안건 열기·닫기</td>
+            <td><strong>"투표 진행중"</strong> 상태에서 안건별 개별 토글. 열린 안건만 투표 가능.</td>
         </tr>
     </table>
-
+    <table>
+        <tr>
+            <th>행위</th>
+            <th>준비중</th>
+            <th>투표 진행중</th>
+            <th>종료</th>
+        </tr>
+        <tr>
+            <td>안건 추가</td>
+            <td>가능</td>
+            <td><strong>가능</strong></td>
+            <td>불가</td>
+        </tr>
+        <tr>
+            <td>안건 수정</td>
+            <td>가능</td>
+            <td>불가</td>
+            <td>불가</td>
+        </tr>
+        <tr>
+            <td>안건 삭제</td>
+            <td>가능</td>
+            <td>불가</td>
+            <td>불가</td>
+        </tr>
+        <tr>
+            <td>안건 열기·닫기</td>
+            <td>불가</td>
+            <td>가능</td>
+            <td>불가</td>
+        </tr>
+    </table>
     <blockquote>
-        <p>의장은 관리자 본인이므로 별도 입력 필드가 없다. 위임장에서 수임인이 공란인 경우 자동으로 의장(관리자)에게 귀속되며, 관리자 페이지에서 일괄 투표를 행사한다.</p>
+        <p><strong>긴급 안건 참고:</strong> 투표 진행중에 추가된 안건은 기존 확정된 모수(투표 행사 가능 수)를 동일하게 적용한다. 추가 후 관리자가 "열기"를 해야 투표가 시작되므로 기존 진행 중인 안건에 영향을 주지 않는다.</p>
+    </blockquote>
+    <blockquote>
+        <p><strong>보기(선택지) 수정 규칙:</strong> 투표 진행중에 추가된 안건은 <strong>"열기" 전까지 보기 수정이 가능</strong>하다. 한 번 "열림" 상태가 되면 보기 수정·삭제 불가.</p>
     </blockquote>
 
     <h3>5-3. 총회 상태 관리</h3>
     <table>
         <tr>
-            <th>상태</th>
-            <th>전환 조건</th>
-            <th>효과</th>
+            <th>전환</th>
+            <th>조건</th>
+            <th>시스템 동작</th>
         </tr>
         <tr>
-            <td><code>준비중</code></td>
-            <td>총회 등록 시 기본값</td>
-            <td>안건 등록·수정·삭제 가능. 위임 스프레드시트 동기화 가능. 투표 불가.</td>
+            <td>준비중 → 투표 진행중</td>
+            <td>더블 컨펌 필수:<br>1차: "총회 상태를 '투표 진행중'으로 변경합니다. 계속하시겠습니까?"<br>2차: "투표가 시작되면, 이후 출석한 위임인의 투표권은 수임인에게 유지됩니다. 투표를 시작하시겠습니까?"</td>
+            <td>① 위임장 스프레드시트 강제 동기화 1회 실행<br>② 검표 시각 기준 위임 취소 판정<br>③ 투표 행사 가능 수(모수) 확정<br>④ 스프레드시트 API 통신 차단</td>
         </tr>
         <tr>
-            <td><code>투표 진행중</code></td>
-            <td>관리자가 수동 전환<br>(더블 컨펌 필수)</td>
-            <td>
-                ① 구글 스프레드시트 <strong>강제 동기화 1회</strong> 자동 실행<br>
-                ② 스프레드시트 <strong>API 통신 차단</strong> (위임 데이터 동결)<br>
-                ③ 위임 취소 판정 일괄 실행 (원천 검표 시각 기준)<br>
-                ④ 투표 시작 시각(timestamp) 기록<br>
-                ⑤ 안건 열기/닫기 가능, 투표자 투표 가능<br>
-                ⑥ 의장 일괄 투표 가능
-            </td>
-        </tr>
-        <tr>
-            <td><code>종료</code></td>
-            <td>관리자가 수동 전환</td>
-            <td>모든 안건 강제 닫힘. 결과 확정. 투표 불가.</td>
+            <td>투표 진행중 → 종료</td>
+            <td>더블 컨펌 필수:<br>1차: "총회를 종료합니다. 계속하시겠습니까?"<br>2차: "종료 후에는 되돌릴 수 없습니다. 모든 안건이 마감되고 최종 결과가 확정됩니다. 정말 종료하시겠습니까?"</td>
+            <td>모든 안건 강제 닫힘. 최종 결과 확정. 되돌릴 수 없음.</td>
         </tr>
     </table>
-
-    <h4>"투표 진행중" 전환 시 더블 컨펌</h4>
-    <table>
-        <tr>
-            <th>단계</th>
-            <th>팝업 내용</th>
-        </tr>
-        <tr>
-            <td>1차 확인</td>
-            <td>"총회 상태를 '투표 진행중'으로 변경합니다. 계속하시겠습니까?"</td>
-        </tr>
-        <tr>
-            <td>2차 확인</td>
-            <td>"투표 진행으로 변경 시, 이후 위임인 본인이 출석하여도 수임인에게 투표권이 유지됩니다. 투표를 시작하시겠습니까?"</td>
-        </tr>
-    </table>
-
     <blockquote>
-        <p>안건을 <code>닫힘 → 열림</code>으로 다시 열 수 있지만, 재오픈 시 "결과가 변동될 수 있습니다" <strong>경고 팝업</strong>을 표시한다. <code>종료</code>
-            상태에서는 안건 토글 불가하며, <strong>종료는 되돌릴 수 없다. "투표 진행중 → 준비중" 롤백도 MVP에서는 지원하지 않는다.</strong></p>
+        <p><strong>롤백 불가:</strong> "투표 진행중 → 준비중" 롤백은 MVP에서 지원하지 않는다. "종료" 상태도 되돌릴 수 없다.</p>
+    </blockquote>
+    <blockquote>
+        <p><strong>안건 가드:</strong> 등록된 안건이 0건인 상태에서는 "투표 진행중"으로 전환할 수 없다. 전환 시도 시 <code>"안건을 1개 이상 등록하세요."</code> 알림을 표시하고 전환을 차단한다.</p>
+    </blockquote>
+    <blockquote>
+        <p><strong>안건 닫기 정책:</strong> 안건을 닫을 때 더블 컨펌을 수행한다.<br>
+            1차: <code>"해당 안건의 투표를 마감합니다. 닫으시겠습니까?"</code><br>
+            2차: <code>"닫힌 안건은 재오픈할 수 있지만, 재오픈 시 미투표자의 추가 투표로 결과가 변동될 수 있습니다. 정말 닫으시겠습니까?"</code></p>
+    </blockquote>
+    <blockquote>
+        <p><strong>안건 재오픈 정책:</strong> 닫힌 안건을 다시 열 경우, <strong>기존 투표 데이터는 유지</strong>한다. 아직 투표하지 않은 행사 가능자만 추가로 투표할 수 있다. 재오픈 시 경고 팝업: <code>"기존 투표 결과에 미투표자의 투표가 추가되어 최종 결과가 변동될 수 있습니다. 재오픈하시겠습니까?"</code></p>
+        <p><strong>횟수 제한:</strong> MVP에서는 재오픈 횟수에 제한을 두지 않는다. 단, 안건의 열기·닫기 이력(시각, 행위자)을 로그로 기록한다.</p>
     </blockquote>
 
-
-    <h3>5-4. 안건 관리</h3>
-    <table>
-        <tr>
-            <th style="width:140px;">항목</th>
-            <th>내용</th>
-        </tr>
-        <tr>
-            <td>안건명</td>
-            <td>필수 입력</td>
-        </tr>
-        <tr>
-            <td>안건 설명</td>
-            <td>선택 입력</td>
-        </tr>
-        <tr>
-            <td>보기</td>
-            <td>무제한 추가 가능 (단일선택)</td>
-        </tr>
-        <tr>
-            <td>안건 번호</td>
-            <td>자동 부여 (제1호 안건, 제2호 안건, …)</td>
-        </tr>
-        <tr>
-            <td>상태</td>
-            <td>기본 <code>닫힘</code>, 관리자가 <code>열림</code>/<code>닫힘</code> 자유 토글</td>
-        </tr>
-    </table>
-
-    <p>관리자 화면 상단에 <strong>전체 안건 수</strong>를 표시한다. (예: "전체 5건")</p>
-
-    <h4>투표율 산식</h4>
-    <table>
-        <tr>
-            <th>구분</th>
-            <th>정의</th>
-        </tr>
-        <tr>
-            <td>투표 행사 가능 수 (모수)</td>
-            <td>출석 본인(위임 X) + 유효 위임(수임인 지정 + 의장 귀속) 건수. <strong>불참·무위임자는 모수에서 제외.</strong></td>
-        </tr>
-        <tr>
-            <td>투표 완료 수</td>
-            <td>해당 안건에 실제 투표를 제출한 수 (본인 + 위임 행사 + 의장 일괄 합산)</td>
-        </tr>
-        <tr>
-            <td>미투표 수</td>
-            <td>행사 가능 수 − 투표 완료 수</td>
-        </tr>
-        <tr>
-            <td>투표율</td>
-            <td>(투표 완료 수 / 투표 행사 가능 수) × 100</td>
-        </tr>
-    </table>
-
-    <blockquote>
-        <p>모수는 <strong>"투표 진행중" 전환 시점의 검표 현황 + 위임 판정 결과</strong>로 확정되며, 이후 변동하지 않는다. 관리자 화면에는 <strong>"전체 티켓 구매자
-                수"</strong>와 <strong>"투표 행사 가능 수"</strong>를 함께 표시한다.</p>
-    </blockquote>
-
-    <h4>관리자 결과 화면 통계 표시</h4>
+    <h3>5-4. 투표 현황</h3>
     <table>
         <tr>
             <th>표시 항목</th>
@@ -816,625 +728,786 @@
         </tr>
         <tr>
             <td>전체 정회원 수</td>
-            <td>참고 수치 (총회 투표권 대상자 전체)</td>
+            <td>총회 대상 정회원 이상 회원 수 (회원 DB 기준). 쿼리 불가 시 <strong>"미제공"</strong> 표시.</td>
         </tr>
         <tr>
-            <td>전체 티켓 구매자</td>
-            <td>참고 수치 (현장 참석 신청자)</td>
+            <td>티켓 구매자 수</td>
+            <td>현장 참석 티켓 구매 회원 수</td>
         </tr>
         <tr>
-            <td>출석 본인</td>
-            <td>검표 완료 + 위임 없음 (또는 위임 취소 후 본인 복귀)</td>
+            <td>출석 본인 수</td>
+            <td>검표 완료 + 위임 X 인원</td>
         </tr>
         <tr>
-            <td>유효 위임 (수임인 지정)</td>
-            <td>수임인이 지정된 위임 건수</td>
+            <td>유효 위임 수</td>
+            <td>수임인 지정 위임 + 의장 귀속 위임 합산</td>
         </tr>
         <tr>
-            <td>유효 위임 (의장 귀속)</td>
-            <td>수임인 공란 → 의장 귀속 건수</td>
+            <td>불참·무위임 수</td>
+            <td>참고용 표시 (모수에서 제외)</td>
         </tr>
         <tr>
-            <td>불참·무위임</td>
-            <td>모수에서 제외됨</td>
+            <td>투표 행사 가능 수 (모수)</td>
+            <td>출석 본인 + 유효 위임 (= 투표율 분모)</td>
         </tr>
         <tr>
-            <td><strong>투표 행사 가능 수</strong></td>
-            <td>출석 본인 + 유효 위임 전체</td>
+            <td>투표 완료 수</td>
+            <td>본인 투표 + 수임인 투표 + 의장 일괄 투표 합산</td>
         </tr>
         <tr>
-            <td>투표 완료</td>
-            <td>실제 투표 제출 수</td>
+            <td>미투표 수</td>
+            <td>투표 행사 가능 수 − 투표 완료 수</td>
         </tr>
         <tr>
-            <td>미투표</td>
-            <td>행사 가능인데 미제출</td>
-        </tr>
-        <tr>
-            <td><strong>투표율</strong></td>
-            <td>(투표 완료 / 투표 행사 가능 수) × 100</td>
+            <td>투표율</td>
+            <td><code>투표 완료 수 / 투표 행사 가능 수 × 100</code></td>
         </tr>
     </table>
+    <blockquote>
+        <p><strong>투표율 산식:</strong> 투표율(%) = (투표 완료 수 / 투표 행사 가능 수) × 100. 모수는 "투표 진행중" 전환 시점의 출석·위임 현황으로 고정한다.</p>
+    </blockquote>
+    <blockquote>
+        <p><strong>정족수 판정:</strong> MVP에서는 정족수(의결 성립 요건) 판정을 포함하지 않는다. 시스템은 투표 결과(득표수·득표율·투표율)만 표시하며, 정족수 충족 여부는 의장이 별도로 판단한다.</p>
+    </blockquote>
+    <blockquote>
+        <p><strong>익명성 원칙:</strong> 안건별로 전체 행사 가능자 수, 투표 완료 수, 미투표 수를 표시한다. <strong>개별 회원이 어떤 보기를 선택했는지는 관리자 화면을 포함한 모든 UI에서 표시하지 않는다.</strong> 투표/미투표 상태만 목록으로 확인 가능하다. 10초 폴링으로 자동 갱신.</p>
+    </blockquote>
 
-
-    <h3>5-5. 출석 관리 (쇼핑몰 검표 DB 직접 조회)</h3>
-    <p>현장에서 QR 리더기로 티켓 QR 코드를 스캔하면, 쇼핑몰 검표 시스템이 주문/티켓 DB의 검표 상태를 업데이트한다. 전자투표 시스템은 <strong>동일 서버 DB를 직접 조회</strong>하므로
-        별도 동기화가 필요 없다.</p>
-
-    <h4>조회 대상 데이터</h4>
+    <h3>5-5. 결과 조회</h3>
     <table>
         <tr>
-            <th style="width:160px;">필드</th>
+            <th>항목</th>
             <th>설명</th>
         </tr>
         <tr>
-            <td>주문번호</td>
-            <td>티켓 식별 키</td>
+            <td>표시 시점</td>
+            <td>안건이 closed 상태로 전환되면 관리자 화면에서 <strong>즉시</strong> 결과를 확인할 수 있다.</td>
         </tr>
         <tr>
-            <td>회원번호</td>
-            <td>회원 DB 참조 키</td>
+            <td>표시 항목</td>
+            <td>안건별로 다음 항목을 표시한다:<br>· 보기별 득표수<br>· 보기별 득표율 (해당 보기 득표수 ÷ 총 투표 수 × 100)<br>· 총 투표 수 (해당 안건에 투표한 총 인원)<br>· 모수 대비 투표율 (총 투표 수 ÷ eligible_count × 100)</td>
         </tr>
         <tr>
-            <td>구매자 이름</td>
-            <td>회원 DB에서 조회</td>
+            <td>정족수 판정</td>
+            <td>MVP에서는 미포함. 숫자만 표시하며, 가결/부결 판정은 의장이 별도 수행.</td>
         </tr>
         <tr>
-            <td>구매자 전화번호</td>
-            <td>회원 DB에서 조회</td>
-        </tr>
-        <tr>
-            <td>검표 상태</td>
-            <td>Y / N</td>
-        </tr>
-        <tr>
-            <td>검표 시각</td>
-            <td>위임 취소 판정의 기준 시각</td>
+            <td>투표자 화면</td>
+            <td><strong>MVP에서는 투표자 화면에 결과를 표시하지 않는다.</strong> 투표자는 자신의 투표 완료 여부와 선택한 보기만 확인 가능.</td>
         </tr>
     </table>
 
-    <h4>관리자 출석 화면</h4>
+    <h3>5-6. 출석 관리</h3>
     <table>
         <tr>
-            <th>표시 항목</th>
+            <th>기능</th>
             <th>설명</th>
         </tr>
         <tr>
-            <td>전체 티켓 수</td>
-            <td>티켓 DB 기준 총 발행 수</td>
+            <td>출석 현황 조회</td>
+            <td>쇼핑몰 DB에서 티켓 구매자 + 검표 시각을 직접 조회하여 표시</td>
         </tr>
         <tr>
-            <td>출석 확인 수</td>
-            <td>검표 Y인 수</td>
+            <td>표시 정보</td>
+            <td>구매자명, 전화번호, 주문번호, 검표 여부(Y/N), 검표 시각</td>
         </tr>
         <tr>
-            <td>미출석 수</td>
-            <td>검표 N인 수</td>
-        </tr>
-        <tr>
-            <td>참석자 목록</td>
-            <td>이름, 전화번호, 회원번호, 주문번호, 검표 시각</td>
-        </tr>
-        <tr>
-            <td>수동 출석 처리</td>
-            <td>예외 상황 대응용 (검표 누락 시 관리자가 직접 출석 처리)</td>
+            <td>위임 여부 표시</td>
+            <td>각 출석자 옆에 위임 상태 표시 (위임 없음 / 위임 있음 → 취소됨 / 위임 있음 → 유지)</td>
         </tr>
     </table>
 
-    <h3>5-6. 위임 관리</h3>
+    <h3>5-7. 위임장 관리</h3>
 
-    <h4>위임 데이터 동기화</h4>
-    <table>
-        <tr>
-            <th style="width:140px;">항목</th>
-            <th>내용</th>
-        </tr>
-        <tr>
-            <td>데이터 소스</td>
-            <td>구글 스프레드시트 (시트명: "위임장") — Google Sheets API v4</td>
-        </tr>
-        <tr>
-            <td>시트 컬럼</td>
-            <td>A: 위임자명 / B: 위임자휴대폰 / C: 위임자회원번호 / D: 수임자명 / E: 수임자휴대폰 / F: 수임자회원번호</td>
-        </tr>
-        <tr>
-            <td>동기화 방식</td>
-            <td>관리자 수동 동기화 버튼 (<code>준비중</code> 상태에서만 활성화)</td>
-        </tr>
-        <tr>
-            <td>매칭 기준</td>
-            <td>위임자: 회원번호(C열)로 회원 DB 매칭<br>수임자: 회원번호(F열)로 회원 DB 매칭</td>
-        </tr>
-        <tr>
-            <td>수임자 공란 처리</td>
-            <td>D·E·F 모두 공란 → 의장(관리자)에게 자동 귀속</td>
-        </tr>
-    </table>
-
-    <h4>수임인 유효성 검증</h4>
+    <h4>5-7-A. 위임 검증 규칙</h4>
+    <p>스프레드시트 동기화 시 아래 검증을 수행한다.</p>
     <table>
         <tr>
             <th>#</th>
             <th>검증 항목</th>
-            <th>통과 조건</th>
+            <th>조건</th>
             <th>실패 시 처리</th>
         </tr>
         <tr>
             <td>1</td>
-            <td>위임자가 회원 DB에 존재하는가</td>
-            <td>회원번호(C열)로 회원 DB 매칭 성공 + <strong>정회원 이상</strong></td>
-            <td><code>매칭 실패</code> 상태 표기, 관리자 수동 확인</td>
+            <td>위임자 자격 검증</td>
+            <td>회원번호(C열)로 회원 DB 매칭 + <strong>총회 당일 기준 정회원 이상</strong></td>
+            <td><code>매칭 실패</code> 또는 <code>위임자 자격 미달</code> 표시, 관리자 수동 확인</td>
         </tr>
-
         <tr>
             <td>2</td>
-            <td>수임자가 회원 DB에 존재하는가</td>
-            <td>회원번호(F열)로 매칭 성공</td>
-            <td><code>매칭 실패</code> 상태 표기, 관리자 수동 확인</td>
+            <td>수임인 공란 → 의장 귀속</td>
+            <td>D·E·F열 모두 공란</td>
+            <td>의장(관리자)에게 자동 귀속 처리</td>
         </tr>
         <tr>
             <td>3</td>
-            <td>수임자 공란 여부</td>
-            <td>D·E·F 모두 공란</td>
-            <td>의장(관리자)에게 <strong>자동 귀속</strong></td>
+            <td>위임인 출석 여부</td>
+            <td>위임에는 출석(검표)이 불필요</td>
+            <td>-</td>
         </tr>
         <tr>
             <td>4</td>
-            <td>수임자 본인의 검표(출석) 여부</td>
-            <td>—</td>
-            <td><strong>검표 불요</strong> (수임인은 위임장만으로 투표 행사권을 가짐)</td>
+            <td>위임인 = 수임인 동일인</td>
+            <td>C열 회원번호 = F열 회원번호</td>
+            <td><code>무효(동일인)</code> 상태 표기</td>
         </tr>
         <tr>
             <td>5</td>
-            <td>위임자와 수임자가 동일인</td>
-            <td>회원번호 기준 다른 사람</td>
-            <td><code>무효</code> 처리, 관리자 알림</td>
+            <td>1인당 수임 건수 제한</td>
+            <td><strong>제한 없음</strong>. 수임 건수에 상한을 두지 않는다.</td>
+            <td>관리자 화면에서 수임인별 건수를 확인할 수 있도록 카운터 표시</td>
         </tr>
         <tr>
             <td>6</td>
-            <td>1인당 수임 한도 초과</td>
-            <td>수임 건수 ≤ 10</td>
-            <td>11건째부터 <code>한도 초과</code> 상태, 관리자 수동 판단</td>
+            <td>동일 위임자 중복 등록</td>
+            <td>동일 위임자 회원번호(C열)가 스프레드시트에 2행 이상 존재</td>
+            <td><strong>마지막 행만 유효</strong> 처리. 관리자 화면에 <code>중복 위임</code> 경고 표시 + 이전 행은 <code>무효(중복)</code> 상태로 표기</td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>수임인 자격 검증</td>
+            <td>회원번호(F열)로 회원 DB 매칭 + <strong>총회 당일 기준 정회원 이상</strong></td>
+            <td><code>수임인 자격 미달</code> 표시, 관리자 수동 확인. 해당 위임건은 유효하지 않은 상태로 보류.</td>
         </tr>
     </table>
 
-    <blockquote>
-        <p>검증 결과는 관리자 위임 관리 화면에 상태 뱃지로 표시: <code>유효</code> <code>매칭 실패</code> <code>의장 귀속</code> <code>무효</code>
-            <code>한도 초과</code>
-        </p>
-    </blockquote>
-
-    <h4>위임 취소 판정 로직</h4>
-    <p>관리자가 총회 상태를 <code>투표 진행중</code>으로 전환하면(더블 컨펌 후), 시스템은 아래 절차를 자동 실행한다.</p>
-    <table>
-        <tr>
-            <th>순서</th>
-            <th>동작</th>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>구글 스프레드시트 <strong>강제 동기화 1회</strong> 실행</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>스프레드시트 <strong>API 통신 차단</strong> (이후 동기화 불가)</td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>위임 목록 순회하며 위임인의 검표 상태 확인 (쇼핑몰 DB 직접 조회)</td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>아래 조건에 따라 판정</td>
-        </tr>
-        <tr>
-            <td>5</td>
-            <td>판정 결과를 관리자 화면에 요약 표시</td>
-        </tr>
-    </table>
-
+    <h4>5-7-B. 위임 취소 판정 (투표 시작 시)</h4>
     <table>
         <tr>
             <th>조건</th>
             <th>처리</th>
         </tr>
         <tr>
-            <td>위임인의 <strong>검표 시각</strong>이 전환 시각 <strong>이전</strong></td>
-            <td>위임 자동 취소 → 행사권 본인 복귀</td>
+            <td>"투표 진행중" 전환 시점에 위임인의 검표 시각(check_time)이 존재하고, 검표 시각이 전환 시각보다 이전인 경우</td>
+            <td>위임 자동 취소 (cancelled_reason: 'delegator_attended') → 위임인 본인에게 투표 행사권 귀속</td>
         </tr>
         <tr>
-            <td>위임인의 검표 시각이 전환 시각 <strong>이후</strong> 또는 미검표</td>
-            <td>위임 유지 → 수임인(또는 의장)이 행사</td>
+            <td>"투표 진행중" 전환 이후에 위임인이 검표</td>
+            <td>MVP에서는 위임 유지 → 수임인이 계속 투표. 위임인이 현장에 도착했더라도 전환 이후 검표이면 위임 취소하지 않음.</td>
+        </tr>
+    </table>
+    <blockquote>
+        <p><strong>판정 기준:</strong> 동기화 반영 시각이 아니라 쇼핑몰 DB의 원천 검표 시각(check_time)을 기준으로 판단한다. "투표 진행중" 전환 버튼 클릭 시 즉시 동기화 1회 강제 실행 후, check_time &lt; 전환 시각인 위임건을 자동 취소한다.</p>
+        <p><strong>판정 시점:</strong> "투표 진행중" 전환 시 강제 동기화 직후, 검표 시각과 전환 시각을 비교하여 일괄 판정한다.</p>
+    </blockquote>
+
+    <h4>5-7-C. 위임 데이터 반영 컷오프</h4>
+    <table>
+        <tr>
+            <th>총회 상태</th>
+            <th>스프레드시트 동기화</th>
+            <th>위임 데이터 변경</th>
+        </tr>
+        <tr>
+            <td>준비중</td>
+            <td>가능 (수동 반복)</td>
+            <td>반영됨</td>
+        </tr>
+        <tr>
+            <td>투표 진행중 (전환 시)</td>
+            <td>강제 동기화 1회 자동 실행</td>
+            <td>이 시점이 최종 반영</td>
+        </tr>
+        <tr>
+            <td>투표 진행중 (전환 후)</td>
+            <td>차단 (API 통신 끊김, 버튼 비활성화)</td>
+            <td>변경 불가</td>
+        </tr>
+        <tr>
+            <td>종료</td>
+            <td>차단</td>
+            <td>변경 불가</td>
         </tr>
     </table>
 
+    <h4>5-7-D. 스프레드시트 동기화 실패 처리</h4>
     <blockquote>
-        <p>"투표 진행중" 전환 시 실행되는 강제 동기화가 <strong>위임 데이터의 최종 반영 시점</strong>이다. 전환 이후에는 스프레드시트가 변경되더라도 시스템에 반영되지 않으며, API 통신
-            자체가 차단된다. 이미 투표가 행사된 위임 관계는 어떤 경우에도 소급 변경하지 않는다. MVP에서는 총회 상태 롤백을 지원하지 않는다.</p>
+        <p><strong>상태 유지 원칙:</strong> 전환 시도 중 동기화가 실패하면 총회 상태는 <strong>"준비중"을 유지</strong>한다. 따라서 CSV 업로드를 포함한 준비중 단계의 모든 기능을 계속 사용할 수 있다.</p>
+        <p><strong>기본 동작:</strong> "투표 진행중" 전환 시 강제 동기화가 실패하면, <strong>자동으로 최대 3회까지 재시도</strong>한다. 3회 모두 실패할 경우 전환을 차단하고 <code>"위임장 동기화에 3회 실패했습니다. CSV 업로드를 이용해주세요."</code> 알림과 함께 CSV 업로드 버튼을 표시한다.</p>
+        <p><strong>비상 전환:</strong> CSV 업로드도 불가능한 상황일 경우 관리자에게 추가 선택지를 제공한다.<br>
+            · 마지막 성공 동기화 데이터가 있는 경우:<br>
+            <code>"동기화에 계속 실패하고 있습니다. 마지막으로 성공한 위임 데이터(YYYY-MM-DD HH:MM 기준)로 투표를 시작하시겠습니까?"</code><br>
+            · 한 번도 동기화에 성공한 적이 없는 경우:<br>
+            <code>"위임 데이터 없이 투표를 시작하시겠습니까? 현장 출석자만 투표 가능합니다."</code>
+        </p>
     </blockquote>
 
-
-    <h4>관리자 위임 화면</h4>
+    <h4>5-7-E. CSV 업로드 (API 장애 시 백업)</h4>
     <table>
         <tr>
-            <th>표시 항목</th>
+            <th>항목</th>
             <th>설명</th>
         </tr>
         <tr>
-            <td>유효 위임 수 (수임인 지정)</td>
-            <td>수임인이 지정된 유효 건수</td>
+            <td>용도</td>
+            <td>구글 스프레드시트 API 연동 실패 시 백업 경로</td>
         </tr>
         <tr>
-            <td>유효 위임 수 (의장 귀속)</td>
-            <td>수임인 공란 → 의장 귀속 건수</td>
+            <td>절차</td>
+            <td>관리자가 구글 스프레드시트에서 CSV 다운로드 → 위임장 관리 화면에서 CSV 파일 업로드</td>
         </tr>
         <tr>
-            <td>취소 위임 수</td>
-            <td>출석으로 인해 취소된 건수</td>
+            <td>파일 형식</td>
+            <td>UTF-8 CSV. 컬럼 순서는 스프레드시트와 동일 (A~F: 위임자명, 위임자휴대폰, 위임자회원번호, 수임자명, 수임자휴대폰, 수임자회원번호)</td>
         </tr>
         <tr>
-            <td>매칭 실패 수</td>
-            <td>수동 확인 필요 건수</td>
+            <td>검증</td>
+            <td>API 동기화와 동일한 7개 검증 규칙 적용</td>
         </tr>
         <tr>
-            <td>위임 목록</td>
-            <td>위임자 이름·회원번호, 수임자 이름·회원번호(또는 "의장 귀속"), 상태 뱃지</td>
+            <td>처리</td>
+            <td>기존 위임 데이터를 전체 교체 (UPSERT). 업로드 시각이 마지막 동기화 시각으로 기록됨.</td>
         </tr>
         <tr>
-            <td>동기화 버튼</td>
-            <td><code>준비중</code> 상태에서만 활성화</td>
-        </tr>
-        <tr>
-            <td>최종 동기화 시각</td>
-            <td>마지막 동기화 일시</td>
+            <td>사용 가능 상태</td>
+            <td>"준비중"에서만 사용 가능. "투표 진행중" 전환 후에는 CSV 업로드도 차단.</td>
         </tr>
     </table>
+    <blockquote>
+        <p><strong>CSV 업로드 오류 처리:</strong><br>
+            · 파일 인코딩이 UTF-8이 아닌 경우: <strong>"업로드 실패: 파일 인코딩을 확인해주세요. UTF-8 형식만 지원합니다."</strong><br>
+            · 컬럼 수가 6개가 아닌 경우: <strong>"업로드 실패: 파일 형식을 확인해주세요. UTF-8 CSV, 6개 컬럼 필수."</strong><br>
+            · 빈 파일(데이터 행 0건): <strong>"업로드 실패: 데이터가 없습니다. 파일 내용을 확인해주세요."</strong><br>
+            · 업로드 성공 후 검증 실패 행이 존재하면, 정상 행은 반영하고 실패 행은 목록으로 표시한다.</p>
+    </blockquote>
 
-
-    <h3>5-7. 의장 일괄 투표</h3>
-    <p>수임인이 지정되지 않아 의장(관리자)에게 귀속된 위임 건에 대해, 관리자 페이지에서 안건별로 일괄 투표를 행사한다.</p>
-
+    <h3>5-8. 의장 귀속 위임 일괄 투표</h3>
+    <blockquote>
+        <p><strong>실행 조건:</strong> 총회 상태가 "투표 진행중"이고, 해당 안건이 <strong>"open(열림)"</strong> 상태일 때만 의장 일괄 투표가 가능하다. 안건이 닫혀 있거나 준비중이면 일괄 투표 버튼은 비활성화된다.</p>
+    </blockquote>
+    <blockquote>
+        <p><strong>의장 일괄 투표 수정:</strong> 의장 일괄 투표도 동일하게 안건이 open 상태인 동안 수정 가능하다. 안건이 closed 상태로 전환되면 수정 불가. 재오픈 시 미투표 귀속건만 추가 투표 가능하며, 이미 투표된 귀속건은 수정할 수 있다.</p>
+    </blockquote>
     <table>
         <tr>
-            <th style="width:140px;">항목</th>
-            <th>내용</th>
+            <th>항목</th>
+            <th>설명</th>
         </tr>
         <tr>
             <td>대상</td>
-            <td>수임자 공란 → 의장 귀속된 위임 건 전체</td>
+            <td>수임인이 지정되지 않아 의장(관리자)에게 귀속된 위임건</td>
         </tr>
         <tr>
             <td>투표 방식</td>
-            <td>안건별 보기 선택 → <strong>"일괄 투표" 버튼</strong> → 귀속된 전체 건에 동일 보기 적용</td>
+            <td>관리자 화면에서 안건별로 보기를 선택 → "일괄 투표" 버튼 클릭</td>
         </tr>
         <tr>
-            <td>투표 기록</td>
-            <td>DB에는 위임인 각각의 투표로 개별 INSERT. <code>is_delegated = Y</code>, <code>delegated_to_chair = Y</code></td>
+            <td>일괄 처리</td>
+            <td>선택한 보기가 의장 귀속 전체 위임건에 동일하게 적용됨 (건별 개별 선택은 v2)</td>
         </tr>
         <tr>
-            <td>참여자 명단 표시</td>
-            <td>위임인 이름으로 "투표함 / 위임 (의장 귀속)" 표시</td>
+            <td>DB 기록</td>
+            <td>각 위임인의 회원번호(voter_member_id)별로 개별 Vote 레코드 생성. voted_by = 관리자 계정 ID.</td>
         </tr>
         <tr>
-            <td>수정</td>
-            <td>안건이 <code>열림</code> 상태인 동안 재선택 후 일괄 재적용 가능</td>
-        </tr>
-        <tr>
-            <td>건별 개별 선택</td>
-            <td>MVP에서 제외 — 전체 동일 보기 일괄 적용만 가능</td>
+            <td>참석자 목록 표시</td>
+            <td>해당 위임인 이름 옆에 <code>투표함 (위임 — 의장 귀속)</code> 표시</td>
         </tr>
     </table>
 
-    <blockquote>
-        <p>의장 일괄 투표로 행사된 건은 해당 위임인 각각의 투표로 기록된다. 결과 집계 시 다른 투표와 동일하게 합산된다.</p>
-    </blockquote>
-
-    <!-- ===== 섹션 6 ===== -->
+    <!-- ===== 6. 투표자 기능 상세 ===== -->
     <h2 id="s6">6. 투표자 기능 상세</h2>
 
     <h3>6-1. 본인 인증</h3>
     <table>
         <tr>
-            <th style="width:140px;">항목</th>
-            <th>내용</th>
-        </tr>
-        <tr>
-            <td>입력 정보</td>
-            <td>이름 + 전화번호 + 주문번호 뒤 5자리</td>
-        </tr>
-        <tr>
-            <td>검증 대상</td>
-            <td>쇼핑몰 회원 DB + 주문/티켓 DB (동일 서버 직접 조회)</td>
-        </tr>
-        <tr>
-            <td>출석 확인</td>
-            <td>검표 상태가 Y인 경우에만 본인 투표 가능. 미검표 시 "현장 출석 확인 후 투표 가능합니다" 안내.</td>
-        </tr>
-        <tr>
-            <td>위임 수임인</td>
-            <td>수임인도 동일하게 본인 인증 진행. 인증 완료 후 본인 투표 + 위임받은 투표를 모두 행사 가능.</td>
-        </tr>
-    </table>
-
-    <h3>6-2. 안건 목록</h3>
-    <table>
-        <tr>
-            <th style="width:140px;">항목</th>
-            <th>내용</th>
-        </tr>
-        <tr>
-            <td>표시 정보</td>
-            <td>안건 번호, 안건명, 상태(열림/닫힘), 전체 안건 수</td>
-        </tr>
-        <tr>
-            <td>열림 안건</td>
-            <td>투표 가능, 수정 가능</td>
-        </tr>
-        <tr>
-            <td>닫힘 안건</td>
-            <td>투표 불가, 수정 불가, 수정 버튼 미노출</td>
-        </tr>
-        <tr>
-            <td>별도 결과 화면</td>
-            <td>없음 — 닫힌 안건은 투표/수정만 비활성화됨</td>
-        </tr>
-    </table>
-
-    <h3>6-3. 투표 화면</h3>
-    <table>
-        <tr>
-            <th style="width:140px;">항목</th>
-            <th>내용</th>
-        </tr>
-        <tr>
-            <td>투표 방식</td>
-            <td>보기 중 1개 선택 (단일선택)</td>
-        </tr>
-        <tr>
-            <td>투표 수정</td>
-            <td>안건이 열림 상태인 동안 자유롭게 수정 가능</td>
-        </tr>
-        <tr>
-            <td>투표 완료 표시</td>
-            <td>제출 완료된 안건은 체크 표시</td>
-        </tr>
-    </table>
-
-    <h3>6-4. 위임 투표 (수임인 화면)</h3>
-    <p>수임인이 로그인하면 본인 투표와 위임받은 투표를 모두 행사할 수 있다. UI는 <strong>드롭다운(select box)</strong> 방식으로 설계하여 최대 10건의 위임을 수용한다.</p>
-    <table>
-        <tr>
-            <th style="width:140px;">항목</th>
-            <th>내용</th>
-        </tr>
-        <tr>
-            <td>드롭다운 구성</td>
-            <td>첫 항목: "본인 투표 (홍길동)" + 위임받은 표 목록 (위임인 이름 표시)</td>
-        </tr>
-        <tr>
-            <td>진행 카운터</td>
-            <td>각 항목 옆에 <code>(완료/전체)</code> 표시, 전부 완료 시 ✅</td>
-        </tr>
-        <tr>
-            <td>전환</td>
-            <td>드롭다운에서 선택하면 해당 사람의 안건 목록·투표 현황으로 전환</td>
-        </tr>
-        <tr>
-            <td>익명 보장</td>
-            <td>수임인이 누구의 표로 어떤 선택을 했는지는 관리자에게도 노출하지 않음</td>
-        </tr>
-    </table>
-
-    <!-- ===== 섹션 7 ===== -->
-    <h2 id="s7">7. 데이터 모델</h2>
-
-    <table>
-        <tr>
-            <th>테이블</th>
-            <th>주요 컬럼</th>
-            <th>비고</th>
-        </tr>
-        <tr>
-            <td>Assembly (총회)</td>
-            <td>id, name, date, description, status (ready/voting/closed), voting_started_at, created_at</td>
-            <td>의장 = 관리자이므로 의장 정보 컬럼 없음</td>
-        </tr>
-        <tr>
-            <td>Agenda (안건)</td>
-            <td>id, assembly_id, number, title, description, status (open/closed), created_at</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>AgendaOption (보기)</td>
-            <td>id, agenda_id, label, sort_order</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Delegation (위임)</td>
-            <td>id, assembly_id, delegator_member_id, delegatee_member_id (nullable), assigned_to_chair (Y/N), status
-                (active/cancelled/invalid/limit_exceeded/match_failed), created_at</td>
-            <td>delegatee_member_id가 null이면 의장 귀속</td>
-        </tr>
-        <tr>
-            <td>Vote (투표)</td>
-            <td>id, agenda_id, member_id (투표권 소유자), option_id, is_delegated (Y/N), delegated_by_member_id (nullable),
-                delegated_to_chair (Y/N), voted_at, updated_at</td>
-            <td>의장 일괄 투표 시 delegated_to_chair = Y</td>
-        </tr>
-        <tr>
-            <td>Admin (관리자)</td>
-            <td>id, login_id, password_hash</td>
-            <td>별도 계정, 회원번호 없음</td>
-        </tr>
-    </table>
-
-    <blockquote>
-        <p>⚠️ <strong>쇼핑몰 기존 테이블 참조 (직접 조회, 별도 생성 불필요):</strong><br>
-            회원 테이블 (회원번호, 이름, 전화번호 등) / 주문·티켓 테이블 (주문번호, 회원번호, 검표상태, 검표시각 등)</p>
-    </blockquote>
-
-    <blockquote>
-        <p>⚠️ <strong>익명 투표 원칙:</strong> Vote 테이블의 option_id(선택한 보기)는 관리자 화면에 노출하지 않는다.</p>
-    </blockquote>
-
-    <h3>안건별 참여자 명단</h3>
-    <p>참여자 명단은 <strong>티켓구매자(투표권 원소유자) 기준</strong>으로 표시하며, 위임된 경우 수임인 정보 또는 "의장 귀속"이 추가 노출된다.</p>
-    <table>
-        <tr>
-            <th>표시 항목</th>
+            <th>항목</th>
             <th>설명</th>
         </tr>
         <tr>
-            <td>티켓구매자 이름</td>
-            <td>투표권의 원래 소유자</td>
+            <td>인증 방식</td>
+            <td>이름 + 전화번호 + 주문번호 뒤 5자리 입력 (별도 인증, 로그인 세션 미사용)</td>
         </tr>
         <tr>
-            <td>티켓구매자 전화번호</td>
-            <td>투표권의 원래 소유자</td>
+            <td>검증</td>
+            <td>쇼핑몰 DB의 티켓 구매 테이블에서 3개 값 일치 여부 확인</td>
         </tr>
         <tr>
-            <td>투표 시각</td>
-            <td>최종 제출(또는 수정) 시각</td>
+            <td>실패 시</td>
+            <td>"일치하는 정보가 없습니다. 입력 내용을 확인해주세요." 메시지 표시</td>
         </tr>
         <tr>
-            <td>투표 여부</td>
-            <td>투표함 / 미투표</td>
+            <td>인증 후 처리</td>
+            <td>인증 성공 시 해당 주문의 <strong>회원번호를 세션에 저장</strong>한다. 이후 위임 매칭·투표 기록에 회원번호를 사용한다.<br>세션의 회원번호로 Delegation 테이블(delegatee_member_id)을 조회하여 위임받은 건이 있으면 수임인 드롭다운을 자동 구성한다.</td>
         </tr>
         <tr>
-            <td>위임 여부</td>
-            <td>본인: "-" / 위임(수임인 지정): "위임" / 의장 귀속: "위임 (의장 귀속)"</td>
+            <td>세션 유지</td>
+            <td>인증 성공 시 회원번호를 세션에 저장한다. <strong>세션은 해당 총회가 "종료" 상태로 전환될 때까지 유지</strong>된다.<br>총회 종료 시 모든 투표자 세션이 만료되며, 이후 투표 페이지 접근 시 "총회가 종료되었습니다." 안내를 표시한다.<br>브라우저를 닫았다가 재접속한 경우, 세션이 유효하면 재인증 없이 기존 투표 상태가 복원된다.</td>
         </tr>
         <tr>
-            <td>수임인 이름</td>
-            <td>수임인 지정 시 표시 / 의장 귀속 시 "의장" / 본인: "-"</td>
-        </tr>
-        <tr>
-            <td>수임인 전화번호</td>
-            <td>수임인 지정 시 표시 / 의장 귀속 시 "-" / 본인: "-"</td>
+            <td>재인증 시 복원</td>
+            <td>브라우저 새로고침·세션 만료 후 재인증 시, DB를 조회하여 기투표 안건은 "투표 완료" 상태로 복원한다.</td>
         </tr>
     </table>
-
     <blockquote>
-        <p>⚠️ <strong>익명 투표 원칙:</strong> 참여자 명단에서는 "누가 투표했는지"만 확인 가능. "어떤 보기를 선택했는지"는 관리자에게도 노출하지 않는다.</p>
+        <p><strong>향후 개선 고려:</strong> 쇼핑몰 서버 내 구축 환경이므로, 쇼핑몰 로그인 세션을 활용하면 별도 입력 없이 회원번호로 자동 식별이 가능하다. 100~130명이 현장에서 모바일로 동시 접속하는 상황에서 입력 단계를 줄이면 UX 및 운영 효율이 향상될 수 있다. MVP에서는 별도 인증 방식을 유지하되, 이후 로그인 세션 기반 인증으로 전환을 검토한다.</p>
     </blockquote>
 
-    <!-- ===== 섹션 8 ===== -->
-    <h2 id="s8">8. 비기능 요구사항</h2>
-
+    <h3>6-2. 투표 화면</h3>
     <table>
         <tr>
             <th>항목</th>
-            <th>내용</th>
+            <th>설명</th>
         </tr>
         <tr>
-            <td>반응형</td>
-            <td>투표자: 모바일 우선 반응형 / 관리자: PC 우선 반응형 (모바일도 대응)</td>
+            <td>안건 목록</td>
+            <td>모든 안건을 상태와 함께 표시한다.<br>
+                · <strong>준비중(draft):</strong> "예정" 뱃지 표시. 안건명·보기 확인 가능. 투표 비활성화.<br>
+                · <strong>열림(open):</strong> 보기(선택지) 라디오 버튼 활성화. 투표 가능.<br>
+                · <strong>닫힘(closed):</strong> "마감" 뱃지 표시. 라디오 버튼·투표 버튼 비활성화.</td>
         </tr>
         <tr>
-            <td>브라우저</td>
-            <td>Chrome, Safari 최신 버전 지원</td>
+            <td>draft 안건 안내</td>
+            <td>투표자 화면에서 draft(준비중) 안건은 "예정" 뱃지와 함께 표시되며, 하단에 <strong>"안건 준비 중 — 보기(선택지)가 변경될 수 있습니다."</strong> 안내 문구를 표시한다.</td>
         </tr>
         <tr>
-            <td>동시접속</td>
-            <td>100~130명 동시 투표 처리 가능 (부하 테스트 실시, 폴링 간격 조정으로 대응)</td>
+            <td>투표 제출</td>
+            <td>선택 후 "투표" 버튼 클릭 → 확인 팝업: <strong>"투표를 제출합니다. 안건이 열려 있는 동안 수정할 수 있습니다."</strong> → 제출.<br>
+                제출 후 해당 안건이 open 상태이면 "수정" 버튼이 표시되며, 선택을 변경하고 재제출할 수 있다.<br>
+                안건이 closed 상태로 전환되면 수정 불가.</td>
         </tr>
         <tr>
-            <td>실시간 반영</td>
-            <td>폴링(10초 간격) — MVP 기준 수용 가능</td>
+            <td>투표 수정</td>
+            <td>안건이 <strong>"열림" 상태인 동안 투표 수정이 자유롭게 가능</strong>하다. 제출 완료 후 "수정" 버튼이 표시되며, 클릭 시 선택을 변경하고 재제출할 수 있다. 안건이 닫히면 수정 불가.</td>
         </tr>
         <tr>
-            <td>보안</td>
-            <td>투표 데이터 암호화 저장, 관리자도 개별 선택지 조회 불가 (익명 투표 원칙)</td>
+            <td>투표 완료 표시</td>
+            <td>투표한 안건은 "투표 완료" 뱃지 + 선택한 보기 표시 + "수정" 버튼 (안건 열림 시에만 활성화)</td>
         </tr>
         <tr>
-            <td>세션</td>
-            <td>투표자: 인증 후 세션 유지 / 관리자: 로그인 후 세션 유지</td>
+            <td>투표 제출 실패</td>
+            <td>네트워크 오류·DB 타임아웃 등으로 제출 실패 시 <code>"투표 저장에 실패했습니다. 다시 시도해주세요."</code> 알림 표시. UNIQUE 제약 조건으로 중복 제출은 자동 방지.</td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <th>안건 상태</th>
+            <th>관리자 화면</th>
+            <th>투표자 화면</th>
         </tr>
         <tr>
-            <td>서버</td>
-            <td>쇼핑몰 동일 서버, PHP 백엔드, DB 직접 접근</td>
+            <td>draft (준비중)</td>
+            <td>표시 + 수정·삭제 가능</td>
+            <td>표시 + "예정" 뱃지 + 투표 비활성화 + "보기 변경 가능" 안내</td>
+        </tr>
+        <tr>
+            <td>open (열림)</td>
+            <td>표시 + 닫기 가능</td>
+            <td>표시 + 투표 가능 + 수정 가능</td>
+        </tr>
+        <tr>
+            <td>closed (닫힘)</td>
+            <td>표시 + 재오픈 가능 + 결과 즉시 표시</td>
+            <td>표시 + "마감" 뱃지 + 투표·수정 비활성화 + 결과 미표시</td>
+        </tr>
+    </table>
+    <blockquote>
+        <p><strong>브라우저 새로고침·이탈 안내:</strong> 투표를 제출하기 전에 브라우저를 새로고침하거나 페이지를 이탈하면, 선택 중이던 내용은 보존되지 않는다. 이미 제출 완료된 투표는 DB에서 조회하여 자동 복원된다. 투표 화면 상단에 <strong>"투표는 제출 후에만 저장됩니다. 새로고침 시 미제출 선택은 초기화됩니다."</strong> 안내 문구를 상시 표시한다.</p>
+    </blockquote>
+
+    <h4>6-2-A. 수임인 투표 화면 구조</h4>
+    <p>수임인이 위임을 1건 이상 받은 경우, 투표 화면 상단에 <strong>드롭다운 선택기</strong>가 표시된다.</p>
+    <table>
+        <tr>
+            <th>항목</th>
+            <th>설명</th>
+        </tr>
+        <tr>
+            <td>레이아웃</td>
+            <td>전체 진행 요약 + 드롭다운 선택기 영역은 <strong>화면 상단 고정(sticky)</strong> 처리. 안건 목록을 스크롤해도 항상 보이도록 한다.</td>
+        </tr>
+        <tr>
+            <td>전체 진행 요약</td>
+            <td>드롭다운 상단에 전체 진행 현황을 요약 표시.<br>예: <code>전체 진행: 8/15 완료 (3명 중 1명 미완료)</code></td>
+        </tr>
+        <tr>
+            <td>드롭다운 구성</td>
+            <td>첫 번째 항목: <code>내 투표 (홍길동) — 3/5 완료</code> — 본인 명의<br>이후 항목: <code>위임 투표 — 김위임 (12345) — 0/5 미완료</code> 형식으로 위임인별 표시<br><strong>미완료 명의가 상단</strong>으로 자동 정렬, 완료 명의는 하단으로 이동</td>
+        </tr>
+        <tr>
+            <td>동작 방식</td>
+            <td>드롭다운에서 선택 → 해당 명의의 안건 목록·투표 상태가 화면에 표시됨. 각 명의별로 독립 투표.</td>
+        </tr>
+        <tr>
+            <td>투표 완료 표시</td>
+            <td>미완료: <code>위임 투표 — 김위임 (12345) — 2/5 미완료</code><br>완료: <code>위임 투표 — 박대리 (67890) — 5/5 완료 ✓</code></td>
+        </tr>
+        <tr>
+            <td>미완료 이탈 경고</td>
+            <td>투표자가 페이지를 이탈하려 할 때 미완료 명의가 있으면<br><code>"위임 투표 — 김위임 외 N건이 미완료입니다. 페이지를 나가시겠습니까?"</code> 알림 표시</td>
+        </tr>
+        <tr>
+            <td>제한 사항</td>
+            <td>의장 귀속 위임건은 수임인 드롭다운에 표시되지 않음 (관리자 화면에서만 일괄 처리)</td>
         </tr>
     </table>
 
-    <!-- ===== 섹션 9 ===== -->
-    <h2 id="s9">9. 화면 목록</h2>
+    <!-- ===== 7. 데이터 모델 ===== -->
+    <h2 id="s7">7. 데이터 모델</h2>
+    <p>쇼핑몰 DB 내에 아래 테이블을 추가한다. 기존 쇼핑몰 테이블(회원, 주문/티켓)은 참조만 한다.</p>
 
-    <h3>관리자 화면</h3>
+    <h3>7-1. Assembly (총회)</h3>
     <table>
         <tr>
-            <th>ID</th>
+            <th>컬럼</th>
+            <th>타입</th>
+            <th>설명</th>
+        </tr>
+        <tr>
+            <td>id</td>
+            <td>INT, PK</td>
+            <td>총회 고유 ID</td>
+        </tr>
+        <tr>
+            <td>title</td>
+            <td>VARCHAR</td>
+            <td>총회명</td>
+        </tr>
+        <tr>
+            <td>scheduled_at</td>
+            <td>DATETIME</td>
+            <td>총회 예정 일시</td>
+        </tr>
+        <tr>
+            <td>status</td>
+            <td>ENUM</td>
+            <td>'preparing' / 'voting' / 'closed'</td>
+        </tr>
+        <tr>
+            <td>voting_started_at</td>
+            <td>DATETIME</td>
+            <td>"투표 진행중" 전환 시각</td>
+        </tr>
+        <tr>
+            <td>closed_at</td>
+            <td>DATETIME</td>
+            <td>종료 시각</td>
+        </tr>
+        <tr>
+            <td>eligible_count</td>
+            <td>INT</td>
+            <td>투표 행사 가능 수 (전환 시 확정)</td>
+        </tr>
+        <tr>
+            <td>last_sync_at</td>
+            <td>DATETIME, NULL</td>
+            <td>위임장 마지막 성공 동기화 시각</td>
+        </tr>
+    </table>
+
+    <h3>7-2. Agenda (안건)</h3>
+    <table>
+        <tr>
+            <th>컬럼</th>
+            <th>타입</th>
+            <th>설명</th>
+        </tr>
+        <tr>
+            <td>id</td>
+            <td>INT, PK</td>
+            <td>안건 고유 ID</td>
+        </tr>
+        <tr>
+            <td>assembly_id</td>
+            <td>INT, FK</td>
+            <td>총회 ID</td>
+        </tr>
+        <tr>
+            <td>title</td>
+            <td>VARCHAR</td>
+            <td>안건명</td>
+        </tr>
+        <tr>
+            <td>sort_order</td>
+            <td>INT</td>
+            <td>표시 순서</td>
+        </tr>
+        <tr>
+            <td>status</td>
+            <td>ENUM</td>
+            <td>'draft' / 'open' / 'closed'</td>
+        </tr>
+    </table>
+
+    <h3>7-3. AgendaOption (안건 보기)</h3>
+    <table>
+        <tr>
+            <th>컬럼</th>
+            <th>타입</th>
+            <th>설명</th>
+        </tr>
+        <tr>
+            <td>id</td>
+            <td>INT, PK</td>
+            <td>보기 고유 ID</td>
+        </tr>
+        <tr>
+            <td>agenda_id</td>
+            <td>INT, FK</td>
+            <td>안건 ID</td>
+        </tr>
+        <tr>
+            <td>label</td>
+            <td>VARCHAR</td>
+            <td>보기 텍스트 (예: 찬성, 반대, 기권)</td>
+        </tr>
+        <tr>
+            <td>sort_order</td>
+            <td>INT</td>
+            <td>표시 순서</td>
+        </tr>
+    </table>
+
+    <h3>7-4. Delegation (위임)</h3>
+    <table>
+        <tr>
+            <th>컬럼</th>
+            <th>타입</th>
+            <th>설명</th>
+        </tr>
+        <tr>
+            <td>id</td>
+            <td>INT, PK</td>
+            <td>위임 고유 ID</td>
+        </tr>
+        <tr>
+            <td>assembly_id</td>
+            <td>INT, FK</td>
+            <td>총회 ID</td>
+        </tr>
+        <tr>
+            <td>delegator_member_id</td>
+            <td>VARCHAR</td>
+            <td>위임인 회원번호 (회원 DB 참조)</td>
+        </tr>
+        <tr>
+            <td>delegator_name</td>
+            <td>VARCHAR</td>
+            <td>위임인 이름</td>
+        </tr>
+        <tr>
+            <td>delegator_phone</td>
+            <td>VARCHAR</td>
+            <td>위임인 전화번호</td>
+        </tr>
+        <tr>
+            <td>delegatee_member_id</td>
+            <td>VARCHAR, NULL</td>
+            <td>수임인 회원번호 (NULL이면 의장 귀속)</td>
+        </tr>
+        <tr>
+            <td>delegatee_name</td>
+            <td>VARCHAR, NULL</td>
+            <td>수임인 이름</td>
+        </tr>
+        <tr>
+            <td>delegatee_phone</td>
+            <td>VARCHAR, NULL</td>
+            <td>수임인 전화번호</td>
+        </tr>
+        <tr>
+            <td>status</td>
+            <td>ENUM</td>
+            <td>'active' / 'cancelled' / 'invalid_match' / 'invalid_same' / 'invalid_duplicate' / 'invalid_grade'</td>
+        </tr>
+        <tr>
+            <td>cancelled_reason</td>
+            <td>VARCHAR, NULL</td>
+            <td>취소 사유 (예: 'delegator_attended')</td>
+        </tr>
+        <tr>
+            <td>sheet_row</td>
+            <td>INT</td>
+            <td>스프레드시트 원본 행 번호 (추적용)</td>
+        </tr>
+        <tr>
+            <td>synced_at</td>
+            <td>DATETIME</td>
+            <td>마지막 동기화 시각</td>
+        </tr>
+    </table>
+    <blockquote>
+        <p><strong>인덱스 권장:</strong> <code>(assembly_id, delegatee_member_id)</code> — 수임인 투표 화면에서 위임 목록 조회 성능 확보. <code>(assembly_id, delegator_member_id)</code> — 위임 취소 판정 및 중복 검증용.</p>
+    </blockquote>
+
+    <h3>7-5. Vote (투표)</h3>
+    <table>
+        <tr>
+            <th>컬럼</th>
+            <th>타입</th>
+            <th>설명</th>
+        </tr>
+        <tr>
+            <td>id</td>
+            <td>INT, PK</td>
+            <td>투표 고유 ID</td>
+        </tr>
+        <tr>
+            <td>agenda_id</td>
+            <td>INT, FK</td>
+            <td>안건 ID</td>
+        </tr>
+        <tr>
+            <td>option_id</td>
+            <td>INT, FK</td>
+            <td>선택한 보기 ID</td>
+        </tr>
+        <tr>
+            <td>voter_member_id</td>
+            <td>VARCHAR</td>
+            <td>투표권 소유자 회원번호 (위임인 또는 본인)</td>
+        </tr>
+        <tr>
+            <td>voted_by</td>
+            <td>VARCHAR</td>
+            <td>실제 투표 행위자 식별자<br>· 본인 투표: 본인 회원번호<br>· 수임인 투표: 수임인 회원번호<br>· 의장(관리자) 일괄 투표: 관리자 계정 ID</td>
+        </tr>
+        <tr>
+            <td>voted_at</td>
+            <td>DATETIME</td>
+            <td>투표 시각</td>
+        </tr>
+    </table>
+    <blockquote>
+        <p><strong>투표 저장 방식:</strong> (agenda_id, voter_member_id)에 UNIQUE 제약 조건을 설정한다. 최초 투표 시 INSERT를 수행한다. UNIQUE 제약으로 INSERT가 실패하면, 안건이 open 상태인 경우에 한해 해당 레코드의 option_id와 voted_at을 UPDATE한다. 안건이 closed 상태이면 INSERT·UPDATE 모두 차단하고 "투표 마감된 안건입니다." 메시지를 표시한다. 두 기기에서 동시 제출 시, 먼저 도착한 요청이 INSERT 성공하고 나중 요청은 UPDATE로 처리되어 마지막 선택이 최종 반영된다.</p>
+    </blockquote>
+
+    <h3>7-6. Admin (관리자)</h3>
+    <table>
+        <tr>
+            <th>컬럼</th>
+            <th>타입</th>
+            <th>설명</th>
+        </tr>
+        <tr>
+            <td>id</td>
+            <td>INT, PK</td>
+            <td>관리자 고유 ID</td>
+        </tr>
+        <tr>
+            <td>login_id</td>
+            <td>VARCHAR</td>
+            <td>관리자 로그인 ID (= 의장)</td>
+        </tr>
+        <tr>
+            <td>password_hash</td>
+            <td>VARCHAR</td>
+            <td>비밀번호 해시</td>
+        </tr>
+    </table>
+
+    <!-- ===== 8. 비기능 요구사항 ===== -->
+    <h2 id="s8">8. 비기능 요구사항</h2>
+    <table>
+        <tr>
+            <th>항목</th>
+            <th>요구사항</th>
+        </tr>
+        <tr>
+            <td>반응형</td>
+            <td>투표자 화면은 모바일 우선 반응형 / 관리자 화면은 PC 우선 반응형</td>
+        </tr>
+        <tr>
+            <td>브라우저</td>
+            <td>Chrome, Safari, Samsung Internet 최신 버전 지원</td>
+        </tr>
+        <tr>
+            <td>동시접속</td>
+            <td>100~130명 동시 투표 처리 가능</td>
+        </tr>
+        <tr>
+            <td>폴링</td>
+            <td>관리자 현황 화면 10초 간격 자동 갱신</td>
+        </tr>
+        <tr>
+            <td>보안</td>
+            <td>HTTPS 필수. 관리자 세션 토큰 기반 인증. 서비스 계정 키 서버 환경변수 보관.</td>
+        </tr>
+        <tr>
+            <td>세션</td>
+            <td>투표자: 총회 종료 시까지 세션 유지. 관리자: 별도 로그인.</td>
+        </tr>
+    </table>
+
+    <h4>8-A. 투표 익명성 정책</h4>
+    <blockquote>
+        <p>Vote 테이블에는 <code>voter_member_id</code>와 선택 보기가 매핑되어 저장된다(투표 여부 확인 및 중복 투표 방지 목적). 단, <strong>관리자 화면을 포함한 모든 UI에서 "누가 어떤 보기를 선택했는지"는 표시하지 않는다.</strong> 관리자가 확인할 수 있는 정보는 "투표함 / 미투표" 여부까지만이다.</p>
+        <p>DB 직접 조회 권한을 가진 인원에 한해 매핑 확인이 가능하므로, DB 접근 권한 관리는 운영 정책으로 통제한다.</p>
+    </blockquote>
+
+    <h4>8-B. 데이터 보관 정책</h4>
+    <blockquote>
+        <p>종료된 총회 데이터는 DB에 <strong>영구 보관</strong>하며, 관리자 화면에서 <strong>조회만 가능</strong>하다. 수정·삭제는 불가하다. 총회 목록에서 종료된 총회는 "종료" 뱃지와 함께 표시되며, 상세 화면 진입 시 모든 입력 기능이 비활성화된 읽기 전용 모드로 표시된다.</p>
+    </blockquote>
+
+    <!-- ===== 9. 화면 목록 ===== -->
+    <h2 id="s9">9. 화면 목록</h2>
+    <table>
+        <tr>
+            <th>화면 ID</th>
             <th>화면명</th>
             <th>설명</th>
         </tr>
         <tr>
             <td>A-01</td>
-            <td>로그인</td>
-            <td>관리자 ID/PW 입력</td>
+            <td>관리자 로그인</td>
+            <td>ID/PW 입력</td>
         </tr>
         <tr>
             <td>A-02</td>
             <td>총회 목록</td>
-            <td>등록된 총회 리스트, 상태 표시</td>
+            <td>총회 리스트 + 상태 표시</td>
         </tr>
         <tr>
             <td>A-03</td>
-            <td>총회 등록/수정</td>
-            <td>총회명, 일시, 설명 입력</td>
+            <td>총회 상세 / 상태 관리</td>
+            <td>안건 목록, 상태 전환 버튼, 통계 요약</td>
         </tr>
         <tr>
             <td>A-04</td>
-            <td>총회 상세 (대시보드)</td>
-            <td>통계 요약, 총회 상태 관리(더블 컨펌), 안건 목록·토글</td>
+            <td>안건 등록·수정</td>
+            <td>안건명 + 보기 입력</td>
         </tr>
         <tr>
             <td>A-05</td>
-            <td>안건 등록/수정</td>
-            <td>안건명, 설명, 보기 무제한 추가</td>
+            <td>출석 관리</td>
+            <td>티켓 구매자 검표 현황 (DB 직접 조회)</td>
         </tr>
         <tr>
             <td>A-06</td>
-            <td>투표 결과</td>
-            <td>안건별 득표율, 참여자 명단</td>
+            <td>위임장 관리</td>
+            <td>스프레드시트 동기화 + CSV 업로드, 검증 결과, 위임 현황</td>
         </tr>
         <tr>
             <td>A-07</td>
-            <td>출석 관리</td>
-            <td>쇼핑몰 검표 DB 직접 조회, 출석 현황</td>
+            <td>투표 현황</td>
+            <td>안건별 투표율, 투표/미투표 상태, 모수 상세</td>
         </tr>
         <tr>
             <td>A-08</td>
-            <td>위임 관리</td>
-            <td>스프레드시트 동기화, 유효성 검증 결과, 위임 현황</td>
+            <td>결과 조회</td>
+            <td>안건별 보기별 득표수, 득표율, 총 투표 수, 모수 대비 투표율</td>
         </tr>
         <tr>
             <td>A-09</td>
             <td>의장 일괄 투표</td>
-            <td>의장 귀속 위임 건 안건별 일괄 투표 행사</td>
-        </tr>
-    </table>
-
-    <h3>투표자 화면</h3>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>화면명</th>
-            <th>설명</th>
+            <td>의장 귀속 위임건 안건별 일괄 투표</td>
         </tr>
         <tr>
             <td>V-01</td>
-            <td>본인 인증</td>
+            <td>투표자 인증</td>
             <td>이름 + 전화번호 + 주문번호 뒤 5자리</td>
         </tr>
         <tr>
             <td>V-02</td>
             <td>투표 화면</td>
-            <td>안건 목록 + 투표 + 위임 드롭다운 (수임인인 경우)</td>
+            <td>안건 목록 + 보기 선택 + 제출 + 수정. 수임인의 경우 드롭다운으로 명의 전환.</td>
         </tr>
     </table>
 
-    <!-- ===== 섹션 10 ===== -->
+    <!-- ===== 10. 리스크 매트릭스 ===== -->
     <h2 id="s10">10. 리스크 매트릭스</h2>
-
     <table>
         <tr>
             <th>심각도</th>
@@ -1443,99 +1516,125 @@
             <th>대응 방안</th>
         </tr>
         <tr>
-            <td><span class="badge badge-resolved">해소</span></td>
-            <td><s>쇼핑몰 DB 연동 방식</s></td>
-            <td>—</td>
-            <td>동일 서버 DB 직접 조회시 API 불필요.</td>
-        </tr>
-        <tr>
-            <td><span class="badge badge-resolved">해소</span></td>
-            <td><s>쇼핑몰 검표 시각(timestamp) 제공여부 확인</s></td>
-            <td>—</td>
-            <td>쇼핑몰 DB에 검표 시각 존재 확인됨.</td>
-        </tr>
-        <tr>
-            <td><span class="badge badge-resolved">해소</span></td>
-            <td><s>스프레드시트 컬럼 확인</s></td>
-            <td>—</td>
-            <td>컬럼 확인: 위임자명/휴대폰/회원번호, 수임자명/휴대폰/회원번호</td>
-        </tr>
-        <tr>
-            <td><span class="badge badge-risk-mid">중간</span></td>
+            <td>🟡 중간</td>
             <td>안건 재오픈 시 결과 변동</td>
             <td>집계 결과 달라질 수 있음</td>
-            <td>재오픈 시 "결과가 변동될 수 있습니다" 경고 팝업 표시</td>
+            <td>재오픈 시 경고 팝업 표시. 기존 투표 유지, 미투표자만 추가 투표 가능. 재오픈 이력 로그 기록.</td>
         </tr>
         <tr>
-            <td><span class="badge badge-risk-mid">중간</span></td>
-            <td>위임 10건 초과 수임인 UI/UX</td>
-            <td>사용성 저하 가능</td>
-            <td>드롭다운 + 진행 카운터, 10건 한도 설정</td>
+            <td>🟡 중간</td>
+            <td>수임인 다건 위임 시 UX</td>
+            <td>위임 건수가 많을수록 드롭다운 항목 증가, 투표 시간 소요</td>
+            <td>드롭다운 + 진행률 카운터 + 완료 뱃지 + 미완료 이탈 경고. 한도 제한 없음.</td>
         </tr>
         <tr>
-            <td><span class="badge badge-risk-mid">중간</span></td>
+            <td>🟡 중간</td>
             <td>동시접속 100~130명 부하</td>
             <td>DB 병목 가능</td>
-            <td>최범선 부장님 개발한 부분 확인 필요</td>
+            <td>최범선 부장님 기존 개발 부분 확인 필요. 폴링 간격 조정 가능.</td>
         </tr>
         <tr>
-            <td><span class="badge badge-risk-mid">중간</span></td>
+            <td>🟡 중간</td>
             <td>10일 개발 일정</td>
-            <td>일정 초과 시 MVP 축소 필요</td>
-            <td>일별 마일스톤 관리, 우선순위 기반 기능 컷</td>
+            <td>일정 초과 시 MVP 축소</td>
+            <td>일별 마일스톤 관리</td>
         </tr>
         <tr>
-            <td><span class="badge badge-risk-low">낮음</span></td>
+            <td>🟢 낮음</td>
+            <td>스프레드시트 컬럼 포맷 불일치</td>
+            <td>매칭 실패 다수 발생 가능</td>
+            <td>시트 컬럼 사전 대조 완료 (A~F 확정)</td>
+        </tr>
+        <tr>
+            <td>🟢 낮음</td>
             <td>중간 결과 노출 여부</td>
             <td>쏠림 현상</td>
-            <td>MVP에서는 안건 닫힌 후에만 결과 표시</td>
+            <td>MVP에서는 닫힌 후에만 관리자 화면에서 결과 표시. 투표자 화면에서는 결과 미표시.</td>
         </tr>
     </table>
+    <blockquote>
+        <p><strong>해소된 리스크:</strong> 쇼핑몰 DB 연동 방식 → 같은 서버 DB 직접 참조로 확정. 검표 시각(timestamp) → DB에 존재 확인. 스프레드시트 컬럼 → A~F 확정.</p>
+    </blockquote>
 
-
-    <!-- ===== 섹션 11 ===== -->
+    <!-- ===== 11. 일정 계획 ===== -->
     <h2 id="s11">11. 일정 계획</h2>
-
     <table>
         <tr>
-            <th>기간</th>
-            <th>내용</th>
+            <th>날짜</th>
             <th>마일스톤</th>
+            <th>상세</th>
         </tr>
         <tr>
-            <td>4/15 ~ 4/16</td>
-            <td>기획 확정 · 디자인 · 미확인 사항 결정</td>
-            <td>기획서 최종 확정</td>
+            <td>4/15 (화)</td>
+            <td>기획 초안 작성</td>
+            <td>기획서 초안 완성 · 고객 검토 요청</td>
         </tr>
         <tr>
-            <td>4/17 ~ 4/18</td>
-            <td>DB 설계 · 쇼핑몰 DB 연동 확인 · 스프레드시트 API 연결</td>
-            <td>DB 스키마 확정, API 통신 검증</td>
+            <td>4/16 (수)</td>
+            <td>기획 확정 + 개발 환경 세팅</td>
+            <td>기획서 최종 확정 / DB 스키마 확정<br><strong>구글 서비스 계정 발급 고객사 요청</strong><br>스프레드시트 공유 권한 설정 예정</td>
         </tr>
         <tr>
-            <td>4/19 ~ 4/22</td>
-            <td>프론트엔드 · 백엔드 개발</td>
-            <td>일별 기능 단위 완료 체크</td>
+            <td>4/17 (목)</td>
+            <td>개발 착수</td>
+            <td>DB 테이블 생성 / 관리자 로그인<br><strong>구글 서비스 계정 키 수령 + 연동 테스트</strong><br>최범선 부장님 DB 구조 확인</td>
         </tr>
         <tr>
-            <td>4/23 ~ 4/24</td>
-            <td>통합 테스트 · 부하 테스트 · 리허설</td>
-            <td>동시접속 테스트 통과</td>
+            <td>4/18 (금)</td>
+            <td>관리자 — 총회·안건 CRUD</td>
+            <td>총회 생성, 안건 등록·수정·삭제</td>
         </tr>
         <tr>
-            <td>4/25</td>
-            <td>실서비스 오픈</td>
-            <td>총회 당일</td>
+            <td>4/19 (토)</td>
+            <td>관리자 — 출석·위임 연동</td>
+            <td>출석 현황 조회, 스프레드시트 동기화, CSV 업로드, 위임 검증</td>
+        </tr>
+        <tr>
+            <td>4/20 (일)</td>
+            <td>투표자 — 인증 + 투표 화면</td>
+            <td>본인 인증, 안건 투표, 투표 수정, 수임인 드롭다운</td>
+        </tr>
+        <tr>
+            <td>4/21 (월)</td>
+            <td>관리자 — 상태 전환 + 의장 일괄 투표</td>
+            <td>더블 컨펌, 강제 동기화, 위임 취소 판정, 일괄 투표</td>
+        </tr>
+        <tr>
+            <td>4/22 (화)</td>
+            <td>관리자 — 투표 현황·결과</td>
+            <td>통계 표시, 투표율 산식, 안건별 결과</td>
+        </tr>
+        <tr>
+            <td>4/23 (수)</td>
+            <td>통합 테스트</td>
+            <td>전체 플로우 테스트, 엣지 케이스 검증, 수임인 현장 티켓 구매 시나리오 테스트</td>
+        </tr>
+        <tr>
+            <td>4/24 (목)</td>
+            <td>버그 수정 + 리허설</td>
+            <td>버그 수정, 관리자·투표자 리허설</td>
+        </tr>
+        <tr>
+            <td>4/25 (금)</td>
+            <td>오픈</td>
+            <td>실서비스 배포 + 총회 당일 운영</td>
         </tr>
     </table>
 
-    <!-- ===== 섹션 12 ===== -->
+    <!-- ===== 12. v2 백로그 ===== -->
     <h2 id="s12">12. v2 백로그</h2>
-
     <table>
         <tr>
             <th>항목</th>
             <th>설명</th>
+        </tr>
+        <tr>
+            <td>투표 진행중 위임 취소</td>
+            <td>투표 진행중 위임인이 현장 도착 시, 관리자가 수동으로 위임 취소. 미투표 안건만 본인 복귀, 기투표 안건은 수임인 투표 유지.</td>
+        </tr>
+        <tr>
+            <td>총회 상태 롤백</td>
+            <td>투표 진행중 → 준비중 되돌리기 (투표 초기화 조건 포함)</td>
         </tr>
         <tr>
             <td>복수선택 투표</td>
@@ -1552,6 +1651,10 @@
         <tr>
             <td>투표자용 결과 화면</td>
             <td>닫힌 안건의 결과를 투표자에게도 공개</td>
+        </tr>
+        <tr>
+            <td>로그인 세션 기반 인증</td>
+            <td>쇼핑몰 로그인 세션 활용으로 별도 인증 입력 제거</td>
         </tr>
         <tr>
             <td>카카오 알림톡</td>
@@ -1573,532 +1676,572 @@
             <td>아카이브</td>
             <td>과거 총회 결과 조회 기능</td>
         </tr>
+        <tr>
+            <td>정족수 자동 판정</td>
+            <td>전체 정회원 수 기반 정족수 충족 여부 자동 계산 및 "가결/부결" 표시</td>
+        </tr>
+        <tr>
+            <td>미제출 선택 임시 저장</td>
+            <td>localStorage 활용하여 제출 전 선택 상태를 임시 보존, 새로고침 후 복원</td>
+        </tr>
     </table>
 
-    <!-- ===== 미확인 사항 ===== -->
-    <h2>📋 미확인 사항 총정리</h2>
-
+    <!-- ===== 13. 미확인 사항 ===== -->
+    <h2 id="s13">13. 미확인 사항</h2>
     <table>
         <tr>
             <th>#</th>
-            <th>항목</th>
-            <th>확인 대상</th>
+            <th>확인 항목</th>
+            <th>담당</th>
             <th>기한</th>
+            <th>상세</th>
         </tr>
         <tr>
             <td>1</td>
-            <td>동시접속 처리 관련 기존 개발 부분 확인</td>
+            <td>쇼핑몰 DB 구조 확인</td>
             <td>최범선 부장님</td>
-            <td>4/16</td>
+            <td>4/17</td>
+            <td>· 회원 테이블명 및 회원번호·등급 컬럼명<br>· 티켓(주문) 테이블명 및 주문번호·검표 시각 컬럼명<br>· 전자투표 관련 테이블 추가 가능한 DB 스키마·권한</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>동시접속 처리 기존 구조 확인</td>
+            <td>최범선 부장님</td>
+            <td>4/17</td>
+            <td>· 100~130명 동시접속 시 기존 캐싱/큐/세션 구조<br>· DB 커넥션 풀 설정 현황<br>· 폴링(10초) 방식의 부하 수용 가능 여부</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>정회원 목록 쿼리 방법</td>
+            <td>최범선 부장님</td>
+            <td>4/17</td>
+            <td>· 회원 등급 필터링이 가능한 테이블·컬럼 확인<br>· 전체 정회원 수 조회 쿼리 방식</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>구글 서비스 계정 발급</td>
+            <td>고객사</td>
+            <td>4/16~17</td>
+            <td>· 서비스 계정 키 JSON 발급 + 전달<br>· 위임장 스프레드시트 공유 권한 설정</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>수임인 현장 티켓 구매 시나리오 테스트</td>
+            <td>QA</td>
+            <td>4/23</td>
+            <td>수임인이 현장에서 티켓 구매 → 검표 → 인증 → 위임받은 투표 정상 동작 확인</td>
         </tr>
     </table>
 
-
-    <hr style="margin-top:48px;">
-    <p style="color:#999; font-size:12px; text-align:center;">전자투표시스템 기획서 MVP v1.0 | 작성일: 2026-04-15 | 최종 수정: 2026-04-15
+    <hr style="margin-top:48px">
+    <p style="text-align:center; color:var(--gray); font-size:13px;">
+        전자투표시스템 기획서 MVP v1.1 · 2026-04-16 최종 갱신
     </p>
 
     <!-- ===== MD 다운로드 ===== -->
     <script>
         function downloadMD() {
-            const md = `# 전자투표시스템 기획서 MVP v1.0
-
-> 작성일: 2026-04-15 | 최종 수정: 2026-04-15 | 목표 오픈: 2026-04-25
-
----
-
-## 목차
-
-1. 프로젝트 개요
-2. 용어 정의
-3. MVP 범위 정의
-4. 시스템 흐름 및 데이터 연동
-5. 관리자 기능 상세
-6. 투표자 기능 상세
-7. 데이터 모델
-8. 비기능 요구사항
-9. 화면 목록
-10. 리스크 매트릭스
-11. 일정 계획
-12. v2 백로그
-
----
-
-## 1. 프로젝트 개요
-
-### 1-1. 목적
-
-총회 현장에서 안건별 단일선택 전자투표를 진행하고, 투표 종료 즉시 결과를 집계하여 관리자에게 제공하는 시스템을 구축한다. 시스템은 **쇼핑몰 서버 내부에 구축**하여 회원 DB 및 검표 데이터를 직접 조회한다.
-
-### 1-2. MVP 범위
-
-| 포함 (MVP) | 제외 (v2 이후) |
-|---|---|
-| 관리자: 총회 등록, 안건 CRUD, 투표 열기/닫기, 총회 상태 관리, 의장 일괄 투표 | 복수선택 투표 |
-| 투표자: 본인 인증 → 안건 목록 → 투표 | 자체 위임 등록 화면 |
-| 위임: 구글 스프레드시트 기반 위임장 연동, 의장(관리자) 자동 귀속 | 투표자용 별도 결과 화면 |
-| 출석: 쇼핑몰 검표 DB 직접 조회 (동일 서버) | 카카오 알림톡, 다중 관리자 권한 |
-| 결과: 안건별 득표율, 참여자 명단(익명 투표 원칙 준수) | 의장 건별 개별 선택, 감사 로그, 아카이브 |
-
-### 1-3. 주요 수치
-
-| 항목 | 값 |
-|---|---|
-| 예상 참여자 수 | 100~130명 |
-| 투표 방식 | 안건별 단일선택 |
-| 서버 환경 | 쇼핑몰 동일 서버 (PHP 백엔드, DB 직접 접근) |
-| 목표 오픈 | 2026-04-25 |
-
----
-
-## 2. 용어 정의
-
-| 용어 | 정의 |
-|---|---|
-| 총회 (Assembly) | 투표가 진행되는 단위 행사. 상태: 준비중 → 투표 진행중 → 종료 |
-| 안건 (Agenda) | 총회 내 개별 투표 항목. 상태: 닫힘(기본) ↔ 열림 |
-| 보기 (Option) | 안건 내 선택지. 개수 제한 없음. |
-| 회원번호 | 쇼핑몰 회원 고유 식별자. 위임 매칭 및 투표권 귀속의 기준 키. |
-| 정회원 | 쇼핑몰 회원 등급이 정회원 이상인 회원. 총회 투표권의 대상자. |
-| 티켓구매자 | 총회 현장 참석을 위해 티켓을 구매한 정회원. 티켓 구매는 현장 출석의 전제 조건이며, 투표권 발생의 전제 조건은 아니다. |
-| 투표권 | 정회원 이상 회원 전원이 보유하는 안건별 1회의 의결 참여 권리. 행사 경로는 ① 현장 출석(티켓 구매 + 검표) 또는 ② 위임장 제출이다. |
-| 투표 행사권 | 투표권을 실제로 행사할 수 있는 자격. ① 본인 행사: 티켓 구매 + 현장 검표 완료 시 ② 위임 행사: 위임장을 통해 수임인에게 이전 시 (위임인 출석 불요, 티켓 미구매도 가능) |
-| 위임인 | 투표 행사권을 타인에게 위임하는 정회원. 티켓 미구매 회원도 위임 가능. |
-| 수임인 | 위임을 받아 대신 투표를 행사하는 회원. 수임인 본인의 출석(검표) 필요. |
-| 의장 | 관리자 = 의장. 별도 회원번호 없음. 수임인 공란 시 의장에게 자동 귀속, 관리자 페이지에서 일괄 투표 행사. |
-| 검표 | 현장 QR 스캔을 통한 출석 확인. 쇼핑몰 시스템에서 처리, 결과는 동일 DB에 기록. |
-
-### 2-1. 투표 행사권 발생 조건 상세
-
-| 상황 | 투표권 | 투표 행사권 | 투표율 모수 포함 | 누가 투표하나 |
-|---|---|---|---|---|
-| 정회원 + 티켓 구매 + 검표 완료 + 위임 X | 있음 | 본인에게 발생 | 포함 | 본인 |
-| 정회원 + 티켓 미구매 + 위임 O (수임인 지정) | 있음 | 수임인에게 이전 | 포함 | 수임인 |
-| 정회원 + 티켓 미구매 + 위임 O (수임인 공란) | 있음 | 의장(관리자)에게 귀속 | 포함 | 의장 (관리자 일괄 투표) |
-| 정회원 + 티켓 구매 + 위임 O (수임인 지정) + 투표 시작 전 검표 | 있음 | 위임 취소 → 본인 복귀 | 포함 | 본인 |
-| 정회원 + 티켓 구매 + 위임 O + 투표 시작 후 검표 | 있음 | 위임 유지 | 포함 (수임인 기준) | 수임인 |
-| 정회원 + 티켓 미구매 + 위임 X + 불참 | 있음 | 행사 불가 | **제외** | 없음 |
-| 정회원 + 티켓 구매 + 미검표 + 위임 X | 있음 | 행사 불가 | **제외** | 없음 |
-
-> **모수 기준 원칙:** 투표 행사 가능 수(모수) = 출석 본인 + 유효 위임(수임인 지정 + 의장 귀속). 이 외의 모든 경우(불참·무위임, 티켓 구매했지만 미출석·무위임)는 모수에서 제외한다.
-
----
-
-## 3. MVP 범위 정의
-
-### 3-1. 기능 범위
-
-| 구분 | 기능 | MVP |
-|---|---|---|
-| 관리자 | 로그인 | ✅ |
-| 관리자 | 총회 등록·수정 | ✅ |
-| 관리자 | 총회 상태 관리 (준비중 → 투표 진행중 → 종료) | ✅ |
-| 관리자 | 안건 CRUD (보기 무제한, 상태 토글) | ✅ |
-| 관리자 | 투표 결과 조회 (득표율 + 참여자 명단) | ✅ |
-| 관리자 | 출석 현황 / 위임 관리 | ✅ |
-| 관리자 | 의장 일괄 투표 (수임인 미지정 귀속 건) | ✅ |
-| 투표자 | 본인 인증 (이름 + 전화번호 + 주문번호 뒤 5자리) | ✅ |
-| 투표자 | 안건 목록 조회 + 투표 + 수정 | ✅ |
-| 투표자 | 위임 투표 (드롭다운 방식, 최대 10건) | ✅ |
-| 연동 | 쇼핑몰 DB 직접 조회 (회원 정보 + 티켓 + 검표) | ✅ |
-| 연동 | 구글 스프레드시트 위임장 연동 (API) | ✅ |
-
----
-
-## 4. 시스템 흐름 및 데이터 연동
-
-### 4-1. 전체 시스템 흐름도
-
-\\\`\\\`\\\`
-┌──────────────────────────────────────────────┐
-│              쇼핑몰 서버 (동일 서버)            │
-│                                                │
-│  [회원 DB] [주문/티켓 DB]                      │
-│      │           │                             │
-│      │ 직접 조회  │ 직접 조회                   │
-│      ▼           ▼                             │
-│  ┌────────────────────────────────┐           │
-│  │     전자투표 시스템 (신규 구축)   │           │
-│  │  [위임 DB] [투표 DB]            │           │
-│  │  [관리자 페이지] [투표자 페이지]  │           │
-│  └────────────────────────────────┘           │
-│                                                │
-│  [현장 QR 리더기] → [쇼핑몰 검표] → 주문/티켓 DB │
-└──────────────────────────────────────────────┘
-         ↕ Google Sheets API (준비중 상태에서만)
-  [구글 스프레드시트 - 시트명: "위임장"]
-\\\`\\\`\\\`
-
-### 4-2. 데이터 연동
-
-#### A. 쇼핑몰 DB 직접 조회
-
-동일 서버에 구축하므로 외부 API 없이 DB 직접 SELECT로 처리한다.
-
-| 항목 | 내용 |
-|---|---|
-| 조회 방식 | 동일 서버 DB 직접 SELECT (실시간) |
-| 회원 DB 조회 항목 | 회원번호, 이름, 전화번호, 회원등급 |
-| 주문/티켓 DB 조회 항목 | 주문번호, 회원번호(FK), 검표 상태(Y/N), 검표 시각(timestamp) |
-| 현장 구매 대응 | 동일 DB에 즉시 반영되므로 별도 동기화 불필요 |
-
-#### B. 위임 데이터 (구글 스프레드시트)
-
-위임장은 외부 시스템에서 수합하여 구글 스프레드시트에 정리한다. 관리자가 동기화 버튼으로 Google Sheets API를 통해 투표 DB에 반영한다. 수임인 정보가 모두 공란인 경우, 의장(관리자)에게 자동 귀속된다.
-
-| 항목 | 내용 |
-|---|---|
-| 시트명 | "위임장" |
-| 시트 컬럼 | A: 위임자명 / B: 위임자휴대폰 / C: 위임자회원번호 / D: 수임자명 / E: 수임자휴대폰 / F: 수임자회원번호 |
-| 매칭 기준 | 위임자: 회원번호(C열)로 회원 DB 매칭 (티켓 미구매 회원도 위임 가능) / 수임자: 회원번호(F열)로 회원 DB 매칭 |
-| 수임자 공란 처리 | D·E·F 모두 공란 → 의장(관리자)에게 자동 귀속 |
-| 동기화 방식 | 관리자 수동 동기화 버튼 (Google Sheets API v4) |
-
-#### 스프레드시트 API 통신 관리
-
-| 총회 상태 | API 통신 | 비고 |
-|---|---|---|
-| 준비중 | ✅ 허용 | 동기화 가능 |
-| 투표 진행중 | ❌ **차단** | 위임 데이터 동결 |
-| 종료 | ❌ **차단** | 변경 불가 |
-
----
-
-## 5. 관리자 기능 상세
-
-### 5-1. 로그인
-
-| 항목 | 내용 |
-|---|---|
-| 인증 방식 | ID / PW 별도 관리자 계정 (쇼핑몰 회원 계정과 분리) |
-| 역할 | 관리자 = 의장 (별도 회원번호 없음) |
-| 세션 유지 | 브라우저 세션 기반 |
-
-### 5-2. 총회 등록·관리
-
-| 항목 | 내용 |
-|---|---|
-| 총회명 | 필수 입력 |
-| 일시 | 필수 입력 |
-| 설명 | 선택 입력 |
-| 상태 | 자동: 준비중 |
-
-> 의장은 관리자 본인이므로 별도 입력 필드가 없다. 수임인 공란 시 의장(관리자)에게 자동 귀속.
-
-### 5-3. 총회 상태 관리
-
-| 상태 | 전환 조건 | 효과 |
-|---|---|---|
-| 준비중 | 등록 시 기본값 | 안건 CRUD 가능. 위임 동기화 가능. 투표 불가. |
-| 투표 진행중 | 관리자 수동 전환 (더블 컨펌) | ① 스프레드시트 강제 동기화 1회 ② API 통신 차단 ③ 위임 취소 판정 ④ 투표 시작 시각 기록 ⑤ 안건 토글·투표 가능 ⑥ 의장 일괄 투표 가능 |
-| 종료 | 관리자 수동 전환 | 모든 안건 강제 닫힘. 결과 확정. |
-
-#### "투표 진행중" 전환 더블 컨펌
-
-| 단계 | 팝업 내용 |
-|---|---|
-| 1차 | "총회 상태를 '투표 진행중'으로 변경합니다. 계속하시겠습니까?" |
-| 2차 | "투표 진행으로 변경 시, 이후 위임인 본인이 출석하여도 수임인에게 투표권이 유지됩니다. 투표를 시작하시겠습니까?" |
-
-> 안건 재오픈 시 "결과가 변동될 수 있습니다" 경고 팝업 표시. 종료는 되돌릴 수 없다. "투표 진행중 → 준비중" 롤백도 MVP에서는 지원하지 않는다.
-
-### 5-4. 안건 관리
-
-| 항목 | 내용 |
-|---|---|
-| 안건명 | 필수 입력 |
-| 안건 설명 | 선택 입력 |
-| 보기 | 무제한 추가 가능 (단일선택) |
-| 안건 번호 | 자동 부여 |
-| 상태 | 기본 닫힘, 자유 토글 |
-
-#### 투표율 산식
-
-| 구분 | 정의 |
-|---|---|
-| 투표 행사 가능 수 (모수) | 출석 본인 + 유효 위임(수임인 지정 + 의장 귀속). 불참·무위임 제외. |
-| 투표 완료 수 | 실제 투표 제출 수 (본인 + 위임 + 의장 일괄 합산) |
-| 투표율 | (투표 완료 수 / 투표 행사 가능 수) × 100 |
-
-> 모수는 "투표 진행중" 전환 시점에 확정, 이후 변동 없음.
-
-#### 관리자 결과 화면 통계
-
-| 표시 항목 | 설명 |
-|---|---|
-| 전체 정회원 수 | 참고 수치 (총회 투표권 대상자 전체) |
-| 전체 티켓 구매자 | 참고 수치 (현장 참석 신청자) |
-| 출석 본인 | 검표 완료 + 위임 없음 (또는 위임 취소 후 본인 복귀) |
-| 유효 위임 (수임인 지정) | 수임인 지정 건수 |
-| 유효 위임 (의장 귀속) | 수임인 공란 → 의장 귀속 건수 |
-| 불참·무위임 | 모수에서 제외 |
-| **투표 행사 가능 수** | 출석 본인 + 유효 위임 전체 |
-| 투표 완료 | 실제 제출 수 |
-| 미투표 | 행사 가능 − 완료 |
-| **투표율** | (완료 / 행사 가능 수) × 100 |
-
-### 5-5. 출석 관리 (쇼핑몰 검표 DB 직접 조회)
-
-동일 서버 DB를 직접 조회하므로 별도 동기화 불필요.
-
-#### 조회 대상 데이터
-
-| 필드 | 설명 |
-|---|---|
-| 주문번호 | 티켓 식별 키 |
-| 회원번호 | 회원 DB 참조 키 |
-| 구매자 이름 | 회원 DB 조회 |
-| 구매자 전화번호 | 회원 DB 조회 |
-| 검표 상태 | Y / N |
-| 검표 시각 | 위임 취소 판정 기준 |
-
-#### 관리자 출석 화면
-
-| 표시 항목 | 설명 |
-|---|---|
-| 전체 티켓 수 | 총 발행 수 |
-| 출석 확인 수 | 검표 Y |
-| 미출석 수 | 검표 N |
-| 참석자 목록 | 이름, 전화번호, 회원번호, 주문번호, 검표 시각 |
-| 수동 출석 처리 | 예외 상황 대응용 |
-
-### 5-6. 위임 관리
-
-#### 위임 데이터 동기화
-
-| 항목 | 내용 |
-|---|---|
-| 데이터 소스 | 구글 스프레드시트 (시트명: "위임장") |
-| 시트 컬럼 | A: 위임자명 / B: 위임자휴대폰 / C: 위임자회원번호 / D: 수임자명 / E: 수임자휴대폰 / F: 수임자회원번호 |
-| 동기화 방식 | 관리자 수동 동기화 (준비중 상태에서만) |
-| 매칭 기준 | 회원번호로 회원 DB 매칭 (위임자: 티켓 미구매 회원도 위임 가능) |
-| 수임자 공란 | D·E·F 모두 공란 → 의장 귀속 |
-
-#### 수임인 유효성 검증
-
-| # | 검증 항목 | 통과 조건 | 실패 시 처리 |
-|---|---|---|---|
-| 1 | 위임자 회원 DB 존재 | 회원번호(C열) 매칭 성공 + 정회원 이상 | 매칭 실패 |
-| 2 | 수임자 회원 DB 존재 | 회원번호(F열) 매칭 성공 | 매칭 실패 |
-| 3 | 수임자 공란 | D·E·F 모두 공란 | 의장 자동 귀속 |
-| 4 | 수임자 검표 여부 | — | 검표 불요 |
-| 5 | 위임자 = 수임자 동일인 | 회원번호 다른 사람 | 무효 |
-| 6 | 수임 한도 초과 | ≤ 10건 | 한도 초과 |
-
-> 상태 뱃지: 유효 / 매칭 실패 / 의장 귀속 / 무효 / 한도 초과
-
-#### 위임 취소 판정 로직
-
-"투표 진행중" 전환 시(더블 컨펌 후) 자동 실행:
-
-1. 구글 스프레드시트 강제 동기화 1회
-2. 스프레드시트 API 통신 차단
-3. 위임 목록 순회, 위임인 검표 상태 확인 (DB 직접 조회)
-4. 판정:
-
-| 조건 | 처리 |
-|---|---|
-| 위임인 검표 시각이 전환 시각 이전 | 위임 자동 취소 → 본인 복귀 |
-| 위임인 검표 시각이 전환 시각 이후 또는 미검표 | 위임 유지 |
-
-> ⚠️ "투표 진행중" 전환 이후 출석한 위임인은 위임 유지. 수임인이 투표, 위임인 본인 투표 불가.
-
-> "투표 진행중" 전환 시 실행되는 강제 동기화가 위임 데이터의 최종 반영 시점이다. 전환 이후에는 스프레드시트가 변경되더라도 시스템에 반영되지 않으며, API 통신 자체가 차단된다. 이미 투표가 행사된 위임 관계는 어떤 경우에도 소급 변경하지 않는다. MVP에서는 총회 상태 롤백을 지원하지 않는다.
-
-#### 관리자 위임 화면
-
-| 표시 항목 | 설명 |
-|---|---|
-| 유효 위임 (수임인 지정) | 수임인 지정 유효 건수 |
-| 유효 위임 (의장 귀속) | 의장 귀속 건수 |
-| 취소 위임 수 | 출석으로 취소된 건수 |
-| 매칭 실패 수 | 수동 확인 필요 |
-| 위임 목록 | 위임자 이름·회원번호, 수임자 이름·회원번호(또는 의장 귀속), 상태 뱃지 |
-| 동기화 버튼 | 준비중에서만 활성화 |
-| 최종 동기화 시각 | 마지막 동기화 일시 |
-
-### 5-7. 의장 일괄 투표
-
-수임인 미지정 → 의장 귀속된 위임 건을 관리자 페이지에서 안건별 일괄 투표.
-
-| 항목 | 내용 |
-|---|---|
-| 대상 | 의장 귀속 위임 건 전체 |
-| 투표 방식 | 안건별 보기 선택 → "일괄 투표" → 전체 건에 동일 보기 적용 |
-| 투표 기록 | 위임인 각각의 투표로 개별 INSERT |
-| 참여자 명단 | 위임인 이름으로 "투표함 / 위임 (의장 귀속)" 표시 |
-| 수정 | 안건 열림 상태에서 재선택·재적용 가능 |
-| 건별 개별 선택 | MVP 제외 (v2) |
-
----
-
-## 6. 투표자 기능 상세
-
-### 6-1. 본인 인증
-
-| 항목 | 내용 |
-|---|---|
-| 입력 정보 | 이름 + 전화번호 + 주문번호 뒤 5자리 |
-| 검증 대상 | 쇼핑몰 회원 DB + 주문/티켓 DB (직접 조회) |
-| 출석 확인 | 검표 Y만 본인 투표 가능. 미검표 시 안내 표시. |
-| 수임인 | 동일 인증 → 본인 + 위임 투표 모두 행사 가능 |
-
-### 6-2. 안건 목록
-
-| 항목 | 내용 |
-|---|---|
-| 표시 | 안건 번호, 안건명, 상태, 전체 안건 수 |
-| 열림 | 투표·수정 가능 |
-| 닫힘 | 투표·수정 불가, 수정 버튼 미노출 |
-| 결과 | 별도 결과 화면 없음 |
-
-### 6-3. 투표 화면
-
-| 항목 | 내용 |
-|---|---|
-| 방식 | 단일선택 |
-| 수정 | 열림 상태에서 자유 수정 |
-| 완료 표시 | 제출 완료 안건 체크 표시 |
-
-### 6-4. 위임 투표 (수임인 화면)
-
-| 항목 | 내용 |
-|---|---|
-| 드롭다운 | "본인 투표 (이름)" + 위임 목록 (위임인 이름) |
-| 카운터 | (완료/전체), 전부 완료 시 ✅ |
-| 전환 | 드롭다운 선택 → 해당 투표 현황 전환 |
-| 익명 | 누구의 표로 어떤 선택을 했는지 관리자에게 비노출 |
-
----
-
-## 7. 데이터 모델
-
-| 테이블 | 주요 컬럼 | 비고 |
-|---|---|---|
-| Assembly | id, name, date, description, status, voting_started_at, created_at | 의장 = 관리자, 별도 컬럼 없음 |
-| Agenda | id, assembly_id, number, title, description, status, created_at | |
-| AgendaOption | id, agenda_id, label, sort_order | |
-| Delegation | id, assembly_id, delegator_member_id, delegatee_member_id (nullable), assigned_to_chair, status, created_at | delegator는 회원 DB 참조 (티켓 미구매도 가능), delegatee null이면 의장 귀속 |
-| Vote | id, agenda_id, member_id, option_id, is_delegated, delegated_by_member_id, delegated_to_chair, voted_at, updated_at | |
-| Admin | id, login_id, password_hash | 별도 계정 |
-
-> 쇼핑몰 기존 테이블 참조 (별도 생성 불필요): 회원 테이블 (회원번호, 이름, 전화번호, 회원등급 등) / 주문·티켓 테이블
-
-> ⚠️ 익명 투표 원칙: Vote의 option_id는 관리자 화면에 비노출.
-
-### 안건별 참여자 명단
-
-| 표시 항목 | 설명 |
-|---|---|
-| 투표권 소유자 이름 | 출석 본인 또는 위임인 (정회원) |
-| 투표권 소유자 전화번호 | 출석 본인 또는 위임인 |
-| 투표 시각 | 최종 제출/수정 시각 |
-| 투표 여부 | 투표함 / 미투표 |
-| 위임 여부 | 본인: "-" / 수임인 지정: "위임" / 의장: "위임 (의장 귀속)" |
-| 수임인 이름 | 수임인 지정 시 / 의장 귀속 시 "의장" / 본인: "-" |
-| 수임인 전화번호 | 수임인 지정 시 / 의장 귀속·본인: "-" |
-
----
-
-## 8. 비기능 요구사항
-
-| 항목 | 내용 |
-|---|---|
-| 반응형 | 투표자: 모바일 우선 / 관리자: PC 우선 (모바일 대응) |
-| 브라우저 | Chrome, Safari 최신 |
-| 동시접속 | 100~130명 (최범선 부장님 개발 부분 확인 필요) |
-| 실시간 | 폴링 10초 간격 |
-| 보안 | 투표 데이터 암호화, 개별 선택지 비노출 |
-| 세션 | 투표자: 인증 후 / 관리자: 로그인 후 |
-| 서버 | 쇼핑몰 동일 서버, PHP, DB 직접 접근 |
-
----
-
-## 9. 화면 목록
-
-### 관리자
-
-| ID | 화면명 | 설명 |
-|---|---|---|
-| A-01 | 로그인 | ID/PW |
-| A-02 | 총회 목록 | 총회 리스트, 상태 |
-| A-03 | 총회 등록/수정 | 총회명, 일시, 설명 |
-| A-04 | 총회 상세 (대시보드) | 통계, 상태 관리(더블 컨펌), 안건 토글 |
-| A-05 | 안건 등록/수정 | 안건명, 설명, 보기 |
-| A-06 | 투표 결과 | 득표율, 참여자 명단 |
-| A-07 | 출석 관리 | 검표 DB 조회, 출석 현황 |
-| A-08 | 위임 관리 | 스프레드시트 동기화, 검증, 현황 |
-| A-09 | 의장 일괄 투표 | 의장 귀속 건 안건별 일괄 투표 |
-
-### 투표자
-
-| ID | 화면명 | 설명 |
-|---|---|---|
-| V-01 | 본인 인증 | 이름 + 전화번호 + 주문번호 뒤 5자리 |
-| V-02 | 투표 화면 | 안건 목록 + 투표 + 위임 드롭다운 |
-
----
-
-## 10. 리스크 매트릭스
-
-| 심각도 | 리스크 항목 | 영향 | 대응 방안 |
-|---|---|---|---|
-| ✅ 해소 | ~~쇼핑몰 DB 연동 방식~~ | — | 동일 서버 DB 직접 조회 고려시 해소|
-| ✅ 해소 | ~~검표 시각 확인~~ | — | DB에 검표 시각 존재 확인 |
-| ✅ 해소 | ~~스프레드시트 확인~~ | — | 컬럼 확인 완료 |
-| 🟡 중간 | 안건 재오픈 시 결과 변동 | 집계 변동 | 경고 팝업 |
-| 🟡 중간 | 위임 10건 초과 UI | 사용성 | 드롭다운 + 카운터, 10건 한도 |
-| 🟡 중간 | 동시접속 100~130명 | DB 병목 | 최범선 부장님 개발 부분 확인 필요 |
-| 🟡 중간 | 10일 개발 일정 | MVP 축소 | 일별 마일스톤 |
-| 🟢 낮음 | 중간 결과 노출 | 쏠림 | 닫힌 후에만 표시 |
-
----
-
-## 11. 일정 계획
-
-| 기간 | 내용 | 마일스톤 |
-|---|---|---|
-| 4/15~4/16 | 기획 확정·디자인 | 기획서 최종 |
-| 4/17~4/18 | DB 설계·스프레드시트 API 연결 | 스키마 확정, API 검증 |
-| 4/19~4/22 | 프론트·백엔드 개발 | 일별 기능 완료 체크 |
-| 4/23~4/24 | 통합·부하 테스트·리허설 | 동시접속 테스트 통과 |
-| 4/25 | 실서비스 오픈 | 총회 당일 |
-
----
-
-## 12. v2 백로그
-
-| 항목 | 설명 |
-|---|---|
-| 복수선택 투표 | 안건별 복수 보기 |
-| 자체 위임 등록 | 관리자 화면에서 직접 등록 |
-| 의장 건별 개별 선택 | 의장 귀속 건 개별 보기 선택 |
-| 투표자용 결과 화면 | 닫힌 안건 결과 공개 |
-| 카카오 알림톡 | 투표 시작/종료 알림 |
-| 다중 관리자 권한 | 역할 기반 계정 |
-| 강화된 암호화 | E2E 암호화 |
-| 감사 로그 | 관리자 행위 이력 |
-| 아카이브 | 과거 총회 조회 |
-| 총회 상태 롤백 | 투표 진행중 → 준비중 되돌리기 (투표 초기화 조건 포함) |
-
----
-
-## 📋 미확인 사항 총정리
-
-| # | 항목 | 확인 대상 | 기한 |
-|---|---|---|---|
-| 1 | 동시접속 처리 관련 기존 개발 부분 확인 | 최범선 부장님 | 4/16 |
-
----
-
-> 전자투표시스템 기획서 MVP v1.0 | 작성일: 2026-04-15 | 최종 수정: 2026-04-15
-`;
+            const md = [
+                '# 전자투표시스템 기획서 MVP v1.1',
+                '',
+                '> 작성일 2026-04-15 · 최종 갱신 2026-04-16 · 목표 오픈 2026-04-25',
+                '',
+                '---',
+                '',
+                '## 목차',
+                '1. 프로젝트 개요',
+                '2. 용어 정의',
+                '3. MVP 범위 정의',
+                '4. 시스템 흐름 · 데이터 연동',
+                '5. 관리자 기능 상세',
+                '6. 투표자 기능 상세',
+                '7. 데이터 모델',
+                '8. 비기능 요구사항',
+                '9. 화면 목록',
+                '10. 리스크 매트릭스',
+                '11. 일정 계획',
+                '12. v2 백로그',
+                '13. 미확인 사항',
+                '',
+                '---',
+                '',
+                '## 1. 프로젝트 개요',
+                '',
+                '| 항목 | 내용 |',
+                '|---|---|',
+                '| 프로젝트명 | 정기총회 전자투표시스템 |',
+                '| 목적 | 정기총회 안건에 대해 현장 출석자 및 위임인의 전자 투표를 지원 |',
+                '| 대상 사용자 | 총회 관리자(의장), 현장 참석 정회원, 위임 수임인 |',
+                '| 예상 참여 인원 | 100~130명 |',
+                '| 투표 방식 | 안건별 단일 선택 (MVP) |',
+                '| 개발 기간 | 10일 (4/16~4/25) |',
+                '| 목표 오픈일 | 2026-04-25 |',
+                '| 구축 환경 | 쇼핑몰 서버 내 구축 (서버 분리 없음). 쇼핑몰 DB 직접 참조 전제로 기획. |',
+                '',
+                '---',
+                '',
+                '## 2. 용어 정의',
+                '',
+                '| 용어 | 정의 |',
+                '|---|---|',
+                '| 정회원 | 쇼핑몰 회원 등급이 정회원 이상인 회원. 총회 투표권의 대상자. |',
+                '| 티켓구매자 | 총회 현장 참석을 위해 티켓을 구매한 정회원. 티켓 구매는 현장 출석의 전제 조건이며, 투표권 발생의 전제 조건은 아니다. |',
+                '| 투표권 | 정회원 이상 회원 전원이 보유하는 안건별 1회의 의결 참여 권리. 행사 경로는 (1) 현장 출석(티켓 구매 + 검표) 또는 (2) 위임장 제출이다. |',
+                '| 투표 행사권 | 투표권을 실제로 행사할 수 있는 상태. 출석(검표 완료) 시 본인에게, 위임 시 수임인에게 발생한다. |',
+                '| 위임인 | 위임장을 제출하여 자신의 투표 행사권을 타인에게 이전하는 정회원. 티켓 미구매 회원도 가능. |',
+                '| 수임인 | 위임장을 통해 타인의 투표 행사권을 위임받아 대리 투표하는 정회원. |',
+                '| 의장 | 총회를 주재하는 관리자. 시스템에서는 관리자 계정 = 의장이다. 수임인이 지정되지 않은 위임건은 의장에게 자동 귀속된다. |',
+                '| 총회 상태 | 준비중 -> 투표 진행중 -> 종료. 각 전환은 관리자가 수동으로 진행한다. |',
+                '| 검표 | 현장에서 티켓 구매자의 출석을 확인하는 행위. 쇼핑몰 DB에 검표 시각(check_time)이 기록된다. |',
+                '',
+                '### 2-1. 투표 행사권 발생 조건 상세',
+                '',
+                '| 상황 | 투표권 | 투표 행사권 | 투표율 모수 포함 | 누가 투표하나 |',
+                '|---|---|---|---|---|',
+                '| 정회원 + 티켓 구매 + 검표 완료 + 위임 X | 있음 | 본인에게 발생 | **포함** | 본인 |',
+                '| 정회원 + 티켓 미구매 + 위임 O (수임인 지정) | 있음 | 수임인에게 이전 | **포함** | 수임인 |',
+                '| 정회원 + 티켓 미구매 + 위임 O (수임인 공란) | 있음 | 의장(관리자)에게 귀속 | **포함** | 의장 (관리자 일괄 투표) |',
+                '| 정회원 + 티켓 구매 + 미검표 + 위임 O (수임인 지정) | 있음 | 수임인에게 이전 | **포함** | 수임인 |',
+                '| 정회원 + 티켓 구매 + 미검표 + 위임 O (수임인 공란) | 있음 | 의장(관리자)에게 귀속 | **포함** | 의장 (관리자 일괄 투표) |',
+                '| 정회원 + 위임 O + "투표 진행중" 전환 시점에 검표 완료 상태 | 있음 | 위임 자동 취소 -> 본인 복귀 | **포함** | 본인 |',
+                '| 정회원 + 위임 O + "투표 진행중" 전환 이후 검표 | 있음 | 위임 유지 | **포함** (수임인 기준) | 수임인 |',
+                '| 정회원 + 티켓 미구매 + 위임 X + 불참 | 있음 | 행사 불가 | **제외** | 없음 |',
+                '| 정회원 + 티켓 구매 + 미검표 + 위임 X | 있음 | 행사 불가 | **제외** | 없음 |',
+                '',
+                '> **모수 기준 원칙:** 투표 행사 가능 수(모수) = 출석 본인(검표 완료 + 위임 X) + 유효 위임(수임인 지정 + 의장 귀속). 이 외의 모든 경우는 모수에서 제외한다.',
+                '>',
+                '> **운영 권장:** "투표 진행중" 전환 시점 이전에 충분한 입장·검표 시간을 확보해 현장 참석자가 최대한 본인 투표를 할 수 있도록 한다.',
+                '',
+                '---',
+                '',
+                '## 3. MVP 범위 정의',
+                '',
+                '| 구분 | 기능 | 포함 여부 |',
+                '|---|---|---|',
+                '| 관리자 | 총회 생성·상태 관리 | MVP 포함 |',
+                '| 관리자 | 안건 CRUD + 보기 등록 | MVP 포함 |',
+                '| 관리자 | 출석 현황 조회 (쇼핑몰 DB 직접 참조) | MVP 포함 |',
+                '| 관리자 | 위임장 관리 (구글 스프레드시트 연동 + CSV 백업) | MVP 포함 |',
+                '| 관리자 | 의장 귀속 위임건 일괄 투표 | MVP 포함 |',
+                '| 관리자 | 투표 현황·결과 조회 | MVP 포함 |',
+                '| 투표자 | 본인 인증 (이름 + 전화번호 + 주문번호 뒤 5자리) | MVP 포함 |',
+                '| 투표자 | 안건별 단일 선택 투표 (열림 상태에서 수정 가능) | MVP 포함 |',
+                '| 투표자 | 수임인 위임 투표 (드롭다운 전환) | MVP 포함 |',
+                '| 관리자 | 복수선택 투표 | v2 |',
+                '| 관리자 | 자체 위임 등록 화면 | v2 |',
+                '| 관리자 | 의장 위임 건별 개별 선택 | v2 |',
+                '| 투표자 | 투표 결과 열람 | v2 |',
+                '| 시스템 | 카카오 알림톡 | v2 |',
+                '| 관리자 | 다중 관리자 권한 | v2 |',
+                '| 시스템 | 투표 진행중 위임 취소 | v2 |',
+                '| 시스템 | 총회 상태 롤백 | v2 |',
+                '',
+                '---',
+                '',
+                '## 4. 시스템 흐름 · 데이터 연동',
+                '',
+                '### 4-1. 전체 흐름',
+                '',
+                '| 단계 | 관리자 행위 | 시스템 동작 |',
+                '|---|---|---|',
+                '| 1. 총회 생성 | 총회명, 일시 입력 | Assembly 레코드 생성, 상태 = 준비중 |',
+                '| 2. 안건 등록 | 안건명 + 보기(선택지) 입력 | Agenda + AgendaOption 레코드 생성 |',
+                '| 3. 위임장 동기화 | 동기화 버튼 클릭 | 구글 스프레드시트 API -> Delegation 테이블 UPSERT |',
+                '| 4. 출석 현황 확인 | 출석 관리 화면 조회 | 쇼핑몰 DB 직접 참조 (티켓 + 검표 시각) |',
+                '| 5. 투표 시작 | "투표 진행중" 전환 (더블 컨펌) | (1) 강제 동기화 1회 -> (2) 검표 시각 기준 위임 취소 판정 -> (3) 모수 확정 -> (4) 스프레드시트 연동 차단 |',
+                '| 6. 안건 열기 | 안건별 "열기" 클릭 | 해당 안건 투표 가능 상태로 전환 |',
+                '| 7. 투표 진행 | 현황 모니터링 | 투표자 화면에서 선택지 제출 -> Vote 레코드 생성 (열림 중 수정 가능) |',
+                '| 8. 안건 닫기 | 안건별 "닫기" 클릭 (더블 컨펌) | 해당 안건 투표 마감, 결과 집계 |',
+                '| 9. 총회 종료 | "종료" 클릭 (더블 컨펌) | 전체 투표 마감, 최종 결과 확정. 되돌릴 수 없음. |',
+                '',
+                '> **투표자 인증 -> 투표 흐름:** 이름+전화번호+주문번호 뒤 5자리 입력 -> 티켓 DB 매칭 -> 성공 시 회원번호를 세션에 저장 -> Delegation 테이블에서 delegatee_member_id로 위임 목록 조회 -> 위임건이 있으면 수임인 드롭다운 구성 -> 안건별 투표 진행.',
+                '',
+                '### 4-2. 데이터 연동 구조',
+                '',
+                '#### 4-2-A. 출석 관리 (쇼핑몰 DB 직접 참조)',
+                '',
+                '| 항목 | 내용 |',
+                '|---|---|',
+                '| 연동 방식 | 같은 서버 내 쇼핑몰 DB 직접 쿼리 (별도 API 불필요) |',
+                '| 조회 대상 | 티켓 구매 테이블 + 검표 시각(check_time) 컬럼 |',
+                '| 데이터 갱신 | 관리자 화면에서 실시간 조회 (페이지 로드 또는 새로고침 시 DB 재조회) |',
+                '| 표시 항목 | 구매자명, 전화번호, 주문번호, 검표 여부, 검표 시각 |',
+                '',
+                '#### 4-2-B. 위임장 관리 (구글 스프레드시트 연동)',
+                '',
+                '| 항목 | 내용 |',
+                '|---|---|',
+                '| 연동 방식 | Google Sheets API v4 + 서비스 계정 인증 (서버 사이드) |',
+                '| 스프레드시트 컬럼 | A: 위임자명 / B: 위임자휴대폰 / C: 위임자회원번호 / D: 수임자명 / E: 수임자휴대폰 / F: 수임자회원번호 |',
+                '| 매칭 기준 | 위임자: 회원번호(C열)로 회원 DB 매칭 / 수임자: 회원번호(F열)로 회원 DB 매칭 |',
+                '| 동기화 방식 | 준비중: 수동 반복 / 전환 시: 강제 1회 -> 이후 차단 |',
+                '| 수임인 공란 처리 | D·E·F열 모두 공란이면 의장(관리자)에게 자동 귀속 |',
+                '| 보안 | 서비스 계정 JSON 키는 서버 환경변수에 보관. 프론트엔드 노출 금지. |',
+                '',
+                '---',
+                '',
+                '## 5. 관리자 기능 상세',
+                '',
+                '### 5-1. 총회 관리',
+                '- 총회 생성: 총회명, 일시 입력. 생성 시 상태 = "준비중".',
+                '- 총회 목록: 생성된 총회 목록 표시. 상태별 필터 가능.',
+                '',
+                '### 5-2. 안건 관리',
+                '- 안건 등록: 안건명 입력 + 보기(선택지) 최소 2개 등록. **"준비중" 및 "투표 진행중"** 상태에서 가능. "종료" 후 불가.',
+                '- 안건 수정·삭제: **"준비중"** 상태에서만 가능. 투표 진행중 이후 수정·삭제 불가.',
+                '- 안건 열기·닫기: **"투표 진행중"** 상태에서 안건별 개별 토글. 열린 안건만 투표 가능.',
+                '',
+                '| 행위 | 준비중 | 투표 진행중 | 종료 |',
+                '|---|---|---|---|',
+                '| 안건 추가 | 가능 | **가능** | 불가 |',
+                '| 안건 수정 | 가능 | 불가 | 불가 |',
+                '| 안건 삭제 | 가능 | 불가 | 불가 |',
+                '| 안건 열기·닫기 | 불가 | 가능 | 불가 |',
+                '',
+                '> **긴급 안건 참고:** 투표 진행중에 추가된 안건은 기존 확정된 모수를 동일하게 적용한다. 추가 후 관리자가 "열기"를 해야 투표가 시작되므로 기존 진행 중인 안건에 영향을 주지 않는다.',
+                '',
+                '> **보기(선택지) 수정 규칙:** 투표 진행중에 추가된 안건은 **"열기" 전까지 보기 수정이 가능**하다. 한 번 "열림" 상태가 되면 보기 수정·삭제 불가.',
+                '',
+                '### 5-3. 총회 상태 관리',
+                '',
+                '| 전환 | 조건 | 시스템 동작 |',
+                '|---|---|---|',
+                '| 준비중 -> 투표 진행중 | 더블 컨펌 | (1) 강제 동기화 -> (2) 위임 취소 판정 -> (3) 모수 확정 -> (4) 스프레드시트 차단 |',
+                '| 투표 진행중 -> 종료 | 더블 컨펌 | 모든 안건 강제 닫힘. 최종 결과 확정. 되돌릴 수 없음. |',
+                '',
+                '> **롤백 불가:** MVP에서 롤백 미지원. "종료"도 되돌릴 수 없다.',
+                '',
+                '> **안건 가드:** 안건 0건이면 "투표 진행중" 전환 차단. "안건을 1개 이상 등록하세요." 알림.',
+                '',
+                '> **안건 닫기 정책:** 더블 컨펌 수행.',
+                '> 1차: "해당 안건의 투표를 마감합니다. 닫으시겠습니까?"',
+                '> 2차: "닫힌 안건은 재오픈할 수 있지만, 재오픈 시 미투표자의 추가 투표로 결과가 변동될 수 있습니다. 정말 닫으시겠습니까?"',
+                '',
+                '> **안건 재오픈 정책:** 기존 투표 유지. 미투표자만 추가 투표. 재오픈 횟수 제한 없음. 열기·닫기 이력 로그 기록.',
+                '',
+                '### 5-4. 투표 현황',
+                '',
+                '| 표시 항목 | 설명 |',
+                '|---|---|',
+                '| 전체 정회원 수 | 회원 DB 기준. 쿼리 불가 시 "미제공" 표시. |',
+                '| 티켓 구매자 수 | 현장 참석 티켓 구매 회원 수 |',
+                '| 출석 본인 수 | 검표 완료 + 위임 X 인원 |',
+                '| 유효 위임 수 | 수임인 지정 + 의장 귀속 합산 |',
+                '| 불참·무위임 수 | 참고용 (모수 제외) |',
+                '| 투표 행사 가능 수 (모수) | 출석 본인 + 유효 위임 |',
+                '| 투표 완료 수 | 본인 + 수임인 + 의장 일괄 합산 |',
+                '| 미투표 수 | 행사 가능 수 - 완료 수 |',
+                '| 투표율 | 완료 수 / 행사 가능 수 x 100 |',
+                '',
+                '> **투표율 산식:** 모수는 "투표 진행중" 전환 시점 기준 고정.',
+                '> **정족수 판정:** MVP 미포함. 결과만 표시, 정족수 충족은 의장 별도 판단.',
+                '> **익명성 원칙:** 안건별 투표/미투표 수만 표시. 개별 선택 보기는 관리자 포함 모든 UI에서 미표시. 10초 폴링.',
+                '',
+                '### 5-5. 결과 조회',
+                '',
+                '| 항목 | 설명 |',
+                '|---|---|',
+                '| 표시 시점 | 안건 closed 전환 즉시 관리자 화면에서 확인 가능 |',
+                '| 표시 항목 | 보기별 득표수, 보기별 득표율, 총 투표 수, 모수 대비 투표율 |',
+                '| 정족수 판정 | MVP 미포함. 숫자만 표시, 가결/부결은 의장 별도 판단. |',
+                '| 투표자 화면 | MVP에서 결과 미표시. 투표 완료 여부 + 선택 보기만 확인 가능. |',
+                '',
+                '### 5-6. 출석 관리',
+                '- 출석 현황 조회: 쇼핑몰 DB에서 티켓 구매자 + 검표 시각을 직접 조회하여 표시',
+                '- 표시 정보: 구매자명, 전화번호, 주문번호, 검표 여부(Y/N), 검표 시각',
+                '- 위임 여부 표시: 각 출석자 옆에 위임 상태 표시',
+                '',
+                '### 5-7. 위임장 관리',
+                '',
+                '#### 5-7-A. 위임 검증 규칙',
+                '',
+                '| # | 검증 항목 | 조건 | 실패 시 처리 |',
+                '|---|---|---|---|',
+                '| 1 | 위임자 자격 검증 | 회원번호(C열) 회원 DB 매칭 + 총회 당일 기준 정회원 이상 | 매칭 실패 또는 위임자 자격 미달 표시 |',
+                '| 2 | 수임인 공란 -> 의장 귀속 | D·E·F열 모두 공란 | 의장(관리자)에게 자동 귀속 |',
+                '| 3 | 위임인 출석 여부 | 위임에는 출석(검표) 불필요 | - |',
+                '| 4 | 위임인 = 수임인 동일인 | C열 = F열 | 무효(동일인) |',
+                '| 5 | 1인당 수임 건수 제한 | 제한 없음 | 카운터 표시 |',
+                '| 6 | 동일 위임자 중복 등록 | C열 2행 이상 | 마지막 행만 유효, 이전 행 무효(중복) |',
+                '| 7 | 수임인 자격 검증 | 회원번호(F열) 매칭 + 정회원 이상 | 수임인 자격 미달 표시, 보류 |',
+                '',
+                '#### 5-7-B. 위임 취소 판정 (투표 시작 시)',
+                '',
+                '| 조건 | 처리 |',
+                '|---|---|',
+                '| 전환 시점에 위임인의 check_time 존재 + check_time < 전환 시각 | 위임 자동 취소 (cancelled_reason: delegator_attended) -> 위임인 본인에게 투표 행사권 귀속 |',
+                '| 전환 이후에 위임인이 검표 | MVP에서는 위임 유지 -> 수임인 계속 투표. 전환 이후 검표이면 위임 취소하지 않음. |',
+                '',
+                '> **판정 기준:** 쇼핑몰 DB의 원천 check_time 기준. 전환 시 강제 동기화 직후 일괄 판정.',
+                '',
+                '#### 5-7-C. 위임 데이터 반영 컷오프',
+                '',
+                '| 총회 상태 | 스프레드시트 동기화 | 위임 데이터 변경 |',
+                '|---|---|---|',
+                '| 준비중 | 가능 (수동 반복) | 반영됨 |',
+                '| 투표 진행중 (전환 시) | 강제 1회 | 최종 반영 |',
+                '| 투표 진행중 (전환 후) | 차단 | 변경 불가 |',
+                '| 종료 | 차단 | 변경 불가 |',
+                '',
+                '#### 5-7-D. 스프레드시트 동기화 실패 처리',
+                '',
+                '> **상태 유지 원칙:** 동기화 실패 시 "준비중" 유지. CSV 업로드 등 준비중 기능 계속 사용 가능.',
+                '>',
+                '> **기본 동작:** 전환 시 강제 동기화 실패 -> 자동 최대 3회 재시도. 3회 실패 시 전환 차단 + "위임장 동기화에 3회 실패했습니다. CSV 업로드를 이용해주세요." + CSV 업로드 버튼 표시.',
+                '>',
+                '> **비상 전환:** CSV도 불가 시 추가 선택지 제공. 마지막 성공 데이터 있으면 해당 데이터로 전환 가능. 없으면 "위임 데이터 없이 투표를 시작하시겠습니까?" 안내.',
+                '',
+                '#### 5-7-E. CSV 업로드 (API 장애 시 백업)',
+                '',
+                '| 항목 | 설명 |',
+                '|---|---|',
+                '| 용도 | 구글 스프레드시트 API 연동 실패 시 백업 경로 |',
+                '| 절차 | 스프레드시트에서 CSV 다운로드 -> 위임장 관리 화면에서 업로드 |',
+                '| 파일 형식 | UTF-8 CSV. 컬럼 순서 A~F 동일 |',
+                '| 검증 | 7개 검증 규칙 동일 적용 |',
+                '| 처리 | 기존 데이터 전체 교체 (UPSERT). 업로드 시각 = 마지막 동기화 시각 |',
+                '| 사용 가능 상태 | "준비중"에서만. "투표 진행중" 이후 차단. |',
+                '',
+                '> **CSV 업로드 오류 처리:** UTF-8 아닌 경우, 컬럼 6개 아닌 경우, 빈 파일인 경우 각각 에러 메시지 표시. 검증 실패 행은 정상 행과 분리 표시.',
+                '',
+                '### 5-8. 의장 귀속 위임 일괄 투표',
+                '',
+                '> **실행 조건:** 총회 "투표 진행중" + 안건 "open" 상태에서만 가능. 닫힘/준비중이면 비활성화.',
+                '> **수정:** 안건 open 동안 수정 가능. closed이면 불가. 재오픈 시 미투표 건 추가 + 기투표 건 수정 가능.',
+                '',
+                '| 항목 | 설명 |',
+                '|---|---|',
+                '| 대상 | 수임인 미지정 -> 의장 귀속 위임건 |',
+                '| 투표 방식 | 안건별 보기 선택 -> "일괄 투표" 버튼 |',
+                '| 일괄 처리 | 전체 귀속 건에 동일 보기 적용 (건별 선택은 v2) |',
+                '| DB 기록 | voter_member_id별 개별 Vote 레코드. voted_by = 관리자 ID. |',
+                '| 표시 | 위임인 이름 옆에 \'투표함 (위임 - 의장 귀속)\' |',
+                '',
+                '---',
+                '',
+                '## 6. 투표자 기능 상세',
+                '',
+                '### 6-1. 본인 인증',
+                '- 인증 방식: 이름 + 전화번호 + 주문번호 뒤 5자리 (별도 인증)',
+                '- 검증: 쇼핑몰 DB 티켓 구매 테이블에서 3개 값 일치 확인',
+                '- 실패 시: "일치하는 정보가 없습니다."',
+                '- 인증 후: 회원번호를 세션에 저장. Delegation 테이블에서 위임 목록 조회 -> 드롭다운 자동 구성.',
+                '- 세션 유지: 총회 종료 시까지 유지. 종료 시 모든 투표자 세션 만료 -> "총회가 종료되었습니다." 안내. 재접속 시 세션 유효하면 자동 복원.',
+                '- 재인증 시 복원: DB 조회하여 기투표 안건 "투표 완료" 상태 복원.',
+                '',
+                '> **향후 개선:** 쇼핑몰 로그인 세션 활용으로 별도 입력 제거 검토 (v2).',
+                '',
+                '### 6-2. 투표 화면',
+                '- 안건 목록: 모든 안건을 상태와 함께 표시.',
+                '  - 준비중(draft): "예정" 뱃지. 투표 비활성화. "안건 준비 중 - 보기(선택지)가 변경될 수 있습니다." 안내.',
+                '  - 열림(open): 라디오 버튼 활성화. 투표 가능.',
+                '  - 닫힘(closed): "마감" 뱃지. 투표 비활성화.',
+                '- 투표 제출: 선택 -> "투표" 버튼 -> 확인 팝업: "투표를 제출합니다. 안건이 열려 있는 동안 수정할 수 있습니다." -> 제출.',
+                '- 투표 수정: 안건 "열림" 동안 자유롭게 수정 가능. "수정" 버튼 표시. 닫히면 불가.',
+                '- 투표 완료: "투표 완료" 뱃지 + 선택 보기 + "수정" 버튼.',
+                '- 제출 실패: "투표 저장에 실패했습니다. 다시 시도해주세요." UNIQUE 제약으로 중복 방지.',
+                '',
+                '| 안건 상태 | 관리자 화면 | 투표자 화면 |',
+                '|---|---|---|',
+                '| draft | 표시 + 수정·삭제 | 표시 + "예정" 뱃지 + 비활성화 + "보기 변경 가능" 안내 |',
+                '| open | 표시 + 닫기 | 표시 + 투표 + 수정 |',
+                '| closed | 표시 + 재오픈 + 결과 즉시 표시 | 표시 + "마감" 뱃지 + 비활성화 + 결과 미표시 |',
+                '',
+                '> **브라우저 새로고침 안내:** 제출 전 새로고침/이탈 시 선택 미보존. 제출 완료된 투표는 DB 조회로 복원. 화면 상단에 "투표는 제출 후에만 저장됩니다. 새로고침 시 미제출 선택은 초기화됩니다." 안내.',
+                '',
+                '#### 6-2-A. 수임인 투표 화면 구조',
+                '',
+                '| 항목 | 설명 |',
+                '|---|---|',
+                '| 레이아웃 | 전체 진행 요약 + 드롭다운 화면 상단 고정(sticky) |',
+                '| 전체 진행 요약 | 예: \'전체 진행: 8/15 완료 (3명 중 1명 미완료)\' |',
+                '| 드롭다운 구성 | 첫 항목: 본인 명의 + 진행률. 이후: 위임인별 + 진행률. 미완료 상단 정렬. |',
+                '| 동작 방식 | 선택 -> 해당 명의 안건·투표 상태 표시. 명의별 독립 투표. |',
+                '| 완료 표시 | 미완료: \'2/5 미완료\' / 완료: \'5/5 완료\' |',
+                '| 이탈 경고 | 미완료 명의 있으면 "위임 투표 - 김위임 외 N건 미완료" 알림 |',
+                '| 제한 | 의장 귀속 건은 수임인 드롭다운 미표시 (관리자 전용) |',
+                '',
+                '---',
+                '',
+                '## 7. 데이터 모델',
+                '',
+                '### 7-1. Assembly (총회)',
+                '| 컬럼 | 타입 | 설명 |',
+                '|---|---|---|',
+                '| id | INT, PK | 총회 고유 ID |',
+                '| title | VARCHAR | 총회명 |',
+                '| scheduled_at | DATETIME | 총회 예정 일시 |',
+                '| status | ENUM | preparing / voting / closed |',
+                '| voting_started_at | DATETIME | 전환 시각 |',
+                '| closed_at | DATETIME | 종료 시각 |',
+                '| eligible_count | INT | 모수 (전환 시 확정) |',
+                '| last_sync_at | DATETIME, NULL | 마지막 성공 동기화 시각 |',
+                '',
+                '### 7-2. Agenda (안건)',
+                '| 컬럼 | 타입 | 설명 |',
+                '|---|---|---|',
+                '| id | INT, PK | 안건 고유 ID |',
+                '| assembly_id | INT, FK | 총회 ID |',
+                '| title | VARCHAR | 안건명 |',
+                '| sort_order | INT | 표시 순서 |',
+                '| status | ENUM | draft / open / closed |',
+                '',
+                '### 7-3. AgendaOption (안건 보기)',
+                '| 컬럼 | 타입 | 설명 |',
+                '|---|---|---|',
+                '| id | INT, PK | 보기 고유 ID |',
+                '| agenda_id | INT, FK | 안건 ID |',
+                '| label | VARCHAR | 보기 텍스트 |',
+                '| sort_order | INT | 표시 순서 |',
+                '',
+                '### 7-4. Delegation (위임)',
+                '| 컬럼 | 타입 | 설명 |',
+                '|---|---|---|',
+                '| id | INT, PK | 위임 고유 ID |',
+                '| assembly_id | INT, FK | 총회 ID |',
+                '| delegator_member_id | VARCHAR | 위임인 회원번호 |',
+                '| delegator_name | VARCHAR | 위임인 이름 |',
+                '| delegator_phone | VARCHAR | 위임인 전화번호 |',
+                '| delegatee_member_id | VARCHAR, NULL | 수임인 회원번호 (NULL = 의장 귀속) |',
+                '| delegatee_name | VARCHAR, NULL | 수임인 이름 |',
+                '| delegatee_phone | VARCHAR, NULL | 수임인 전화번호 |',
+                '| status | ENUM | active / cancelled / invalid_match / invalid_same / invalid_duplicate / invalid_grade |',
+                '| cancelled_reason | VARCHAR, NULL | 취소 사유 |',
+                '| sheet_row | INT | 스프레드시트 행 번호 |',
+                '| synced_at | DATETIME | 동기화 시각 |',
+                '',
+                '> **인덱스:** (assembly_id, delegatee_member_id), (assembly_id, delegator_member_id)',
+                '',
+                '### 7-5. Vote (투표)',
+                '| 컬럼 | 타입 | 설명 |',
+                '|---|---|---|',
+                '| id | INT, PK | 투표 고유 ID |',
+                '| agenda_id | INT, FK | 안건 ID |',
+                '| option_id | INT, FK | 선택 보기 ID |',
+                '| voter_member_id | VARCHAR | 투표권 소유자 |',
+                '| voted_by | VARCHAR | 실제 투표자 (본인/수임인/관리자 ID) |',
+                '| voted_at | DATETIME | 투표 시각 |',
+                '',
+                '> **저장 방식:** UNIQUE(agenda_id, voter_member_id). 최초 INSERT, 수정 시 UPDATE (open 상태에서만). closed이면 INSERT/UPDATE 모두 차단. 동시 제출 시 먼저 도착한 것이 INSERT, 나중 것은 UPDATE.',
+                '',
+                '### 7-6. Admin (관리자)',
+                '| 컬럼 | 타입 | 설명 |',
+                '|---|---|---|',
+                '| id | INT, PK | 관리자 고유 ID |',
+                '| login_id | VARCHAR | 로그인 ID (= 의장) |',
+                '| password_hash | VARCHAR | 비밀번호 해시 |',
+                '',
+                '---',
+                '',
+                '## 8. 비기능 요구사항',
+                '',
+                '| 항목 | 요구사항 |',
+                '|---|---|',
+                '| 반응형 | 투표자: 모바일 우선 / 관리자: PC 우선 |',
+                '| 브라우저 | Chrome, Safari, Samsung Internet |',
+                '| 동시접속 | 100~130명 |',
+                '| 폴링 | 관리자 현황 10초 갱신 |',
+                '| 보안 | HTTPS. 관리자 토큰 인증. 서비스 계정 키 환경변수. |',
+                '| 세션 | 투표자: 총회 종료 시까지. 관리자: 별도 로그인. |',
+                '',
+                '### 8-A. 투표 익명성 정책',
+                '> DB에 voter_member_id + 선택 보기 매핑 저장 (중복 방지). 모든 UI에서 "누가 어떤 보기를 선택했는지" 미표시. 관리자도 투표/미투표만 확인. DB 직접 조회 권한으로만 매핑 확인 가능.',
+                '',
+                '### 8-B. 데이터 보관 정책',
+                '> 종료된 총회 데이터는 DB에 영구 보관. 관리자 화면에서 조회만 가능. 수정·삭제 불가. "종료" 뱃지 + 읽기 전용 모드.',
+                '',
+                '---',
+                '',
+                '## 9. 화면 목록',
+                '',
+                '| 화면 ID | 화면명 | 설명 |',
+                '|---|---|---|',
+                '| A-01 | 관리자 로그인 | ID/PW 입력 |',
+                '| A-02 | 총회 목록 | 총회 리스트 + 상태 표시 |',
+                '| A-03 | 총회 상세 / 상태 관리 | 안건 목록, 상태 전환, 통계 요약 |',
+                '| A-04 | 안건 등록·수정 | 안건명 + 보기 입력 |',
+                '| A-05 | 출석 관리 | 티켓 구매자 검표 현황 |',
+                '| A-06 | 위임장 관리 | 동기화 + CSV + 검증 + 현황 |',
+                '| A-07 | 투표 현황 | 투표/미투표 상태, 모수 상세 |',
+                '| A-08 | 결과 조회 | 보기별 득표수, 득표율, 투표율 |',
+                '| A-09 | 의장 일괄 투표 | 의장 귀속 건 일괄 투표 |',
+                '| V-01 | 투표자 인증 | 이름 + 전화번호 + 주문번호 뒤 5자리 |',
+                '| V-02 | 투표 화면 | 안건 + 투표 + 수정 + 수임인 드롭다운 |',
+                '',
+                '---',
+                '',
+                '## 10. 리스크 매트릭스',
+                '',
+                '| 심각도 | 리스크 | 영향 | 대응 |',
+                '|---|---|---|---|',
+                '| 중간 | 안건 재오픈 결과 변동 | 집계 변경 | 경고 팝업 + 기존 투표 유지 + 로그 |',
+                '| 중간 | 수임인 다건 위임 UX | 드롭다운 증가 | 진행률 카운터 + 뱃지 + 이탈 경고 |',
+                '| 중간 | 동시접속 부하 | DB 병목 | 기존 구조 확인 + 폴링 조정 |',
+                '| 중간 | 10일 일정 | 초과 위험 | 일별 마일스톤 |',
+                '| 낮음 | 스프레드시트 컬럼 불일치 | 매칭 실패 | A~F 사전 확정 |',
+                '| 낮음 | 중간 결과 노출 | 쏠림 | 관리자만 닫힌 후 결과. 투표자 미표시. |',
+                '',
+                '---',
+                '',
+                '## 11. 일정 계획',
+                '',
+                '| 날짜 | 마일스톤 | 상세 |',
+                '|---|---|---|',
+                '| 4/15 | 기획 초안 | 초안 완성 · 검토 요청 |',
+                '| 4/16 | 기획 확정 + 환경 세팅 | 기획서 확정 / DB 스키마 / 구글 서비스 계정 요청 |',
+                '| 4/17 | 개발 착수 | DB 생성 / 로그인 / 서비스 계정 수령 / DB 구조 확인 |',
+                '| 4/18 | 총회·안건 CRUD | 총회 생성, 안건 CRUD |',
+                '| 4/19 | 출석·위임 연동 | 출석 조회, 동기화, CSV, 검증 |',
+                '| 4/20 | 인증 + 투표 화면 | 인증, 투표, 수정, 드롭다운 |',
+                '| 4/21 | 상태 전환 + 일괄 투표 | 더블 컨펌, 동기화, 취소 판정, 일괄 |',
+                '| 4/22 | 현황·결과 | 통계, 투표율, 결과 |',
+                '| 4/23 | 통합 테스트 | 전체 플로우 + 엣지 케이스 + 수임인 티켓 구매 시나리오 |',
+                '| 4/24 | 버그 수정 + 리허설 | 수정, 리허설 |',
+                '| 4/25 | 오픈 | 실서비스 배포 |',
+                '',
+                '---',
+                '',
+                '## 12. v2 백로그',
+                '',
+                '| 항목 | 설명 |',
+                '|---|---|',
+                '| 투표 진행중 위임 취소 | 관리자 수동 취소. 미투표만 본인 복귀. |',
+                '| 총회 상태 롤백 | 투표 진행중 -> 준비중 |',
+                '| 복수선택 투표 | 안건별 복수 보기 |',
+                '| 자체 위임 등록 | 관리자 화면 직접 등록 |',
+                '| 의장 건별 개별 선택 | 귀속 건별 다른 보기 |',
+                '| 투표자용 결과 | 닫힌 안건 결과 공개 |',
+                '| 로그인 세션 인증 | 쇼핑몰 세션 활용 |',
+                '| 카카오 알림톡 | 시작/종료 알림 |',
+                '| 다중 관리자 | 역할 기반 계정 |',
+                '| 강화된 암호화 | E2E 암호화 |',
+                '| 감사 로그 | 관리자 행위 이력 |',
+                '| 아카이브 | 과거 총회 조회 |',
+                '| 정족수 자동 판정 | 정회원 수 기반 가결/부결 |',
+                '| 미제출 선택 임시 저장 | localStorage 활용 새로고침 후 복원 |',
+                '',
+                '---',
+                '',
+                '## 13. 미확인 사항',
+                '',
+                '| # | 확인 항목 | 담당 | 기한 | 상세 |',
+                '|---|---|---|---|---|',
+                '| 1 | 쇼핑몰 DB 구조 | 최범선 부장님 | 4/17 | 회원·티켓 테이블명·컬럼, DB 스키마 권한 |',
+                '| 2 | 동시접속 처리 | 최범선 부장님 | 4/17 | 캐싱·큐·세션, 커넥션 풀, 폴링 부하 |',
+                '| 3 | 정회원 목록 쿼리 | 최범선 부장님 | 4/17 | 등급 필터링 테이블·컬럼, 전체 수 조회 |',
+                '| 4 | 구글 서비스 계정 | 고객사 | 4/16~17 | JSON 키 발급 + 스프레드시트 권한 |',
+                '| 5 | 수임인 티켓 구매 테스트 | QA | 4/23 | 현장 구매 -> 검표 -> 인증 -> 위임 투표 확인 |',
+                '',
+                '---',
+                '',
+                '*전자투표시스템 기획서 MVP v1.1 · 2026-04-16 최종 갱신*'
+            ].join('\n');
 
             const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = '전자투표시스템_기획서_MVP_v1.0.md';
+            a.download = '전자투표시스템_기획서_MVP_v1.1.md';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

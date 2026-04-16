@@ -10,124 +10,182 @@
 
 <nav class="admin-nav">
   <div class="nav-inner">
-    <a href="assemblies.html" class="nav-logo">전자투표 관리</a>
+    <a href="assemblies.html" class="nav-logo"><span style="color: #003B5C;">멘사코리아</span> 전자투표 관리</a>
     <div class="nav-links">
       <a href="assemblies.html">총회 목록</a>
-      <a href="index.html" class="nav-logout" onclick="adminLogout()">로그아웃</a>
+      <a href="index.html" class="nav-logout">로그아웃</a>
     </div>
   </div>
 </nav>
 
-<main class="main-content" id="app"></main>
+<main class="main-content">
 
-<footer class="site-footer"><p>&copy; 2026 전자투표시스템 — 프로토타입</p></footer>
+  <!-- [PHP] $agenda_id = $_GET['agenda_id']; $assembly_id = $_GET['assembly_id'];
+    SELECT agendas.*, assemblies.title as assembly_title, assemblies.eligible_count
+    FROM agendas JOIN assemblies ON assemblies.id = agendas.assembly_id
+    WHERE agendas.id = ?
+    --
+    SELECT option_id, COUNT(*) as cnt
+    FROM votes WHERE agenda_id = ?
+    GROUP BY option_id
+    -- 표시 조건: agenda.status === 'closed' 일 때만 결과 표시 가능
+  -->
 
-<script src="../assets/js/data.js"></script>
-<script src="../assets/js/app.js"></script>
-<script>
-  if (!requireAdmin()) {}
+  <div class="page-header">
+    <h1>제1호 안건 결과</h1><!-- [PHP] 제<?= $agenda['sort_order'] ?>호 안건 결과 -->
+    <p>
+      <a href="assembly-detail.html?id=1">&larr; 2026년 정기총회로 돌아가기</a><!-- [PHP] <?= h($assembly['title']) ?> -->
+    </p>
+  </div>
 
-  const params = new URLSearchParams(location.search);
-  const agendaId = Number(params.get('agenda_id')) || 1;
-  const agenda = getAgenda(agendaId);
-  const assembly = getAssembly(agenda.assembly_id);
-  const votes = getVotesByAgenda(agendaId);
-  const totalVotes = votes.length;
-  const totalEligible = SAMPLE_DATA.tickets.length;
-  const voteRate = totalEligible > 0 ? ((totalVotes / totalEligible) * 100).toFixed(1) : 0;
-
-  // 옵션별 카운트
-  const optionCounts = {};
-  agenda.options.forEach(o => { optionCounts[o.id] = 0; });
-  votes.forEach(v => { optionCounts[v.option_id] = (optionCounts[v.option_id] || 0) + 1; });
-
-  // 결과 바
-  let barsHTML = '';
-  agenda.options.forEach(o => {
-    const count = optionCounts[o.id] || 0;
-    const pct = totalVotes > 0 ? ((count / totalVotes) * 100).toFixed(1) : 0;
-    const width = totalVotes > 0 ? ((count / totalVotes) * 100) : 0;
-    barsHTML += `
-      <div class="result-bar-wrap">
-        <div class="result-bar-label">
-          <span class="label-text">${h(o.label)}</span>
-          <span class="label-value">${pct}% (${count}명)</span>
-        </div>
-        <div class="result-bar">
-          <div class="result-bar-fill" style="width:${width}%">
-            ${width > 15 ? `<span>${pct}%</span>` : ''}
-          </div>
-        </div>
-      </div>
-    `;
-  });
-
-  // 참여자 명단 — 티켓구매자 기준
-  let tableRows = '';
-  SAMPLE_DATA.tickets.forEach(t => {
-    const vote = votes.find(v => v.ticket_id === t.id);
-    const delegation = SAMPLE_DATA.delegations.find(d => d.delegator_id === t.id && d.status === 'active');
-    const isVoted = !!vote;
-    const isDelegated = !!delegation;
-    let delegateName = '-';
-    let delegatePhone = '-';
-    if (isDelegated) {
-      const delegateTicket = getTicket(delegation.delegate_id);
-      delegateName = delegateTicket ? delegateTicket.name : '-';
-      delegatePhone = delegateTicket ? delegateTicket.phone : '-';
-    }
-    tableRows += `
-      <tr>
-        <td>${h(t.name)}</td>
-        <td>${h(t.phone)}</td>
-        <td>${h(t.order_number)}</td>
-        <td><span style="color:${isVoted ? 'var(--success)' : 'var(--gray-400)'}; font-weight:600;">${isVoted ? '투표함' : '미투표'}</span></td>
-        <td>${isVoted ? vote.submitted_at : '-'}</td>
-        <td>${isDelegated ? '<span class="badge badge-delegation">위임</span>' : '본인'}</td>
-        <td>${h(delegateName)}</td>
-        <td>${h(delegatePhone)}</td>
-      </tr>
-    `;
-  });
-
-  document.getElementById('app').innerHTML = `
-    <div class="page-header">
-      <h1>제${agenda.number}호 안건 결과</h1>
-      <p><a href="assembly-detail.html?id=${assembly.id}">&larr; ${h(assembly.name)} 으로 돌아가기</a></p>
+  <div class="card">
+    <div class="card-header">
+      <h2>멘사코리아 회원 연회비를 다음과 같이 조정한다.</h2><!-- [PHP] <?= h($agenda['title']) ?> -->
+      <span class="badge status-closed">마감</span><!-- [PHP] 상태 뱃지 -->
     </div>
 
-    <div class="card">
-      <div class="card-header">
-        <h2>${h(agenda.title)}</h2>
-        <span class="badge ${statusClass(agenda.status)}">${statusLabel(agenda.status)}</span>
+    <!-- 집계 요약 -->
+    <!-- [PHP]
+      $total_votes  = SUM(count) from vote groupby
+      $eligible     = $assembly['eligible_count']
+      $vote_rate    = round($total_votes / $eligible * 100, 1)
+    -->
+    <div class="stats-row" style="margin-bottom:20px;">
+      <div class="stat-card">
+        <div class="stat-value">5</div><!-- [PHP] <?= $total_votes ?> -->
+        <div class="stat-label">총 투표 수</div>
       </div>
-
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-value">${totalVotes}</div><div class="stat-label">총 투표</div></div>
-        <div class="stat-card"><div class="stat-value">${totalEligible}</div><div class="stat-label">투표 가능</div></div>
-        <div class="stat-card"><div class="stat-value">${voteRate}%</div><div class="stat-label">투표율</div></div>
+      <div class="stat-card">
+        <div class="stat-value">5</div><!-- [PHP] <?= $eligible ?> -->
+        <div class="stat-label">투표 모수</div>
       </div>
-
-      ${barsHTML}
-    </div>
-
-    <div class="card">
-      <div class="card-header"><h2>참여자 명단</h2></div>
-      <div class="alert alert-info" style="font-size:13px;">익명 투표 원칙: "어떤 보기를 선택했는지"는 표시되지 않습니다.</div>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>티켓구매자</th><th>전화번호</th><th>주문번호</th>
-              <th>투표여부</th><th>투표시각</th><th>위임여부</th>
-              <th>위임자</th><th>위임자 연락처</th>
-            </tr>
-          </thead>
-          <tbody>${tableRows}</tbody>
-        </table>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--accent);">100.0%</div><!-- [PHP] <?= $vote_rate ?>% -->
+        <div class="stat-label">투표율</div>
       </div>
     </div>
-  `;
-</script>
+
+    <!-- 보기별 결과 바 -->
+    <!-- [PHP] foreach ($options as $opt):
+      $cnt  = $vote_counts[$opt['id']] ?? 0;
+      $pct  = $total_votes > 0 ? round($cnt / $total_votes * 100, 1) : 0;
+      $width = $pct;
+    -->
+
+    <div class="result-bar-wrap">
+      <div class="result-bar-label">
+        <span class="label-text">연 7만원</span><!-- [PHP] <?= h($opt['label']) ?> -->
+        <span class="label-value">20.0% (1명)</span><!-- [PHP] <?= $pct ?>% (<?= $cnt ?>명) -->
+      </div>
+      <div class="result-bar">
+        <div class="result-bar-fill" style="width:20%;"></div><!-- [PHP] width:<?= $width ?>% -->
+      </div>
+    </div>
+
+    <div class="result-bar-wrap">
+      <div class="result-bar-label">
+        <span class="label-text">연 8만원</span>
+        <span class="label-value">20.0% (1명)</span>
+      </div>
+      <div class="result-bar">
+        <div class="result-bar-fill" style="width:20%;"></div>
+      </div>
+    </div>
+
+    <div class="result-bar-wrap">
+      <div class="result-bar-label">
+        <span class="label-text">연 9만원</span>
+        <span class="label-value">60.0% (3명)</span>
+      </div>
+      <div class="result-bar">
+        <div class="result-bar-fill" style="width:60%;"></div>
+      </div>
+    </div>
+
+    <div class="result-bar-wrap">
+      <div class="result-bar-label">
+        <span class="label-text">연 10만원</span>
+        <span class="label-value">0.0% (0명)</span>
+      </div>
+      <div class="result-bar">
+        <div class="result-bar-fill" style="width:0%;"></div>
+      </div>
+    </div>
+
+    <!-- [PHP] endforeach -->
+
+    <div class="alert alert-info" style="font-size:13px;margin-top:16px;">
+      정족수 판정은 MVP 미포함입니다. 숫자를 참고하여 의장이 별도 판단합니다.
+    </div>
+  </div>
+
+  <!-- 투표/미투표 현황 (익명 — 선택 보기 미표시) -->
+  <div class="card">
+    <div class="card-header"><h2>투표 참여 현황</h2></div>
+    <div class="alert alert-info" style="font-size:13px;">
+      익명 투표 원칙: "어떤 보기를 선택했는지"는 표시되지 않습니다.
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>이름</th>
+            <th>전화번호</th>
+            <th>투표 여부</th>
+            <th>투표 시각</th>
+            <th>투표 주체</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- [PHP] foreach ($eligible_voters as $v):
+            voter_member_id 기준. 위임건은 위임인 정보 + 수임인/의장으로 투표된 것 표시.
+          -->
+          <tr>
+            <td>김투표</td>
+            <td>010-1234-5678</td>
+            <td><span style="color:var(--success);font-weight:600;">투표함</span></td>
+            <td>14:22:31</td>
+            <td>본인</td>
+          </tr>
+          <tr>
+            <td>이참석</td>
+            <td>010-2345-6789</td>
+            <td><span style="color:var(--success);font-weight:600;">투표함</span></td>
+            <td>14:25:17</td>
+            <td>본인</td>
+          </tr>
+          <tr>
+            <td>최불참</td>
+            <td>010-3456-7890</td>
+            <td><span style="color:var(--success);font-weight:600;">투표함 (위임)</span></td>
+            <td>14:26:05</td>
+            <td>수임인: 박의장</td><!-- [PHP] 위임건: 수임인 이름 -->
+          </tr>
+          <tr>
+            <td>정기권</td>
+            <td>010-5678-9012</td>
+            <td><span style="color:var(--success);font-weight:600;">투표함</span></td>
+            <td>14:23:45</td>
+            <td>본인</td>
+          </tr>
+          <tr>
+            <td>김외부</td>
+            <td>010-7777-8888</td>
+            <td><span style="color:var(--success);font-weight:600;">투표함 (위임 - 의장)</span></td>
+            <td>14:30:00</td>
+            <td>의장 일괄</td>
+          </tr>
+          <!-- [PHP] endforeach -->
+          <!-- 미투표 시 -->
+          <!-- <tr><td>미참석자</td><td>...</td><td><span style="color:var(--gray-400);">미투표</span></td><td>—</td><td>—</td></tr> -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer"><p>&copy; 2026 전자투표시스템</p></footer>
+
 </body>
 </html>
